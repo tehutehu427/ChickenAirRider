@@ -4,9 +4,6 @@
 #include <vector>
 #include "../../Common/Fader.h"
 
-// 推奨しませんが、どうしても使いたい方は
-#define mainCamera SceneManager::GetInstance().GetCamera().lock()
-
 class SceneBase;
 class Fader;
 class Camera;
@@ -19,13 +16,11 @@ public:
 	// シーン管理用
 	enum class SCENE_ID
 	{
-		NONE,
-		TITLE,
-		SELECT,
-		GAME,
-		SOLO,
-		MULTI,
-		FREE,
+		NONE = -1,
+		TITLE,		//タイトル
+		SELECT,		//セレクト
+		GAME,		//ゲーム
+		RESULT,		//リザルト
 		MAX
 	};
 	

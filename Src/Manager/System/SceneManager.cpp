@@ -1,19 +1,12 @@
  #include <chrono>
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>
-#include "../../Scene/TitleScene.h"
-#include "../../Scene/SelectScene.h"
-#include "../../Scene/Game/GameScene.h"
-#include "../../Scene/Game/FreePlay.h"
-#include "../../Scene/Game/MultiParty.h"
-#include "../../Scene/Game/SoloChallenge.h"
-#include "../Game/PlayerManager.h"
 #include "../Game/CollisionManager.h"
 #include "Camera.h"
 #include "ResourceManager.h"
 #include "SoundManager.h"
-#include "DateBank.h"
 #include "SceneManager.h"
+#include"../Application.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
 
@@ -50,9 +43,6 @@ void SceneManager::Init(void)
 
 	// メインスクリーン
 	mainScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
-
-	//データバンクを生成
-	DateBank::CreateInstance();
 
 	//当たり判定管理の初期化(各シーンで追加の可能性があるため)
 	CollisionManager::CreateInstance();
@@ -221,8 +211,6 @@ void SceneManager::Destroy(void)
 	//スクリーンの解放
 	DeleteGraph(mainScreen_);
 	for(auto & screen : splitScreens_){ DeleteGraph(screen); }
-
-	DateBank::GetInstance().Destroy();
 	
 	//自身のインスタンス解放
 	delete instance_;
@@ -287,7 +275,7 @@ void SceneManager::CreateSplitScreen(const int _playerNum)
 	// 最大人数を超える場合,
 	// または引数と現在のスクリーン数が同じとき
 	if (_playerNum <= 1 || 
-		_playerNum > PlayerManager::PLAYER_NUM_MAX ||
+		_playerNum > 4 ||
 		splitScreens_.size() == _playerNum)
 	{
 		isSplitMode_ = false;	//分割しない
@@ -309,7 +297,7 @@ void SceneManager::CreateSplitScreen(const int _playerNum)
 	//人数が条件以上の場合
 	if (_playerNum >= CASE_VALUE)
 	{
-		createNum = PlayerManager::PLAYER_NUM_MAX;	//最大人数分生成
+		createNum = 4;	//最大人数分生成
 		divY++;									//画面分割数増加
 	}
 
@@ -379,13 +367,13 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 
 
 	//シーンに合わせて生成数を設定
-	const int createNum = (sceneId == SCENE_ID::MULTI) ? DateBank::GetInstance().GetPlayerNum() : 1;
+	//const int createNum = (sceneId == SCENE_ID::MULTI) ? DateBank::GetInstance().GetPlayerNum() : 1;
 
 	//カメラ生成
-	CreateCameras(createNum);
+	//CreateCameras(createNum);
 
 	//分割スクリーン生成
-	CreateSplitScreen(createNum);
+	//CreateSplitScreen(createNum);
 
 	//シーンを生成
 	switch (sceneId_)
@@ -400,18 +388,6 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 
 	case SCENE_ID::GAME:
 		scene_ = std::make_unique<GameScene>();
-		break;
-
-	case SCENE_ID::FREE:
-		scene_ = std::make_unique<FreePlay>();
-		break;
-
-	case SCENE_ID::MULTI:
-		scene_ = std::make_unique<MultiParty>();
-		break;
-
-	case SCENE_ID::SOLO:
-		scene_ = std::make_unique<SoloChallenge>();
 		break;
 	}
 
@@ -457,7 +433,7 @@ void SceneManager::Fade(void)
 void SceneManager::DrawMultiScreen()
 {
 	//描画位置（分割スクリーンの左上位置）
-	const Vector2 screenPos[PlayerManager::PLAYER_NUM_MAX] =
+	const Vector2 screenPos[4] =
 	{
 		{ 0, 0 },													// 1P: 左上
 		{ Application::SCREEN_HALF_X, 0 },							// 2P: 右上
@@ -471,8 +447,8 @@ void SceneManager::DrawMultiScreen()
 		//プレイ人数が3人の時の4つ目の画面を1Pの画面を表示する
 		screenIndex_ = i;	//分割スクリーンのインデックス
 		int index = i;
-		if (CASE_VALUE == DateBank::GetInstance().GetPlayerNum() &&
-			index == PlayerManager::PLAYER_NUM_MAX - 1)
+		//if (CASE_VALUE == DateBank::GetInstance().GetPlayerNum() &&
+		//	index == PlayerManager::PLAYER_NUM_MAX - 1)
 		{
 			index = 1;
 			screenIndex_ = 1;
