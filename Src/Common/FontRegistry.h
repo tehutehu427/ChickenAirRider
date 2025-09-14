@@ -50,6 +50,6 @@ public:
 private:
 
 	//“o˜^—pƒpƒX
-	std::string fontPath_[FONT_TYPES];
+	std::wstring fontPath_[FONT_TYPES];
 };
 

@@ -178,9 +178,9 @@ private:
 
 	struct SoundResource
 	{
-		int handleId = -1;		//音源ハンドルID
-		TYPE type = TYPE::MAX;	//音源の種類
-		std::string path = "";	//音源のパス
+		int handleId = -1;			//音源ハンドルID
+		TYPE type = TYPE::MAX;		//音源の種類
+		std::wstring path = L"";	//音源のパス
 	};		
 	
 	//静的インスタンス

@@ -12,7 +12,7 @@ public:
 	/// </summary>
 	/// <param name="shaderFileName">シェーダーファイル名</param>
 	/// <param name="constBufFloat4Size">定数バッファの確保サイズ(FLOAT4をいくつ作るか)</param>
-	VertexMaterial(std::string shaderFileName, int constBufFloat4Size);
+	VertexMaterial(std::wstring shaderFileName, int constBufFloat4Size);
 
 	// デストラクタ
 	~VertexMaterial(void);

@@ -1,5 +1,4 @@
 #include <DxLib.h>
-#include "../Manager/Game/MapEditer.h"
 #include "../Utility/Utility.h"
 #include "Grid.h"
 
@@ -33,8 +32,8 @@ void Grid::Draw(void)
 	// XZ基本軸(グリッド)
 	VECTOR sPos;
 	VECTOR ePos;
-	IntVector3 lineNum = MapEditer::MAP_SIZE;
-	int size = MapEditer::GRID_SIZE;
+	IntVector3 lineNum = { 10 ,10 ,10 };
+	int size = 50;
 	for (int i = 0; i <= lineNum.x; i++)
 	{
 		for (int j = 0; j <= lineNum.y; j++)

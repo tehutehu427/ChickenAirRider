@@ -347,90 +347,6 @@ double Utility::Distance(const VECTOR& v1, const VECTOR& v2)
     return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2) + pow(v2.z - v1.z, 2));
 }
 
-bool Utility::IsHitSpheres(const VECTOR& pos1, float radius1, const VECTOR& pos2, float radius2)
-{
-    // 球体同士の衝突判定
-    bool ret = false;
-
-    // お互いの半径の合計
-    float radius = radius1 + radius2;
-
-    // 座標の差からお互いの距離を取る
-    VECTOR diff = VSub(pos2, pos1);
-
-    // 三平方の定理で比較(SqrMagnitudeと同じ)
-    float dis = (diff.x * diff.x) + (diff.y * diff.y) + (diff.z * diff.z);
-    if (dis < (radius * radius))
-    {
-        ret = true;
-    }
-
-    return ret;
-}
-
-bool Utility::IsHitSphereCapsule(
-    const VECTOR& sphPos, float sphRadius, 
-    const VECTOR& capPos1, const VECTOR& capPos2, float capRadius)
-{
-
-    bool ret = false;
-
-    // カプセル球体の中心を繋ぐベクトル
-    VECTOR cap1to2 = VSub(capPos2, capPos1);
-
-    // ベクトルを正規化
-    VECTOR cap1to2ENor = VNorm(cap1to2);
-
-    // カプセル繋ぎの単位ベクトルと、
-    // そのベクトル元から球体へのベクトルの内積を取る
-    float dot = VDot(cap1to2ENor, VSub(sphPos, capPos1));
-
-    // 内積で求めた射影距離を使って、カプセル繋ぎ上の座標を取る
-    VECTOR capRidePos = VAdd(capPos1, VScale(cap1to2ENor, dot));
-
-    // カプセル繋ぎのベクトルの長さを取る
-    float len = Utility::MagnitudeF(cap1to2);
-
-    // 球体がカプセル繋ぎ上にいるか判別するため、比率を取る
-    float rate = dot / len;
-
-    VECTOR centerPos;
-
-    // 球体の位置が３エリアに分割されたカプセル形状のどこにいるか判別
-    if (rate > 0.0f && rate <= 1.0f)
-    {
-        // ①球体がカプセル繋ぎ上にいる
-        centerPos = VAdd(capPos1, VScale(cap1to2ENor, dot));
-    }
-    else if (rate > 1.0f)
-    {
-        // ②球体がカプセルの終点側にいる
-        centerPos = capPos2;
-    }
-    else if (rate < 0.0f)
-    {
-        // ③球体がカプセルの始点側にいる
-        centerPos = capPos1;
-    }
-    else
-    {
-        // ここにきてはいけない
-    }
-
-    // 球体同士の当たり判定
-    if (Utility::IsHitSpheres(centerPos, capRadius, sphPos, sphRadius))
-    {
-        ret = true;
-    }
-    else
-    {
-        ret = false;
-    }
-
-    return ret;
-
-}
-
 bool Utility::Equals(const VECTOR& v1, const VECTOR& v2)
 {
     if (v1.x == v2.x && v1.y == v2.y && v1.z == v2.z)
@@ -563,10 +479,10 @@ bool Utility::IsTimeOver(float& totalTime, const float& waitTime)
     return false;
 }
 
-void Utility::DrawStringPlace(std::string _str, int _line, int _posY, int _color, STRING_PLACE _place)
+void Utility::DrawStringPlace(std::wstring _str, int _line, int _posY, int _color, STRING_PLACE _place)
 {
     //文字列の長さを取得
-    int width = GetDrawStringWidth(_str.c_str(), strlen(_str.c_str()));
+    int width = GetDrawStringWidth(_str.c_str(), strlen(WStrToStr(_str).c_str()));
 
     //表示するX座標を求める
     int posX = _line;
@@ -906,13 +822,21 @@ std::string Utility::ShowSaveJsonDialog()
     return selected_path; // キャンセルされたときには空文字列が返る
 }
 
-std::string Utility::WideToUtf8(const std::wstring& wstr)
+std::string Utility::WStrToStr(const std::wstring& wstr)
 {
     int size = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
     std::string result(size, 0);
     WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &result[0], size, nullptr, nullptr);
     result.pop_back(); // null文字を削除
     return result;
+}
+
+std::wstring Utility::StrToWStr(const std::string& str)
+{
+    int size = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, nullptr, 0);
+    std::wstring wstr(size, L'\0');
+    MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, &wstr[0], size);
+    return wstr;
 }
 
 float Utility::PingPongUpdate(const float _value, const float _step, const float _max, const float _min, int& _dir)

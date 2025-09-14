@@ -18,13 +18,12 @@ public:
 		FONT,
 		EFFEKSEER
 	};
-
 	// コンストラクタ
 	Resource(void);
 	// コンストラクタ
-	Resource(TYPE type, const std::string& path);
+	Resource(TYPE type, const std::wstring& path);
 	// コンストラクタ(IMGS用)
-	Resource(TYPE type, const std::string& path, int numX, int numY, int sizeX, int sizeY);
+	Resource(TYPE type, const std::wstring& path, int numX, int numY, int sizeX, int sizeY);
 
 	// デストラクタ
 	~Resource(void);
@@ -42,7 +41,7 @@ public:
 	TYPE type_;
 
 	// リソースの読み込み先
-	std::string path_;
+	std::wstring path_;
 
 	// 画像とモデルのハンドルID
 	int handleId_;

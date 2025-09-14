@@ -5,8 +5,11 @@
 #include "Camera.h"
 #include "ResourceManager.h"
 #include "SoundManager.h"
-#include "SceneManager.h"
+#include "../Scene/SceneTitle.h"
+#include "../Scene/SceneGame.h"
+#include "../Scene/SceneSelect.h"
 #include"../Application.h"
+#include"SceneManager.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
 
@@ -379,15 +382,15 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 	switch (sceneId_)
 	{
 	case SCENE_ID::TITLE:
-		scene_ = std::make_unique<TitleScene>();
+		scene_ = std::make_unique<SceneTitle>();
 		break;
 
 	case SCENE_ID::SELECT:
-		scene_ = std::make_unique<SelectScene>();
+		scene_ = std::make_unique<SceneTitle>();
 		break;
 
 	case SCENE_ID::GAME:
-		scene_ = std::make_unique<GameScene>();
+		scene_ = std::make_unique<SceneTitle>();
 		break;
 	}
 

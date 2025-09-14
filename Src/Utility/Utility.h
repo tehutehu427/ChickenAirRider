@@ -127,15 +127,6 @@ public:
 	static double Distance(const Vector2& v1, const Vector2& v2);
 	static double Distance(const VECTOR& v1, const VECTOR& v2);
 
-	// 球体同士の衝突判定
-	static bool IsHitSpheres(
-		const VECTOR& pos1, float radius1, const VECTOR& pos2, float radius2);
-
-	// 球体とカプセルの衝突判定
-	static bool IsHitSphereCapsule(
-		const VECTOR& sphPos, float sphRadius, 
-		const VECTOR& capPos1, const VECTOR& capPos2, float capRadius);
-
 	// 比較
 	static bool Equals(const VECTOR& v1, const VECTOR& v2);
 	static bool EqualsVZero(const VECTOR& v1);
@@ -163,7 +154,7 @@ public:
 	/// <param name="_posY">描画するY座標</param>
 	/// <param name="_color">描画する色コード</param>
 	/// <param name="_place">揃える位置</param>
-	static void DrawStringPlace(std::string _str, int _line, int _posY, int _color, STRING_PLACE _place);
+	static void DrawStringPlace(std::wstring _str, int _line, int _posY, int _color, STRING_PLACE _place);
 
 	/// <summary>
 	/// とある点からとある点までの移動ベクトルを返す
@@ -204,9 +195,9 @@ public:
 	/// <summary>
 	/// 特定の円の範囲内に座標が含まれてるか調べる
 	/// </summary>
-	/// <param name="_pos"></param>
-	/// <param name="_circlePos"></param>
-	/// <param name="_radius"></param>
+	/// <param name="_pos">調べる座標</param>
+	/// <param name="_circlePos">円の座標</param>
+	/// <param name="_radius">半径</param>
 	/// <returns></returns>
 	static bool IsPointInRectCircle(const Vector2 _pos, const Vector2 _circlePos, const float _radius);
 
@@ -306,10 +297,11 @@ public:
 	/// <returns>文字列を返す</returns>
 	static std::string ShowSaveJsonDialog();
 
-	/// <summary>
-	/// ワイド文字列をUTF-8に変換する
-	/// </summary>
-	static std::string WideToUtf8(const std::wstring& wstr);
+	//wstring(Unicode文字列)をstring(UTF-8)に変換する
+	static std::string WStrToStr(const std::wstring& wstr);
+	
+	//string(UTF-8)をwstring(Unicode文字列)に変換する
+	static std::wstring StrToWStr(const std::string& str);
 
 	/// <summary>
 	/// 値を上下に動かす処理

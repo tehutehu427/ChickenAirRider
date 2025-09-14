@@ -27,7 +27,7 @@ public:
 	/// </summary>
 	/// <param name="shaderFileName">シェーダーファイル名</param>
 	/// <param name="constBufFloat4Size">定数バッファの確保サイズ(FLOAT4をいくつ作るか)</param>
-	PixelMaterial(std::string shaderFileName, int constBufFloat4Size);
+	PixelMaterial(std::wstring shaderFileName, int constBufFloat4Size);
 
 	// デストラクタ
 	~PixelMaterial(void);

@@ -1,7 +1,7 @@
 #include "../Application.h"
 #include "PixelMaterial.h"
 
-PixelMaterial::PixelMaterial(std::string shaderFileName, int constBufFloat4Size)
+PixelMaterial::PixelMaterial(std::wstring shaderFileName, int constBufFloat4Size)
 {
 
 	// ピクセルシェーダのロード

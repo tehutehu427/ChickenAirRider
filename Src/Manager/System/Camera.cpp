@@ -4,7 +4,6 @@
 #include "../../Utility/Utility.h"
 #include "../../Object/Common/Transform.h"
 #include "../../Manager/Game/GravityManager.h"
-#include "../../Manager/System/DateBank.h"
 #include "../../Application.h"
 #include "Camera.h"
 
@@ -231,8 +230,7 @@ void Camera::ProcessRot(void)
 {
 	auto& ins = KeyConfig::GetInstance();
 	float rotPow = Utility::Deg2RadF(SPEED);
-	auto playerMaxNum = DateBank::GetInstance().GetPlayerNum();
-	auto keyType = playerMaxNum == 1 ? KeyConfig::TYPE::ALL : KeyConfig::TYPE::PAD;
+	auto keyType = KeyConfig::TYPE::ALL;
 	if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_RIGHT, padNo_, keyType)) { angles_.y += rotPow; }
 	if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_LEFT, padNo_, keyType)) { angles_.y -= rotPow; }
 	if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_UP, padNo_, keyType)) { angles_.x += rotPow; }
@@ -265,8 +263,7 @@ void Camera::ProcessRot(void)
 void Camera::ProcessZoom(void)
 {
 	auto& ins = KeyConfig::GetInstance();
-	auto playerMaxNum = DateBank::GetInstance().GetPlayerNum();
-	auto keyType = playerMaxNum == 1 ? KeyConfig::TYPE::ALL : KeyConfig::TYPE::PAD;
+	auto keyType = KeyConfig::TYPE::ALL;
 	auto vec = VNorm(VSub(LOCAL_F2T_POS,LOCAL_F2C_POS));
 	if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_ZOOM_IN, padNo_, keyType))
 	{
@@ -381,8 +378,7 @@ void Camera::SetBeforeDrawFreeControll(void)
 {
 	auto& ins = KeyConfig::GetInstance();
 	float rotPow = Utility::Deg2RadF(SPEED);
-	auto playerMaxNum = DateBank::GetInstance().GetPlayerNum();
-	auto keyType = playerMaxNum == 1 ? KeyConfig::TYPE::ALL : KeyConfig::TYPE::PAD;
+	auto keyType = KeyConfig::TYPE::ALL;
 	if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_ROT_RIGHT, padNo_,keyType)) { angles_.y += rotPow; }
 	if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_ROT_LEFT, padNo_,keyType)) { angles_.y -= rotPow; }
 	if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_ROT_UP, padNo_,keyType)) { angles_.x -= rotPow; }

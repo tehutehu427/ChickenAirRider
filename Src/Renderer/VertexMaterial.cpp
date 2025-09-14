@@ -1,7 +1,7 @@
 #include "VertexMaterial.h"
 #include "../Application.h"
 
-VertexMaterial::VertexMaterial(std::string shaderFileName, int constBufFloat4Size)
+VertexMaterial::VertexMaterial(std::wstring shaderFileName, int constBufFloat4Size)
 {
 	// 頂点シェーダのロード
 	shader_ = LoadVertexShader((Application::PATH_SHADER + shaderFileName).c_str());

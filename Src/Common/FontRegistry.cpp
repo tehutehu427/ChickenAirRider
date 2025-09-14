@@ -21,12 +21,12 @@ void FontRegistry::Init()
 {
 	//フォント登録を行う
 	// フォントパス初期化
-	fontPath_[static_cast<int>(FONT_TYPE::DOT)] = "FontDot.otf";
-	fontPath_[static_cast<int>(FONT_TYPE::BOKUTATI)] = "bokutachi.otf";
-	fontPath_[static_cast<int>(FONT_TYPE::HANAZOME)] = "はなぞめフォント.ttf";
-	fontPath_[static_cast<int>(FONT_TYPE::PENGS)] = "PENGS.ttf";
-	fontPath_[static_cast<int>(FONT_TYPE::LOGO)] = "Corporate-Logo-Bold-ver3.otf";
-	fontPath_[static_cast<int>(FONT_TYPE::BANANA)] = "YDWbananaslipplus.otf";
+	fontPath_[static_cast<int>(FONT_TYPE::DOT)] = L"FontDot.otf";
+	fontPath_[static_cast<int>(FONT_TYPE::BOKUTATI)] = L"bokutachi.otf";
+	fontPath_[static_cast<int>(FONT_TYPE::HANAZOME)] = L"はなぞめフォント.ttf";
+	fontPath_[static_cast<int>(FONT_TYPE::PENGS)] = L"PENGS.ttf";
+	fontPath_[static_cast<int>(FONT_TYPE::LOGO)] = L"Corporate-Logo-Bold-ver3.otf";
+	fontPath_[static_cast<int>(FONT_TYPE::BANANA)] = L"YDWbananaslipplus.otf";
 
 	// フォントをシステムに登録
 	for (int i = 0; i < FONT_TYPES; i++)

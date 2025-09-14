@@ -11,16 +11,16 @@
 
 Application* Application::instance_ = nullptr;
 
-const std::string Application::PATH_IMAGE = "Data/Image/";
-const std::string Application::PATH_MODEL = "Data/Model/";
-const std::string Application::PATH_EFFECT = "Data/Effect/";
-const std::string Application::PATH_SOUND_BGM = "Data/Sound/BGM/";
-const std::string Application::PATH_SOUND_SE = "Data/Sound/SE/";
-const std::string Application::PATH_FONT = "Data/Font/";
-const std::string Application::PATH_TEXT = "Data/Text/";
-const std::string Application::PATH_JSON = "Data/JSON/";
-const std::string Application::PATH_CSV = "Data/CSV/";
-const std::string Application::PATH_SHADER = "Data/Shader/";
+const std::wstring Application::PATH_IMAGE = L"Data/Image/";
+const std::wstring Application::PATH_MODEL = L"Data/Model/";
+const std::wstring Application::PATH_EFFECT = L"Data/Effect/";
+const std::wstring Application::PATH_SOUND_BGM = L"Data/Sound/BGM/";
+const std::wstring Application::PATH_SOUND_SE = L"Data/Sound/SE/";
+const std::wstring Application::PATH_FONT = L"Data/Font/";
+const std::wstring Application::PATH_TEXT = L"Data/Text/";
+const std::wstring Application::PATH_JSON = L"Data/JSON/";
+const std::wstring Application::PATH_CSV = L"Data/CSV/";
+const std::wstring Application::PATH_SHADER = L"Data/Shader/";
 
 void Application::CreateInstance(void)
 {
@@ -40,7 +40,7 @@ void Application::Init(void)
 {
 
 	// アプリケーションの初期設定
-	SetWindowText("CHIKICHKI CREATE RACE");
+	SetWindowText(L"チキンエアライダー");
 
 	// ウィンドウサイズ
 	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);

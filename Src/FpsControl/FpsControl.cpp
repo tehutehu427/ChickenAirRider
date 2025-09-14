@@ -80,6 +80,6 @@ void FpsControl::DrawFrameRate()
 		Application::SCREEN_SIZE_X - 90,
 		0,
 		0xff0000,
-		"FPS[%.2f]",
+		L"FPS[%.2f]",
 		frameRate_);
 }

@@ -29,7 +29,7 @@ void ObjectBase::ChangeModelColor(const COLOR_F _colorScale)
 	{
 #ifdef _DEBUG
 
-		OutputDebugString("ChangeModelColor‚ÌŽ¸”s");
+		OutputDebugString(L"ChangeModelColor‚ÌŽ¸”s");
 
 #endif // _DEBUG
 	}

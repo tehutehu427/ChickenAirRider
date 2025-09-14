@@ -7,7 +7,7 @@
 Resource::Resource(void)
 {
 	type_ = TYPE::NONE;
-	path_ = "";
+	path_ = L"";
 
 	numX_ = -1;
 	numY_ = -1;
@@ -18,7 +18,7 @@ Resource::Resource(void)
 	handleIds_ = nullptr;
 }
 
-Resource::Resource(TYPE type, const std::string& path)
+Resource::Resource(TYPE type, const std::wstring& path)
 {
 	type_ = type;
 	path_ = path;
@@ -32,7 +32,7 @@ Resource::Resource(TYPE type, const std::string& path)
 	handleIds_ = nullptr;
 }
 
-Resource::Resource(TYPE type, const std::string& path, int numX, int numY, int sizeX, int sizeY)
+Resource::Resource(TYPE type, const std::wstring& path, int numX, int numY, int sizeX, int sizeY)
 {
 	type_ = type;
 	path_ = path;
