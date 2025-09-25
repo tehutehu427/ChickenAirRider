@@ -20,5 +20,10 @@ public:
 	void Draw(void)override;
 	//解放
 	void Release(void)override;
+
+private:
+
+	//デバッグ描画
+	void DebugDraw(void)override;
 };
 

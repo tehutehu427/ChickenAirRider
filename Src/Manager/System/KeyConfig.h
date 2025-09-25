@@ -24,7 +24,7 @@ public:
 
 	enum class TYPE
 	{
-		KEYBORD_MOUSE,
+		KEYBOARD_MOUSE,
 		PAD,
 		ALL,
 	};
@@ -81,73 +81,8 @@ public:
 	enum class CONTROL_TYPE //操作の種類	
 	{
 		ENTER,					//決定
-		DECISION_KEY_AND_PAD,	//決定(PAD or KEYBOARDD onry)
-		DECISION_MOUSE,			//決定(MOUSE)
-		CANCEL,					//キャンセル
-
-		PHASE_CHANGE,			//フェーズ変更
-		PHASE_CHANGE_CHECK,		//フェーズ変更
-
-		IMPORT_FILE,			//ファイル入力
-		IMPORT_FILE_CLICK,		//ファイル入力クリック
-		EXPORT_FILE,			//ファイル出力
-		EXPORT_FILE_CLICK,		//ファイル出力クリック
-
-		EDIT_ESCAPE,			//エディットをやめる
-		EDIT_ESCAPE_CLICK,		//エディットをやめる時のクリック用
-
-		SELECT_UP,				//選択　上
-		SELECT_DOWN,			//選択　下
-		SELECT_LEFT,			//選択　左
-		SELECT_RIGHT,			//選択　右
-
-		MANUAL,					//マニュアルを開く
-		MANUAL_ICON_CLICK,		//マニュアルをクリックで開く
-
-		PALETTE_CURSOR_UP,		//パレット時のカーソル上移動
-		PALETTE_CURSOR_DOWN,	//パレット時のカーソル下移動
-		PALETTE_CURSOR_LEFT,	//パレット時のカーソル左移動
-		PALETTE_CURSOR_RIGHT,	//パレット時のカーソル右移動
-		PALETTE_CURSOR_SELECT,	//パレット時のカーソル選択
-
-		EDIT_CAMERA_ROT_UP,		//エディット時のカメラ回転上
-		EDIT_CAMERA_ROT_DOWN,	//エディット時のカメラ回転下
-		EDIT_CAMERA_ROT_RIGHT,	//エディット時のカメラ回転右
-		EDIT_CAMERA_ROT_LEFT,	//エディット時のカメラ回転左
-		EDIT_CAMERA_MOVE_FRONT,	//エディット時のカメラ移動前
-		EDIT_CAMERA_MOVE_BACK,	//エディット時のカメラ移動後ろ
-		EDIT_CAMERA_MOVE_LEFT,	//エディット時のカメラ移動左
-		EDIT_CAMERA_MOVE_RIGHT,	//エディット時のカメラ移動右
-		EDIT_CAMERA_MOVE_UP,	//エディット時のカメラ移動上
-		EDIT_CAMERA_MOVE_DOWN,	//エディット時のカメラ移動下
-		EDIT_CAMERA_CHANGE,		//エディット時のカメラを変更する
-
-		EDIT_ITEM_SELECT,		//エディット時のアイテム選択
-		EDIT_ITEM_ROTATE,		//エディット時のアイテム回転
-		EDIT_ITEM_DELETE,		//エディット時のアイテム削除
-
-		EDIT_GRID_ON_OFF,		//エディット時のグリッドのオンオフ
-
-		CURSOR_SPEED_UP,		//カーソルの移動速度アップ
-
-		PLAYER_JUMP,			//プレイヤーのジャンプ
-		PLAYER_PUNCH,			//プレイヤーのパンチ
-		PLAYER_DASH,
-		PLAYER_MOVE_FRONT,		//プレイヤーの移動前
-		PLAYER_MOVE_BACK,		//プレイヤーの移動後ろ
-		PLAYER_MOVE_RIGHT,		//プレイヤーの移動右
-		PLAYER_MOVE_LEFT,		//プレイヤーの移動左
-
-		PLAY_CAMERA_MOVE_UP,	//プレイのカメラ移動上
-		PLAY_CAMERA_MOVE_DOWN,	//プレイのカメラ移動下
-		PLAY_CAMERA_MOVE_RIGHT,	//プレイのカメラ移動右
-		PLAY_CAMERA_MOVE_LEFT,	//プレイのカメラ移動左
-		PLAY_CAMERA_ZOOM_IN,	//プレイのカメラズームイン
-		PLAY_CAMERA_ZOOM_OUT,	//プレイのカメラズームアウト
-
-		DEMO_TO_TITLE_BACK,		//デモからタイトルに戻る
-
-		INPUT_CHECK,			//マルチ時の入力確認
+		CAMERA_ZOOM_IN,			//カメラのズームイン
+		CAMERA_ZOOM_OUT,		//カメラのズームアウト
 
 		DEBUG_CHANGE_TITLE,		//デバッグ用タイトル画面に戻る
 		DEBUG_CHANGE_CLEAR,		//デバッグ用クリア画面に戻る

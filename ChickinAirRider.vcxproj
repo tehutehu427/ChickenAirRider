@@ -119,6 +119,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>./Src/Lib/DxLib;$(ProjectDir)Src/Lib/</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,6 +138,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>./Src/Lib/DxLib;$(ProjectDir)Src/Lib/</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -147,6 +149,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Player\Action\MachineAction.cpp" />
+    <ClCompile Include="Src\Object\Player\Action\CharacterAction.cpp" />
+    <ClCompile Include="Src\Object\Common\Parameter.cpp" />
+    <ClCompile Include="Src\Object\Player\Action\ActionBase.cpp" />
+    <ClCompile Include="Src\Object\Player\Logic\LogicBase.cpp" />
+    <ClCompile Include="Src\Object\Player\Logic\NpcLogic.cpp" />
+    <ClCompile Include="Src\Object\Player\Logic\PlayerLogic.cpp" />
+    <ClCompile Include="Src\Object\Player\Machine\Machine.cpp" />
+    <ClCompile Include="Src\Object\Player\Character\Character.cpp" />
+    <ClCompile Include="Src\Object\Player\Player.cpp" />
     <ClCompile Include="Src\Scene\SceneSelect.cpp" />
     <ClCompile Include="Src\Scene\SceneGame.cpp" />
     <ClCompile Include="Src\Scene\SceneTitle.cpp" />
@@ -189,6 +201,16 @@
     <ClCompile Include="Src\Utility\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Player\Action\MachineAction.h" />
+    <ClInclude Include="Src\Object\Player\Action\CharacterAction.h" />
+    <ClInclude Include="Src\Object\Common\Parameter.h" />
+    <ClInclude Include="Src\Object\Player\Action\ActionBase.h" />
+    <ClInclude Include="Src\Object\Player\Logic\LogicBase.h" />
+    <ClInclude Include="Src\Object\Player\Logic\NpcLogic.h" />
+    <ClInclude Include="Src\Object\Player\Logic\PlayerLogic.h" />
+    <ClInclude Include="Src\Object\Player\Machine\Machine.h" />
+    <ClInclude Include="Src\Object\Player\Character\Character.h" />
+    <ClInclude Include="Src\Object\Player\Player.h" />
     <ClInclude Include="Src\Scene\SceneSelect.h" />
     <ClInclude Include="Src\Scene\SceneGame.h" />
     <ClInclude Include="Src\Scene\SceneTitle.h" />

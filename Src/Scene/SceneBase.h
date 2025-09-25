@@ -22,6 +22,7 @@ public:
 
 protected:
 
-
+	//デバッグ描画
+	virtual void DebugDraw(void);
 };
 

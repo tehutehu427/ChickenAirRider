@@ -80,7 +80,8 @@ const bool Sphere::IsHit(Cube& _cube)
 	// 球と最近接点の距離²を計算
 	float distSq = Utility::SqrMagnitudeF(VSub(closest, pos_));
 
-	return distSq <= Utility::MagnitudeF(VScale(pos_, radius_));
+	//半径と比較
+	return distSq <= (radius_ * radius_);
 }
 
 const bool Sphere::IsHit(Sphere& _sphere)

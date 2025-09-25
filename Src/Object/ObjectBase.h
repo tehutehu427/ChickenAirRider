@@ -1,5 +1,6 @@
 #pragma once
 #include<memory>
+#include<set>
 #include<vector>
 #include "Common/Transform.h"
 #include "../Common/IntVector3.h"
@@ -69,7 +70,7 @@ protected:
 	/// <param name="_tag">自身の当たり判定タグ</param>
 	/// <param name="_Geometry">自身の形状情報</param>
 	/// <param name="_notHitTags">衝突させないタグ</param>
-	void MakeCollider(const std::vector<Collider::TAG> _tag, std::unique_ptr<Geometry> _geometry, const std::vector<Collider::TAG> _notHitTags = {});
+	void MakeCollider(const std::set<Collider::TAG> _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags = {});
 
 	//特定の配列番号の当たり判定削除
 	void DeleteCollider(const int _arrayNum);

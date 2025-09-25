@@ -231,10 +231,10 @@ void Camera::ProcessRot(void)
 	auto& ins = KeyConfig::GetInstance();
 	float rotPow = Utility::Deg2RadF(SPEED);
 	auto keyType = KeyConfig::TYPE::ALL;
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_RIGHT, padNo_, keyType)) { angles_.y += rotPow; }
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_LEFT, padNo_, keyType)) { angles_.y -= rotPow; }
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_UP, padNo_, keyType)) { angles_.x += rotPow; }
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_DOWN, padNo_, keyType)) { angles_.x -= rotPow; }
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_RIGHT, padNo_, keyType)) { angles_.y += rotPow; }
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_LEFT, padNo_, keyType)) { angles_.y -= rotPow; }
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_UP, padNo_, keyType)) { angles_.x += rotPow; }
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_DOWN, padNo_, keyType)) { angles_.x -= rotPow; }
 
 
 	auto rStick = ins.GetKnockRStickSize(padNo_);
@@ -265,11 +265,11 @@ void Camera::ProcessZoom(void)
 	auto& ins = KeyConfig::GetInstance();
 	auto keyType = KeyConfig::TYPE::ALL;
 	auto vec = VNorm(VSub(LOCAL_F2T_POS,LOCAL_F2C_POS));
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_ZOOM_IN, padNo_, keyType))
+	if (ins.IsNew(KeyConfig::CONTROL_TYPE::CAMERA_ZOOM_IN, padNo_, keyType))
 	{
 		localPos_ = VAdd(localPos_, VScale(vec, ZOOM_SPEED));
 	}
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_ZOOM_OUT, padNo_, keyType))
+	if (ins.IsNew(KeyConfig::CONTROL_TYPE::CAMERA_ZOOM_IN, padNo_, keyType))
 	{
 		localPos_ = VAdd(localPos_, VScale(VScale(vec,-1), ZOOM_SPEED));
 	}
@@ -379,10 +379,10 @@ void Camera::SetBeforeDrawFreeControll(void)
 	auto& ins = KeyConfig::GetInstance();
 	float rotPow = Utility::Deg2RadF(SPEED);
 	auto keyType = KeyConfig::TYPE::ALL;
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_ROT_RIGHT, padNo_,keyType)) { angles_.y += rotPow; }
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_ROT_LEFT, padNo_,keyType)) { angles_.y -= rotPow; }
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_ROT_UP, padNo_,keyType)) { angles_.x -= rotPow; }
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_ROT_DOWN, padNo_,keyType)) { angles_.x += rotPow; }
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_ROT_RIGHT, padNo_,keyType)) { angles_.y += rotPow; }
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_ROT_LEFT, padNo_,keyType)) { angles_.y -= rotPow; }
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_ROT_UP, padNo_,keyType)) { angles_.x -= rotPow; }
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_ROT_DOWN, padNo_,keyType)) { angles_.x += rotPow; }
 
 	if (angles_.x <= FPS_LIMIT_X_UP_RAD)
 	{
@@ -408,24 +408,24 @@ void Camera::SetBeforeDrawFreeControll(void)
 	//}
 	static float moveSpeed = 10.0f;
 	static float moveSpeedFB = 30.0f;
-	pos_ = VAdd(pos_, VScale(Quaternion::Quaternion(angles_).GetForward(), ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_MOVE_FRONT, padNo_,keyType) * moveSpeedFB));
-	pos_ = VAdd(pos_, VScale(Quaternion::Quaternion(angles_).GetBack(), ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_MOVE_BACK, padNo_,keyType) * moveSpeedFB));
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_MOVE_LEFT, padNo_,keyType))
-	{
-		pos_ = VAdd(pos_, VScale(Quaternion::Quaternion(angles_).GetLeft(), moveSpeed));
-	}
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_MOVE_RIGHT, padNo_,keyType))
-	{
-		pos_ =VAdd(pos_, VScale(Quaternion::Quaternion(angles_).GetRight(), moveSpeed));
-	}
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_MOVE_UP, padNo_,keyType))
-	{
-		pos_ =VAdd(pos_, VScale(Quaternion::Quaternion(angles_).GetUp(), moveSpeed));
-	}
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_MOVE_DOWN, padNo_,keyType))
-	{
-		pos_ =VAdd(pos_, VScale(Quaternion::Quaternion(angles_).GetDown(), moveSpeed));
-	}
+	//pos_ = VAdd(pos_, VScale(Quaternion::Quaternion(angles_).GetForward(), ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_MOVE_FRONT, padNo_,keyType) * moveSpeedFB));
+	//pos_ = VAdd(pos_, VScale(Quaternion::Quaternion(angles_).GetBack(), ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_MOVE_BACK, padNo_,keyType) * moveSpeedFB));
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_MOVE_LEFT, padNo_,keyType))
+	//{
+	//	pos_ = VAdd(pos_, VScale(Quaternion::Quaternion(angles_).GetLeft(), moveSpeed));
+	//}
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_MOVE_RIGHT, padNo_,keyType))
+	//{
+	//	pos_ =VAdd(pos_, VScale(Quaternion::Quaternion(angles_).GetRight(), moveSpeed));
+	//}
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_MOVE_UP, padNo_,keyType))
+	//{
+	//	pos_ =VAdd(pos_, VScale(Quaternion::Quaternion(angles_).GetUp(), moveSpeed));
+	//}
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::EDIT_CAMERA_MOVE_DOWN, padNo_,keyType))
+	//{
+	//	pos_ =VAdd(pos_, VScale(Quaternion::Quaternion(angles_).GetDown(), moveSpeed));
+	//}
 
 	VECTOR localPos;
 	rot_ =(Quaternion::Quaternion(angles_));

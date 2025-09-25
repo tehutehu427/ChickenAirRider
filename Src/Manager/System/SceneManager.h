@@ -2,8 +2,12 @@
 #include <memory>
 #include <chrono>
 #include <vector>
+#include <list>
+#include <map>
+#include <functional>
 #include "../../Common/Fader.h"
 
+class Grid;
 class SceneBase;
 class Fader;
 class Camera;
@@ -23,73 +27,60 @@ public:
 		RESULT,		//リザルト
 		MAX
 	};
+
+	//シーン変更管理用
+	enum class CHANGE_SCENE_STATE
+	{
+		NONE = -1,
+		PUSH_BACK,		//末尾追加
+		POP_BACK,		//末尾削除
+		CHANGE_BACK,	//末尾変更
+	};
 	
-	/// <summary>
-	/// インスタンスを生成
-	/// </summary>
-	/// <param name=""></param>
+	//インスタンスを生成
 	static void CreateInstance(void);
 
-	/// <summary>
-	/// インスタンスを取得
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>インスタンスを返す</returns>
+	//インスタンスを取得
 	static SceneManager& GetInstance(void);
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name=""></param>
+	//初期化
 	void Init(void);
 
-	/// <summary>
-	/// 3D関連の初期化
-	/// </summary>
-	/// <param name=""></param>
+	//3D関連の初期化
 	void Init3D(void);
 
-	/// <summary>
-	/// 更新処理
-	/// </summary>
-	/// <param name=""></param>
+	//更新処理
 	void Update(void);
 
-	/// <summary>
-	/// 描画処理
-	/// </summary>
-	/// <param name=""></param>
+	//描画処理
 	void Draw(void);
 
 	/// <summary>
-	/// 先頭の（Updataが呼ばれる）シーンを切り替える
+	/// 先頭の（Updateが呼ばれる）シーンを切り替える
 	/// </summary>
-	/// <param name="scene">切り替え先のシーン</param>
-	void CreateScene(std::shared_ptr<SceneBase> scene);
+	/// <param name="_sceneId">切り替え先のシーンID</param>
+	/// <param name="_isFade">フェードの有無(true:フェードあり)</param>
+	void ChangeScene(const SCENE_ID _sceneId, const bool _isFade = false);
 
 	/// <summary>
 	/// すべてのシーンを切り替える
 	/// </summary>
-	/// <param name="scene">切り替え先のシーン</param>
-	void ChangeAllScene(std::shared_ptr<SceneBase> scene);
+	/// <param name="_sceneId">切り替え先のシーンID</param>
+	void ChangeAllScene(const SCENE_ID _sceneId);
 
 	/// <summary>
 	/// シーンをプッシュする。スタックの数が増える
-	/// 一番上のシーンのUpdataしか呼ばれません。
+	/// 一番上のシーンのUpdateしか呼ばれません。
 	/// </summary>
-	/// <param name="scene">積むシーン</param>
-	void PushScene(std::shared_ptr<SceneBase> scene);
+	/// <param name="_sceneId">積むシーンID</param>
+	/// <param name="_isFade">フェードの有無(true:フェードあり)</param>
+	void PushScene(const SCENE_ID _sceneId, const bool _isFade = false);
 
-	/// <summary>
-	/// スタックの頭のシーンを削除する。
-	/// ただし、スタック上にシーンが一つしかない場合は、削除しない。
-	/// </summary>
-	void PopScene();
+	//スタックの頭のシーンを削除する。
+	//ただし、スタック上にシーンが一つしかない場合は、削除しない。
+	void PopScene(void);
 
-	/// <summary>
-	/// リソースの破棄
-	/// </summary>
-	/// <param name=""></param>
+	//リソースの破棄
 	void Destroy(void);
 
 	/// <summary>
@@ -117,38 +108,26 @@ public:
 	/// <returns>シーンID</returns>
 	SCENE_ID GetSceneID(void) const { return sceneId_; }
 
-	/// <summary>
-	/// メインスクリーンを返す
-	/// </summary>
-	/// <returns>メインスクリーン</returns>
+	//メインスクリーンの取得
 	int GetMainScreen() const { return mainScreen_; }
-	/// <summary>
-	/// スクリーンを返す
-	/// </summary>
-	/// <returns>メインスクリーン</returns>
+	
+	//スクリーンの取得
 	int GetScreen(int _screenNum) const { return splitScreens_[_screenNum]; }
 
-	/// <summary>
-	/// デルタタイムの取得
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>デルタタイム</returns>
+	//デルタタイムの取得
 	float GetDeltaTime(void) const { return deltaTime_; }
 
-	/// <summary>
-	/// 経過時間を返す
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>経過時間</returns>
+	//経過時間の所得
 	float GetTotalTime(void) const { return totalTime_; }
 
 	/// <summary>
-	/// カメラを取得
+	/// カメラの取得
 	/// </summary>
 	/// <param name="_playerIndex">プレイヤー番号</param>
 	/// <returns>指定したプレイヤー番号のカメラ</returns>
 	std::weak_ptr<Camera> GetCamera(const int _playerIndex) const;
 
+	//スクリーンの番号の取得
 	int GetScreenIndex(void)const { return screenIndex_; }
 
 private:
@@ -160,39 +139,36 @@ private:
 	static SceneManager* instance_;
 
 	//シーンID
-	SCENE_ID sceneId_;
-	SCENE_ID waitSceneId_;
+	SCENE_ID sceneId_;		//現在シーンID
+	SCENE_ID waitSceneId_;	//待機シーンID
 
-	// 各種シーン	
-	std::unique_ptr<SceneBase> scene_;
+	//シーン変更管理
+	CHANGE_SCENE_STATE changeSceneState_;
 
-	// フェード
-	std::unique_ptr<Fader> fader_;
-
-	// カメラ
-	std::vector<std::shared_ptr<Camera>> cameras_;
+	//ポインタ
+	std::unique_ptr<Grid> grid_;					//デバッググリッド
+	std::list<std::unique_ptr<SceneBase>> scene_;	//各種シーン	
+	std::unique_ptr<Fader> fader_;					//フェード
+	std::vector<std::shared_ptr<Camera>> cameras_;	//カメラ
 
 	// シーン遷移中判定
 	bool isSceneChanging_;
 
-	// デルタタイム
-	std::chrono::system_clock::time_point preTime_;
-	float deltaTime_;
+	//時間
+	std::chrono::system_clock::time_point preTime_;		//前の時間
+	float deltaTime_;									//デルタタイム
+	float totalTime_;									//経過時間
 
-	//経過時間
-	float totalTime_;
+	//スクリーン
+	int mainScreen_;					//メインスクリーン
+	bool isSplitMode_;					//画面分割を行うか
+	int screenIndex_ ;					//分割スクリーンのインデックス
+	std::vector<int> splitScreens_;		//分割用スクリーン
 
-	//メインスクリーン
-	int mainScreen_;	
-	
-	//画面分割を行うか
-	bool isSplitMode_;
-
-	//分割スクリーンのインデックス
-	int screenIndex_ ;
-
-	//分割用スクリーン
-	std::vector<int> splitScreens_;
+	//関数ポインタ
+	std::map<SCENE_ID, std::function<std::unique_ptr<SceneBase>(void)>> createScene_;	//シーン作成用
+	std::map<CHANGE_SCENE_STATE, std::function<void(void)>> changeScene_;				//シーン変更用
+	std::map<Fader::STATE, std::function<void(void)>> fadeState_;						//フェード用
 
 	//カメラ生成
 	void CreateCameras(const int _playerNum);
@@ -214,10 +190,15 @@ private:
 	// シーン遷移
 	void DoChangeScene(SCENE_ID sceneId);
 
+	/// <summary>
+	/// シーン変更時のリセット等
+	/// </summary>
+	/// <param name="_isFade">フェードの有無(true:フェードあり)</param>
+	void ResetChangeScene(const bool _isFade);
+
 	// フェード
 	void Fade(void);
 
 	//マルチ画面の描画
 	void DrawMultiScreen();
-
 };

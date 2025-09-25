@@ -1,6 +1,7 @@
 ﻿#include<algorithm>
 #include<cassert>
-#include "../../../Common/Quaternion.h"
+#include"../../../Common/Quaternion.h"
+#include"../../../Utility/Utility.h"
 #include"Model.h"
 #include"Sphere.h"
 #include"Capsule.h"
@@ -89,8 +90,8 @@ const bool Cube::IsHit(Cube& _cube)
 
 		// 軸Aの投影量
 		float ra = halfA.x * fabs(VDot(axisA, obb_.axis[0])) +
-			halfA.y * fabs(VDot(axisA, _cube.GetObb().axis[1])) +
-			halfA.z * fabs(VDot(axisA, _cube.GetObb().axis[2]));
+			halfA.y * fabs(VDot(axisA, obb_.axis[1])) +
+			halfA.z * fabs(VDot(axisA, obb_.axis[2]));
 
 		float rb = halfB.x * fabs(VDot(axisA, _cube.GetObb().axis[0])) +
 			halfB.y * fabs(VDot(axisA, _cube.GetObb().axis[1])) +
@@ -120,6 +121,7 @@ const bool Cube::IsHit(Cube& _cube)
 
 			// 軸が0に近い（平行またはゼロベクトル） → 無視
 			if (VSize(axis) < 0.0001f) continue;
+			axis = VNorm(axis);
 
 			float ra = halfA.x * fabs(VDot(axis, obb_.axis[0])) +
 				halfA.y * fabs(VDot(axis, obb_.axis[1])) +
@@ -144,91 +146,125 @@ const bool Cube::IsHit(Sphere& _sphere)
 
 const bool Cube::IsHit(Capsule& _capsule)
 {
-	return false;
+	// OBB のローカル中心
+	VECTOR localCenter = VScale(VAdd(obb_.vMin, obb_.vMax), 0.5f);
+
+	// OBB のワールド中心
+	VECTOR worldCenter = VAdd(
+		VAdd(
+			VAdd(
+				VScale(obb_.axis[0], localCenter.x),
+				VScale(obb_.axis[1], localCenter.y)
+			),
+			VScale(obb_.axis[2], localCenter.z)
+		),
+		pos_
+	);
+
+	// カプセル線分をOBBのローカル空間に変換
+	VECTOR rel1 = VSub(_capsule.GetPosTop(), worldCenter);
+	VECTOR rel2 = VSub(_capsule.GetPosDown(), worldCenter);
+
+	VECTOR local1 = {
+		VDot(rel1, obb_.axis[0]),
+		VDot(rel1, obb_.axis[1]),
+		VDot(rel1, obb_.axis[2])
+	};
+
+	VECTOR local2 = {
+		VDot(rel2, obb_.axis[0]),
+		VDot(rel2, obb_.axis[1]),
+		VDot(rel2, obb_.axis[2])
+	};
+
+	// スラブ法で最近接点を見つける
+	// AABBとして処理する（OBBローカル空間内で）
+
+	float distSq = ClosestSegmentAABB(local1, local2, obb_.vMin, obb_.vMax);
+
+	return distSq <= (_capsule.GetRadius() * _capsule.GetRadius());
 }
 
 const bool Cube::IsHit(Line& _line)
 {
-	//// ワールド空間の線分座標
-	//VECTOR p1 = _line.GetPosPoint1();
-	//VECTOR p2 = _line.GetPosPoint2();
+	// ワールド空間の線分座標
+	VECTOR p1 = _line.GetPosPoint1();
+	VECTOR p2 = _line.GetPosPoint2();
 
-	//// OBB のローカル中心（Min/Maxの中点）
-	//VECTOR localCenter = VScale(VAdd(obb_.vMin, obb_.vMax), 0.5f);
+	// OBB のローカル中心（Min/Maxの中点）
+	VECTOR localCenter = VScale(VAdd(obb_.vMin, obb_.vMax), 0.5f);
 
-	//// OBB のワールド中心を計算：axisで回転して pos_ を加算
-	//VECTOR worldCenter = VAdd(
-	//	VAdd(
-	//		VAdd(
-	//			VScale(obb_.axis[0], localCenter.x),
-	//			VScale(obb_.axis[1], localCenter.y)
-	//		),
-	//		VScale(obb_.axis[2], localCenter.z)
-	//	),
-	//	pos_
-	//);
+	// OBB のワールド中心を計算：axisで回転して pos_ を加算
+	VECTOR worldCenter = VAdd(
+		VAdd(
+			VAdd(
+				VScale(obb_.axis[0], localCenter.x),
+				VScale(obb_.axis[1], localCenter.y)
+			),
+			VScale(obb_.axis[2], localCenter.z)
+		),
+		pos_
+	);
 
-	//// 線分をOBB空間に変換（ワールド中心 → ローカル）
-	//VECTOR rel1 = VSub(p1, worldCenter);
-	//VECTOR rel2 = VSub(p2, worldCenter);
+	// 線分をOBB空間に変換（ワールド中心 → ローカル）
+	VECTOR rel1 = VSub(p1, worldCenter);
+	VECTOR rel2 = VSub(p2, worldCenter);
 
-	//VECTOR local1 = {
-	//	VDot(rel1, obb_.axis[0]),
-	//	VDot(rel1, obb_.axis[1]),
-	//	VDot(rel1, obb_.axis[2])
-	//};
+	VECTOR local1 = {
+		VDot(rel1, obb_.axis[0]),
+		VDot(rel1, obb_.axis[1]),
+		VDot(rel1, obb_.axis[2])
+	};
 
-	//VECTOR local2 = {
-	//	VDot(rel2, obb_.axis[0]),
-	//	VDot(rel2, obb_.axis[1]),
-	//	VDot(rel2, obb_.axis[2])
-	//};
+	VECTOR local2 = {
+		VDot(rel2, obb_.axis[0]),
+		VDot(rel2, obb_.axis[1]),
+		VDot(rel2, obb_.axis[2])
+	};
 
-	//// スラブ法：線分が AABB（Min/Max）と交差するか
-	//VECTOR dir = VSub(local2, local1);
-	//float tmin = 0.0f, tmax = 1.0f;
+	// スラブ法：線分が AABB（Min/Max）と交差するか
+	VECTOR dir = VSub(local2, local1);
+	float tmin = 0.0f, tmax = 1.0f;
 
-	//// 各軸 (x, y, z)
-	//for (int axis = 0; axis < 3; ++axis)
-	//{
-	//	float start, delta, minB, maxB;
+	// 各軸 (x, y, z)
+	for (int axis = 0; axis < 3; ++axis)
+	{
+		float start, delta, minB, maxB;
 
-	//	if (axis == 0) {
-	//		start = local1.x; delta = dir.x;
-	//		minB = obb_.vMin.x; maxB = obb_.vMax.x;
-	//	}
-	//	else if (axis == 1) {
-	//		start = local1.y; delta = dir.y;
-	//		minB = obb_.vMin.y; maxB = obb_.vMax.y;
-	//	}
-	//	else {
-	//		start = local1.z; delta = dir.z;
-	//		minB = obb_.vMin.z; maxB = obb_.vMax.z;
-	//	}
+		if (axis == 0) {
+			start = local1.x; delta = dir.x;
+			minB = obb_.vMin.x; maxB = obb_.vMax.x;
+		}
+		else if (axis == 1) {
+			start = local1.y; delta = dir.y;
+			minB = obb_.vMin.y; maxB = obb_.vMax.y;
+		}
+		else {
+			start = local1.z; delta = dir.z;
+			minB = obb_.vMin.z; maxB = obb_.vMax.z;
+		}
 
-	//	if (fabs(delta) < 1e-6)
-	//	{
-	//		// 線が平行で AABB のこの面を貫通しない
-	//		if (start < minB || start > maxB) return false;
-	//	}
-	//	else
-	//	{
-	//		float ood = 1.0f / delta;
-	//		float t1 = (minB - start) * ood;
-	//		float t2 = (maxB - start) * ood;
+		if (fabs(delta) < 1e-6)
+		{
+			// 線が平行で AABB のこの面を貫通しない
+			if (start < minB || start > maxB) return false;
+		}
+		else
+		{
+			float ood = 1.0f / delta;
+			float t1 = (minB - start) * ood;
+			float t2 = (maxB - start) * ood;
 
-	//		if (t1 > t2) std::swap(t1, t2);
+			if (t1 > t2) std::swap(t1, t2);
 
-	//		if (t1 > tmin) tmin = t1;
-	//		if (t2 < tmax) tmax = t2;
+			if (t1 > tmin) tmin = t1;
+			if (t2 < tmax) tmax = t2;
 
-	//		if (tmin > tmax) return false;
-	//	}
-	//}
+			if (tmin > tmax) return false;
+		}
+	}
 
-	//return true;
-
-	return false;
+	return true;
 }
 
 void Cube::SetHalfSize(const VECTOR& _halfSize)
@@ -271,4 +307,37 @@ void Cube::CalculateVertices(VECTOR outVertices[8]) const
 			}
 		}
 	}
+}
+
+float Cube::ClosestSegmentAABB(const VECTOR& segA, const VECTOR& segB, const VECTOR& aabbMin, const VECTOR& aabbMax)
+{
+	// 線分とAABBの最短距離²を求める
+	// → 各軸でクランプを行う
+
+	float t = 0.0f;
+	float minDistSq = FLT_MAX;
+
+	// 線分上の点 P(t) = A + t*(B - A), 0 <= t <= 1
+	const int steps = 10;
+	for (int i = 0; i <= steps; ++i)
+	{
+		float ft = static_cast<float>(i) / steps;
+		VECTOR point = VAdd(segA, VScale(VSub(segB, segA), ft));
+
+		// AABB内の最近接点
+		VECTOR clamped = {
+			std::max(aabbMin.x, std::min(point.x, aabbMax.x)),
+			std::max(aabbMin.y, std::min(point.y, aabbMax.y)),
+			std::max(aabbMin.z, std::min(point.z, aabbMax.z))
+		};
+
+		float distSq = Utility::SqrMagnitudeF(VSub(point, clamped));
+		if (distSq < minDistSq)
+		{
+			minDistSq = distSq;
+			t = ft;
+		}
+	}
+
+	return minDistSq;
 }

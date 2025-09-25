@@ -1,6 +1,6 @@
 #pragma once
 
-#include<vector>
+#include<set>
 #include"Geometry/Geometry.h"
 
 class ObjectBase;
@@ -48,19 +48,19 @@ public :
 	/// <param name="_tags">自身の衝突用タグ</param>
 	/// <param name="_geometry">当たり判定の形状</param>
 	/// <param name="_notHitTags">衝突させないタグ</param>
-	Collider(ObjectBase& _parent, const std::vector<TAG> _tags, Geometry& _geometry, const std::vector<TAG> _notHitTags);
+	Collider(ObjectBase& _parent, const std::set<TAG> _tags, Geometry& _geometry, const std::set<TAG> _notHitTags);
 
 	// デストラクタ
 	~Collider(void);
 
 	//衝突用タグの取得
-	inline const std::vector<TAG> GetTags(void)const { return tags_; }
+	inline const std::set<TAG> GetTags(void)const { return tags_; }
 
 	//当たり判定の形状を取得
 	inline Geometry& GetGeometry(void)const { return geometry_; }
 
 	//衝突させないタグの取得
-	inline const std::vector<TAG> GetNotHitTags(void)const { return notHitTags_; }
+	inline const std::set<TAG> GetNotHitTags(void)const { return notHitTags_; }
 
 	//親を取得
 	inline const ObjectBase& GetParent(void)const { return parent_; }
@@ -86,10 +86,10 @@ private:
 	ObjectBase& parent_;
 
 	// 衝突用タグ
-	std::vector<TAG> tags_;
+	std::set<TAG> tags_;
 
 	// 衝突しないタグ
-	std::vector<TAG> notHitTags_;
+	std::set<TAG> notHitTags_;
 
 	//当たり判定の形状
 	Geometry& geometry_;

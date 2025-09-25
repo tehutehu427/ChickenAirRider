@@ -86,4 +86,7 @@ private:
 
 	// 各頂点の計算（ワールド座標）
 	void CalculateVertices(VECTOR outVertices[8]) const;
+
+	//線分とAABBの最短距離の二乗計算
+	float ClosestSegmentAABB(const VECTOR& segA, const VECTOR& segB, const VECTOR& aabbMin, const VECTOR& aabbMax);
 };
