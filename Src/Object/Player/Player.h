@@ -38,6 +38,12 @@ public:
 	//当たり判定処理
 	void OnHit(const std::weak_ptr<Collider> _hitCol)override;
 
+	//総合パラメーター
+	const Parameter& GetAllParam(void)const;
+
+	//移動力変更
+	void SetMovePow(const VECTOR _movePow) { movePow_ = _movePow; }
+
 private:
 
 	//基本機能
@@ -48,5 +54,8 @@ private:
 
 	//パラメーター
 	Parameter param_;
+
+	//移動力
+	VECTOR movePow_;
 };
 

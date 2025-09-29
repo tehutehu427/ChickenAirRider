@@ -10,7 +10,7 @@ public:
 	//デストラクタ
 	~Parameter(void);
 
-	//パラメーター関係
+	//上昇するパラメーター関係
 	int maxHealth_;		//最大体力
 	int maxSpeed_;		//最高速度
 	int acceleration_;	//加速度
@@ -19,7 +19,7 @@ public:
 	int charge_;		//チャージ速度
 
 	//演算
-	Parameter operator+(const Parameter _param);
+	Parameter operator+(const Parameter _param)const;
 	void operator+=(const Parameter _param);
 };
 

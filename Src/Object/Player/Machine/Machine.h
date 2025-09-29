@@ -9,7 +9,7 @@ public:
 	{
 		NONE = -1,
 
-		WAKABA,
+		WAKABA,		//‰Šú‹@‘Ì
 		
 		MAX
 	};

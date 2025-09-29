@@ -1,3 +1,4 @@
+#include "../Utility/Utility.h"
 #include "Character/Character.h"
 #include "Machine/Machine.h"
 #include "Logic/LogicBase.h"
@@ -10,6 +11,7 @@
 
 Player::Player(void)
 {
+	movePow_ = Utility::VECTOR_ZERO;
 }
 
 Player::~Player(void)
@@ -36,6 +38,8 @@ void Player::Init(void)
 
 void Player::Update(void)
 {
+	//移動
+	trans_.pos = VAdd(trans_.pos, movePow_);
 }
 
 void Player::Draw(void)
@@ -44,4 +48,15 @@ void Player::Draw(void)
 
 void Player::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
+}
+
+const Parameter& Player::GetAllParam(void)const
+{
+	//総合パラメーター
+	Parameter ret;
+
+	//取得した強化アイテム + キャラの基本性能 + 機体の基本性能
+	ret = param_ + chara_->GetParam() + machine_->GetParam();
+
+	return ret;
 }

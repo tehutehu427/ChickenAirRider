@@ -87,7 +87,7 @@ public:
 	/// シーンの状態遷移
 	/// </summary>
 	/// <param name="nextId">遷移先のシーン</param>
-	void ChangeScene(SCENE_ID nextId);
+	//void ChangeScene(SCENE_ID nextId);
 	
 	/// <summary>
 	/// フェード開始

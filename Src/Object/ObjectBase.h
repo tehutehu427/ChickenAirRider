@@ -44,7 +44,7 @@ public:
 	virtual void OnHit(const std::weak_ptr<Collider> _hitCol) = 0;
 
 	//ƒ‚ƒfƒ‹î•ñ‚Ìæ“¾
-	inline const Transform& GetTransform(void) const { return trans_; }
+	inline const Transform& GetTrans(void) const { return trans_; }
 
 	//ƒ‚ƒfƒ‹‚ÌF‚ğ•Ï‚¦‚é
 	virtual void ChangeModelColor(const COLOR_F _colorScale);

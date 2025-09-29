@@ -14,7 +14,7 @@ Parameter::~Parameter(void)
 {
 }
 
-Parameter Parameter::operator+(const Parameter _param)
+Parameter Parameter::operator+(const Parameter _param)const
 {
     //‰ÁŽZ
     Parameter ret;
