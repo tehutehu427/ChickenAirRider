@@ -32,7 +32,7 @@ void Grid::Draw(void)
 	// XZ基本軸(グリッド)
 	VECTOR sPos;
 	VECTOR ePos;
-	IntVector3 lineNum = { 10 ,10 ,10 };
+	IntVector3 lineNum = { 10 ,3 ,100 };
 	int size = 50;
 	for (int i = 0; i <= lineNum.x; i++)
 	{

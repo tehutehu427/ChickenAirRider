@@ -12,6 +12,17 @@ PlayerLogic::~PlayerLogic(void)
 
 const bool PlayerLogic::StartCharge(void)const
 {
+    //インスタンス
+    auto& key = KeyConfig::GetInstance();
+
+    //チャージ開始ボタンを押しているか
+    if (key.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_CHARGE, KeyConfig::JOYPAD_NO::PAD1))
+    {
+        //押している
+        return true;
+    }
+
+    //押していない
     return false;
 }
 
@@ -23,7 +34,7 @@ const float PlayerLogic::TurnValue(void)const
     //返す値
     float ret = 0.0f;
 
-    //回転量
+    //マウスカーソル又はスティックの移動量
     ret = GetJoypadNum() <= 0 ? key.GetMouseMove().x : key.GetKnockLStickSize(KeyConfig::JOYPAD_NO::PAD1).x;
 
     return ret;

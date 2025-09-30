@@ -87,6 +87,8 @@ public:
 		MACHINE_TURN_RIGHT,		//機体の右回転
 		MACHINE_TURN_LEFT,		//機体の左回転
 
+		MACHINE_CHARGE,					//機体のチャージ
+
 		DEBUG_CHANGE_TITLE,		//デバッグ用タイトル画面に戻る
 		DEBUG_CHANGE_CLEAR,		//デバッグ用クリア画面に戻る
 		DEBUG_CHANGE_INPUT,			//デバッグ用入力デバイス切り替え

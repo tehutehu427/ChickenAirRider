@@ -9,6 +9,7 @@ MachineAction::MachineAction(Player& _player, const Machine _machine, const Logi
 	machine_(_machine)
 {
 	driveCnt_ = 0.0f;
+	chargeCnt_ = 0.0f;
 	velocity_ = 0.0f;
 	speed_ = 0.0f;
 }
@@ -24,8 +25,17 @@ void MachineAction::Init(void)
 
 void MachineAction::Update(void)
 {
-	//移動
-	Move();
+	//チャージをするか
+	if (logic_.StartCharge())
+	{
+		//チャージ
+		Charge();
+	}
+	else
+	{
+		//移動
+		Move();
+	}
 
 	//回転
 	Turn();
@@ -39,16 +49,16 @@ void MachineAction::Draw(void)
 
 void MachineAction::Move(void)
 {
+	//チャージ力の初期化
+	chargeCnt_ = 0.0f;
+
 	//加速力を元にだんだん最高速まで速度を増やす
 
 	//カウンタ
 	driveCnt_ += SceneManager::GetInstance().GetDeltaTime();
 
-	//初速度
-	const float VELOCITY = 3.0f;
-
 	//速度の方程式に当てはめる
-	speed_ = VELOCITY + (player_.GetAllParam().acceleration_ * driveCnt_);
+	speed_ = velocity_ + (player_.GetAllParam().acceleration_ * driveCnt_);
 
 	//最高速の制限
 	if (speed_ > player_.GetAllParam().maxSpeed_ * 10)
@@ -67,16 +77,39 @@ void MachineAction::Move(void)
 
 void MachineAction::Charge(void)
 {
+	//走行時間と速度、移動量の初期化
+	driveCnt_ = 0.0f;
+	speed_ = 0.0f;
+	player_.SetMovePow(Utility::VECTOR_ZERO);
+
+	//チャージカウンタ
+	chargeCnt_ += SceneManager::GetInstance().GetDeltaTime() * player_.GetAllParam().charge_;
+
+	//チャージの制限
+	if (chargeCnt_ > player_.GetAllParam().maxSpeed_ * 10)
+	{
+		chargeCnt_ = player_.GetAllParam().maxSpeed_ * 10;
+	}
+
+	//チャージ分を初速度に変換
+	velocity_ = chargeCnt_;
 }
 
 void MachineAction::Turn(void)
 {
 	//回転量
-	float rotatePow = logic_.TurnValue() / COMP_ROTATE;
+	float turnPow = logic_.TurnValue() / COMP_TURN;
+
+	//回転量がないならスキップ
+	if (turnPow == 0.0f)return;
+
+	//チャージ中なら回転しやすく
+	float chargeTurn = logic_.StartCharge() ? COMP_CHARGE_TURN : 1.0f;
 
 	//パラメーターで回転しやすくする
-	rotatePow += rotatePow >= 0.0f ? player_.GetAllParam().turning_ / COMP_ROTATE : -player_.GetAllParam().turning_ / COMP_ROTATE;
+	turnPow += turnPow > 0.0f ? player_.GetAllParam().turning_ * 10.0f / (COMP_TURN / chargeTurn)
+		: -player_.GetAllParam().turning_ * 10.0f / (COMP_TURN / chargeTurn);
 
 	//回転
-	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::AngleAxis(Utility::Deg2RadF(rotatePow), Utility::AXIS_Y)));
+	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::AngleAxis(Utility::Deg2RadF(turnPow), Utility::AXIS_Y)));
 }

@@ -35,8 +35,13 @@ void SceneGame::Init(void)
 
 void SceneGame::Update(void)
 {
+	//インスタンス
+	auto& plMng = PlayerManager::GetInstance();
+
 	//プレイヤーの更新
-	PlayerManager::GetInstance().Update();
+	plMng.Update();
+
+	SceneManager::GetInstance().GetCamera(0).lock()->SetAngles(plMng.GetPlayer(0).GetTrans().quaRot.ToEuler());
 }
 
 void SceneGame::Draw(void)

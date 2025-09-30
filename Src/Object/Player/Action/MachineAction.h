@@ -24,13 +24,19 @@ public:
 private:
 
 	//回転量の補正
-	static constexpr float COMP_ROTATE = 1000.0f;
+	static constexpr float COMP_TURN = 1000.0f;
+
+	//チャージ中の回転の補正値
+	static constexpr float COMP_CHARGE_TURN = 10.0f;
 
 	//機体
 	const Machine& machine_;
 
 	//走行時間カウンタ
 	float driveCnt_;
+
+	//チャージカウンタ
+	float chargeCnt_;
 
 	//初速度
 	float velocity_;

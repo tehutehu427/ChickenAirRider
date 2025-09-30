@@ -241,14 +241,14 @@ void Camera::ProcessRot(void)
 	rotPow = SPEED_PAD;
 	angles_.x += Utility::Deg2RadF(rStick.y * rotPow);
 	angles_.y += Utility::Deg2RadF(rStick.x * rotPow);
-	if (keyType == KeyConfig::TYPE::ALL)
-	{
-		auto mouseMove = ins.GetMouseMove();
-		rotPow = SPEED_MOUSE;
-		angles_.x += Utility::Deg2RadF(mouseMove.y * rotPow);
-		angles_.y += Utility::Deg2RadF(mouseMove.x * rotPow);
-	}
-	KeyConfig::GetInstance().SetMousePos({ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y});
+	//if (keyType == KeyConfig::TYPE::ALL)
+	//{
+	//	auto mouseMove = ins.GetMouseMove();
+	//	rotPow = SPEED_MOUSE;
+	//	angles_.x += Utility::Deg2RadF(mouseMove.y * rotPow);
+	//	angles_.y += Utility::Deg2RadF(mouseMove.x * rotPow);
+	//}
+	//KeyConfig::GetInstance().SetMousePos({ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y});
 
 	if (angles_.x >= LIMIT_X_UP_RAD)
 	{
