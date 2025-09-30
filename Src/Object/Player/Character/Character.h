@@ -1,4 +1,6 @@
 #pragma once
+#include<memory>
+#include"../Object/Common/Transform.h"
 #include"../../Common/Parameter.h"
 
 class Character
@@ -33,10 +35,19 @@ public:
 	//描画
 	void Draw(void);
 
+	//座標の設定
+	void SetPos(const VECTOR& _pos) { trans_.pos = _pos; }
+
+	//回転の設定
+	void SetQuaRot(const Quaternion& _quaRot) { trans_.quaRot = _quaRot; }
+
 	//パラメーターの取得
 	const Parameter& GetParam(void) { return param_; }
 
 private:
+
+	// モデル制御の基本情報
+	Transform trans_;
 
 	//パラメーター
 	Parameter param_;

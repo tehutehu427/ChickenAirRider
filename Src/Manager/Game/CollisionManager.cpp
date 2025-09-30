@@ -5,6 +5,7 @@
 #include"../Utility/Utility.h"
 #include "CollisionManager.h"
 
+//静的インスタンスの初期化
 CollisionManager* CollisionManager::instance_ = nullptr;
 
 void CollisionManager::CreateInstance(void)

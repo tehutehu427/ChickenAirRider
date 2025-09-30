@@ -1,12 +1,13 @@
 #pragma once
 #include"ActionBase.h"
+#include"../Character/Character.h"
 
 class CharacterAction : public ActionBase
 {
 public:
 
 	//コンストラクタ
-	CharacterAction(Player& _player, const LogicBase& _logic);
+	CharacterAction(Player& _player, const Character& _chara, const LogicBase& _logic);
 
 	//コンストラクタ
 	~CharacterAction(void)override;
@@ -22,6 +23,7 @@ public:
 
 private:
 
-
+	//キャラクター
+	const Character& chara_;
 };
 

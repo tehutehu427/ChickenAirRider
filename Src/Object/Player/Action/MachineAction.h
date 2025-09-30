@@ -23,6 +23,9 @@ public:
 
 private:
 
+	//‰ñ“]—Ê‚Ì•â³
+	static constexpr float COMP_ROTATE = 1000.0f;
+
 	//‹@‘Ì
 	const Machine& machine_;
 
@@ -31,6 +34,9 @@ private:
 
 	//‰‘¬“x
 	float velocity_;
+
+	//‘‡‘¬“x
+	float speed_;
 
 	//ˆÚ“®
 	void Move(void);

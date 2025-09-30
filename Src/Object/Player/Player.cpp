@@ -11,7 +11,45 @@
 
 Player::Player(void)
 {
+	//初期化
+	state_ = STATE::NONE;
 	movePow_ = Utility::VECTOR_ZERO;
+
+	//行動切り替え
+	changeAction_[STATE::NONE] = [this](void)
+	{
+	};
+	changeAction_[STATE::NORMAL] = [this](void)
+	{
+		//キャラクターの行動に変更
+		action_ = std::make_unique<CharacterAction>(*this, *chara_, *logic_);
+	};
+	changeAction_[STATE::RIDE_MACHINE] = [this](void)
+	{
+		//機体の行動に変更
+		action_ = std::make_unique<MachineAction>(*this, *machine_, *logic_);
+	};
+
+	//描画
+	draw_[STATE::NONE] = [this](void)
+	{
+	};
+	draw_[STATE::NORMAL] = [this](void)
+	{
+		//キャラの描画
+		chara_->Draw();
+	};
+	draw_[STATE::RIDE_MACHINE] = [this](void)
+	{
+		//キャラの描画
+		chara_->Draw();
+
+		//機体の描画
+		machine_->Draw();
+
+		//UI
+		action_->Draw();
+	};
 }
 
 Player::~Player(void)
@@ -26,26 +64,43 @@ void Player::Init(void)
 {
 	//キャラクター
 	chara_ = std::make_unique<Character>();
+	chara_->Load();
 	chara_->Init();
 
 	//機体
 	machine_ = std::make_unique<Machine>();
+	machine_->Load();
 	machine_->Init();
 
 	//行動基準
 	logic_ = std::make_unique<PlayerLogic>();
 
 	//初期状態
+	ChangeState(STATE::RIDE_MACHINE);
+
+	//行動
+	changeAction_[state_]();
 }
 
 void Player::Update(void)
 {
+	//行動
+	action_->Update();
+
 	//移動
 	trans_.pos = VAdd(trans_.pos, movePow_);
+
+	//機体とキャラに座標と回転を同期させる
+	SynchronizeChara();
+	SynchronizeMachine();
 }
 
 void Player::Draw(void)
 {
+	//描画
+	draw_[state_]();
+
+	DrawFormatString(0, 32, 0xffffff, L"%.2f,%.2f,%.2f", trans_.quaRot.ToEuler().x, trans_.quaRot.ToEuler().y, trans_.quaRot.ToEuler().z);
 }
 
 void Player::OnHit(const std::weak_ptr<Collider> _hitCol)
@@ -61,4 +116,18 @@ const Parameter& Player::GetAllParam(void)const
 	ret = param_ + chara_->GetParam() + machine_->GetParam();
 
 	return ret;
+}
+
+void Player::SynchronizeChara(void)
+{
+	//座標と回転の同期
+	chara_->SetPos(trans_.pos);
+	chara_->SetQuaRot(trans_.quaRot);
+}
+
+void Player::SynchronizeMachine(void)
+{
+	//座標と回転の同期
+	machine_->SetPos(trans_.pos);
+	machine_->SetQuaRot(trans_.quaRot);
 }

@@ -1,7 +1,8 @@
 #include "CharacterAction.h"
 
-CharacterAction::CharacterAction(Player& _player, const LogicBase& _logic)
-	: ActionBase(_player, _logic)
+CharacterAction::CharacterAction(Player& _player, const Character& _chara, const LogicBase& _logic)
+	: ActionBase(_player, _logic),
+	chara_(_chara)
 {
 }
 

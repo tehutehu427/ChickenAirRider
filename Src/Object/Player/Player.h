@@ -1,6 +1,8 @@
 #pragma once
+#include <map>
+#include <functional>
 #include "../ObjectBase.h"
-#include"../Common/Parameter.h"
+#include "../Common/Parameter.h"
 
 class Character;
 class Machine;
@@ -14,6 +16,8 @@ public:
 	//現在の状態
 	enum class STATE
 	{
+		NONE = -1,
+
 		NORMAL,			//生身
 		RIDE_MACHINE,	//機体乗車中
 	};
@@ -41,8 +45,14 @@ public:
 	//総合パラメーター
 	const Parameter& GetAllParam(void)const;
 
+	//回転の設定
+	void SetQuaRot(const Quaternion _quaRot) { trans_.quaRot = _quaRot; }
+
 	//移動力変更
 	void SetMovePow(const VECTOR _movePow) { movePow_ = _movePow; }
+
+	//行動切り替え
+	void ChangeState(const STATE _state) { state_ = _state; }
 
 private:
 
@@ -55,7 +65,20 @@ private:
 	//パラメーター
 	Parameter param_;
 
+	//状態
+	STATE state_;
+
 	//移動力
 	VECTOR movePow_;
+
+	//関数ポインタ
+	std::map<STATE, std::function<void(void)>> changeAction_;	//行動切り替え
+	std::map<STATE, std::function<void(void)>> draw_;			//状態ごとの描画
+
+	//キャラと座標と回転の同期する
+	void SynchronizeChara(void);
+
+	//機体と座標と回転の同期する
+	void SynchronizeMachine(void);
 };
 
