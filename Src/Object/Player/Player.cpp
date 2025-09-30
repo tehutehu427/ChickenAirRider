@@ -34,6 +34,8 @@ void Player::Init(void)
 
 	//s“®Šî€
 	logic_ = std::make_unique<PlayerLogic>();
+
+	//‰Šúó‘Ô
 }
 
 void Player::Update(void)
