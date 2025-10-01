@@ -45,6 +45,7 @@ void MachineAction::Draw(void)
 {
 	//速度
 	DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 32, 0xffffff, L"Speed = %.2f", speed_);
+	DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 64, 0xffffff, L"Charge = %.2f", chargeCnt_);
 }
 
 void MachineAction::Move(void)
@@ -77,11 +78,6 @@ void MachineAction::Move(void)
 
 void MachineAction::Charge(void)
 {
-	//走行時間と速度、移動量の初期化
-	driveCnt_ = 0.0f;
-	speed_ = 0.0f;
-	player_.SetMovePow(Utility::VECTOR_ZERO);
-
 	//チャージカウンタ
 	chargeCnt_ += SceneManager::GetInstance().GetDeltaTime() * player_.GetAllParam().charge_;
 
@@ -93,6 +89,29 @@ void MachineAction::Charge(void)
 
 	//チャージ分を初速度に変換
 	velocity_ = chargeCnt_;
+
+	//ターンしているか
+	if (logic_.TurnValue() == 0.0f)
+	{
+		//走行時間初期化
+		driveCnt_ = 0.0f;
+
+		//減速
+		speed_ -= chargeCnt_;
+
+		//速度の下限
+		if (speed_ < 0.0f)
+		{
+			speed_ = 0.0f;
+		}
+
+		//前方に移動力を作る
+		VECTOR movePow = VGet(0.0f, 0.0f, speed_);
+		movePow = player_.GetTrans().quaRot.PosAxis(movePow);
+
+		//プレイヤーに送る
+		player_.SetMovePow(movePow);
+	}
 }
 
 void MachineAction::Turn(void)
@@ -103,12 +122,9 @@ void MachineAction::Turn(void)
 	//回転量がないならスキップ
 	if (turnPow == 0.0f)return;
 
-	//チャージ中なら回転しやすく
-	float chargeTurn = logic_.StartCharge() ? COMP_CHARGE_TURN : 1.0f;
-
 	//パラメーターで回転しやすくする
-	turnPow += turnPow > 0.0f ? player_.GetAllParam().turning_ * 10.0f / (COMP_TURN / chargeTurn)
-		: -player_.GetAllParam().turning_ * 10.0f / (COMP_TURN / chargeTurn);
+	turnPow += turnPow > 0.0f ? player_.GetAllParam().turning_ * 10.0f / COMP_TURN
+		: -player_.GetAllParam().turning_ * 10.0f / COMP_TURN;
 
 	//回転
 	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::AngleAxis(Utility::Deg2RadF(turnPow), Utility::AXIS_Y)));

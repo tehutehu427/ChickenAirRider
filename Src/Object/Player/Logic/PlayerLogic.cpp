@@ -1,4 +1,5 @@
 #include <DxLib.h>
+#include "../Application.h"
 #include "../Manager/System/KeyConfig.h"
 #include "PlayerLogic.h"
 
@@ -36,6 +37,10 @@ const float PlayerLogic::TurnValue(void)const
 
     //マウスカーソル又はスティックの移動量
     ret = GetJoypadNum() <= 0 ? key.GetMouseMove().x : key.GetKnockLStickSize(KeyConfig::JOYPAD_NO::PAD1).x;
+    if (GetJoypadNum() <= 0)
+    {
+        //KeyConfig::GetInstance().SetMousePos({ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y });
+    }
 
     return ret;
 }
