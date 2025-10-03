@@ -1,7 +1,7 @@
 #include "../Player.h"
 #include "ActionBase.h"
 
-ActionBase::ActionBase(Player& _player, const LogicBase& _logic)
+ActionBase::ActionBase(Player& _player, LogicBase& _logic)
 	: player_(_player),
 	logic_(_logic)
 {

@@ -1,7 +1,7 @@
 #pragma once
 #include<memory>
 #include"../Object/Common/Transform.h"
-#include"../../Common/Parameter.h"
+#include"../Parameter/Parameter.h"
 
 class Machine
 {

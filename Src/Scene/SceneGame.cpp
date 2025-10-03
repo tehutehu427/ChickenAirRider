@@ -41,6 +41,7 @@ void SceneGame::Update(void)
 	//プレイヤーの更新
 	plMng.Update();
 
+	//カメラの回転
 	SceneManager::GetInstance().GetCamera(0).lock()->SetAngles(plMng.GetPlayer(0).GetTrans().quaRot.ToEuler());
 }
 

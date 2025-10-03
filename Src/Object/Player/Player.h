@@ -2,7 +2,7 @@
 #include <map>
 #include <functional>
 #include "../ObjectBase.h"
-#include "../Common/Parameter.h"
+#include "Parameter/Parameter.h"
 
 class Character;
 class Machine;

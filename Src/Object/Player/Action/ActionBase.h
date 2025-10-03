@@ -8,7 +8,7 @@ class ActionBase
 public:
 
 	//コンストラクタ
-	ActionBase(Player& _player, const LogicBase& _logic);
+	ActionBase(Player& _player, LogicBase& _logic);
 
 	//コンストラクタ
 	virtual ~ActionBase(void);
@@ -28,5 +28,5 @@ protected:
 	Player& player_;
 
 	//行動判断
-	const LogicBase& logic_;
+	LogicBase& logic_;
 };

@@ -156,7 +156,7 @@
     <ClCompile Include="Src\Object\Player\Action\ActionBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Common\Parameter.cpp">
+    <ClCompile Include="Src\Object\Player\Parameter\Parameter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Player\Action\CharacterAction.cpp">
@@ -515,7 +515,7 @@
     <ClInclude Include="Src\Object\Player\Action\ActionBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Common\Parameter.h">
+    <ClInclude Include="Src\Object\Player\Parameter\Parameter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Player\Action\CharacterAction.h">

@@ -21,6 +21,8 @@ void Character::Load(void)
 	param_.attack_ = 1;
 	param_.defense_ = 1;
 	param_.maxHealth_ = 1;
+
+	param_.chargeCapacity_ = 100.0f;
 }
 
 void Character::Init(void)

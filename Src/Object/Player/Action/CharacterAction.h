@@ -7,7 +7,7 @@ class CharacterAction : public ActionBase
 public:
 
 	//コンストラクタ
-	CharacterAction(Player& _player, const Character& _chara, const LogicBase& _logic);
+	CharacterAction(Player& _player, const Character& _chara, LogicBase& _logic);
 
 	//コンストラクタ
 	~CharacterAction(void)override;

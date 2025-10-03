@@ -7,7 +7,7 @@ class MachineAction : public ActionBase
 public:
 
 	//コンストラクタ
-	MachineAction(Player& _player, const Machine _machine, const LogicBase& _logic);
+	MachineAction(Player& _player, const Machine _machine, LogicBase& _logic);
 
 	//コンストラクタ
 	~MachineAction(void)override;
@@ -23,8 +23,11 @@ public:
 
 private:
 
+	//最高速の基本倍率
+	static constexpr int MAX_SPEED_BASE = 10;
+
 	//回転量の補正
-	static constexpr float COMP_TURN = 1000.0f;
+	static constexpr float COMP_TURN = 500.0f;
 
 	//機体
 	const Machine& machine_;
@@ -46,6 +49,9 @@ private:
 
 	//チャージ
 	void Charge(void);
+
+	//チャージ解放
+	void DisCharge(void);
 
 	//旋回
 	void Turn(void);

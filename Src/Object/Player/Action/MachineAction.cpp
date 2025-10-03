@@ -4,7 +4,7 @@
 #include "../Logic/LogicBase.h"
 #include "MachineAction.h"
 
-MachineAction::MachineAction(Player& _player, const Machine _machine, const LogicBase& _logic)
+MachineAction::MachineAction(Player& _player, const Machine _machine, LogicBase& _logic)
 	: ActionBase(_player,_logic),
 	machine_(_machine)
 {
@@ -31,6 +31,11 @@ void MachineAction::Update(void)
 		//チャージ
 		Charge();
 	}
+	else if(logic_.DisCharge())
+	{
+		//チャージ解放
+		DisCharge();
+	}
 	else
 	{
 		//移動
@@ -50,22 +55,23 @@ void MachineAction::Draw(void)
 
 void MachineAction::Move(void)
 {
-	//チャージ力の初期化
-	chargeCnt_ = 0.0f;
+	//デルタタイム
+	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
 	//加速力を元にだんだん最高速まで速度を増やす
 
 	//カウンタ
-	driveCnt_ += SceneManager::GetInstance().GetDeltaTime();
+	driveCnt_ += delta;
 
 	//速度の方程式に当てはめる
 	speed_ = velocity_ + (player_.GetAllParam().acceleration_ * driveCnt_);
 
 	//最高速の制限
-	if (speed_ > player_.GetAllParam().maxSpeed_ * 10)
+	if (speed_ > player_.GetAllParam().maxSpeed_ * MAX_SPEED_BASE * player_.GetAllParam().affectMaxSpeed_)
 	{
 		//最高速
-		speed_ = static_cast<float>(player_.GetAllParam().maxSpeed_ * 10);
+		//speed_ -= player_.GetAllParam().acceleration_ * driveCnt_;
+		speed_ = player_.GetAllParam().maxSpeed_ * MAX_SPEED_BASE * player_.GetAllParam().affectMaxSpeed_;
 	}
 
 	//前方に移動力を作る
@@ -74,6 +80,14 @@ void MachineAction::Move(void)
 
 	//プレイヤーに送る
 	player_.SetMovePow(movePow);
+
+	//チャージ力をだんだん減らす
+	if (chargeCnt_ > 0.0f)
+	{
+		//chargeCnt_ -= player_.GetAllParam().acceleration_ * delta;
+		//velocity_ = chargeCnt_;
+		chargeCnt_ = 0.0f;
+	}
 }
 
 void MachineAction::Charge(void)
@@ -82,22 +96,16 @@ void MachineAction::Charge(void)
 	chargeCnt_ += SceneManager::GetInstance().GetDeltaTime() * player_.GetAllParam().charge_;
 
 	//チャージの制限
-	if (chargeCnt_ > player_.GetAllParam().maxSpeed_ * 10)
+	if (chargeCnt_ > player_.GetAllParam().chargeCapacity_)
 	{
-		chargeCnt_ = player_.GetAllParam().maxSpeed_ * 10;
+		chargeCnt_ = player_.GetAllParam().maxSpeed_ * 7;
 	}
 
-	//チャージ分を初速度に変換
-	velocity_ = chargeCnt_;
-
-	//ターンしているか
+	//ターンしていない
 	if (logic_.TurnValue() == 0.0f)
 	{
-		//走行時間初期化
-		driveCnt_ = 0.0f;
-
 		//減速
-		speed_ -= chargeCnt_;
+		speed_ -= SceneManager::GetInstance().GetDeltaTime() * player_.GetAllParam().acceleration_ * 100.0f;
 
 		//速度の下限
 		if (speed_ < 0.0f)
@@ -112,6 +120,18 @@ void MachineAction::Charge(void)
 		//プレイヤーに送る
 		player_.SetMovePow(movePow);
 	}
+}
+
+void MachineAction::DisCharge(void)
+{
+	//走行時間初期化
+	driveCnt_ = 0.0f;
+
+	//チャージ分を初速度に変換
+	velocity_ = chargeCnt_;
+
+	//初速度
+	//speed_ = velocity_;
 }
 
 void MachineAction::Turn(void)

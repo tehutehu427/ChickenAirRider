@@ -38,8 +38,11 @@ void CollisionManager::Sweep(void)
 
 void CollisionManager::Update(void)
 {
+	//コライダの数
+	const auto& colSize = colliders_.size();
+
 	//コライダが一つもないなら処理を飛ばす
-	if (colliders_.size() <= 0)return;
+	if (colSize <= 0)return;
 
 	//当たり判定フレーム
 	if (updateFrame_ < COL_UPDATE_FRAME)
@@ -49,7 +52,7 @@ void CollisionManager::Update(void)
 		return;
 	}
 
-	for (int i = 0; i < colliders_.size() - 1; i++)
+	for (int i = 0; i < colSize - 1; i++)
 	{
 		//コライダが死亡済みなら
 		if (colliders_[i]->IsDead())
@@ -58,7 +61,7 @@ void CollisionManager::Update(void)
 			continue;
 		}
 
-		for (int j = i + 1; j < colliders_.size(); j++)
+		for (int j = i + 1; j < colSize; j++)
 		{
 			//コライダが死亡済みなら
 			if (colliders_[i]->IsDead() || colliders_[j]->IsDead())
@@ -165,10 +168,14 @@ const bool CollisionManager::IsWithInHitRange(const std::weak_ptr<Collider> _col
 		_col1.lock()->GetGeometry().GetColPos(),
 		_col2.lock()->GetGeometry().GetColPos());
 
+	//タグ
+	const auto& tags1 = _col1.lock()->GetTags();
+	const auto& tags2 = _col2.lock()->GetTags();
+
 	//双方のタグ
-	for (const auto tag1 : _col1.lock()->GetTags())
+	for (const auto& tag1 : tags1)
 	{
-		for (const auto tag2 : _col2.lock()->GetTags())
+		for (const auto& tag2 : tags2)
 		{
 			//距離範囲の比較
 			float range = hitRange_.at(tag1) >= hitRange_.at(tag2) ? hitRange_.at(tag1) : hitRange_.at(tag2);
@@ -197,11 +204,15 @@ const bool CollisionManager::JudgeIsCollision(const int _col1Num, const int _col
 		//範囲内でなかった
 		return false;
 	}
+
+	//タグ
+	const auto& tags1 = colliders_[_col1Num]->GetTags();
+	const auto& tags2 = colliders_[_col2Num]->GetTags();
 	
 	//双方のタグ
-	for (auto tag1 : colliders_[_col1Num]->GetTags())
+	for (const auto& tag1 : tags1)
 	{
-		for (auto tag2 : colliders_[_col2Num]->GetTags())
+		for (const auto& tag2 : tags2)
 		{
 			//違うタグか
 			if (tag1 == tag2)
@@ -219,11 +230,15 @@ const bool CollisionManager::JudgeIsCollision(const int _col1Num, const int _col
 		}
 	}
 
+	//当たり判定しないタグ
+	const auto& notColTags1 = colliders_[_col1Num]->GetNotHitTags();
+	const auto& notColTags2 = colliders_[_col2Num]->GetNotHitTags();
+
 	//1人目のタグ
-	for (auto tag1 : colliders_[_col1Num]->GetTags())
+	for (const auto& tag1 : tags1)
 	{
 		//2人目の当たり判定しないタグ
-		for (auto notColTag2 : colliders_[_col2Num]->GetNotHitTags())
+		for (const auto& notColTag2 : notColTags2)
 		{
 			if (tag1 == notColTag2)
 			{
@@ -234,10 +249,10 @@ const bool CollisionManager::JudgeIsCollision(const int _col1Num, const int _col
 	}
 
 	//2人目のタグ
-	for (auto tag2 : colliders_[_col2Num]->GetTags())
+	for (const auto& tag2 : tags2)
 	{
 		//1人目の当たり判定しないタグ
-		for (auto notColTag1 : colliders_[_col1Num]->GetNotHitTags())
+		for (const auto& notColTag1 : notColTags1)
 		{
 			if (tag2 == notColTag1)
 			{
