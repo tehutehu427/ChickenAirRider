@@ -58,20 +58,23 @@ void MachineAction::Move(void)
 	//デルタタイム
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
+	//パラメーター
+	const auto& param = player_.GetAllParam();
+
 	//加速力を元にだんだん最高速まで速度を増やす
 
 	//カウンタ
 	driveCnt_ += delta;
 
 	//速度の方程式に当てはめる
-	speed_ = velocity_ + (player_.GetAllParam().acceleration_ * driveCnt_);
+	speed_ = velocity_ + (param.acceleration_ * delta);
 
 	//最高速の制限
-	if (speed_ > player_.GetAllParam().maxSpeed_ * MAX_SPEED_BASE * player_.GetAllParam().affectMaxSpeed_)
+	if (speed_ > param.maxSpeed_ * MAX_SPEED_BASE)
 	{
 		//最高速
 		//speed_ -= player_.GetAllParam().acceleration_ * driveCnt_;
-		speed_ = player_.GetAllParam().maxSpeed_ * MAX_SPEED_BASE * player_.GetAllParam().affectMaxSpeed_;
+		speed_ = param.maxSpeed_ * MAX_SPEED_BASE;
 	}
 
 	//前方に移動力を作る
@@ -91,21 +94,29 @@ void MachineAction::Move(void)
 }
 
 void MachineAction::Charge(void)
-{
+{	
+	//パラメーター
+	const auto& param = player_.GetAllParam();
+	const auto& unitParam = player_.GetUnitParam();
+
+	//デルタタイム
+	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
+
 	//チャージカウンタ
-	chargeCnt_ += SceneManager::GetInstance().GetDeltaTime() * player_.GetAllParam().charge_;
+	chargeCnt_ += delta * player_.GetAllParam().charge_;
 
 	//チャージの制限
-	if (chargeCnt_ > player_.GetAllParam().chargeCapacity_)
+	if (chargeCnt_ > unitParam.chargeCapacity_)
 	{
-		chargeCnt_ = player_.GetAllParam().maxSpeed_ * 7;
+		chargeCnt_ = param.maxSpeed_ * 7;
 	}
 
 	//ターンしていない
 	if (logic_.TurnValue() == 0.0f)
 	{
 		//減速
-		speed_ -= SceneManager::GetInstance().GetDeltaTime() * player_.GetAllParam().acceleration_ * 100.0f;
+		//speed_ -= SceneManager::GetInstance().GetDeltaTime() * player_.GetAllParam().acceleration_ * 100.0f;
+		speed_ = 0.0f;
 
 		//速度の下限
 		if (speed_ < 0.0f)
@@ -136,6 +147,9 @@ void MachineAction::DisCharge(void)
 
 void MachineAction::Turn(void)
 {
+	//パラメーター
+	const auto& param = player_.GetAllParam();
+
 	//回転量
 	float turnPow = logic_.TurnValue() / COMP_TURN;
 
@@ -143,8 +157,8 @@ void MachineAction::Turn(void)
 	if (turnPow == 0.0f)return;
 
 	//パラメーターで回転しやすくする
-	turnPow += turnPow > 0.0f ? player_.GetAllParam().turning_ * 10.0f / COMP_TURN
-		: -player_.GetAllParam().turning_ * 10.0f / COMP_TURN;
+	turnPow += turnPow > 0.0f ? param.turning_ / COMP_TURN
+		: -param.turning_ / COMP_TURN;
 
 	//回転
 	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::AngleAxis(Utility::Deg2RadF(turnPow), Utility::AXIS_Y)));

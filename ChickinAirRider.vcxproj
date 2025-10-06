@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Player\Parameter\UnitParameter.cpp" />
     <ClCompile Include="Src\Manager\Game\PlayerManager.cpp" />
     <ClCompile Include="Src\Object\Player\Action\MachineAction.cpp" />
     <ClCompile Include="Src\Object\Player\Action\CharacterAction.cpp" />
@@ -202,6 +203,7 @@
     <ClCompile Include="Src\Utility\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Player\Parameter\UnitParameter.h" />
     <ClInclude Include="Src\Manager\Game\PlayerManager.h" />
     <ClInclude Include="Src\Object\Player\Action\MachineAction.h" />
     <ClInclude Include="Src\Object\Player\Action\CharacterAction.h" />

@@ -45,6 +45,9 @@ public:
 	//総合パラメーター
 	const Parameter& GetAllParam(void)const;
 
+	//ユニットのみのパラメーター
+	const UnitParameter& GetUnitParam(void)const;
+
 	//回転の設定
 	void SetQuaRot(const Quaternion _quaRot) { trans_.quaRot = _quaRot; }
 

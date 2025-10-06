@@ -113,9 +113,14 @@ const Parameter& Player::GetAllParam(void)const
 	Parameter ret;
 
 	//取得した強化アイテム + キャラの基本性能 + 機体の基本性能
-	ret = param_ + chara_->GetParam() + machine_->GetParam();
+	ret = param_ * (chara_->GetUnitParam() * machine_->GetUnitParam());
 
 	return ret;
+}
+
+const UnitParameter& Player::GetUnitParam(void) const
+{
+	return chara_->GetUnitParam() * machine_->GetUnitParam();
 }
 
 void Player::SynchronizeChara(void)

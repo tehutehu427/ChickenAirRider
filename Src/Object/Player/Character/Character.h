@@ -1,11 +1,14 @@
 #pragma once
 #include<memory>
 #include"../Object/Common/Transform.h"
-#include"../Parameter/Parameter.h"
+#include"../Parameter/UnitParameter.h"
 
 class Character
 {
 public:
+
+	//パラメーターの基本倍率
+	static constexpr float PARAM_NORMAL = 1.7f;
 
 	//キャラクターの種類
 	enum class CHARA_TYPE
@@ -42,7 +45,7 @@ public:
 	void SetQuaRot(const Quaternion& _quaRot) { trans_.quaRot = _quaRot; }
 
 	//パラメーターの取得
-	const Parameter& GetParam(void) { return param_; }
+	const UnitParameter& GetUnitParam(void) { return unitParam_; }
 
 private:
 
@@ -50,6 +53,6 @@ private:
 	Transform trans_;
 
 	//パラメーター
-	Parameter param_;
+	UnitParameter unitParam_;
 };
 

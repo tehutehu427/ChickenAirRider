@@ -12,17 +12,18 @@ Character::~Character(void)
 void Character::Load(void)
 {
 	//キャラクターのステータスを外部から持ってくる
-	param_.maxSpeed_ = 1;
-	param_.acceleration_ = 1;
-	param_.turning_ = 1;
-	param_.charge_ = 1;
-	param_.flight_ = 1;
-	param_.weight_ = 1;
-	param_.attack_ = 1;
-	param_.defense_ = 1;
-	param_.maxHealth_ = 1;
+	unitParam_.affectMaxSpeed_ = PARAM_NORMAL;
+	unitParam_.affectAcceleration_ = PARAM_NORMAL;
+	unitParam_.affectTurning_ = PARAM_NORMAL;
+	unitParam_.affectCharge_ = PARAM_NORMAL;
+	unitParam_.affectFlight_ = PARAM_NORMAL;
+	unitParam_.affectWeight_ = PARAM_NORMAL;
+	unitParam_.affectAttack_ = PARAM_NORMAL;
+	unitParam_.affectDefence_ = PARAM_NORMAL;
+	unitParam_.affectMaxHealth_ = PARAM_NORMAL;
 
-	param_.chargeCapacity_ = 100.0f;
+	unitParam_.chargeBraking_ = 0.2f;
+	unitParam_.chargeCapacity_ = 100.0f;
 }
 
 void Character::Init(void)
