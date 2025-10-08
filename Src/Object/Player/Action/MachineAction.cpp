@@ -63,19 +63,20 @@ void MachineAction::Move(void)
 
 	//加速力を元にだんだん最高速まで速度を増やす
 
-	//カウンタ
-	driveCnt_ += delta;
+	//最高速の制限
+	if (speed_ > param.maxSpeed_ * BASE_MAX_SPEED)
+	{
+		//減速なのでカウンタ減少
+		driveCnt_ -= delta;
+	}
+	else
+	{
+		//カウンタ
+		driveCnt_ += delta;
+	}
 
 	//速度の方程式に当てはめる
-	speed_ = velocity_ + (param.acceleration_ * delta);
-
-	//最高速の制限
-	if (speed_ > param.maxSpeed_ * MAX_SPEED_BASE)
-	{
-		//最高速
-		//speed_ -= player_.GetAllParam().acceleration_ * driveCnt_;
-		speed_ = param.maxSpeed_ * MAX_SPEED_BASE;
-	}
+	speed_ = velocity_ + (param.acceleration_ * driveCnt_) + BASE_ACCELE;
 
 	//前方に移動力を作る
 	VECTOR movePow = VGet(0.0f, 0.0f, speed_);
@@ -84,13 +85,8 @@ void MachineAction::Move(void)
 	//プレイヤーに送る
 	player_.SetMovePow(movePow);
 
-	//チャージ力をだんだん減らす
-	if (chargeCnt_ > 0.0f)
-	{
-		//chargeCnt_ -= player_.GetAllParam().acceleration_ * delta;
-		//velocity_ = chargeCnt_;
-		chargeCnt_ = 0.0f;
-	}
+	//チャージを初期化
+	chargeCnt_ = 0.0f;
 }
 
 void MachineAction::Charge(void)
@@ -103,12 +99,12 @@ void MachineAction::Charge(void)
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
 	//チャージカウンタ
-	chargeCnt_ += delta * player_.GetAllParam().charge_;
+	chargeCnt_ += BASE_CHARGE * player_.GetAllParam().charge_ / unitParam.chargeCapacity_;
 
 	//チャージの制限
-	if (chargeCnt_ > unitParam.chargeCapacity_)
+	if (chargeCnt_ > 1.0f)
 	{
-		chargeCnt_ = param.maxSpeed_ * 7;
+		chargeCnt_ = 1.0f;
 	}
 
 	//ターンしていない
@@ -135,14 +131,11 @@ void MachineAction::Charge(void)
 
 void MachineAction::DisCharge(void)
 {
-	//走行時間初期化
-	driveCnt_ = 0.0f;
+	//パラメーター
+	const auto& param = player_.GetAllParam();
 
-	//チャージ分を初速度に変換
-	velocity_ = chargeCnt_;
-
-	//初速度
-	//speed_ = velocity_;
+	//チャージを走行時間に変換
+	driveCnt_ = Utility::Lerp(0.0f, param.maxSpeed_ * BASE_MAX_SPEED, chargeCnt_);
 }
 
 void MachineAction::Turn(void)

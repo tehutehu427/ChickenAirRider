@@ -24,7 +24,13 @@ public:
 private:
 
 	//最高速の基本倍率
-	static constexpr int MAX_SPEED_BASE = 10;
+	static constexpr float BASE_MAX_SPEED = 10.0f;
+
+	//加速度の固定上昇値
+	static constexpr float BASE_ACCELE = 5.0f;
+
+	//チャージの固定上昇値
+	static constexpr float BASE_CHARGE = 50.0f;
 
 	//回転量の補正
 	static constexpr float COMP_TURN = 500.0f;
