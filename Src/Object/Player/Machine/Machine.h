@@ -8,7 +8,7 @@ class Machine
 public:
 
 	//パラメーターの基本倍率
-	static constexpr float PARAM_NORMAL = 1.7f;
+	static constexpr float PARAM_NORMAL = 1.5f;
 
 	//機体の種類
 	enum class MACHINE_TYPE

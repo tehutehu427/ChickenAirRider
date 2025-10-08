@@ -43,10 +43,10 @@ public:
 	void OnHit(const std::weak_ptr<Collider> _hitCol)override;
 
 	//総合パラメーター
-	const Parameter& GetAllParam(void)const;
+	const Parameter GetAllParam(void)const;
 
 	//ユニットのみのパラメーター
-	const UnitParameter& GetUnitParam(void)const;
+	UnitParameter GetUnitParam(void)const;
 
 	//回転の設定
 	void SetQuaRot(const Quaternion _quaRot) { trans_.quaRot = _quaRot; }

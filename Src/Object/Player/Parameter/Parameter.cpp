@@ -1,23 +1,7 @@
+#include "UnitParameter.h"
 #include "Parameter.h"
 
-Parameter::Parameter(void)
-{
-    maxSpeed_ = 0;
-    acceleration_ = 0;
-    turning_ = 0;
-    charge_ = 0;
-    flight_ = 0;
-    weight_ = 0;
-    attack_ = 0;
-    defense_ = 0;
-    maxHealth_ = 0;
-}
-
-Parameter::~Parameter(void)
-{
-}
-
-Parameter& Parameter::operator+(const Parameter& _param)const
+Parameter Parameter::operator+(const Parameter& _param)const
 {
     //加算
     Parameter ret;
@@ -48,19 +32,19 @@ void Parameter::operator+=(const Parameter& _param)
     maxHealth_ += _param.maxHealth_;
 }
 
-Parameter& Parameter::operator*(const UnitParameter& _unitParam)const
+Parameter Parameter::CalcUnitParam(const UnitParameter& _unitParam)const
 {
+    //上昇パラメーター * ユニットの成長度 + ユニットの固定パラメーター
     Parameter ret;
-
-    ret.maxSpeed_ = maxSpeed_ * _unitParam.affectMaxSpeed_;
-    ret.acceleration_ = acceleration_ * _unitParam.affectAcceleration_;
-    ret.turning_ = turning_ * _unitParam.affectTurning_;
-    ret.charge_= charge_ * _unitParam.affectCharge_;
-    ret.flight_ = flight_ * _unitParam.affectFlight_;
-    ret.weight_ = weight_ * _unitParam.affectWeight_;
-    ret.attack_ = attack_ * _unitParam.affectAttack_;
-    ret.defense_ = defense_ * _unitParam.affectDefence_;
-    ret.maxHealth_ = maxHealth_ * _unitParam.affectMaxHealth_;
+    ret.maxSpeed_ = (maxSpeed_ * _unitParam.affectMaxSpeed_) + _unitParam.fixedMaxSpeed_;
+    ret.acceleration_ = (acceleration_ * _unitParam.affectAcceleration_) + _unitParam.fixedAcceleration_;
+    ret.turning_ = (turning_ * _unitParam.affectTurning_) + _unitParam.fixedTurning_;
+    ret.charge_ = (charge_ * _unitParam.affectCharge_) + _unitParam.fixedCharge_;
+    ret.flight_ = (flight_ * _unitParam.affectFlight_) + _unitParam.fixedFlight_;
+    ret.weight_ = (weight_ * _unitParam.affectWeight_) + _unitParam.fixedWeight_;
+    ret.attack_ = (attack_ * _unitParam.affectAttack_) + _unitParam.fixedAttack_;
+    ret.defense_ = (defense_ * _unitParam.affectDefence_) + _unitParam.fixedDefence_;
+    ret.maxHealth_ = (maxHealth_ * _unitParam.affectMaxHealth_) + _unitParam.fixedMaxHealth_;
 
     return ret;
 }

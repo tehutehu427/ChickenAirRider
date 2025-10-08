@@ -8,7 +8,7 @@ class Character
 public:
 
 	//パラメーターの基本倍率
-	static constexpr float PARAM_NORMAL = 1.7f;
+	static constexpr float PARAM_NORMAL = 0.5f;
 
 	//キャラクターの種類
 	enum class CHARA_TYPE

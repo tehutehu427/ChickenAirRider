@@ -30,7 +30,11 @@ void PlayerManager::Update(void)
 	//各プレイヤーの更新
 	for (auto& player : players_)
 	{
+		//更新
 		player->Update();
+		
+		//当たり判定の整理
+		player->Sweep();
 	}
 }
 

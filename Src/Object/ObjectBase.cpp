@@ -23,6 +23,12 @@ ObjectBase::~ObjectBase(void)
 	colParam_.clear();
 }
 
+void ObjectBase::Sweep(void)
+{
+	//削除された判定を配列から破棄
+	std::erase_if(colParam_, [](ColParam& _colParam) {return _colParam.collider_->IsDead(); });
+}
+
 void ObjectBase::ChangeModelColor(const COLOR_F _colorScale)
 {
 	if (MV1SetDifColorScale(trans_.modelId, _colorScale))
@@ -51,18 +57,6 @@ void ObjectBase::MakeCollider(const std::set<Collider::TAG> _tag, std::unique_pt
 
 	//配列にセット
 	colParam_.push_back(std::move(colParam));
-}
-
-void ObjectBase::DeleteCollider(const int _arrayNum)
-{
-	//配列番号-1
-	int arrayNum = _arrayNum - 1;
-
-	//コライダの削除
-	colParam_[_arrayNum].collider_->Kill();
-
-	//配列の削除
-	colParam_.erase(colParam_.begin() + arrayNum);
 }
 
 void ObjectBase::DeleteAllCollider(void)

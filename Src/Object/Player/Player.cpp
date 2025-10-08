@@ -107,20 +107,16 @@ void Player::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
 }
 
-const Parameter& Player::GetAllParam(void)const
+const Parameter Player::GetAllParam(void)const
 {
 	//総合パラメーター
-	Parameter ret;
-
-	//取得した強化アイテム + キャラの基本性能 + 機体の基本性能
-	ret = param_ * (chara_->GetUnitParam() * machine_->GetUnitParam());
-
-	return ret;
+	return param_.CalcUnitParam(GetUnitParam());
 }
 
-const UnitParameter& Player::GetUnitParam(void) const
+UnitParameter Player::GetUnitParam(void) const
 {
-	return chara_->GetUnitParam() * machine_->GetUnitParam();
+	//キャラと機体の合計パラメーター
+ 	return chara_->GetUnitParam().Calculate(machine_->GetUnitParam());
 }
 
 void Player::SynchronizeChara(void)
