@@ -40,20 +40,6 @@ public:
 	//削除
 	void Destroy(void);
 
-	/// <summary>
-	/// そのタグがプレイヤーかどうか調べる
-	/// </summary>
-	/// <param name="_tag">調べるタグ</param>
-	/// <returns>true:プレイヤーだった</returns>
-	const bool IsPlayer(const Collider::TAG _tag)const;
-
-	/// <summary>
-	/// そのタグがアイテムかどうか調べる
-	/// </summary>
-	/// <param name="_tag">調べるタグ</param>
-	/// <returns>true:アイテムだった</returns>
-	const bool IsItem(const Collider::TAG _tag)const;
-
 private:
 
 	//静的インスタンス

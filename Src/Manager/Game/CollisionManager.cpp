@@ -111,17 +111,6 @@ void CollisionManager::Destroy(void)
 	instance_ = nullptr;
 }
 
-const bool CollisionManager::IsPlayer(const Collider::TAG _tag)const
-{
-	return _tag == Collider::TAG::PLAYER1 || _tag == Collider::TAG::PLAYER2 || _tag == Collider::TAG::PLAYER3 || _tag == Collider::TAG::PLAYER4 || _tag == Collider::TAG::SHADOW;
-}
-
-const bool CollisionManager::IsItem(const Collider::TAG _tag) const
-{
-	//今のところはプレイヤー以外がアイテム
-	return !IsPlayer(_tag) && _tag != Collider::TAG::PUNCH;
-}
-
 CollisionManager::CollisionManager(void)
 {
 	updateFrame_ = 0;
@@ -134,24 +123,7 @@ CollisionManager::CollisionManager(void)
 	hitRange_[Collider::TAG::PLAYER2] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::PLAYER3] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::PLAYER4] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::PUNCH] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::NORMAL_ITEM] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::MOVE_HORI_FLOOR] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::MOVE_VER_FLOOR] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::KILLER_ALL] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::KILLER_SPECIFIC] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::DESTROYER] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::SLIME_FLOOR] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::SPRING] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::SHADOW] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::COIN] = HIT_RANGE_NORMAL;
-
-
-	hitRange_[Collider::TAG::START] = HIT_RANGE_START;
-	hitRange_[Collider::TAG::GOAL] = HIT_RANGE_GOAL;
-
-	hitRange_[Collider::TAG::CANNON_AIM] = HIT_RANGE_TARGET;
-	hitRange_[Collider::TAG::WIND] = HIT_RANGE_WIND;
+	hitRange_[Collider::TAG::STAGE] = HIT_RANGE_NORMAL;
 }
 
 CollisionManager::~CollisionManager(void)
@@ -272,13 +244,6 @@ const bool CollisionManager::JudgeIsColTag(const Collider::TAG _tag1, const Coll
 
 	//総合
 	bool ret = true;
-
-	//どちらともアイテムなら
-	if (IsItem(_tag1) && IsItem(_tag2))
-	{
-		//当たり判定しない
-		ret = false;
-	}
 
 	return ret;
 }

@@ -1,7 +1,9 @@
 #pragma once
 
 #include<DxLib.h>
+#include<cassert>
 #include<vector>
+#include<list>
 #include<memory>
 #include<string>
 #include<map>
