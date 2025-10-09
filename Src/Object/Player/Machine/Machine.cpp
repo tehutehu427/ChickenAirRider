@@ -35,6 +35,9 @@ void Machine::Load(void)
 
 	unitParam_.chargeBraking_ = 0.2f;
 	unitParam_.chargeCapacity_ = 100.0f;
+	unitParam_.chargeDamp_ = 1.0f;
+	unitParam_.boostRate_ = 0.5f;
+	unitParam_.boostPower_ = 6;
 }
 
 void Machine::Init(void)

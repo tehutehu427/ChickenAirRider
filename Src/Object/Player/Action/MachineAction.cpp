@@ -1,3 +1,4 @@
+#include<cmath>
 #include "../Application.h"
 #include "../Utility/Utility.h"
 #include "../Manager/System/SceneManager.h"
@@ -111,7 +112,6 @@ void MachineAction::Charge(void)
 	if (logic_.TurnValue() == 0.0f)
 	{
 		//減速
-		//speed_ -= SceneManager::GetInstance().GetDeltaTime() * player_.GetAllParam().acceleration_ * 100.0f;
 		speed_ = 0.0f;
 
 		//速度の下限
@@ -133,9 +133,16 @@ void MachineAction::DisCharge(void)
 {
 	//パラメーター
 	const auto& param = player_.GetAllParam();
+	const auto& unitParam = player_.GetUnitParam();
 
 	//チャージを走行時間に変換
-	driveCnt_ = Utility::Lerp(0.0f, param.maxSpeed_ * BASE_MAX_SPEED, chargeCnt_);
+	//driveCnt_ = Utility::Lerp(0.0f, param.maxSpeed_ * BASE_MAX_SPEED, chargeCnt_);
+
+	//走行時間の初期化
+	driveCnt_ = 0.0f;
+
+	//チャージの割合で初速度を決める
+	velocity_ = (param.maxSpeed_ * BASE_MAX_SPEED) * (1 + unitParam.boostRate_ * std::pow(chargeCnt_,unitParam.boostPower_)) * std::pow(chargeCnt_,unitParam.chargeDamp_);
 }
 
 void MachineAction::Turn(void)

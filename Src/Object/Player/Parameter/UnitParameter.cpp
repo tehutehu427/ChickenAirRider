@@ -42,5 +42,10 @@ UnitParameter UnitParameter::Calculate(const UnitParameter& _unitParam) const
     //基本チャージ容量
     ret.chargeCapacity_ = chargeCapacity_ * _unitParam.chargeCapacity_;
 
+    //ブースト関係
+    ret.chargeDamp_ = chargeDamp_ + _unitParam.chargeDamp_;
+    ret.boostRate_ = boostRate_ + _unitParam.boostRate_;
+    ret.boostPower_ = boostPower_ + _unitParam.boostPower_;
+
     return ret;
 }

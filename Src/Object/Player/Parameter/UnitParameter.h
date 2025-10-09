@@ -27,6 +27,9 @@ struct UnitParameter
 	//チャージ
 	float chargeBraking_ = 0.0f;	//チャージ時の止まりやすさ(0.0f～1.0f)
 	float chargeCapacity_ = 0.0f;	//チャージ容量
+	float chargeDamp_ = 0.0f;		//チャージの影響度(1.0だとチャージそのまま)
+	float boostRate_ = 0.0f;		//チャージ満タン時の最高速度超過率(%換算,0.0だと最高速度そのまま)
+	int boostPower_ = 0;			//ブーストカーブの急さ(値が大きいとチャージしきった時の影響が大きい)
 
 	//演算
 	UnitParameter Calculate(const UnitParameter& _unitParam)const;
