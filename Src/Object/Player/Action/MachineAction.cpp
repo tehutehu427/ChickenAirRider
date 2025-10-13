@@ -135,9 +135,6 @@ void MachineAction::DisCharge(void)
 	const auto& param = player_.GetAllParam();
 	const auto& unitParam = player_.GetUnitParam();
 
-	//チャージを走行時間に変換
-	//driveCnt_ = Utility::Lerp(0.0f, param.maxSpeed_ * BASE_MAX_SPEED, chargeCnt_);
-
 	//走行時間の初期化
 	driveCnt_ = 0.0f;
 

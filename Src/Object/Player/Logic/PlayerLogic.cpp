@@ -57,11 +57,26 @@ const float PlayerLogic::TurnValue(void)
     //返す値
     float ret = 0.0f;
 
-    //マウスカーソル又はスティックの移動量
-    ret = GetJoypadNum() <= 0 ? key.GetMouseMove().x : key.GetKnockLStickSize(KeyConfig::JOYPAD_NO::PAD1).x;
+    //キーボード又はスティックの移動量
     if (GetJoypadNum() <= 0)
     {
-        //KeyConfig::GetInstance().SetMousePos({ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y });
+        //キーボードの場合
+        if (key.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_LEFT, KeyConfig::JOYPAD_NO::PAD1))
+        {
+            ret = -KETBOARD_TURN;
+        }
+        else if (key.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_RIGHT, KeyConfig::JOYPAD_NO::PAD1))
+        {
+            ret = KETBOARD_TURN;
+        }
+
+        ret = key.GetMouseMove().x * 10.0f;
+        KeyConfig::GetInstance().SetMousePos({ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y });
+    }
+    else
+    {
+        //スティックの場合
+        ret = key.GetKnockLStickSize(KeyConfig::JOYPAD_NO::PAD1).x;
     }
 
     return ret;

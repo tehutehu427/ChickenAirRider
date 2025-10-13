@@ -38,5 +38,10 @@ public:
 	/// <param name=""></param>
 	/// <returns>回転量(-値:左回転, +値:右回転)</returns>
 	const float TurnValue(void) override;
+
+private:
+
+	//キーボードの場合の回転量
+	static constexpr float KETBOARD_TURN = 1000.0f;
 };
 
