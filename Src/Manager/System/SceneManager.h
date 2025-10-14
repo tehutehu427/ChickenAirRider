@@ -57,8 +57,9 @@ public:
 
 	/// @brief 先頭の（Updateが呼ばれる）シーンを切り替える
 	/// @param _sceneId 切り替え先のシーンID
+	/// @param _isReset シーンをリセットするか(true:リセットする)
 	/// @param _isFade フェードの有無(true:フェードあり)
-	void ChangeScene(const SCENE_ID _sceneId, const bool _isFade = false);
+	void ChangeScene(const SCENE_ID _sceneId, const bool _isReset, const bool _isFade = false);
 
 	/// @brief すべてのシーンを切り替える
 	/// @param _sceneId 切り替え先のシーンID
@@ -80,6 +81,9 @@ public:
 	//スタックの頭のシーンを削除する。
 	//ただし、スタック上にシーンが一つしかない場合は、削除しない。
 	void PopScene(void);
+
+	//シーンをリセットする
+	void ResetScene(void);
 
 	//リソースの破棄
 	void Destroy(void);

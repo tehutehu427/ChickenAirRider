@@ -37,24 +37,24 @@ SceneManager::SceneManager(void)
 	createScene_[SCENE_ID::TITLE] = [this](void)
 	{
 		//タイトルシーン生成   
-		return std::make_unique<SceneTitle>();
+		return std::move(std::make_unique<SceneTitle>());
 	};
 	createScene_[SCENE_ID::SELECT] = [this](void)
 	{
 		//セレクトシーン生成
-		return std::make_unique<SceneSelect>();
+		return std::move(std::make_unique<SceneSelect>());
 	};
 	createScene_[SCENE_ID::GAME] = [this](void)
 	{
 		//ゲームシーン生成
-		return std::make_unique<SceneGame>();
+		return std::move(std::make_unique<SceneGame>());
 	};
 
 	//シーン変更
 	changeScene_[CHANGE_SCENE_STATE::PUSH_BACK] = [this](void)
 	{
 		//シーンの末尾追加
-		scene_.push_back(createScene_[sceneId_]());
+		scene_.push_back(std::move(createScene_[sceneId_]()));
 
 		//初期化
 		scene_.back()->Load();
@@ -68,7 +68,7 @@ SceneManager::SceneManager(void)
 	changeScene_[CHANGE_SCENE_STATE::CHANGE_BACK] = [this](void)
 	{
 		//シーンの先頭変更
-		scene_.back() = createScene_[sceneId_]();
+		scene_.back() = std::move(createScene_[sceneId_]());
 
 		//初期化
 		scene_.back()->Load();
@@ -211,8 +211,12 @@ void SceneManager::Update(void)
 	//フェーダー更新
 	fader_->Update();
 
-	//先頭シーンの更新
-	scene_.front()->Update();
+	if (fader_->GetState() == Fader::STATE::NONE)
+	{
+		if(scene_.front() != nullptr)
+		//先頭シーンの更新
+		scene_.front()->Update();
+	}
 
 	//カメラの更新
 	for (auto& c : cameras_)
@@ -246,6 +250,7 @@ void SceneManager::Draw(void)
 		// 描画
 		for (auto& scene : scene_)
 		{
+			if (scene == nullptr)continue;
 			scene->Draw();
 		}
 
@@ -276,10 +281,14 @@ void SceneManager::Draw(void)
 
 }
 
-void SceneManager::ChangeScene(const SCENE_ID _sceneId, const bool _isFade)
+void SceneManager::ChangeScene(const SCENE_ID _sceneId, const bool _isReset, const bool _isFade)
 {
-	//リセット
-	ResetChangeScene(_isFade);
+	//リセットの有無
+	if (_isReset)
+	{
+		//リセット
+		ResetChangeScene(_isFade);
+	}
 
 	//待機シーンの変更
 	waitSceneId_ = _sceneId;
@@ -335,6 +344,15 @@ void SceneManager::PopScene(void)
 	{
 		//取り出す
 		changeSceneState_ = CHANGE_SCENE_STATE::POP_BACK;
+	}
+}
+
+void SceneManager::ResetScene(void)
+{
+	// 現在のシーンを解放
+	if (!scene_.empty())
+	{
+		scene_.front().reset();
 	}
 }
 

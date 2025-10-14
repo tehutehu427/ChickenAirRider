@@ -33,6 +33,12 @@ void StageManager::Draw(void)
 	stage_->Draw();
 }
 
+void StageManager::Destroy(void)
+{
+	//ステージを明示的に解放
+	stage_.reset();
+}
+
 StageManager::StageManager(void)
 {
 }

@@ -23,6 +23,9 @@ public:
 	//描画
 	void Draw(void);
 
+	//解放
+	void Destroy(void);
+
 	/// @brief プレイヤーの生成
 	/// @param _userNum ユーザーの数
 	/// @param _npcNum NPCの数

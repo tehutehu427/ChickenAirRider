@@ -25,7 +25,7 @@ void SceneSelect::Update(void)
 	if (KeyConfig::GetInstance().IsTrgDown(KeyConfig::CONTROL_TYPE::ENTER, KeyConfig::JOYPAD_NO::PAD1))
 	{
 		//ÉVÅ[ÉìÇÃçÌèú
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME, true);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME,true, true);
 		return;
 	}
 }

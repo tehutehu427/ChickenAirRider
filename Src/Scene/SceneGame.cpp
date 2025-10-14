@@ -12,6 +12,7 @@ SceneGame::SceneGame(void)
 
 SceneGame::~SceneGame(void)
 {
+	PlayerManager::GetInstance().Destroy();
 }
 
 void SceneGame::Load(void)
@@ -21,8 +22,11 @@ void SceneGame::Load(void)
 void SceneGame::Init(void)
 {
 	//タイマー
-	timer_ = std::make_unique<Timer>();
+	timer_ = std::make_unique<Timer>(10.0f);
 	timer_->Init();
+
+	//カウント開始
+	timer_->SetCountValid(true);
 
 	//プレイヤー管理の生成
 	PlayerManager::CreateInstance();
@@ -40,6 +44,14 @@ void SceneGame::Init(void)
 
 void SceneGame::Update(void)
 {
+	//タイムリミットになったならリザルトへ(デバッグ)
+	if (timer_->IsTimeOver())
+	{
+		//シーンの削除
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE,true, true);
+		return;
+	}
+
 	//インスタンス
 	auto& plMng = PlayerManager::GetInstance();
 

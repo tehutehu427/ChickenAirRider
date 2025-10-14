@@ -60,10 +60,12 @@ const float PlayerLogic::TurnValue(void)
     //キーボード又はスティックの移動量
     if (key.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_LEFT, KeyConfig::JOYPAD_NO::PAD1))
     {
+        //左方向なのでマイナス
         ret = -TURN_POW;
     }
     else if (key.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_RIGHT, KeyConfig::JOYPAD_NO::PAD1))
     {
+        //右方向なのでプラス
         ret = TURN_POW;
     }
 

@@ -48,6 +48,12 @@ void PlayerManager::Draw(void)
 	}
 }
 
+void PlayerManager::Destroy(void)
+{
+	//プレイヤーを明示的に解放
+	players_.clear();
+}
+
 void PlayerManager::CreatePlayer(const int _userNum, const int _npcNum)
 {
 }

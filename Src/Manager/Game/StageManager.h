@@ -23,6 +23,9 @@ public:
 	//描画
 	void Draw(void);
 
+	//解放
+	void Destroy(void);
+
 private:
 
 	//静的インスタンス

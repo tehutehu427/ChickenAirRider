@@ -47,9 +47,9 @@ private:
 	bool cntValid_;
 
 	//•ª•ÏŠ·
-	const int Minute(void)const;
+	const int Minute(const float _value)const;
 
 	//•b•ÏŠ·
-	const int Second(void)const;
+	const int Second(const float _value)const;
 };
 

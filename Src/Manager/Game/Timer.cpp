@@ -33,8 +33,18 @@ void Timer::Update(void)
 
 void Timer::Draw(void)
 {
-	//åoâﬂéûä‘
-	DrawFormatString(0, 64, 0xffffff, L"%02d:%02d", Minute(), Second());
+	//éûä‘êßå¿Ç†ÇË
+	if (IsTimeLimit())
+	{
+		//écÇËéûä‘
+		DrawFormatString(0, 64, 0xffffff, L"%02d:%02d", Minute(RemainingTime()), Second(RemainingTime()));
+	}
+	//éûä‘êßå¿Ç»Çµ
+	else
+	{
+		//åoâﬂéûä‘
+		DrawFormatString(0, 64, 0xffffff, L"%02d:%02d", Minute(cnt_), Second(cnt_));
+	}
 }
 
 const bool Timer::IsTimeOver(void)
@@ -67,18 +77,18 @@ const float Timer::RemainingTime(void)
 	return ret;
 }
 
-const int Timer::Minute(void) const
+const int Timer::Minute(const float _value) const
 {
 	//ï™
-	int ret = static_cast<int>(cnt_ / SECOND_TO_MINUTE);
+	int ret = static_cast<int>(_value / SECOND_TO_MINUTE);
 
 	return ret;
 }
 
-const int Timer::Second(void) const
+const int Timer::Second(const float _value) const
 {
 	//ïb
-	int ret = static_cast<int>(cnt_) % static_cast<int>(SECOND_TO_MINUTE);
+	int ret = static_cast<int>(_value) % static_cast<int>(SECOND_TO_MINUTE);
 
 	return ret;
 }
