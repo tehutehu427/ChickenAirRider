@@ -1,6 +1,7 @@
 #include"../pch.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
+#include"../Manager/Game/Timer.h"
 #include"../Manager/Game/PlayerManager.h"
 #include"../Object/Player/Player.h"
 #include "SceneGame.h"
@@ -19,6 +20,10 @@ void SceneGame::Load(void)
 
 void SceneGame::Init(void)
 {
+	//タイマー
+	timer_ = std::make_unique<Timer>();
+	timer_->Init();
+
 	//プレイヤー管理の生成
 	PlayerManager::CreateInstance();
 
@@ -38,6 +43,9 @@ void SceneGame::Update(void)
 	//インスタンス
 	auto& plMng = PlayerManager::GetInstance();
 
+	//タイマーの更新
+	timer_->Update();
+
 	//プレイヤーの更新
 	plMng.Update();
 
@@ -53,6 +61,8 @@ void SceneGame::Draw(void)
 	DebugDraw();
 
 #endif // _DEBUG
+	//タイマーの描画
+	timer_->Draw();
 
 	//プレイヤーの描画
 	PlayerManager::GetInstance().Draw();

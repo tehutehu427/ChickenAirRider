@@ -27,9 +27,15 @@ public:
 	void SetCountValid(const bool _cntValid) { cntValid_ = _cntValid; }
 
 	//時間制限が終わったか
-	const bool IsTimeOver(void) { return timer_ < cnt_; }
+	const bool IsTimeOver(void);
+
+	//残り時間の取得
+	const float RemainingTime(void);
 			
 private:
+
+	//秒数の分換算
+	static constexpr float SECOND_TO_MINUTE = 60.0f;
 
 	//時間計測
 	float timer_;
@@ -39,5 +45,11 @@ private:
 
 	//カウントの状態
 	bool cntValid_;
+
+	//分変換
+	const int Minute(void)const;
+
+	//秒変換
+	const int Second(void)const;
 };
 

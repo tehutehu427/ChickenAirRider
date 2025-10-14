@@ -67,5 +67,8 @@ const float PlayerLogic::TurnValue(void)
         ret = TURN_POW;
     }
 
+    //ゲームコントローラーがついてないなら
+    if(GetJoypadNum() < 1)key.SetMousePos({ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y });
+
     return ret;
 }

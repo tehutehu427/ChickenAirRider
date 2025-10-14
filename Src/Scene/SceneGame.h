@@ -1,6 +1,8 @@
 #pragma once
 #include "SceneBase.h"
 
+class Timer;
+
 class SceneGame : public SceneBase
 {
 public:
@@ -25,5 +27,8 @@ private:
 
 	//デバッグ描画
 	void DebugDraw(void)override;
+
+	//タイマー
+	std::unique_ptr<Timer> timer_;
 };
 
