@@ -23,8 +23,11 @@ public:
 	//時間制限の有無
 	const bool IsTimeLimit(void)const { return timer_ > 0.0f; }
 
-	//カウントの有効の有無
-	void SetCountValid(const bool _cntValid) { cntStop_ = _cntValid; }
+	//カウントの有無の設定
+	void SetCountValid(const bool _cntValid) { cntValid_ = _cntValid; }
+
+	//時間制限が終わったか
+	const bool IsTimeOver(void) { return timer_ < cnt_; }
 			
 private:
 
@@ -34,7 +37,7 @@ private:
 	//カウンタ
 	float cnt_;
 
-	//カウントを止めるか
-	bool cntStop_;
+	//カウントの状態
+	bool cntValid_;
 };
 

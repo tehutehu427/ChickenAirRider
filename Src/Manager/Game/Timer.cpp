@@ -5,7 +5,7 @@ Timer::Timer(const float _timeLimit)
 {
 	cnt_ = 0.0f;
 	timer_ = _timeLimit;
-	cntStop_ = false;
+	cntValid_ = false;
 }
 
 Timer::~Timer(void)
