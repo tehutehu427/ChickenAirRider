@@ -20,6 +20,12 @@ public:
 	//描画
 	void Draw(void);
 
+	//時間制限の有無
+	const bool IsTimeLimit(void)const { return timer_ > 0.0f; }
+
+	//カウントの有効の有無
+	void SetCountValid(const bool _cntValid) { cntStop_ = _cntValid; }
+			
 private:
 
 	//時間計測
@@ -27,5 +33,8 @@ private:
 
 	//カウンタ
 	float cnt_;
+
+	//カウントを止めるか
+	bool cntStop_;
 };
 
