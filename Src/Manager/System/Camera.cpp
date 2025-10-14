@@ -1,13 +1,11 @@
-#include <math.h>
-#include <DxLib.h>
-#include <EffekseerForDXLib.h>
+#include"../pch.h"
 #include "../../Utility/Utility.h"
 #include "../../Object/Common/Transform.h"
 #include "../../Manager/Game/GravityManager.h"
 #include "../../Application.h"
 #include "Camera.h"
 
-Camera::Camera(int _playerNum)
+Camera::Camera(int _userNum)
 {
 	angles_ = VECTOR();
 	cameraUp_ = VECTOR();
@@ -15,7 +13,7 @@ Camera::Camera(int _playerNum)
 	pos_ = Utility::VECTOR_ZERO;
 	targetPos_ = Utility::VECTOR_ZERO;
 	followTransform_ = nullptr;
-	padNo_ = static_cast<KeyConfig::JOYPAD_NO>(_playerNum + 1);
+	padNo_ = static_cast<KeyConfig::JOYPAD_NO>(_userNum + 1);
 	localPos_ = Utility::VECTOR_ZERO;
 }
 

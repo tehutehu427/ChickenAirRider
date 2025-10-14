@@ -1,4 +1,4 @@
-#include <DxLib.h>
+#include"../pch.h"
 #include "FpsControl.h"
 #include "../Application.h"
 
@@ -8,7 +8,7 @@ FpsControl::FpsControl()
 	prevFrameTime_ = 0;
 	frameCnt_ = 0;
 	updateFrameRateTime_ = 0;
-	frameCnt_ = 0.0f;
+	frameRate_ = 0.0f;
 }
 
 FpsControl::~FpsControl()
@@ -22,7 +22,7 @@ void FpsControl::Init()
 	prevFrameTime_ = 0;
 	frameCnt_ = 0;
 	updateFrameRateTime_ = 0;
-	frameCnt_ = 0.0f;
+	frameRate_ = 0.0f;
 }
 
 bool FpsControl::UpdateFrameRate()

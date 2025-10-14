@@ -1,4 +1,4 @@
-#include <cmath>
+#include"../pch.h"
 #include "KeyConfig.h"
 #include "InputManager.h"
 KeyConfig* KeyConfig::instance_ = nullptr;
@@ -27,7 +27,6 @@ void KeyConfig::Init(void)
 	inputManager_->Init();
 
 	//åàíËèàóù
-	Add(CONTROL_TYPE::ENTER, KEY_INPUT_SPACE);
 	Add(CONTROL_TYPE::ENTER, KEY_INPUT_RETURN);
 	Add(CONTROL_TYPE::ENTER, MOUSE::CLICK_LEFT);
 	Add(CONTROL_TYPE::ENTER, JOYPAD_BTN::RIGHTBUTTON_RIGHT);

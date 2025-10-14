@@ -11,37 +11,29 @@ public:
 	//デストラクタ
 	~PlayerLogic(void)override;
 
-	/// <summary>
-	/// プッシュしたか
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>プッシュの有無(true:プッシュした)</returns>
+	/// @brief プッシュしたか
+	/// @param  
+	/// @return プッシュの有無(true:プッシュした)
 	const bool IsPush(void) override;
 
-	/// <summary>
-	/// チャージ開始
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>チャージ開始の有無(true:チャージ開始)</returns>
+	/// @brief チャージ開始
+	/// @param  
+	/// @return チャージ開始の有無(true:チャージ開始)
 	const bool StartCharge(void) override;
 
-	/// <summary>
-	/// チャージ解放
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>チャージ解放の有無(true:チャージ解放)</returns>
+	/// @brief チャージ解放
+	/// @param  
+	/// @return チャージ解放の有無(true:チャージ解放)
 	const bool DisCharge(void) override;
 
-	/// <summary>
-	/// ターンの値
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>回転量(-値:左回転, +値:右回転)</returns>
+	/// @brief ターンの値
+	/// @param  
+	/// @return 回転量(-値:左回転, +値:右回転)
 	const float TurnValue(void) override;
 
 private:
 
-	//キーボードの場合の回転量
-	static constexpr float KETBOARD_TURN = 1000.0f;
+	//回転量
+	static constexpr float TURN_POW = 1000.0f;
 };
 

@@ -1,4 +1,4 @@
-#include<DxLib.h>
+#include"../pch.h"
 #include"../Manager/System/KeyConfig.h"
 #include"../Manager/System/SceneManager.h"
 #include "SceneSelect.h"

@@ -6,10 +6,13 @@ class MachineAction : public ActionBase
 {
 public:
 
-	//コンストラクタ
+	/// @brief コンストラクタ
+	/// @param _player 親情報
+	/// @param _machine 機体の情報
+	/// @param _logic 行動情報
 	MachineAction(Player& _player, const Machine _machine, LogicBase& _logic);
 
-	//コンストラクタ
+	//デストラクタ
 	~MachineAction(void)override;
 
 	//初期化

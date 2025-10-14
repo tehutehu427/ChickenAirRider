@@ -21,12 +21,11 @@ public :
 		STAGE,			//ステージ
 	};
 
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	/// <param name="_tags">自身の衝突用タグ</param>
-	/// <param name="_geometry">当たり判定の形状</param>
-	/// <param name="_notHitTags">衝突させないタグ</param>
+	/// @brief コンストラクタ
+	/// @param _parent 親情報
+	/// @param _tags 自身の衝突用タグ
+	/// @param _geometry 当たり判定の形状
+	/// @param _notHitTags 衝突させないタグ
 	Collider(ObjectBase& _parent, const std::set<TAG> _tags, Geometry& _geometry, const std::set<TAG> _notHitTags);
 
 	// デストラクタ
@@ -53,10 +52,8 @@ public :
 	//終了処理(所持者の解放時に置く)
 	inline void Kill(void) { isDead_ = true; }
 
-	/// <summary>
-	/// 当たった時の処理
-	/// </summary>
-	/// <param name="_collider">相手のコライダ</param>
+	/// @brief 当たった時の処理
+	/// @param _collider 相手のコライダ
 	void OnHit(const std::weak_ptr<Collider> _collider);
 
 private:

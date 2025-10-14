@@ -7,23 +7,17 @@ class Capsule : public Geometry
 
 public:
 
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	/// <param name="_pos">追従する親の座標</param>
-	/// <param name="_rot">追従する親の回転</param>
-	/// <param name="_localPosTop">上側の相対座標</param>
-	/// <param name="_localPosDown">下側の相対座標</param>
-	/// <param name="_radius">半径</param>
+	/// @brief コンストラクタ
+	/// @param _pos 追従する親の座標
+	/// @param _rot 追従する親の回転
+	/// @param _localPosTop 上側の相対座標
+	/// @param _localPosDown 下側の相対座標
+	/// @param _radius 半径
 	Capsule(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _localPosTop, const VECTOR _localPosDown, const float _radius);
-
-	/// <summary>
-	/// コピーコンストラクタ
-	/// </summary>
-	/// <param name="_copyBase">コピー元</param>
-	/// <param name="_pos">追従する親の座標</param>
-	/// <param name="_rot">追従する親の回転</param>
-	Capsule(const Capsule& _copyBase, const VECTOR& _pos, const Quaternion& _rot);
+	
+	/// @brief コピーコンストラクタ
+	/// @param _copyBase コピー元
+	Capsule(const Capsule& _copyBase);
 
 	// デストラクタ
 	~Capsule(void)override;

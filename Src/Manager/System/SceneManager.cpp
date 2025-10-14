@@ -1,6 +1,4 @@
-#include <chrono>
-#include <DxLib.h>
-#include <EffekseerForDXLib.h>
+#include"../pch.h"
 #include "../Game/CollisionManager.h"
 #include "Camera.h"
 #include "ResourceManager.h"

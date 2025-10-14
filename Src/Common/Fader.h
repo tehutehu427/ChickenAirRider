@@ -15,52 +15,28 @@ public:
 		FADE_IN		// 徐々に明転
 	};
 
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
+	//コンストラクタ
 	Fader();
 
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
+	//デストラクタ
 	~Fader();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name=""></param>
+	//初期化
 	void Init(void);
 
-	/// <summary>
-	/// 更新
-	/// </summary>
-	/// <param name=""></param>
+	//更新
 	void Update(void);
 
-	/// <summary>
-	/// 描画
-	/// </summary>
-	/// <param name=""></param>
+	//描画
 	void Draw(void);		
 	
-	/// <summary>
-	/// 指定フェードを開始する
-	/// </summary>
-	/// <param name="_state">フェード状態</param>
+	//指定フェードを開始する
 	void SetFade(const STATE _state);
 	
-	/// <summary>
-	/// 状態の取得
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>状態を返す</returns>
+	//フェード状態の取得
 	const STATE GetState(void) const { return state_; }
 
-	/// <summary>
-	/// 終了判定を返す
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>終了判定を返す</returns>
+	//終了判定を返す
 	const bool IsEnd(void) const { return isEnd_; }
 
 private:

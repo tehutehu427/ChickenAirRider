@@ -39,11 +39,9 @@ public:
 
 protected:
 
-	/// <summary>
-	/// コンストラクタ(外部で作る必要のない基底なのでprotected)
-	/// </summary>
-	/// <param name="_pos">追従する親の座標</param>
-	/// <param name="_rot">追従する親の回転</param>
+	/// @brief コンストラクタ(外部で作る必要のない基底なのでprotected)
+	/// @param _pos 追従する親の座標
+	/// @param _rot 追従する親の回転
 	Geometry(const VECTOR& _pos, const Quaternion& _rot);
 
 	// 相対座標を回転させてワールド座標で取得する

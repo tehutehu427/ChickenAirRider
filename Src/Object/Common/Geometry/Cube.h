@@ -14,30 +14,22 @@ public:
 		VECTOR axis[3];
 	};
 
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	/// <param name="_pos">追従する親の座標</param>
-	/// <param name="_rot">追従する親の回転</param>
-	/// <param name="_min">親から見た、箱の最小地点</param>
-	/// <param name="_max">親から見た、箱の最大地点</param>
+	/// @brief コンストラクタ
+	/// @param _pos 追従する親の座標
+	/// @param _rot 追従する親の回転
+	/// @param _min 親から見た、箱の最小地点
+	/// @param _max 親から見た、箱の最大地点
 	Cube(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max);
-
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	/// <param name="_pos">追従する親の座標</param>
-	/// <param name="_rot">追従する親の回転</param>
-	/// <param name="_halfSize">箱の半分サイズ</param>
+	
+	/// @brief コンストラクタ
+	/// @param _pos 追従する親の座標
+	/// @param _rot 追従する親の回転
+	/// @param _halfSize 箱の半分サイズ
 	Cube(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _halfSize);
 
-	/// <summary>
-	/// コピーコンストラクタ
-	/// </summary>
-	/// <param name="_copyBase">コピー元</param>
-	/// <param name="_pos">追従する親の座標</param>
-	/// <param name="_rot">追従する親の回転</param>
-	Cube(const Cube& _copyBase, const VECTOR& _pos, const Quaternion& _rot);
+	/// @brief コピーコンストラクタ
+	/// @param _copyBase コピー元
+	Cube(const Cube& _copyBase);
 
 	//デストラクタ
 	~Cube(void)override;
@@ -76,7 +68,8 @@ public:
 
 private:
 
-	OBB obb_;			//回転バウンディングボックス
+	//回転バウンディングボックス
+	OBB obb_;
 
 	//箱の回転情報の取得
 	inline const VECTOR GetAxis(const int _num)const { return obb_.axis[_num]; }

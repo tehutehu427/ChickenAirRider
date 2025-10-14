@@ -1,4 +1,4 @@
-#include <DxLib.h>
+#include"../pch.h"
 #include "../../Application.h"
 #include "Resource.h"
 #include "ResourceManager.h"

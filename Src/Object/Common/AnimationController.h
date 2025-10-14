@@ -25,23 +25,23 @@ public :
 	// デストラクタ
 	~AnimationController(void);
 
-	// アニメーション追加
-	void Add(int type, const std::string& path, float speed);
-
+	/// @brief 追加
+	/// @param type アニメーション番号
+	/// @param speed 速度
+	/// @param modelId モデルID
 	void Add(int type, const float speed,int modelId = -1);
 
-	/// <summary>
-	/// アニメーションプレイ
-	/// </summary>
-	/// <param name="type">アニメーション番号</param>
-	/// <param name="isLoop">ループするか</param>
-	/// <param name="startStep">再生開始フレーム</param>
-	/// <param name="endStep">再生終了フレーム</param>
-	/// <param name="isStop">アニメーションを止める</param>
-	/// <param name="isForce">同じアニメーションを再生したい場合はtrue</param>
+	/// @brief アニメーションプレイ
+	/// @param type アニメーション番号
+	/// @param isLoop ループするか
+	/// @param startStep 再生開始フレーム
+	/// @param endStep 再生終了フレーム
+	/// @param isStop アニメーションを止める
+	/// @param isForce 同じアニメーションを再生したい場合はtrue
 	void Play(int type, bool isLoop = true, 
 		float startStep = 0.0f, float endStep = -1.0f, bool isStop = false, bool isForce = false);
 
+	//更新
 	void Update(void);
 
 	// アニメーション終了後に繰り返すループステップ

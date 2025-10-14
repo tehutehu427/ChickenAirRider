@@ -1,4 +1,4 @@
-﻿#include<algorithm>
+﻿#include"../pch.h"
 #include "../../../Common/Quaternion.h"
 #include "../../../Utility/Utility.h"
 #include"Model.h"
@@ -17,7 +17,8 @@ Sphere::Sphere(const VECTOR& _pos, const float _radius) : Geometry(_pos,Quaterni
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));
 }
 
-Sphere::Sphere(const Sphere& _copyBase, const VECTOR& _pos) : Geometry(_pos, Quaternion())
+Sphere::Sphere(const Sphere& _copyBase)
+	: Geometry(_copyBase.GetColPos(), Quaternion())
 {
 	radius_ = _copyBase.GetRadius();
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));

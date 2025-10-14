@@ -6,22 +6,15 @@ class Model : public Geometry
 {
 public:
 
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	/// <param name="_pos">追従する親の座標</param>
-	/// <param name="_rot">追従する親の回転</param>
-	/// <param name="_modelId">追従する親のモデルID</param>
+	/// @brief コンストラクタ
+	/// @param _pos 追従する親の座標
+	/// @param _rot 追従する親の回転
+	/// @param _modelId 追従する親のモデルID
 	Model(const VECTOR& _pos, const Quaternion& _rot, const int _modelId);
 
-	/// <summary>
-	/// コピーコンストラクタ
-	/// </summary>
-	/// <param name="_copyBase">コピー元</param>
-	/// <param name="_pos">追従する親の座標</param>
-	/// <param name="_rot">追従する親の回転</param>
-	/// <param name="_modelId">追従する親のモデルID</param>
-	Model(const Model& _copyBase, const VECTOR& _pos, const Quaternion& _rot);
+	/// @brief コピーコンストラクタ
+	/// @param _copyBase コピー元
+	Model(const Model& _copyBase);
 
 	//デストラクタ
 	~Model(void)override;

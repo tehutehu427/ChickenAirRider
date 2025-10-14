@@ -1,6 +1,8 @@
 #pragma once
 
 #include<DxLib.h>
+#include <EffekseerForDXLib.h>
+#include <Effekseer.h>
 #include<cassert>
 #include<vector>
 #include<list>

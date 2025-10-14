@@ -64,36 +64,28 @@ private:
 	//デストラクタ
 	~CollisionManager(void);
 
-	/// <summary>
-	/// 当たり判定距離内にいるか
-	/// </summary>
-	/// <param name="_col1">1つ目のコライダ</param>
-	/// <param name="_col2">2つ目のコライダ</param>
-	/// <returns>true:範囲内</returns>
+	/// @brief 当たり判定距離内にいるか
+	/// @param _col1 1つ目のコライダ
+	/// @param _col2 2つ目のコライダ
+	/// @return true:範囲内
 	const bool IsWithInHitRange(const std::weak_ptr<Collider> _col1, const std::weak_ptr<Collider> _col2)const;
 
-	/// <summary>
-	/// 当たり判定をするか(全部当てはまったらtrue)
-	/// </summary>
-	/// <param name="_col1">1つ目のコライダ番号</param>
-	/// <param name="_col2">2つ目のコライダ番号</param>
-	/// <returns>true:当たり判定をする</returns>
+	/// @brief 当たり判定をするか
+	/// @param _col1Num 1つ目のコライダ番号
+	/// @param _col2Num 2つ目のコライダ番号
+	/// @return true:当たり判定をする
 	const bool JudgeIsCollision(const int _col1Num, const int _col2Num)const;
 
-	/// <summary>
-	/// タグごとでの当たり判定するかどうか
-	/// </summary>
-	/// <param name="_tag1">1つ目のタグ</param>
-	/// <param name="_tag2">2つ目のタグ</param>
-	/// <returns>true:当たり判定をする</returns>
+	/// @brief タグごとでの当たり判定するかどうか
+	/// @param _tag1 1つ目のタグ
+	/// @param _tag2 2つ目のタグ
+	/// @return true:当たり判定をする
 	const bool JudgeIsColTag(const Collider::TAG _tag1, const Collider::TAG _tag2)const;
 
-	/// <summary>
-	/// 当たり判定
-	/// </summary>
-	/// <param name="_col1">1つ目のコライダ</param>
-	/// <param name="_col2">2つ目のコライダ</param>
-	/// <returns>true:当たった</returns>
+	/// @brief 当たり判定
+	/// @param _col1 1つ目のコライダ
+	/// @param _col2 2つ目のコライダ
+	/// @return true:当たった
 	const bool IsCollision(const std::weak_ptr<Collider> _col1, const std::weak_ptr<Collider> _col2)const;
 
 };

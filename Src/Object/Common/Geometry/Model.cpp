@@ -1,3 +1,4 @@
+#include"../pch.h"
 #include "../../../Common/Quaternion.h"
 #include"Sphere.h"
 #include"Capsule.h"
@@ -15,7 +16,8 @@ Model::Model(const VECTOR& _pos, const Quaternion& _rot, const int _modelId) : G
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_)); 
 }
 
-Model::Model(const Model& _copyBase, const VECTOR& _pos, const Quaternion& _rot) : Geometry(_pos,_rot)
+Model::Model(const Model& _copyBase)
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColRot())
 {
 	parentModelId_ = _copyBase.GetParentModel();
 	hitLineInfo_ = {};

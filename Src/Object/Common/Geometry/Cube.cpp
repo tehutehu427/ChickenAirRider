@@ -1,5 +1,4 @@
-﻿#include<algorithm>
-#include<cassert>
+﻿#include"../pch.h"
 #include"../../../Common/Quaternion.h"
 #include"../../../Utility/Utility.h"
 #include"Model.h"
@@ -28,7 +27,9 @@ Cube::Cube(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _halfSize) :
 	UpdateObbAxis();
 }
 
-Cube::Cube(const Cube& _copyBase, const VECTOR& _pos, const Quaternion& _rot) : Geometry(_pos, _rot),obb_(_copyBase.GetObb())
+Cube::Cube(const Cube& _copyBase)
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColRot()),
+	obb_(_copyBase.GetObb())
 {
 	UpdateObbAxis();
 }
@@ -61,8 +62,10 @@ const bool Cube::IsHit(Geometry& _geometry)
 	//回転の更新
 	UpdateObbAxis();
 
+	//判定
 	bool ret = _geometry.IsHit(*this);
 
+	//結果
 	return ret;
 }
 

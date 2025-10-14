@@ -1,3 +1,4 @@
+#include"../pch.h"
 #include "../../../Common/Quaternion.h"
 #include "Geometry.h"
 

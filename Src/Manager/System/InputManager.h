@@ -7,7 +7,6 @@
 
 class InputManager
 {
-
 public:
 
 	static constexpr int STICK_THRESHOLD = 300;	//スティックの猶予
@@ -26,6 +25,7 @@ public:
 		SWITCH_PRO_CTRL,
 		MAX
 	};
+
 	// ゲームコントローラーの入力情報
 	struct JOYPAD_IN_STATE
 	{
@@ -40,12 +40,21 @@ public:
 		int AKeyRX;
 		int AKeyRY;
 	};
+
+	//コンストラクタ
 	InputManager(void);
 	InputManager(const InputManager& manager) = default;
+	
+	//デストラクタ
 	~InputManager(void);
 
+	//初期化
 	void Init(void);
+	
+	//更新
 	void Update(void);
+
+	//解放
 	void Release(void);
 
 	// 判定を行うキーを追加

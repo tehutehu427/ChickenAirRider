@@ -40,10 +40,8 @@ public:
 	//当たり判定の削除
 	void Sweep(void);
 
-	/// <summary>
-	/// それぞれの当たり判定後の処理
-	/// </summary>
-	/// <param name="_hitColTag">相手側の当たり判定タグ</param>
+	/// @brief それぞれの当たり判定後の処理
+	/// @param _hitCol 相手側の当たり判定タグ
 	virtual void OnHit(const std::weak_ptr<Collider> _hitCol) = 0;
 
 	//モデル情報の取得
@@ -67,12 +65,10 @@ protected:
 	//エフェクト
 	std::unique_ptr<EffectController> effect_;
 
-	/// <summary>
-	/// 当たり判定作成(形状情報作成後)
-	/// </summary>
-	/// <param name="_tag">自身の当たり判定タグ</param>
-	/// <param name="_Geometry">自身の形状情報</param>
-	/// <param name="_notHitTags">衝突させないタグ</param>
+	/// @brief 当たり判定作成(形状情報作成後)
+	/// @param _tag 自身の当たり判定タグ
+	/// @param _geometry 自身の形状情報
+	/// @param _notHitTags 衝突させないタグ
 	void MakeCollider(const std::set<Collider::TAG> _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags = {});
 
 	//全当たり判定の消去

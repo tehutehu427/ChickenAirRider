@@ -1,5 +1,4 @@
-#include <DxLib.h>
-#include <EffekseerForDXLib.h>
+#include"pch.h"
 #include "Manager/System/InputManager.h"
 #include "Manager/System/KeyConfig.h"
 #include "Manager/System/ResourceManager.h"

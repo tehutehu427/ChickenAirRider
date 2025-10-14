@@ -1,3 +1,4 @@
+#include"../pch.h"
 #include "../Utility/Utility.h"
 #include "Character/Character.h"
 #include "Machine/Machine.h"

@@ -1,7 +1,7 @@
-#include <DxLib.h>
-#include <cmath>
+#include"../pch.h"
 #include "../Application.h"
 #include "InputManager.h"
+
 void InputManager::Init(void)
 {
 

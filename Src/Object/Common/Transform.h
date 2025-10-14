@@ -43,12 +43,10 @@ public:
 	// ローカル回転
 	Quaternion quaRotLocal;
 
-	/// <summary>
-	/// モデル制御の基本情報更新
-	/// </summary>
-	/// <param name=""></param>
+	//モデル制御の基本情報更新
 	void Update(void);
 
+	//モデル設定
 	void SetModel(int modelHId);
 
 	// 前方方向を取得

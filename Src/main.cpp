@@ -1,8 +1,7 @@
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 
-#include <DxLib.h>
-#include<crtdbg.h>
+#include"pch.h"
 #include "Application.h"
 
 

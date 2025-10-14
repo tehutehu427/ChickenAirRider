@@ -1,3 +1,4 @@
+#include"../pch.h"
 #include"../Utility/Utility.h"
 #include "../Common/Quaternion.h"
 #include"Model.h"
@@ -10,7 +11,8 @@
 //ƒJƒvƒZƒ‹
 //***************************************************
 
-Capsule::Capsule(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _localPosTop, const VECTOR _localPosDown, const float _radius) : Geometry(_pos,_rot),
+Capsule::Capsule(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _localPosTop, const VECTOR _localPosDown, const float _radius)
+	: Geometry(_pos,_rot),
 	localPosTop_(_localPosTop),
 	localPosDown_(_localPosDown),
 	radius_(_radius)
@@ -18,7 +20,8 @@ Capsule::Capsule(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _local
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));
 }
 
-Capsule::Capsule(const Capsule& _copyBase, const VECTOR& _pos, const Quaternion& _rot) : Geometry(_pos,_rot)
+Capsule::Capsule(const Capsule& _copyBase)
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColRot())
 {
 	radius_ = _copyBase.GetRadius();
 	localPosTop_ = _copyBase.GetLocalPosTop();

@@ -1,3 +1,4 @@
+#include"../pch.h"
 #include "../ObjectBase.h"
 #include "Geometry/Geometry.h"
 #include "Collider.h"

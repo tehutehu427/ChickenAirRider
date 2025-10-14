@@ -7,10 +7,12 @@ class ActionBase
 {
 public:
 
-	//コンストラクタ
+	/// @brief コンストラクタ
+	/// @param _player 親情報
+	/// @param _logic 行動情報
 	ActionBase(Player& _player, LogicBase& _logic);
 
-	//コンストラクタ
+	//デストラクタ
 	virtual ~ActionBase(void);
 
 	//初期化

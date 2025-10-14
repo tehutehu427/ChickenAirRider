@@ -1,5 +1,6 @@
-#include "VertexMaterial.h"
+#include"../pch.h"
 #include "../Application.h"
+#include "VertexMaterial.h"
 
 VertexMaterial::VertexMaterial(std::wstring shaderFileName, int constBufFloat4Size)
 {
@@ -7,7 +8,7 @@ VertexMaterial::VertexMaterial(std::wstring shaderFileName, int constBufFloat4Si
 	shader_ = LoadVertexShader((Application::PATH_SHADER + shaderFileName).c_str());
 
 	// 頂点定数バッファの確保サイズ(FLOAT4をいくつ作るか)
-	constBufFloat4Size_ = constBufFloat4Size_;
+	constBufFloat4Size_ = constBufFloat4Size;
 
 	// 頂点シェーダー用の定数バッファを作成
 	constBuf_ = CreateShaderConstantBuffer(sizeof(FLOAT4) * constBufFloat4Size_);

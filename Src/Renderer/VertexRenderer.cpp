@@ -1,5 +1,5 @@
+#include"../pch.h"
 #include "VertexRenderer.h"
-#include<DxLib.h>
 #include "VertexMaterial.h"
 
 VertexRenderer::VertexRenderer(VertexMaterial& material):

@@ -71,43 +71,64 @@ public:
 	};
 
 
+	/// @brief コンストラクタ
+	/// @param _playerNum ユーザーの数
+	Camera(int _userNum);
 
-	Camera(int _playerNum);
+	//デストラクタ
 	~Camera(void);
 
+	//初期化
 	void Init(void);
+	
+	//更新
 	void Update(void);
+	
+	//描画前処理
 	void SetBeforeDraw(void);
+	
+	//描画
 	void Draw(void);
 
-	// カメラ位置
+	// カメラ位置の取得
 	VECTOR GetPos(void) const;
-	// カメラの操作角度
+
+	// カメラの操作角度の取得
 	VECTOR GetAngles(void) const;
-	// カメラの注視点
+
+	// カメラの注視点の取得
 	VECTOR GetTargetPos(void) const;
 
-	// カメラ角度
+	// カメラ角度の取得
 	Quaternion GetQuaRot(void) const;
-	// X回転を抜いたカメラ角度
+
+	// X回転を抜いたカメラ角度の取得
 	Quaternion GetQuaRotOutX(void) const;
-	// カメラの前方方向
+
+	// カメラの前方方向の取得
 	VECTOR GetForward(void) const;
 
-	//カメラの設定
+	// カメラの設定
 	void CameraSetting(void);
 
-	// カメラモードの変更
-	void ChangeMode(MODE mode);
-
+	// カメラモードの取得
 	MODE GetMode(void) { return mode_; }
+
+	// カメラモードの設定
+	void ChangeMode(MODE mode);
 
 	// 追従対象の設定
 	void SetFollow(const Transform* follow);
 
+	//座標の設定
 	void SetPos(VECTOR pos) { pos_ = pos; }
+	
+	//操作角度の設定
 	void SetAngles(VECTOR angles) { angles_ = angles; }
+	
+	//注視点の設定
 	void SetTargetPos(VECTOR pos) { targetPos_ = pos; }
+
 private:
 
 	// カメラのローカル座標
@@ -152,8 +173,10 @@ private:
 	// カメラ操作
 	void ProcessRot(void);
 	void ProcessZoom(void);
+
 	//マウスでのカメラ操作
 	void ProcessRotMause(float* x_m, float* y_m, const float fov_per = 1.0f);
+
 	// モード別更新ステップ
 	void SetBeforeDrawFixedPoint(void);
 	void SetBeforeDrawFollow(void);

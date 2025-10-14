@@ -1,3 +1,4 @@
+#include"../pch.h"
 #include"../Object/Common/Transform.h"
 #include"../Object/Common/Geometry/Geometry.h"
 #include"../Object/Common/Collider.h"

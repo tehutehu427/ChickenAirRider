@@ -1,5 +1,4 @@
-#include <math.h>
-#include <DxLib.h>
+#include"../pch.h"
 #include "../Utility/Utility.h"
 #include "Quaternion.h"
 

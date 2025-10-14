@@ -6,19 +6,14 @@ class Sphere : public Geometry
 {
 public:
 
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	/// <param name="_pos">追従する親の座標</param>
-	/// <param name="_radius">半径</param>
+	/// @brief コンストラクタ
+	/// @param _pos 追従する親の座標
+	/// @param _radius 半径
 	Sphere(const VECTOR& _pos, const float _radius);
 
-	/// <summary>
-	/// コピーコンストラクタ
-	/// </summary>
-	/// <param name="_copyBase">コピー元</param>
-	/// <param name="_pos">追従する親の座標</param>
-	Sphere(const Sphere& _copyBase, const VECTOR& _pos);
+	/// @brief コピーコンストラクタ
+	/// @param _copyBase コピー元
+	Sphere(const Sphere& _copyBase);
 
 	//デストラクタ
 	~Sphere(void)override;

@@ -1,3 +1,4 @@
+#include"../pch.h"
 #include"../Object/Player/Player.h"
 #include "PlayerManager.h"
 
@@ -47,7 +48,7 @@ void PlayerManager::Draw(void)
 	}
 }
 
-void PlayerManager::CreatePlayer(const int _userNum, const int cpuNum)
+void PlayerManager::CreatePlayer(const int _userNum, const int _npcNum)
 {
 }
 

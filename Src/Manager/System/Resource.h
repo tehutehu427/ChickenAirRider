@@ -20,9 +20,19 @@ public:
 	};
 	// コンストラクタ
 	Resource(void);
-	// コンストラクタ
+
+	/// @brief コンストラクタ
+	/// @param type リソースのタイプ
+	/// @param path リソースまでのパス
 	Resource(TYPE type, const std::wstring& path);
-	// コンストラクタ(IMGS用)
+	
+	/// @brief コンストラクタ(IMGS用)
+	/// @param type リソースのタイプ
+	/// @param path リソースまでのパス
+	/// @param numX 横分割数
+	/// @param numY 縦分割数
+	/// @param sizeX 分割後画像の1つ分の横サイズ
+	/// @param sizeY 分割後画像の1つ分の縦サイズ
 	Resource(TYPE type, const std::wstring& path, int numX, int numY, int sizeX, int sizeY);
 
 	// デストラクタ

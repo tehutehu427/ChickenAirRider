@@ -1,3 +1,4 @@
+#include"../pch.h"
 #include "../../../Common/Quaternion.h"
 #include"Model.h"
 #include"Cube.h"
@@ -16,7 +17,8 @@ Line::Line(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _localPosPoi
 	hitInfo_ = {};
 }
 
-Line::Line(const Line& _copyBase, const VECTOR& _pos, const Quaternion& _rot) : Geometry(_pos, _rot)
+Line::Line(const Line& _copyBase)
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColRot())
 {
 	localPosPoint1_ = _copyBase.GetLocalPosPoint1();
 	localPosPoint2_ = _copyBase.GetLocalPosPoint2();

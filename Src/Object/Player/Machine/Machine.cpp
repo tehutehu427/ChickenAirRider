@@ -1,4 +1,4 @@
-#include <DxLib.h>
+#include"../pch.h"
 #include "Machine.h"
 
 Machine::Machine(void)

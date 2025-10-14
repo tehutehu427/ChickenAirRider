@@ -22,6 +22,7 @@ public:
 		INPUT_KEY = 4096	// キー入力
 	};
 
+	//入力タイプ
 	enum class TYPE
 	{
 		KEYBOARD_MOUSE,
@@ -52,6 +53,7 @@ public:
 		MAX
 	};
 
+	//ゲームコントローラースティック
 	enum class JOYPAD_STICK
 	{
 		L_STICK_UP,		//左スティック上
@@ -65,6 +67,7 @@ public:
 		MAX
 	};
 
+	//マウス
 	enum class MOUSE
 	{
 		CLICK_RIGHT,		//右クリック
@@ -78,7 +81,8 @@ public:
 		MAX
 	};
 
-	enum class CONTROL_TYPE //操作の種類	
+	//操作の種類
+	enum class CONTROL_TYPE 	
 	{
 		ENTER,					//決定
 		CAMERA_ZOOM_IN,			//カメラのズームイン
@@ -104,55 +108,98 @@ public:
 	// インスタンスの取得
 	static KeyConfig& GetInstance(void);
 
+	//初期化
 	void Init(void);
+	
+	//更新
 	void Update(void);
 
-	//操作の種類別にキーの状態を取得
+	/// @brief キーが押されているか
+	/// @param cType 操作名
+	/// @param no ゲームコントローラーの番号
+	/// @param type 入力タイプ
+	/// @return true:押されている
 	bool IsNew(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no ,TYPE type = TYPE::ALL);
+
+	/// @brief キーが押されたか(押された瞬間のみ)
+	/// @param cType 操作名
+	/// @param no ゲームコントローラーの番号
+	/// @param type 入力タイプ
+	/// @return true:押された
 	bool IsTrgDown(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no,TYPE type = TYPE::ALL);
+
+	/// @brief キーが離されたか(離された瞬間のみ)
+	/// @param cType 操作名
+	/// @param no ゲームコントローラーの番号
+	/// @param type 入力タイプ
+	/// @return true:押されている
 	bool IsTrgUp(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, TYPE type = TYPE::ALL);
 
-	//操作の種類別にキーを追加	
+	/// @brief 対応キーを追加
+	/// @param type キーの種類
+	/// @param key 追加したい入力(キーボード)
 	void Add(CONTROL_TYPE type, int key);
+
+	/// @brief 対応キーを追加
+	/// @param type キーの種類
+	/// @param key 追加したい入力(ゲームコントローラーボタン)
 	void Add(CONTROL_TYPE type, JOYPAD_BTN key);
+
+	/// @brief 対応キーを追加
+	/// @param type キーの種類
+	/// @param key 追加したい入力(ゲームコントローラースティック)
 	void Add(CONTROL_TYPE type, JOYPAD_STICK key);
+
+	/// @brief 対応キーを追加
+	/// @param type キーの種類
+	/// @param key 追加したい入力(マウス)
 	void Add(CONTROL_TYPE type, MOUSE key);
 
 	// マウス座標の取得
 	Vector2 GetMousePos(void) const;
+
 	//マウスの移動量を取得
 	Vector2 GetMouseMove(void) const;
 
 	//マウスの座標を設定
 	void SetMousePosScreen(void);
 
+	//マウスの座標を設定
 	void SetMousePos(const Vector2& pos);
+
+	//ゲームコントローラーのLスティックの回転
 	float GetLStickDeg(KeyConfig::JOYPAD_NO no) const;
 
+	//ゲームコントローラーのRスティックの回転
 	float GetRStickDeg(KeyConfig::JOYPAD_NO no) const;
-	//上を0.0度として角度を渡す
+	
+	//ゲームコントローラーのLスティックの上を0.0度として角度を渡す
 	Vector2 GetKnockLStickSize(KeyConfig::JOYPAD_NO no) const;
+
+	//ゲームコントローラーのRスティックの上を0.0度として角度を渡す
 	Vector2 GetKnockRStickSize(KeyConfig::JOYPAD_NO no) const;
+
 	//指定の方向に倒れた度合い0から1000
 	int PadStickOverSize(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick)const;
+	
 	// リソースの破棄
 	void Destroy(void);
-	/// <summary>
-	/// パッドを振動する
-	/// </summary>
-	/// <param name="_no">振動させるPAD番号</param>
-	/// <param name="_time">ミリ秒　,-1で無限に続けることができる(STOP 必須)</param>
-	/// <param name="_pow">1～1000</param>
+
+	/// @brief ゲームコントローラーを振動する
+	/// @param _no 振動させるゲームコントローラーの番号
+	/// @param _time ミリ秒　,-1で無限に続けることができる(STOP 必須)
+	/// @param _pow 振動の強さ(1～1000)
 	void PadVibration(KeyConfig::JOYPAD_NO _no, int _time, int _pow);
-	/// <summary>
-	/// 振動を止める
-	/// </summary>
-	/// <param name="_no"></param>
+
+	/// @brief 振動を止める
+	/// @param _no ゲームコントローラーの番号
 	void StopPadVibration(KeyConfig::JOYPAD_NO _no);
+
 private:
+
 	std::unique_ptr<InputManager> inputManager_;	//入力管理クラスのインスタンス
 
-	std::map<CONTROL_TYPE, std::vector<int>>keyInput_;								//操作の種類とキーの種類でキーボードの状態を格納
+	std::map<CONTROL_TYPE, std::vector<int>>keyInput_;					//操作の種類とキーの種類でキーボードの状態を格納
 	std::map<CONTROL_TYPE, std::vector<JOYPAD_BTN>>conInput_;			//操作の種類とボタンの種類でコントローラーの状態を格納
 	std::map<CONTROL_TYPE, std::vector<JOYPAD_STICK>>stickInput_;		//操作の種類とスティックの種類でコントローラーの状態を格納
 	std::map < CONTROL_TYPE, std::vector<MOUSE>>mouseInput_;			//操作の種類とマウスの種類でマウスの状態を格納

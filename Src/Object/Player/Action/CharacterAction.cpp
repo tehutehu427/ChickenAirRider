@@ -1,3 +1,4 @@
+#include"../pch.h"
 #include "CharacterAction.h"
 
 CharacterAction::CharacterAction(Player& _player, const Character& _chara, LogicBase& _logic)

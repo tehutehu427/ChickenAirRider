@@ -68,9 +68,7 @@ public:
 		CHICKEN_SE_4,			//チキンSE4
 	};
 
-	/// <summary>
-	/// 音源種類
-	/// </summary>
+	//再生種類
 	enum class TYPE
 	{
 		BGM,				//BGM
@@ -78,9 +76,7 @@ public:
 		MAX
 	};
 
-	/// <summary>
-	/// 再生種類
-	/// </summary>
+	//再生種類
 	enum class PLAYTYPE
 	{
 		NORMAL,	//ノーマル再生
@@ -94,88 +90,59 @@ public:
 	//音源種類最大数
 	static constexpr int TYPE_MAX = static_cast<int>(TYPE::MAX);
 
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
+	//デストラクタ
 	~SoundManager();
 
-	/// <summary>
-	/// 明示的にインスタンス生成する
-	/// </summary>
-	/// <param name=""></param>
+	//明示的にインスタンス生成する
 	static void CreateInstance();
 
-	/// <summary>
-	/// 静的インスタンスの取得
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns></returns>インスタンス
+	//静的インスタンスの取得
 	static SoundManager& GetInstance();
 
-	/// <summary>
-	/// 解放
-	/// </summary>
+	//解放
 	void Destroy();
 
-	/// <summary>
-	/// リソースの解放
-	/// </summary>
+	//リソースの解放
 	void Release();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
+	//初期化
 	void Init();
 
-	/// <summary>
-	/// リソースの読み込み
-	/// </summary>
-	/// <param name="_src">リソース種類</param>
-	/// <returns>trueの場合読み込み成功,falseの場合失敗</returns>
+	/// @brief リソースの読み込み
+	/// @param _src リソース種類
+	/// @return trueの場合読み込み成功,falseの場合失敗
 	const bool LoadResource(const SRC _src);
 
-	/// <summary>
-	/// 音源の再生
-	/// </summary>
-	/// <param name="_src">リソース種類</param>
-	/// <param name="_playType">再生種類</param>
+	/// @brief 音源の再生
+	/// @param _src リソース種類
+	/// @param _playType 再生種類
 	void Play(const SRC _src, const PLAYTYPE _playType);
 
-	/// <summary>
-	/// 音源の停止
-	/// </summary>
-	/// <param name="_src">リソース種類</param>
+	/// @brief 音源の停止
+	/// @param _src リソース種類
 	void Stop(const SRC _src);
 
-	/// <summary>
-	/// 再生中かを返す
-	/// </summary>
-	/// <param name="_src">リソース種類</param>
-	/// <returns>trueの場合再生中,falseの場合再生していない</returns>
+	/// @brief 再生中かを返す
+	/// @param _src リソース種類
+	/// @return trueの場合再生中,falseの場合再生していない
 	bool IsPlay(const SRC _src) const;
 
-	/// <summary>
-	/// 読み込んだ音量を設定する
-	/// </summary>
-	/// <returns></returns>
+	//読み込んだ音量を設定する
 	const void SetLoadedSoundsVolume() { for (int i = 0; i < TYPE_MAX; i++) { SetSystemVolume(volume_[i], i); } };
 
-	/// <summary>
-	/// 音量の設定
-	/// </summary>
-	/// <param name="_volumePercent">音量パーセント</param>
-	/// <param name="_type">サウンド種類</param>
+	/// @brief 音量の設定
+	/// @param _volumePercent 音量パーセント
+	/// @param _type サウンド種類
 	void SetSystemVolume(const int _volumePercent, const int _type);
 
-	/// <summary>
-	/// 音量を返す
-	/// </summary>
-	/// <param name="_type">サウンド種類</param>
-	/// <returns>指定したサウンド種類の音量を返す</returns>
+	/// @brief 音量を返す
+	/// @param _type サウンド種類
+	/// @return 指定したサウンド種類の音量を返す
 	const int GetSoundTypeVolume(const int _type) const { return volume_[_type]; }
 
 private:
 
+	//サウンドリソース
 	struct SoundResource
 	{
 		int handleId = -1;			//音源ハンドルID

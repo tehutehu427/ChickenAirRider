@@ -1,6 +1,4 @@
-#include<DxLib.h>
-#include<EffekseerForDXLib.h>
-#include<Effekseer.h>
+#include"../pch.h"
 #include "../../Manager/System/SceneManager.h"
 #include "EffectController.h"
 

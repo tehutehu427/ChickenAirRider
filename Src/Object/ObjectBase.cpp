@@ -1,3 +1,4 @@
+#include"../pch.h"
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/Game/CollisionManager.h"

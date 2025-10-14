@@ -1,7 +1,5 @@
-#include <DxLib.h>
+#include"../pch.h"
 #include <wingdi.h>
-#include <cassert>
-#include <EffekseerForDXLib.h>
 #include "Resource.h"
 
 Resource::Resource(void)

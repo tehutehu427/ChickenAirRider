@@ -1,3 +1,4 @@
+#include"../pch.h"
 #include "PixelRenderer.h"
 
 PixelRenderer::PixelRenderer(PixelMaterial& pixelMaterial) : pixelMaterial_(pixelMaterial)

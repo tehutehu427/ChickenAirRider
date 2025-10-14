@@ -27,24 +27,16 @@ public:
 	static const std::string LOGO;
 	static const std::string BANANA;
 
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
+	//コンストラクタ
 	FontRegistry();
 
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
+	//デストラクタ
 	~FontRegistry();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
+	//初期化
 	void Init();
 
-	/// <summary>
-	/// 解放処理
-	/// </summary>
+	//解放処理
 	void Destroy();
 
 private:

@@ -23,12 +23,10 @@ public:
 	//描画
 	void Draw(void);
 
-	/// <summary>
-	/// プレイヤーの生成
-	/// </summary>
-	/// <param name="_userNum">操作者の数</param>
-	/// <param name="cpuNum">CPUの数</param>
-	void CreatePlayer(const int _userNum, const int cpuNum);
+	/// @brief プレイヤーの生成
+	/// @param _userNum ユーザーの数
+	/// @param _npcNum NPCの数
+	void CreatePlayer(const int _userNum, const int _npcNum);
 
 	//プレイヤーの取得
 	const Player& GetPlayer(int _playerIndex) { return *players_[_playerIndex]; }

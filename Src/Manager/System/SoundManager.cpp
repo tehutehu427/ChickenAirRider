@@ -1,6 +1,5 @@
+#include"../pch.h"
 #include "SoundManager.h"
-#include <DxLib.h>
-#include <cassert>
 #include "../../Application.h"
 
 SoundManager* SoundManager::instance_ = nullptr;

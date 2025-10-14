@@ -1,4 +1,4 @@
-#include <DxLib.h>
+#include"../pch.h"
 #include "../Application.h"
 #include "../Utility/Utility.h"
 #include "../Manager/System/SceneManager.h"

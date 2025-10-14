@@ -1,4 +1,4 @@
-#include<DxLib.h>
+#include"../pch.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
 #include"../Manager/Game/PlayerManager.h"

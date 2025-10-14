@@ -55,17 +55,13 @@ public:
 	//描画処理
 	void Draw(void);
 
-	/// <summary>
-	/// 先頭の（Updateが呼ばれる）シーンを切り替える
-	/// </summary>
-	/// <param name="_sceneId">切り替え先のシーンID</param>
-	/// <param name="_isFade">フェードの有無(true:フェードあり)</param>
+	/// @brief 先頭の（Updateが呼ばれる）シーンを切り替える
+	/// @param _sceneId 切り替え先のシーンID
+	/// @param _isFade フェードの有無(true:フェードあり)
 	void ChangeScene(const SCENE_ID _sceneId, const bool _isFade = false);
 
-	/// <summary>
-	/// すべてのシーンを切り替える
-	/// </summary>
-	/// <param name="_sceneId">切り替え先のシーンID</param>
+	/// @brief すべてのシーンを切り替える
+	/// @param _sceneId 切り替え先のシーンID
 	void ChangeAllScene(const SCENE_ID _sceneId);
 
 	/// <summary>
@@ -74,6 +70,11 @@ public:
 	/// </summary>
 	/// <param name="_sceneId">積むシーンID</param>
 	/// <param name="_isFade">フェードの有無(true:フェードあり)</param>
+
+	/// @brief シーンをプッシュする。スタックの数が増える
+	/// 一番上のシーンのUpdateしか呼ばれません。
+	/// @param _sceneId 
+	/// @param _isFade 
 	void PushScene(const SCENE_ID _sceneId, const bool _isFade = false);
 
 	//スタックの頭のシーンを削除する。
@@ -89,23 +90,14 @@ public:
 	/// <param name="nextId">遷移先のシーン</param>
 	//void ChangeScene(SCENE_ID nextId);
 	
-	/// <summary>
-	/// フェード開始
-	/// </summary>
-	/// <param name=""></param>
+	//フェード開始
 	void StartFadeIn(void);
 
-	/// <summary>
-	/// 分割描画の設定
-	/// </summary>
-	/// <param name="_isSplitMode">分割する場合true、しない場合false</param>
+	/// @brief 分割描画の設定
+	/// @param _isSplitMode 分割する場合true、しない場合false
 	void SetIsSplitMode(const bool _isSplitMode) { isSplitMode_ = _isSplitMode; }
 
-	/// <summary>
-	/// シーンIDを返す
-	/// </summary>
-	/// <param name=""></param>
-	/// <returns>シーンID</returns>
+	//シーンIDの取得
 	SCENE_ID GetSceneID(void) const { return sceneId_; }
 
 	//メインスクリーンの取得
@@ -120,11 +112,9 @@ public:
 	//経過時間の所得
 	float GetTotalTime(void) const { return totalTime_; }
 
-	/// <summary>
-	/// カメラの取得
-	/// </summary>
-	/// <param name="_playerIndex">プレイヤー番号</param>
-	/// <returns>指定したプレイヤー番号のカメラ</returns>
+	/// @brief カメラの取得
+	/// @param _playerIndex プレイヤー番号
+	/// @return 指定したプレイヤー番号のカメラ
 	std::weak_ptr<Camera> GetCamera(const int _playerIndex) const;
 
 	//スクリーンの番号の取得
@@ -180,7 +170,7 @@ private:
 	// 外部から生成できない様にする
 	SceneManager(void);
 	// コピーコンストラクタも同様
-	SceneManager(const SceneManager& manager) = default;
+	SceneManager(const SceneManager& manager) = delete;
 	// デストラクタも同様
 	~SceneManager(void);
 
