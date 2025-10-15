@@ -15,6 +15,8 @@ void Stage::Load(void)
 
 void Stage::Init(void)
 {
+	trans_.pos.y = -100.0f;
+
 	//ÉRÉâÉCÉ_ê∂ê¨
 	std::unique_ptr<Cube> geo = std::make_unique<Cube>(trans_.pos, trans_.quaRot, STAGE_SIZE);
 	MakeCollider({ Collider::TAG::STAGE }, std::move(geo));

@@ -2,9 +2,12 @@
 #include"../Utility/Utility.h"
 #include "GravityManager.h"
 
+//静的インスタンスの初期化
 GravityManager* GravityManager::instance_ = nullptr;
+
 GravityManager::GravityManager(void)
 {
+	slerpPow_ = 0.0f;
 }
 
 GravityManager::~GravityManager(void)
@@ -43,18 +46,21 @@ void GravityManager::Init(void)
 	slerpPow_ = 0.0f;
 }
 
-void GravityManager::CalcGravity(VECTOR& _dir, VECTOR& _pow, float _per)
+void GravityManager::CalcGravity(const VECTOR& _dir, VECTOR& _pow, const float _per)
 {
 	// 重力方向
 	VECTOR dirGravity = _dir;
+
 	// 重力の強さ
 	float gravityPow = GRAVITY_POW * _per / 100.0f;
-	// 重力
+
 	// 重力を作る
-	//_pow に重力計算を行う(加速度)
 	VECTOR gravity = VScale(dirGravity, gravityPow);
+
+	//_pow に重力計算を行う(加速度)
 	_pow = VAdd(_pow, gravity);
 
+	//回転させる
 	Calculate();
 
 	//// 内積

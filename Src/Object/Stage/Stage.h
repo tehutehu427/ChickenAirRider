@@ -29,6 +29,6 @@ public:
 private:
 
 	//ステージの大きさ
-	static constexpr VECTOR STAGE_SIZE = { 1000.0f,10.0f,1000.0f };
+	static constexpr VECTOR STAGE_SIZE = { 10000.0f,10.0f,10000.0f };
 };
 

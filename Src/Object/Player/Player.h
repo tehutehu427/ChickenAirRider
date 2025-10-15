@@ -71,6 +71,9 @@ private:
 	//ó‘Ô
 	STATE state_;
 
+	//ˆÚ“®ŒãÀ•W
+	VECTOR movedPos_;
+
 	//ˆÚ“®—Í
 	VECTOR movePow_;
 
