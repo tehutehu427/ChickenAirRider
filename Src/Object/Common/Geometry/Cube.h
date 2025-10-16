@@ -35,7 +35,7 @@ public:
 	~Cube(void)override;
 
 	//描画
-	void Draw(void)override;
+	void Draw(const int _color = NORMAL_COLOR)override;
 
 	//各種当たり判定
 	const bool IsHit(Geometry& _geometry)override;
@@ -66,10 +66,19 @@ public:
 	//サイズの半分の設定
 	inline void SetHalfSize(const VECTOR& _halfSize);
 
+	//法線方向の取得
+	inline const VECTOR GetHitNormal(void)const { return hitNormal_; }
+
+	//法線方向の設定
+	inline void SetHitNormal(const VECTOR _hitNormal) { hitNormal_ = _hitNormal; }
+
 private:
 
 	//回転バウンディングボックス
 	OBB obb_;
+
+	//当たった法線方向
+	VECTOR hitNormal_;
 
 	//箱の回転情報の取得
 	inline const VECTOR GetAxis(const int _num)const { return obb_.axis[_num]; }
@@ -80,6 +89,18 @@ private:
 	// 各頂点の計算（ワールド座標）
 	void CalculateVertices(VECTOR outVertices[8]) const;
 
-	//線分とAABBの最短距離の二乗計算
-	float ClosestSegmentAABB(const VECTOR& segA, const VECTOR& segB, const VECTOR& aabbMin, const VECTOR& aabbMax);
+	// AABB 上で最近接点を求める（線分の点との最短点）
+	VECTOR ClosestPointOnAABB(const VECTOR& point, const VECTOR& aabbMin, const VECTOR& aabbMax);
+
+	// 線分上で、AABBにもっとも近い点を求める（補助関数）
+	VECTOR ClosestPointOnSegmentToAABB(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& aabbMin, const VECTOR& aabbMax);
+	
+	// 本体：線分とAABBの最近接点間の距離二乗
+	float ClosestSegmentAABB(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& aabbMin, const VECTOR& aabbMax);
+	
+	// AABB上の最近接点を返す（線分に対して）
+	VECTOR GetClosestPointOnAABBToSegment(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& aabbMin, const VECTOR& aabbMax);
+	
+	// カプセル線分上の最近接点（射影）を返す
+	VECTOR CapsuleSegmentClosestPoint(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& targetPoint);
 };

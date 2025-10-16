@@ -2,6 +2,7 @@
 #include "../Application.h"
 #include "../Utility/Utility.h"
 #include "../Manager/System/SceneManager.h"
+#include "../Manager/Game/GravityManager.h"
 #include "../Logic/LogicBase.h"
 #include "MachineAction.h"
 
@@ -159,4 +160,8 @@ void MachineAction::Turn(void)
 
 	//‰ñ“]
 	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::AngleAxis(Utility::Deg2RadF(turnPow), Utility::AXIS_Y)));
+}
+
+void MachineAction::Flight(void)
+{
 }

@@ -1,4 +1,6 @@
 #pragma once
+#include <map>
+#include <functional>
 #include "ActionBase.h"
 #include "../Machine/Machine.h"
 
@@ -25,7 +27,7 @@ public:
 	void Draw(void)override;
 
 private:
-
+	
 	//最高速の基本倍率
 	static constexpr float BASE_MAX_SPEED = 10.0f;
 
@@ -53,6 +55,9 @@ private:
 	//総合速度
 	float speed_;
 
+	//状態ごとの更新
+	std::map<bool, std::function<void(void)>> update_;
+
 	//移動
 	void Move(void);
 
@@ -64,5 +69,8 @@ private:
 
 	//旋回
 	void Turn(void);
+
+	//飛行
+	void Flight(void);
 };
 

@@ -160,9 +160,24 @@ private:
 	std::vector<int> splitScreens_;		//分割用スクリーン
 
 	//関数ポインタ
-	std::map<SCENE_ID, std::function<std::unique_ptr<SceneBase>(void)>> createScene_;	//シーン作成用
+	std::map<SCENE_ID, std::function<std::unique_ptr<SceneBase>(void)>> createScene_;	//シーン生成用
 	std::map<CHANGE_SCENE_STATE, std::function<void(void)>> changeScene_;				//シーン変更用
 	std::map<Fader::STATE, std::function<void(void)>> fadeState_;						//フェード用
+
+	//シーン生成
+	std::unique_ptr<SceneBase> CreateSceneTitle(void);
+	std::unique_ptr<SceneBase> CreateSceneSelect(void);
+	std::unique_ptr<SceneBase> CreateSceneGame(void);
+	//std::unique_ptr<SceneBase> CreateSceneResult(void);
+
+	//シーン変更
+	void ChangeScenePushBack(void);
+	void ChangeScenePopBack(void);
+	void ChangeSceneChangeBack(void);
+
+	//フェード
+	void FadeOut(void);
+	void FadeIn(void);
 
 	//カメラ生成
 	void CreateCameras(const int _playerNum);

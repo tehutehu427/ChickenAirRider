@@ -20,7 +20,7 @@ public:
 	~Model(void)override;
 
 	//•`‰æ
-	void Draw(void)override;
+	void Draw(const int _color = NORMAL_COLOR)override;
 
 	//ŠeŽí“–‚½‚è”»’è
 	const bool IsHit(Geometry& _geometry)override;

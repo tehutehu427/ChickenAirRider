@@ -30,5 +30,8 @@ private:
 
 	//ステージの大きさ
 	static constexpr VECTOR STAGE_SIZE = { 10000.0f,10.0f,10000.0f };
+
+	//色
+	unsigned int color_;
 };
 

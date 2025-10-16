@@ -22,6 +22,13 @@ public:
 		RIDE_MACHINE,	//機体乗車中
 	};
 
+	//当たり判定添え字
+	enum class COL_VALUE
+	{
+		MAIN,		//本体
+		GROUNDED,	//接地
+	};
+
 	//コンストラクタ
 	Player(void);
 	//デストラクタ
@@ -59,6 +66,11 @@ public:
 
 private:
 
+	//当たり判定用
+	static constexpr float RADIUS = 30.0f;	//球体の半径
+	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,40.0f,0.0f };		//線判定の上相対座標
+	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-40.0f,0.0f };		//線判定の下相対座標
+
 	//基本機能
 	std::unique_ptr<Character> chara_;		//キャラクタ―
 	std::unique_ptr<Machine> machine_;		//機体
@@ -77,9 +89,20 @@ private:
 	//移動力
 	VECTOR movePow_;
 
+	//接地しているか
+	bool isGrounded_;
+
 	//関数ポインタ
 	std::map<STATE, std::function<void(void)>> changeAction_;	//行動切り替え
 	std::map<STATE, std::function<void(void)>> draw_;			//状態ごとの描画
+
+	//状態ごとのアクションの変更
+	void ChangeActionNormal(void);
+	void ChangeActionRide(void);
+
+	//状態ごとの描画
+	void DrawNormal(void);
+	void DrawRide(void);
 
 	//キャラと座標と回転の同期する
 	void SynchronizeChara(void);

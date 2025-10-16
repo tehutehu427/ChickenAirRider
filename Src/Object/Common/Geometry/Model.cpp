@@ -29,7 +29,7 @@ Model::~Model(void)
 	HitAfter();
 }
 
-void Model::Draw(void)
+void Model::Draw(const int _color)
 {
 }
 

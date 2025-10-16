@@ -39,7 +39,7 @@ Cube::~Cube(void)
 
 }
 
-void Cube::Draw(void)
+void Cube::Draw(const int _color)
 {
 	VECTOR vertices[8];
 	CalculateVertices(vertices);
@@ -53,7 +53,7 @@ void Cube::Draw(void)
 
 	for (int i = 0; i < 12; ++i)
 	{
-		DrawLine3D(vertices[edges[i][0]], vertices[edges[i][1]], NORMAL_COLOR);
+		DrawLine3D(vertices[edges[i][0]], vertices[edges[i][1]], _color);
 	}
 }
 
@@ -76,6 +76,9 @@ const bool Cube::IsHit(Model& _model)
 
 const bool Cube::IsHit(Cube& _cube)
 {
+	float minOverlap = FLT_MAX;
+	VECTOR bestAxis = { 0, 0, 0 }; // 最小オーバーラップ軸（法線になる）
+	
 	// 各OBBの中心座標（ワールド空間）
 	VECTOR centerA = VAdd(pos_, VScale(VAdd(obb_.vMin, obb_.vMax), 0.5f));
 	VECTOR centerB = VAdd(_cube.GetColPos(), VScale(VAdd(_cube.GetObb().vMin, _cube.GetObb().vMax), 0.5f));
@@ -89,6 +92,7 @@ const bool Cube::IsHit(Cube& _cube)
 
 	// 各軸を順にチェック（15軸）
 	for (int i = 0; i < 3; ++i) {
+
 		const VECTOR& axisA = obb_.axis[i];
 
 		// 軸Aの投影量
@@ -101,6 +105,19 @@ const bool Cube::IsHit(Cube& _cube)
 			halfB.z * fabs(VDot(axisA, _cube.GetObb().axis[2]));
 
 		if (fabs(VDot(t, axisA)) > ra + rb) return false;
+		
+		float dist = fabs(VDot(t, axisA));
+		float overlap = ra + rb - dist;
+		if (overlap < 0.0f) return false; // 分離軸あり → 衝突なし
+
+		if (overlap < minOverlap) {
+			minOverlap = overlap;
+			bestAxis = axisA;
+			// tとの向きが逆なら反転（OBB A → B に押し戻す方向にする）
+			if (VDot(t, axisA) < 0) {
+				bestAxis = VScale(axisA, -1.0f);
+			}
+		}
 	}
 
 	for (int i = 0; i < 3; ++i) {
@@ -115,6 +132,18 @@ const bool Cube::IsHit(Cube& _cube)
 			halfB.z * fabs(VDot(axisB, _cube.GetObb().axis[2]));
 
 		if (fabs(VDot(t, axisB)) > ra + rb) return false;
+
+		float dist = fabs(VDot(t, axisB));
+		float overlap = ra + rb - dist;
+		if (overlap < 0.0f) return false;
+
+		if (overlap < minOverlap) {
+			minOverlap = overlap;
+			bestAxis = axisB;
+			if (VDot(t, axisB) < 0) {
+				bestAxis = VScale(axisB, -1.0f);
+			}
+		}
 	}
 
 	// 外積軸
@@ -135,8 +164,27 @@ const bool Cube::IsHit(Cube& _cube)
 				halfB.z * fabs(VDot(axis, _cube.GetObb().axis[2]));
 
 			if (fabs(VDot(t, axis)) > ra + rb) return false;
+
+			if (VSize(axis) < 0.0001f) continue;
+			axis = VNorm(axis);
+
+			float dist = fabs(VDot(t, axis));
+			float overlap = ra + rb - dist;
+			if (overlap < 0.0f) return false;
+
+			if (overlap < minOverlap) {
+				minOverlap = overlap;
+				bestAxis = axis;
+				if (VDot(t, axis) < 0) {
+					bestAxis = VScale(axis, -1.0f);
+				}
+			}
 		}
 	}
+
+	//法線方向
+	hitNormal_ = bestAxis;
+	_cube.SetHitNormal(VScale(bestAxis, -1.0f));
 
 	// すべての軸で重なっている → 衝突
 	return true;
@@ -185,7 +233,29 @@ const bool Cube::IsHit(Capsule& _capsule)
 
 	float distSq = ClosestSegmentAABB(local1, local2, obb_.vMin, obb_.vMax);
 
-	return distSq <= (_capsule.GetRadius() * _capsule.GetRadius());
+	//判定
+	bool ret = distSq <= (_capsule.GetRadius() * _capsule.GetRadius());
+
+	if (ret)
+	{
+		// カプセル線分から最近接点までのベクトル（OBBローカル空間）
+		VECTOR closestPoint = GetClosestPointOnAABBToSegment(local1, local2, obb_.vMin, obb_.vMax);
+
+		VECTOR dir = VSub(closestPoint, CapsuleSegmentClosestPoint(local1, local2,closestPoint)); // ローカル空間で
+		VECTOR normalLocal = VNorm(dir); // 法線（ローカル空間）
+
+		// OBBのワールド軸で戻す
+		VECTOR normalWorld = {
+			obb_.axis[0].x * normalLocal.x + obb_.axis[1].x * normalLocal.y + obb_.axis[2].x * normalLocal.z,
+			obb_.axis[0].y * normalLocal.x + obb_.axis[1].y * normalLocal.y + obb_.axis[2].y * normalLocal.z,
+			obb_.axis[0].z * normalLocal.x + obb_.axis[1].z * normalLocal.y + obb_.axis[2].z * normalLocal.z,
+		};
+
+		// 押し戻しや反射に使える
+		hitNormal_ = VNorm(normalWorld);
+
+		return true;
+	}
 }
 
 const bool Cube::IsHit(Line& _line)
@@ -267,6 +337,23 @@ const bool Cube::IsHit(Line& _line)
 		}
 	}
 
+	// 線分とAABBの最近接点を求める
+	VECTOR closestOnAABB = GetClosestPointOnAABBToSegment(local1, local2, obb_.vMin, obb_.vMax);
+
+	// 線分上の最近接点（ターゲットは上のclosestOnAABB）
+	VECTOR closestOnSegment = CapsuleSegmentClosestPoint(local1, local2, closestOnAABB);
+
+	// 法線は2点の差分方向
+	VECTOR normalLocal = VNorm(VSub(closestOnAABB, closestOnSegment));
+
+	// ローカル空間からワールド空間に変換
+	VECTOR normalWorld = {
+		obb_.axis[0].x * normalLocal.x + obb_.axis[1].x * normalLocal.y + obb_.axis[2].x * normalLocal.z,
+		obb_.axis[0].y * normalLocal.x + obb_.axis[1].y * normalLocal.y + obb_.axis[2].y * normalLocal.z,
+		obb_.axis[0].z * normalLocal.x + obb_.axis[1].z * normalLocal.y + obb_.axis[2].z * normalLocal.z,
+	};
+	hitNormal_ = normalWorld;
+
 	return true;
 }
 
@@ -312,35 +399,88 @@ void Cube::CalculateVertices(VECTOR outVertices[8]) const
 	}
 }
 
-float Cube::ClosestSegmentAABB(const VECTOR& segA, const VECTOR& segB, const VECTOR& aabbMin, const VECTOR& aabbMax)
-{
-	// 線分とAABBの最短距離²を求める
-	// → 各軸でクランプを行う
+VECTOR Cube::ClosestPointOnAABB(const VECTOR& point, const VECTOR& aabbMin, const VECTOR& aabbMax) {
+	return {
+		std::clamp(point.x, aabbMin.x, aabbMax.x),
+		std::clamp(point.y, aabbMin.y, aabbMax.y),
+		std::clamp(point.z, aabbMin.z, aabbMax.z)
+	};
+}
 
-	float t = 0.0f;
+VECTOR Cube::ClosestPointOnSegmentToAABB(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& aabbMin, const VECTOR& aabbMax) {
+	VECTOR ab = VSub(segEnd, segStart);
+	float tMin = 0.0f;
+	float tMax = 1.0f;
+
+	// スラブごとの処理をしてもよいが、最小化問題としてtをスキャンでも可
+	const int STEPS = 10;
 	float minDistSq = FLT_MAX;
+	VECTOR closest = segStart;
 
-	// 線分上の点 P(t) = A + t*(B - A), 0 <= t <= 1
-	const int steps = 10;
-	for (int i = 0; i <= steps; ++i)
-	{
-		float ft = static_cast<float>(i) / steps;
-		VECTOR point = VAdd(segA, VScale(VSub(segB, segA), ft));
+	for (int i = 0; i <= STEPS; ++i) {
+		float t = static_cast<float>(i) / STEPS;
+		VECTOR point = VAdd(segStart, VScale(ab, t));
+		VECTOR clamped = ClosestPointOnAABB(point, aabbMin, aabbMax);
+		VECTOR diff = VSub(clamped, point);
+		float distSq = VDot(diff, diff);
 
-		// AABB内の最近接点
-		VECTOR clamped = {
-			std::max(aabbMin.x, std::min(point.x, aabbMax.x)),
-			std::max(aabbMin.y, std::min(point.y, aabbMax.y)),
-			std::max(aabbMin.z, std::min(point.z, aabbMax.z))
-		};
-
-		float distSq = Utility::SqrMagnitudeF(VSub(point, clamped));
-		if (distSq < minDistSq)
-		{
+		if (distSq < minDistSq) {
 			minDistSq = distSq;
-			t = ft;
+			closest = point;
 		}
 	}
 
-	return minDistSq;
+	return closest;
+}
+
+float Cube::ClosestSegmentAABB(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& aabbMin, const VECTOR& aabbMax) {
+	VECTOR closestPointOnSegment = ClosestPointOnSegmentToAABB(segStart, segEnd, aabbMin, aabbMax);
+	VECTOR closestPointOnAABB = ClosestPointOnAABB(closestPointOnSegment, aabbMin, aabbMax);
+	VECTOR diff = VSub(closestPointOnAABB, closestPointOnSegment);
+	return VDot(diff, diff); // 距離の2乗
+}
+
+// AABB上の最近接点を返す（線分に対して）
+VECTOR Cube::GetClosestPointOnAABBToSegment(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& aabbMin, const VECTOR& aabbMax) {
+	// 線分上の最近接点をAABB内にクランプ
+	VECTOR ab = VSub(segEnd, segStart);
+	float t = 0.0f;
+	float tMin = 0.0f;
+	float tMax = 1.0f;
+
+	const int STEPS = 10; // 精度を上げたいなら増やす
+	float minDistSq = FLT_MAX;
+	VECTOR bestPoint = segStart;
+
+	for (int i = 0; i <= STEPS; ++i) {
+		t = static_cast<float>(i) / STEPS;
+		VECTOR point = VAdd(segStart, VScale(ab, t)); // 線分上の点
+		VECTOR clamped = {
+			std::clamp(point.x, aabbMin.x, aabbMax.x),
+			std::clamp(point.y, aabbMin.y, aabbMax.y),
+			std::clamp(point.z, aabbMin.z, aabbMax.z)
+		};
+
+		float distSq = VDot(VSub(clamped, point), VSub(clamped, point));
+		if (distSq < minDistSq) {
+			minDistSq = distSq;
+			bestPoint = clamped;
+		}
+	}
+
+	return bestPoint;
+}
+
+// カプセル線分上の最近接点（射影）を返す
+VECTOR Cube::CapsuleSegmentClosestPoint(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& targetPoint) {
+	VECTOR ab = VSub(segEnd, segStart);
+	VECTOR ap = VSub(targetPoint, segStart);
+
+	float abLenSq = VDot(ab, ab);
+	if (abLenSq == 0.0f) return segStart; // 線分が点の場合
+
+	float t = VDot(ap, ab) / abLenSq;
+	t = std::clamp(t, 0.0f, 1.0f); // 線分内にクランプ
+
+	return VAdd(segStart, VScale(ab, t));
 }

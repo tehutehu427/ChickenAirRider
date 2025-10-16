@@ -29,12 +29,12 @@ Line::~Line(void)
 {
 }
 
-void Line::Draw(void)
+void Line::Draw(const int _color)
 {
 	VECTOR point1 = GetRotPos(localPosPoint1_);
 	VECTOR point2 = GetRotPos(localPosPoint2_);
 
-	DrawLine3D(point1, point2, NORMAL_COLOR);
+	DrawLine3D(point1, point2, _color);
 }
 
 const bool Line::IsHit(Geometry& _geometry)

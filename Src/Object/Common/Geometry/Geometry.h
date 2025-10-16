@@ -13,14 +13,11 @@ class Geometry
 {
 public:
 
-	//通常色
-	static constexpr int NORMAL_COLOR = 0x000000;
-
 	//デストラクタ
 	virtual~Geometry(void) = 0;
 
 	//描画
-	virtual void Draw(void) = 0;
+	virtual void Draw(const int _color = NORMAL_COLOR) = 0;
 
 	//各種当たり判定
 	virtual const bool IsHit(Geometry& _geometry) = 0;
@@ -38,6 +35,9 @@ public:
 	inline const Quaternion& GetColRot(void)const { return quaRot_; }
 
 protected:
+
+	//通常色
+	static constexpr int NORMAL_COLOR = 0xffffff;
 
 	/// @brief コンストラクタ(外部で作る必要のない基底なのでprotected)
 	/// @param _pos 追従する親の座標

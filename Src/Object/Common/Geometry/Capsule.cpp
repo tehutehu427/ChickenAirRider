@@ -33,15 +33,15 @@ Capsule::~Capsule(void)
 {
 }
 
-void Capsule::Draw(void)
+void Capsule::Draw(const int _color)
 {
 	// 上の球体
 	VECTOR pos1 = GetPosTop();
-	DrawSphere3D(pos1, radius_, 5, NORMAL_COLOR, NORMAL_COLOR, false);
+	DrawSphere3D(pos1, radius_, 5, _color, _color, false);
 
 	// 下の球体
 	VECTOR pos2 = GetPosDown();
-	DrawSphere3D(pos2, radius_, 5, NORMAL_COLOR, NORMAL_COLOR, false);
+	DrawSphere3D(pos2, radius_, 5, _color, _color, false);
 
 	VECTOR dir;
 	VECTOR s;
@@ -51,28 +51,28 @@ void Capsule::Draw(void)
 	dir = quaRot_.PosAxis(Utility::DIR_R);
 	s = VAdd(pos1, VScale(dir, radius_));
 	e = VAdd(pos2, VScale(dir, radius_));
-	DrawLine3D(s, e, NORMAL_COLOR);
+	DrawLine3D(s, e, _color);
 
 	// 球体を繋ぐ線(X-)
 	dir = quaRot_.PosAxis(Utility::DIR_L);
 	s = VAdd(pos1, VScale(dir, radius_));
 	e = VAdd(pos2, VScale(dir, radius_));
-	DrawLine3D(s, e, NORMAL_COLOR);
+	DrawLine3D(s, e, _color);
 
 	// 球体を繋ぐ線(Z+)
 	dir = quaRot_.PosAxis(Utility::DIR_F);
 	s = VAdd(pos1, VScale(dir, radius_));
 	e = VAdd(pos2, VScale(dir, radius_));
-	DrawLine3D(s, e, NORMAL_COLOR);
+	DrawLine3D(s, e, _color);
 
 	// 球体を繋ぐ線(Z-)
 	dir = quaRot_.PosAxis(Utility::DIR_B);
 	s = VAdd(pos1, VScale(dir, radius_));
 	e = VAdd(pos2, VScale(dir, radius_));
-	DrawLine3D(s, e, NORMAL_COLOR);
+	DrawLine3D(s, e, _color);
 
 	// カプセルの中心
-	DrawSphere3D(GetCenter(), 5.0f, 10, NORMAL_COLOR, NORMAL_COLOR, true);
+	DrawSphere3D(GetCenter(), 5.0f, 10, _color, _color, true);
 }
 
 const bool Capsule::IsHit(Geometry& _geometry)

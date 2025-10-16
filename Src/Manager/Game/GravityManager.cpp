@@ -63,13 +63,13 @@ void GravityManager::CalcGravity(const VECTOR& _dir, VECTOR& _pow, const float _
 	//回転させる
 	Calculate();
 
-	//// 内積
-	//float dot = VDot(dirGravity, _pow);
-	//if (dot >= 0.0f)
-	//{
-	//	//重力方向と反対方向(マイナス)でなければ、ジャンプ力を無くす
-	//	_pow = gravity;
-	//}
+	// 内積
+	float dot = VDot(dirGravity, _pow);
+	if (dot >= 0.0f)
+	{
+		//重力方向と反対方向(マイナス)でなければ、ジャンプ力を無くす
+		_pow = gravity;
+	}
 }
 
 void GravityManager::Calculate(void)

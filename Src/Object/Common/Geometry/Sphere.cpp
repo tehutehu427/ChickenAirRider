@@ -28,9 +28,9 @@ Sphere::~Sphere(void)
 {
 }
 
-void Sphere::Draw(void)
+void Sphere::Draw(const int _color)
 {
-	DrawSphere3D(pos_, radius_, 10, NORMAL_COLOR, NORMAL_COLOR, false);
+	DrawSphere3D(pos_, radius_, 10, _color, _color, false);
 }
 
 const bool Sphere::IsHit(Geometry& _geometry)
@@ -81,8 +81,21 @@ const bool Sphere::IsHit(Cube& _cube)
 	// 球と最近接点の距離²を計算
 	float distSq = Utility::SqrMagnitudeF(VSub(closest, pos_));
 
-	//半径と比較
-	return distSq <= (radius_ * radius_);
+	//判定
+	bool ret = distSq <= (radius_ * radius_);
+
+	//当たった
+	if (ret)
+	{
+		//法線方向の設定
+		_cube.SetHitNormal(VNorm(VSub(closest, pos_)));
+
+		//半径と比較
+		return true;
+	}
+
+	//当たらなかった
+	return false;
 }
 
 const bool Sphere::IsHit(Sphere& _sphere)
