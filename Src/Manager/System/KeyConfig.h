@@ -90,6 +90,8 @@ public:
 
 		MACHINE_TURN_RIGHT,		//機体の右回転
 		MACHINE_TURN_LEFT,		//機体の左回転
+		MACHINE_TURN_FRONT,		//機体の前回転
+		MACHINE_TURN_BACK,		//機体の後回転
 
 		PUSH_BUTTON,			//機体のチャージ
 

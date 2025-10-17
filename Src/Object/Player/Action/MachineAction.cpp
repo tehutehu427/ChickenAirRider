@@ -14,6 +14,11 @@ MachineAction::MachineAction(Player& _player, const Machine _machine, LogicBase&
 	chargeCnt_ = 0.0f;
 	velocity_ = 0.0f;
 	speed_ = 0.0f;
+	turnPow_ = Quaternion();
+	flightPow_ = Quaternion();
+
+	update_[true] = [this](void) {UpdateGround(); };
+	update_[false] = [this](void) {UpdateFlight(); };
 }
 
 MachineAction::~MachineAction(void)
@@ -27,13 +32,26 @@ void MachineAction::Init(void)
 
 void MachineAction::Update(void)
 {
+	//状態ごとの更新
+	update_[player_.IsGrounded()]();
+}
+
+void MachineAction::Draw(void)
+{
+	//速度
+	DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 32, 0xffffff, L"Speed = %.2f", speed_);
+	DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 64, 0xffffff, L"Charge = %.2f", chargeCnt_);
+}
+
+void MachineAction::UpdateGround(void)
+{
 	//チャージをするか
 	if (logic_.StartCharge())
 	{
 		//チャージ
 		Charge();
 	}
-	else if(logic_.DisCharge())
+	else if (logic_.DisCharge())
 	{
 		//チャージ解放
 		DisCharge();
@@ -48,11 +66,16 @@ void MachineAction::Update(void)
 	Turn();
 }
 
-void MachineAction::Draw(void)
+void MachineAction::UpdateFlight(void)
 {
-	//速度
-	DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 32, 0xffffff, L"Speed = %.2f", speed_);
-	DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 64, 0xffffff, L"Charge = %.2f", chargeCnt_);
+	//飛行
+	Flight();
+
+	//移動
+	Move();
+
+	//回転
+	Turn();
 }
 
 void MachineAction::Move(void)
@@ -110,7 +133,7 @@ void MachineAction::Charge(void)
 	}
 
 	//ターンしていない
-	if (logic_.TurnValue() == 0.0f)
+	if (logic_.TurnValue().x == 0.0f)
 	{
 		//減速
 		speed_ = 0.0f;
@@ -149,7 +172,7 @@ void MachineAction::Turn(void)
 	const auto& param = player_.GetAllParam();
 
 	//回転量
-	float turnPow = logic_.TurnValue() / COMP_TURN;
+	float turnPow = logic_.TurnValue().x / COMP_TURN;
 
 	//回転量がないならスキップ
 	if (turnPow == 0.0f)return;
@@ -158,10 +181,26 @@ void MachineAction::Turn(void)
 	turnPow += turnPow > 0.0f ? param.turning_ / COMP_TURN
 		: -param.turning_ / COMP_TURN;
 
+	turnPow_ = Quaternion::AngleAxis(Utility::Deg2RadF(turnPow), Utility::AXIS_Y);
+
 	//回転
-	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::AngleAxis(Utility::Deg2RadF(turnPow), Utility::AXIS_Y)));
+	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(turnPow_));
 }
 
 void MachineAction::Flight(void)
 {
+	//回転量
+	float upPow = logic_.TurnValue().y / COMP_TURN;
+
+	if (upPow == 0.0f)return;
+
+	Quaternion quaRotX = player_.GetTrans().quaRot.Mult(Quaternion::AngleAxis(Utility::Deg2RadF(upPow), Utility::AXIS_X));
+
+	VECTOR euler = quaRotX.ToEuler();
+	euler.x = Utility::Deg2RadF(std::clamp(Utility::Rad2DegF(euler.x), -45.0f, 45.0f));
+
+	flightPow_ = Quaternion::Euler(euler);
+
+	//回転
+	player_.SetQuaRot(flightPow_);
 }

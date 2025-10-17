@@ -1,5 +1,6 @@
 #pragma once
 #include "LogicBase.h"
+#include "../Common/Vector2F.h"
 
 class PlayerLogic : public LogicBase
 {
@@ -29,7 +30,7 @@ public:
 	/// @brief ターンの値
 	/// @param  
 	/// @return 回転量(-値:左回転, +値:右回転)
-	const float TurnValue(void) override;
+	const Vector2F TurnValue(void) override;
 
 private:
 

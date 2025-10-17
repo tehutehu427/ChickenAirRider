@@ -1,29 +1,73 @@
 #include "Vector2.h"
+#include "Vector2F.h"
 
-// コンストラクタ
-Vector2::Vector2(void)
+Vector2 Vector2::operator+(const Vector2 _value) const
 {
-	x = 0;
-	y = 0;
+	return { x + _value.x,y + _value.y };
 }
 
-// コンストラクタ
-Vector2::Vector2(int vX, int vY)
+void Vector2::operator+=(const Vector2 _value)
 {
-	x = vX;
-	y = vY;
+	x += _value.x;
+	y += _value.y;
 }
 
-Vector2::~Vector2(void)
+Vector2 Vector2::operator-(const Vector2 _value) const
 {
+	return { x - _value.x, y - _value.y };
 }
 
-Vector2 Vector2::AddVector2(const Vector2& _value1, const Vector2& _value2)
+void Vector2::operator-=(const Vector2 _value)
 {
-	return Vector2{ _value1.x + _value2.x,_value1.y + _value2.y };
+	x -= _value.x;
+	y -= _value.y;
 }
 
-Vector2 Vector2::SubVector2(const Vector2& _value1, const Vector2& _value2)
+Vector2 Vector2::operator*(const int _value) const
 {
-	return Vector2{ _value1.x - _value2.x,_value1.y - _value2.y };
+	return { x * _value , y * _value };
+}
+
+void Vector2::operator*=(const int _value)
+{
+	x *= _value;
+	y *= _value;
+}
+
+Vector2 Vector2::operator*(const Vector2 _value) const
+{
+	return { x * _value.x, y * _value.y };
+}
+
+void Vector2::operator*=(const Vector2 _value)
+{
+	x *= _value.x;
+	y *= _value.y;
+}
+
+Vector2 Vector2::operator/(const int _value) const
+{
+	return { x / _value, y / _value };
+}
+
+void Vector2::operator/=(const int _value)
+{
+	x /= _value;
+	y /= _value;
+}
+
+Vector2 Vector2::operator/(const Vector2 _value) const
+{
+	return { x / _value.x,y / _value.y };
+}
+
+void Vector2::operator/=(const Vector2 _value)
+{
+	x /= _value.x;
+	y /= _value.y;
+}
+
+Vector2F Vector2::ToVector2F(void)
+{
+	return { static_cast<float>(x),static_cast<float>(y) };
 }

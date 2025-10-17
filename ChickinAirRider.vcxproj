@@ -214,6 +214,7 @@
     <ClCompile Include="Src\Renderer\VertexRenderer.cpp" />
     <ClCompile Include="Src\Utility\Utility.cpp" />
     <ClCompile Include="Src\Manager\Game\Timer.cpp" />
+    <ClCompile Include="Src\Common\Vector2F.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Manager\Game\StageManager.h" />
@@ -340,6 +341,7 @@
     <ClInclude Include="Src\Utility\Utility.h" />
     <ClInclude Include="Src\Utility\UtilityTemplates.h" />
     <ClInclude Include="Src\Manager\Game\Timer.h" />
+    <ClInclude Include="Src\Common\Vector2F.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

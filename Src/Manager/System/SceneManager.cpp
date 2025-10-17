@@ -34,46 +34,19 @@ SceneManager::SceneManager(void)
 	totalTime_ = -1.0f;
 
 	//シーン生成用関数ポインタ
-	createScene_[SCENE_ID::TITLE] = [this](void){return CreateSceneTitle();};
-	createScene_[SCENE_ID::SELECT] = [this](void){return CreateSceneSelect();};
-	createScene_[SCENE_ID::GAME] = [this](void){return CreateSceneGame();};
+	createScene_[SCENE_ID::TITLE] = [this](void) {return CreateSceneTitle(); };
+	createScene_[SCENE_ID::SELECT] = [this](void) {return CreateSceneSelect(); };
+	createScene_[SCENE_ID::GAME] = [this](void) {return CreateSceneGame(); };
 
 	//シーン変更
-	changeScene_[CHANGE_SCENE_STATE::PUSH_BACK] = [this](void){ChangeScenePushBack();};
-	changeScene_[CHANGE_SCENE_STATE::POP_BACK] = [this](void){ChangeScenePopBack();};
-	changeScene_[CHANGE_SCENE_STATE::CHANGE_BACK] = [this](void){ChangeSceneChangeBack();};
+	changeScene_[CHANGE_SCENE_STATE::PUSH_BACK] = [this](void) {ChangeScenePushBack(); };
+	changeScene_[CHANGE_SCENE_STATE::POP_BACK] = [this](void) {ChangeScenePopBack(); };
+	changeScene_[CHANGE_SCENE_STATE::CHANGE_BACK] = [this](void) {ChangeSceneChangeBack(); };
 
 	//フェード用関数ポインタ
-	fadeState_[Fader::STATE::NONE] = [this](void){};
-	fadeState_[Fader::STATE::FADE_IN] = [this](void)
-	{
-		// 明転中
-		if (fader_->IsEnd())
-		{
-			// 明転が終了したら、フェード処理終了
-			fader_->SetFade(Fader::STATE::NONE);
-		}
-		//FadeIn();
-	};
-	fadeState_[Fader::STATE::FADE_OUT] = [this](void)
-	{
-		// 暗転中
-		if (fader_->IsEnd())
-		{			
-			//シーンIDの変更
-			sceneId_ = waitSceneId_;
-
-			//シーンの遷移
-			changeScene_[changeSceneState_]();
-
-			//待機シーンIDの初期化
-			waitSceneId_ = SCENE_ID::NONE;
-
-			// 暗転から明転へ
-			fader_->SetFade(Fader::STATE::FADE_IN);
-		}
-		//FadeOut();
-	};
+	fadeState_[Fader::STATE::NONE] = [this](void) {};
+	fadeState_[Fader::STATE::FADE_IN] = [this](void) {FadeIn(); };
+	fadeState_[Fader::STATE::FADE_OUT] = [this](void) {FadeOut(); };
 }
 
 SceneManager::~SceneManager(void)
@@ -96,9 +69,11 @@ SceneManager& SceneManager::GetInstance(void)
 
 void SceneManager::Init(void)
 {
+	//初期シーン
 	sceneId_ = SCENE_ID::TITLE;
 	waitSceneId_ = SCENE_ID::NONE;
 
+	//グリッド
 	grid_ = std::make_unique<Grid>();
 	grid_->Init();
 
@@ -609,16 +584,6 @@ void SceneManager::ChangeSceneChangeBack(void)
 
 void SceneManager::FadeOut(void)
 {
-	// 明転中
-	if (fader_->IsEnd())
-	{
-		// 明転が終了したら、フェード処理終了
-		fader_->SetFade(Fader::STATE::NONE);
-	}
-}
-
-void SceneManager::FadeIn(void)
-{
 	// 暗転中
 	if (fader_->IsEnd())
 	{
@@ -633,5 +598,15 @@ void SceneManager::FadeIn(void)
 
 		// 暗転から明転へ
 		fader_->SetFade(Fader::STATE::FADE_IN);
+	}
+}
+
+void SceneManager::FadeIn(void)
+{
+	// 明転中
+	if (fader_->IsEnd())
+	{
+		// 明転が終了したら、フェード処理終了
+		fader_->SetFade(Fader::STATE::NONE);
 	}
 }

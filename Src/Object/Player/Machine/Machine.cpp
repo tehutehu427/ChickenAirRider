@@ -50,5 +50,5 @@ void Machine::Update(void)
 
 void Machine::Draw(void)
 {
-	DrawSphere3D(trans_.pos, 30.0f, 20, 0xff0000, 0xff0000, true);
+	//DrawSphere3D(trans_.pos, 30.0f, 20, 0xff0000, 0xff0000, true);
 }

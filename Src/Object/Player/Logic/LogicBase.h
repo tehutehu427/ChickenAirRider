@@ -1,4 +1,5 @@
 #pragma once
+#include"../Common/Vector2F.h"
 
 class LogicBase
 {
@@ -28,6 +29,6 @@ public:
 	/// @brief ターンの値
 	/// @param  
 	/// @return 回転量(-値:左回転, +値:右回転)
-	virtual const float TurnValue(void) = 0;
+	virtual const Vector2F TurnValue(void) = 0;
 };
 

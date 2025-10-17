@@ -23,8 +23,8 @@ void Stage::Init(void)
 	std::unique_ptr<Geometry> geo = std::make_unique<Cube>(trans_.pos, trans_.quaRot, STAGE_SIZE);
 	MakeCollider({ Collider::TAG::STAGE }, std::move(geo));
 
-	geo = std::make_unique<Cube>(trans_.pos, trans_.quaRot.AngleAxis(45.0f, Utility::AXIS_X), STAGE_SIZE);
-	MakeCollider({ Collider::TAG::STAGE }, std::move(geo));
+	//geo = std::make_unique<Cube>(trans_.pos, trans_.quaRot.AngleAxis(45.0f, Utility::AXIS_X), STAGE_SIZE);
+	//MakeCollider({ Collider::TAG::STAGE }, std::move(geo));
 }
 
 void Stage::Update(void)

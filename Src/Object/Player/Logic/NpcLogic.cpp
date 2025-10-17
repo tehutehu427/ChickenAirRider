@@ -24,7 +24,7 @@ const bool NpcLogic::DisCharge(void)
     return false;
 }
 
-const float NpcLogic::TurnValue(void)
+const Vector2F NpcLogic::TurnValue(void)
 {
-    return 0.0f;
+    return {0.0f,0.0f};
 }

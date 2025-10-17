@@ -90,6 +90,8 @@ void Player::Update(void)
 	grvMng.CalcGravity(Utility::DIR_D, grav);
 	movedPos_ = VAdd(movedPos_, grav);
 
+	isGrounded_ = false;
+
 	//‹@‘Ì‚ÆƒLƒƒƒ‰‚ÉÀ•W‚Æ‰ñ“]‚ð“¯Šú‚³‚¹‚é
 	SynchronizeChara();
 	SynchronizeMachine();
@@ -175,6 +177,7 @@ void Player::SynchronizeChara(void)
 	//À•W‚Æ‰ñ“]‚Ì“¯Šú
 	chara_->SetPos(trans_.pos);
 	chara_->SetQuaRot(trans_.quaRot);
+	chara_->Update();
 }
 
 void Player::SynchronizeMachine(void)
@@ -182,4 +185,5 @@ void Player::SynchronizeMachine(void)
 	//À•W‚Æ‰ñ“]‚Ì“¯Šú
 	machine_->SetPos(trans_.pos);
 	machine_->SetQuaRot(trans_.quaRot);
+	machine_->Update();
 }

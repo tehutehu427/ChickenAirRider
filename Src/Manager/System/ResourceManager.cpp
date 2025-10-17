@@ -40,7 +40,10 @@ void ResourceManager::Init(void)
 
 
 #pragma region モデル
-	res = std::make_unique<Resource>(Resource::TYPE::MODEL, PATH_MDL + L"Chicken.mv1");
+	//キャラクターのパス
+	std::wstring charaPath = PATH_MDL + L"Character/";
+
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, charaPath + L"Chicken.mv1");
 	resourcesMap_.emplace(SRC::CHICKEN, std::move(res));
 #pragma endregion 
 

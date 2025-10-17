@@ -1,4 +1,6 @@
 #include"../pch.h"
+#include"../Utility/Utility.h"
+#include"../../Manager/System/ResourceManager.h"
 #include "Character.h"
 
 Character::Character(void)
@@ -35,6 +37,10 @@ void Character::Load(void)
 
 	unitParam_.chargeBraking_ = 0.2f;
 	unitParam_.chargeCapacity_ = 100.0f;
+
+	//モデル
+	trans_.quaRotLocal = Quaternion::AngleAxis(Utility::Deg2RadF(180.0f), Utility::AXIS_Y);
+	trans_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::CHICKEN).handleId_);
 }
 
 void Character::Init(void)
@@ -43,9 +49,13 @@ void Character::Init(void)
 
 void Character::Update(void)
 {
+	//モデル用
+	trans_.Update();
 }
 
 void Character::Draw(void)
 {
-	DrawSphere3D(trans_.pos, 10.0f, 20, 0xffff00, 0xffff00, true);
+	//モデル描画
+	MV1DrawModel(trans_.modelId);
+	//DrawSphere3D(trans_.pos, 10.0f, 20, 0xffff00, 0xffff00, true);
 }

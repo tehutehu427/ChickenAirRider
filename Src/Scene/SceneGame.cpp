@@ -133,5 +133,5 @@ void SceneGame::DebugDraw(void)
 	//ÉVÅ[Éìñº
 	DrawString(0, 0, L"SceneGame", 0xffffff);
 
-	DrawBox(100, 100, 924, 540, 0xffffff, true);
+	DrawBox(100, 100, 924, 540, 0x0000ff, true);
 }

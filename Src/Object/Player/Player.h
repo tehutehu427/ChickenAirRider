@@ -64,6 +64,9 @@ public:
 	//s“®Ø‚è‘Ö‚¦
 	void ChangeState(const STATE _state) { state_ = _state; }
 
+	//Ú’n”»’è
+	const bool IsGrounded(void) { return isGrounded_; }
+
 private:
 
 	//“–‚½‚è”»’è—p
