@@ -45,6 +45,19 @@ void ResourceManager::Init(void)
 
 	res = std::make_unique<Resource>(Resource::TYPE::MODEL, charaPath + L"Chicken.mv1");
 	resourcesMap_.emplace(SRC::CHICKEN, std::move(res));
+
+	//マシンのモデル
+	std::wstring machinePath = PATH_MDL + L"Machine/";
+
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, machinePath + L"Wakaba.mv1");
+	resourcesMap_.emplace(SRC::WAKABA, std::move(res));
+
+	//ステージオブジェクトのパス
+	std::wstring stagePath = PATH_MDL + L"StageObject/";
+
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, stagePath + L"Glass.mv1");
+	resourcesMap_.emplace(SRC::GLASS, std::move(res));
+
 #pragma endregion 
 
 

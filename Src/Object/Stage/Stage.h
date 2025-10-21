@@ -31,6 +31,9 @@ private:
 	//ステージの大きさ
 	static constexpr VECTOR STAGE_SIZE = { 10000.0f,10.0f,10000.0f };
 
+	//モデルサイズ
+	static constexpr float MODEL_SIZE_Y = 200.0f;
+
 	//色
 	unsigned int color_;
 };

@@ -1,4 +1,5 @@
 #include"../pch.h"
+#include"../../Manager/System/ResourceManager.h"
 #include "Machine.h"
 
 Machine::Machine(void)
@@ -38,6 +39,11 @@ void Machine::Load(void)
 	unitParam_.chargeDamp_ = 1.0f;
 	unitParam_.boostRate_ = 0.5f;
 	unitParam_.boostPower_ = 6;
+
+	//ƒ‚ƒfƒ‹
+	trans_.modelId = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::WAKABA);
+	trans_.scl = MODEL_SIZE;
+	trans_.localPos.y -= 20.0f;
 }
 
 void Machine::Init(void)
@@ -46,9 +52,11 @@ void Machine::Init(void)
 
 void Machine::Update(void)
 {
+	trans_.Update();
 }
 
 void Machine::Draw(void)
 {
+	MV1DrawModel(trans_.modelId);
 	//DrawSphere3D(trans_.pos, 30.0f, 20, 0xff0000, 0xff0000, true);
 }

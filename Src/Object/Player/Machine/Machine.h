@@ -49,6 +49,9 @@ public:
 
 private:
 
+	//モデルのサイズ
+	static constexpr VECTOR MODEL_SIZE = { 0.33f,0.33f,0.33f };
+
 	// モデル制御の基本情報
 	Transform trans_;
 
