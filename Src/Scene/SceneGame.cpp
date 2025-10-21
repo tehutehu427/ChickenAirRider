@@ -95,7 +95,9 @@ void SceneGame::Update(void)
 	plMng.Update();
 
 	//ƒJƒƒ‰‚Ì‰ñ“]
-	camera->SetAngles(plMng.GetPlayer(0).GetTrans().quaRot.ToEuler());
+	VECTOR euler = plMng.GetPlayer(0).GetTrans().quaRot.ToEuler();
+	euler.x = 0.0f;
+	camera->SetAngles(euler);
 
 	//“–‚½‚è”»’è‚Ì”jŠü
 	colMng.Sweep();

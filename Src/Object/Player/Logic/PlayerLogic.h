@@ -35,6 +35,6 @@ public:
 private:
 
 	//‰ñ“]—Ê
-	static constexpr float TURN_POW = 1000.0f;
+	static constexpr float TURN_POW = 10.0f;
 };
 

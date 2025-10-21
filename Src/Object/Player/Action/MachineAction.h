@@ -55,12 +55,6 @@ private:
 	//総合速度
 	float speed_;
 
-	//旋回力
-	Quaternion turnPow_;
-
-	//飛行ベクトル
-	Quaternion flightPow_;
-
 	//状態ごとの更新
 	std::map<bool, std::function<void(void)>> update_;
 

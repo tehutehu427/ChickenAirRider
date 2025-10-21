@@ -14,8 +14,6 @@ MachineAction::MachineAction(Player& _player, const Machine _machine, LogicBase&
 	chargeCnt_ = 0.0f;
 	velocity_ = 0.0f;
 	speed_ = 0.0f;
-	turnPow_ = Quaternion();
-	flightPow_ = Quaternion();
 
 	update_[true] = [this](void) {UpdateGround(); };
 	update_[false] = [this](void) {UpdateFlight(); };
@@ -32,6 +30,9 @@ void MachineAction::Init(void)
 
 void MachineAction::Update(void)
 {
+	//âÒì]çXêV
+	player_.SetQuaRot(Quaternion::Euler(axis_));
+
 	//èÛë‘Ç≤Ç∆ÇÃçXêV
 	update_[player_.IsGrounded()]();
 }
@@ -146,7 +147,7 @@ void MachineAction::Charge(void)
 
 		//ëOï˚Ç…à⁄ìÆóÕÇçÏÇÈ
 		VECTOR movePow = VGet(0.0f, 0.0f, speed_);
-		movePow = player_.GetTrans().quaRot.PosAxis(movePow);
+		//movePow = player_.GetTrans().quaRot.PosAxis(movePow);
 
 		//ÉvÉåÉCÉÑÅ[Ç…ëóÇÈ
 		player_.SetMovePow(movePow);
@@ -181,26 +182,18 @@ void MachineAction::Turn(void)
 	turnPow += turnPow > 0.0f ? param.turning_ / COMP_TURN
 		: -param.turning_ / COMP_TURN;
 
-	turnPow_ = Quaternion::AngleAxis(Utility::Deg2RadF(turnPow), Utility::AXIS_Y);
-
-	//âÒì]
-	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(turnPow_));
+	//YâÒì]Çê›íË
+	axis_.y += turnPow;
 }
 
 void MachineAction::Flight(void)
 {
 	//âÒì]ó 
-	float upPow = logic_.TurnValue().y / COMP_TURN;
+	float flightPow = logic_.TurnValue().y / COMP_TURN;
 
-	if (upPow == 0.0f)return;
+	if (flightPow == 0.0f)return;
 
-	Quaternion quaRotX = player_.GetTrans().quaRot.Mult(Quaternion::AngleAxis(Utility::Deg2RadF(upPow), Utility::AXIS_X));
-
-	VECTOR euler = quaRotX.ToEuler();
-	euler.x = Utility::Deg2RadF(std::clamp(Utility::Rad2DegF(euler.x), -45.0f, 45.0f));
-
-	flightPow_ = Quaternion::Euler(euler);
-
-	//âÒì]
-	player_.SetQuaRot(flightPow_);
+	//XâÒì]Çê›íË
+	axis_.x += flightPow;
+	axis_.x = Utility::Deg2RadF(std::clamp(Utility::Rad2DegF(axis_.x), -45.0f, 45.0f));
 }

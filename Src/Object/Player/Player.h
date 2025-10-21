@@ -71,7 +71,7 @@ private:
 
 	//当たり判定用
 	static constexpr float RADIUS = 30.0f;	//球体の半径
-	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,40.0f,0.0f };		//線判定の上相対座標
+	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };		//線判定の上相対座標
 	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-40.0f,0.0f };		//線判定の下相対座標
 
 	//基本機能

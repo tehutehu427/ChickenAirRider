@@ -65,8 +65,11 @@ void Player::Init(void)
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, RADIUS);
 	MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
 
+	//接地用
+	static const Quaternion GROUNDED_LINE = Quaternion();
+
 	//接地判定用の当たり判定
-	geo = std::make_unique<Line>(trans_.pos, trans_.quaRot, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
+	geo = std::make_unique<Line>(trans_.pos, GROUNDED_LINE, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
 }
 
@@ -126,7 +129,11 @@ void Player::OnHit(const std::weak_ptr<Collider> _hitCol)
 		movedPos_ = trans_.pos;
 
 		//接地しているか
-		if (groundCol->IsHit())isGrounded_ = true;
+		if (groundCol->IsHit())
+		{
+			action_->ResetAxisX();
+			isGrounded_ = true;
+		}
 	}
 }
 

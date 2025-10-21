@@ -24,6 +24,9 @@ public:
 	//•`‰æ
 	virtual void Draw(void);
 
+	//X²‰ñ“]‚Ì‰Šú‰»
+	void ResetAxisX(void) { axis_.x = 0.0f; };
+
 protected:
 
 	//Š—LÒ
@@ -31,4 +34,7 @@ protected:
 
 	//s“®”»’f
 	LogicBase& logic_;
+
+	//²‚²‚Æ‚Ì‰ñ“]—p
+	VECTOR axis_;
 };
