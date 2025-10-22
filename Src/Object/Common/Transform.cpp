@@ -27,6 +27,7 @@ Transform::Transform(int model)
 	rot = Utility::VECTOR_ZERO;
 	pos = Utility::VECTOR_ZERO;
 	localPos = Utility::VECTOR_ZERO;
+	overAllPos = Utility::VECTOR_ZERO;
 
 	matScl = MGetIdent();
 	matRot = MGetIdent();

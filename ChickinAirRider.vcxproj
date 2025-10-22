@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\SkyDome\SkyDome.cpp" />
     <ClCompile Include="Src\Manager\Game\StageManager.cpp" />
     <ClCompile Include="Src\Object\Player\Action\ActionBase.cpp" />
     <ClCompile Include="Src\Object\Player\Action\CharacterAction.cpp" />
@@ -217,6 +218,7 @@
     <ClCompile Include="Src\Common\Vector2F.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\SkyDome\SkyDome.h" />
     <ClInclude Include="Src\Manager\Game\StageManager.h" />
     <ClInclude Include="Src\Object\Player\Action\ActionBase.h" />
     <ClInclude Include="Src\Object\Player\Action\CharacterAction.h" />

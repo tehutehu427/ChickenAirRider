@@ -58,6 +58,12 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::MODEL, stagePath + L"Glass.mv1");
 	resourcesMap_.emplace(SRC::GLASS, std::move(res));
 
+	//スカイドームのパス
+	std::wstring skyDomePath = PATH_MDL + L"SkyDome/";
+
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, skyDomePath + L"SkyDome.mv1");
+	resourcesMap_.emplace(SRC::SKY_DOME, std::move(res));
+
 #pragma endregion 
 
 

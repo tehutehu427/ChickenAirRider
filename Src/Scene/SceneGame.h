@@ -2,6 +2,7 @@
 #include "SceneBase.h"
 
 class Timer;
+class SkyDome;
 
 class SceneGame : public SceneBase
 {
@@ -30,5 +31,8 @@ private:
 
 	//タイマー
 	std::unique_ptr<Timer> timer_;
+
+	//スカイドーム
+	std::unique_ptr<SkyDome> sky_;
 };
 

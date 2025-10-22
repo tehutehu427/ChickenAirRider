@@ -6,6 +6,7 @@
 #include"../Manager/Game/Timer.h"
 #include"../Manager/Game/StageManager.h"
 #include"../Manager/Game/PlayerManager.h"
+#include"../Object/SkyDome/SkyDome.h"
 #include"../Object/Player/Player.h"
 #include "SceneGame.h"
 
@@ -61,6 +62,11 @@ void SceneGame::Init(void)
 	//プレイヤーの初期化
 	plMng.Init();
 
+	//スカイドーム
+	sky_ = std::make_unique<SkyDome>(plMng.GetPlayer(0).GetTrans().pos);
+	sky_->Load();
+	sky_->Init();
+
 	//カメラ設定
 	camera->SetFollow(&plMng.GetPlayer(0).GetTrans());
 	camera->ChangeMode(Camera::MODE::FOLLOW);
@@ -87,6 +93,9 @@ void SceneGame::Update(void)
 
 	//タイマーの更新
 	timer_->Update();
+
+	//スカイドームの更新
+	sky_->Update();
 
 	//ステージ更新
 	stgMng.Update();
@@ -118,6 +127,9 @@ void SceneGame::Draw(void)
 
 	//タイマーの描画
 	timer_->Draw();
+
+	//スカイドーム
+	sky_->Draw();
 
 	//ステージの描画
 	stgMng.Draw();
