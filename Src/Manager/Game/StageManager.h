@@ -1,6 +1,7 @@
 #pragma once
 #include<vector>
 #include<memory>
+#include<string>
 
 class Stage;
 
@@ -25,6 +26,9 @@ public:
 
 	//‰ğ•ú
 	void Destroy(void);
+
+	//Json‚Ìƒ[ƒh
+	void LoadJsonFile(const std::string& _fileName);
 
 private:
 

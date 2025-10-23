@@ -1,4 +1,5 @@
 #include"pch.h"
+#include "Common/SingletonRegistry.h"
 #include "Manager/System/InputManager.h"
 #include "Manager/System/KeyConfig.h"
 #include "Manager/System/ResourceManager.h"
@@ -109,10 +110,9 @@ void Application::Run(void)
 void Application::Destroy(void)
 {
 	fontReg_->Destroy();
-	SceneManager::GetInstance().Destroy();
-	SoundManager::GetInstance().Destroy();	
-	KeyConfig::GetInstance().Destroy();
-	ResourceManager::GetInstance().Destroy();
+
+	//シングルトンインスタンスの一括解放
+	SingletonRegistry::GetInstance().AllDelete();
 
 	// Effekseerを終了する。
 	Effkseer_End();

@@ -218,6 +218,8 @@
     <ClCompile Include="Src\Common\Vector2F.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Common\SingletonRegistry.h" />
+    <ClInclude Include="Src\Common\Singleton.h" />
     <ClInclude Include="Src\Object\SkyDome\SkyDome.h" />
     <ClInclude Include="Src\Manager\Game\StageManager.h" />
     <ClInclude Include="Src\Object\Player\Action\ActionBase.h" />

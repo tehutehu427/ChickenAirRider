@@ -3,11 +3,15 @@
 #include <map>
 #include <memory>
 #include "../Common/Vector2.h"
+#include"../Common/Singleton.h"
 
 class InputManager;
 
-class KeyConfig
+class KeyConfig : public Singleton<KeyConfig>
 {
+	//継承元のコンストラクタ等にアクセスするため
+	friend class Singleton<KeyConfig>;
+
 public:
 
 	// ゲームコントローラーの認識番号
@@ -104,17 +108,14 @@ public:
 		MAX,
 	};
 
-	// インスタンスを明示的に生成
-	static void CreateInstance(void);
-
-	// インスタンスの取得
-	static KeyConfig& GetInstance(void);
-
 	//初期化
-	void Init(void);
+	void Init(void)override;
 	
 	//更新
 	void Update(void);
+
+	// リソースの破棄
+	void Destroy(void)override;
 
 	/// @brief キーが押されているか
 	/// @param cType 操作名
@@ -184,9 +185,6 @@ public:
 	//指定の方向に倒れた度合い0から1000
 	int PadStickOverSize(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick)const;
 	
-	// リソースの破棄
-	void Destroy(void);
-
 	/// @brief ゲームコントローラーを振動する
 	/// @param _no 振動させるゲームコントローラーの番号
 	/// @param _time ミリ秒　,-1で無限に続けることができる(STOP 必須)
@@ -197,6 +195,11 @@ public:
 	/// @param _no ゲームコントローラーの番号
 	void StopPadVibration(KeyConfig::JOYPAD_NO _no);
 
+protected:
+
+	KeyConfig(void);
+	~KeyConfig(void)override = default;
+
 private:
 
 	std::unique_ptr<InputManager> inputManager_;	//入力管理クラスのインスタンス
@@ -205,12 +208,5 @@ private:
 	std::map<CONTROL_TYPE, std::vector<JOYPAD_BTN>>conInput_;			//操作の種類とボタンの種類でコントローラーの状態を格納
 	std::map<CONTROL_TYPE, std::vector<JOYPAD_STICK>>stickInput_;		//操作の種類とスティックの種類でコントローラーの状態を格納
 	std::map < CONTROL_TYPE, std::vector<MOUSE>>mouseInput_;			//操作の種類とマウスの種類でマウスの状態を格納
-
-	// シングルトン用インスタンス
-	static KeyConfig* instance_;
-
-	KeyConfig(void);
-	KeyConfig(const KeyConfig& manager);
-	~KeyConfig(void) = default;
 };
 

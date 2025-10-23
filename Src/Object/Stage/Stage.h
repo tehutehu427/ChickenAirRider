@@ -5,6 +5,13 @@ class Stage : public ObjectBase
 {
 public:
 
+	//オブジェクトの種類
+	enum class OBJECT_TYPE
+	{
+		GLASS,		//草地
+		BUILDING,	//ビル
+	};
+
 	//コンストラクタ
 	Stage(void);
 	

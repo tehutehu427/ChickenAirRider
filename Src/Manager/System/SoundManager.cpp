@@ -2,8 +2,6 @@
 #include "SoundManager.h"
 #include "../../Application.h"
 
-SoundManager* SoundManager::instance_ = nullptr;
-
 SoundManager::SoundManager()
 {  
 	// ‰¹—Ê‚Ì‰Šú‰»
@@ -15,21 +13,6 @@ SoundManager::SoundManager()
 
 SoundManager::~SoundManager()
 {
-}
-
-void SoundManager::CreateInstance(void)
-{
-    if (instance_ == nullptr)
-    {
-        instance_ = new SoundManager();
-    }
-    // ‰Šú‰»ˆ—‚ğŒÄ‚Ño‚·
-    instance_->Init();
-}
-
-SoundManager& SoundManager::GetInstance(void)
-{
-    return *instance_;
 }
 
 void SoundManager::Destroy()

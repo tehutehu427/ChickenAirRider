@@ -2,10 +2,13 @@
 #include <memory>
 #include <map>
 #include <string>
+#include "../Common/Singleton.h"
 #include "Resource.h"
 
-class ResourceManager
+class ResourceManager : public Singleton<ResourceManager>
 {
+	//継承元のコンストラクタ等にアクセスするため
+	friend class Singleton<ResourceManager>;
 
 public:
 
@@ -22,25 +25,20 @@ public:
 
 		//ステージオブジェクトモデル
 		GLASS,				//草地モデル
+		BUILDING,			//ビルモデル
 
 		//スカイドーム
 		SKY_DOME,			//スカイドーム
 	};
 
-	// 明示的にインステンスを生成する
-	static void CreateInstance(void);
-
-	// 静的インスタンスの取得
-	static ResourceManager& GetInstance(void);
-
 	// 初期化
-	void Init(void);
+	void Init(void)override;
 
 	// 解放(シーン切替時に一旦解放)
 	void Release(void);
 
 	// リソースの完全破棄
-	void Destroy(void);
+	void Destroy(void)override;
 
 	// リソースのロード
 	const Resource& Load(SRC src);
@@ -48,10 +46,14 @@ public:
 	// リソースの複製ロード(モデル用)
 	int LoadModelDuplicate(SRC src);
 
-private:
+protected:
 
-	// 静的インスタンス
-	static ResourceManager* instance_;
+	// デフォルトコンストラクタをprivateにして、
+	// 外部から生成できない様にする
+	ResourceManager(void);
+	~ResourceManager(void);
+
+private:
 
 	// リソース管理の対象
 	
@@ -61,12 +63,6 @@ private:
 	std::map<SRC, Resource&> loadedMap_;
 
 	Resource dummy_;
-
-	// デフォルトコンストラクタをprivateにして、
-	// 外部から生成できない様にする
-	ResourceManager(void);
-	ResourceManager(const ResourceManager& manager) = default;
-	~ResourceManager(void);
 
 	// 内部ロード
 	Resource& _Load(SRC src);

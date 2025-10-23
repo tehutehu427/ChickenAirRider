@@ -10,8 +10,6 @@
 #include"../Application.h"
 #include"SceneManager.h"
 
-SceneManager* SceneManager::instance_ = nullptr;
-
 SceneManager::SceneManager(void)
 {
 	mainScreen_ = -1;	//メインスクリーンの初期化
@@ -51,20 +49,6 @@ SceneManager::SceneManager(void)
 
 SceneManager::~SceneManager(void)
 {
-}
-
-void SceneManager::CreateInstance()
-{
-	if (instance_ == nullptr)
-	{
-		instance_ = new SceneManager();
-	}
-	instance_->Init();
-}
-
-SceneManager& SceneManager::GetInstance(void)
-{
-	return *instance_;
 }
 
 void SceneManager::Init(void)

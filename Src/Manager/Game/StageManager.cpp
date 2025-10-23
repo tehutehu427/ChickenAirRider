@@ -5,6 +5,12 @@
 //静的インスタンスの初期化
 StageManager* StageManager::instance_ = nullptr;
 
+namespace
+{
+	//Jsonの簡略化
+	using json = nlohmann::json;
+}
+
 void StageManager::CreateInstance(void)
 {
 	if (instance_ == nullptr)
@@ -37,6 +43,15 @@ void StageManager::Destroy(void)
 {
 	//ステージを明示的に解放
 	stage_.reset();
+}
+
+void StageManager::LoadJsonFile(const std::string& _fileName)
+{
+	std::ifstream ifs(_fileName);
+	if (!ifs.is_open()) {
+		std::cerr << "ファイルが開けません: " << _fileName << "\n";
+		return;
+	}
 }
 
 StageManager::StageManager(void)

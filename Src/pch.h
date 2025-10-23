@@ -1,8 +1,8 @@
 #pragma once
 
-#include<DxLib.h>
-#include <EffekseerForDXLib.h>
-#include <Effekseer.h>
+#include"DxLib.h"
+#include<EffekseerForDXLib.h>
+#include<Effekseer.h>
 #include<cassert>
 #include<vector>
 #include<list>
@@ -14,4 +14,5 @@
 #include<algorithm>
 #include<functional>
 #include<iostream>
-#include <fstream>
+#include<fstream>
+#include"nlohmann/json.hpp"

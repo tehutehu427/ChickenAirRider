@@ -23,8 +23,10 @@ void SceneTitle::Init(void)
 
 void SceneTitle::Update(void)
 {
+	auto& key = KeyConfig::GetInstance();
+
 	//シーン遷移デバッグ
-	if (KeyConfig::GetInstance().IsTrgDown(KeyConfig::CONTROL_TYPE::ENTER, KeyConfig::JOYPAD_NO::PAD1))
+	if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::ENTER, KeyConfig::JOYPAD_NO::PAD1))
 	{
 		//シーンの削除
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT,true, true);

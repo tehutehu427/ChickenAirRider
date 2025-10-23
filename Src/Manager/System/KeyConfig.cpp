@@ -1,25 +1,6 @@
 #include"../pch.h"
 #include "KeyConfig.h"
 #include "InputManager.h"
-KeyConfig* KeyConfig::instance_ = nullptr;
-
-void KeyConfig::CreateInstance(void)
-{
-	if (instance_ == nullptr)
-	{
-		instance_ = new KeyConfig();
-	}
-	instance_->Init();
-}
-
-KeyConfig& KeyConfig::GetInstance(void)
-{
-	if (instance_ == nullptr)
-	{
-		KeyConfig::CreateInstance();
-	}
-	return *instance_;
-}
 
 void KeyConfig::Init(void)
 {
@@ -456,6 +437,7 @@ void KeyConfig::Destroy(void)
 	stickInput_.clear();
 	mouseInput_.clear();
 	delete instance_;
+	instance_ = nullptr;
 }
 
 void KeyConfig::PadVibration(KeyConfig::JOYPAD_NO _no, int _time, int _pow)
@@ -475,9 +457,5 @@ void KeyConfig::StopPadVibration(KeyConfig::JOYPAD_NO _no)
 }
 
 KeyConfig::KeyConfig(void)
-{
-}
-
-KeyConfig::KeyConfig(const KeyConfig& manager)
 {
 }

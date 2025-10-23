@@ -3,22 +3,6 @@
 #include "Resource.h"
 #include "ResourceManager.h"
 
-ResourceManager* ResourceManager::instance_ = nullptr;
-
-void ResourceManager::CreateInstance(void)
-{
-	if (instance_ == nullptr)
-	{
-		instance_ = new ResourceManager();
-	}
-	instance_->Init();
-}
-
-ResourceManager& ResourceManager::GetInstance(void)
-{
-	return *instance_;
-}
-
 void ResourceManager::Init(void)
 {
 	std::wstring PATH_IMG = Application::PATH_IMAGE;
@@ -57,6 +41,9 @@ void ResourceManager::Init(void)
 
 	res = std::make_unique<Resource>(Resource::TYPE::MODEL, stagePath + L"Glass.mv1");
 	resourcesMap_.emplace(SRC::GLASS, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, stagePath + L"Building.mv1");
+	resourcesMap_.emplace(SRC::BUILDING, std::move(res));
 
 	//スカイドームのパス
 	std::wstring skyDomePath = PATH_MDL + L"SkyDome/";

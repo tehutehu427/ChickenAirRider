@@ -5,6 +5,7 @@
 #include <list>
 #include <map>
 #include <functional>
+#include "../../Common/Singleton.h"
 #include "../../Common/Fader.h"
 
 class Grid;
@@ -12,8 +13,10 @@ class SceneBase;
 class Fader;
 class Camera;
 
-class SceneManager
+class SceneManager : public Singleton<SceneManager>
 {
+	//継承元のコンストラクタ等にアクセスするため
+	friend class Singleton<SceneManager>;
 
 public:
 
@@ -37,14 +40,8 @@ public:
 		CHANGE_BACK,	//末尾変更
 	};
 	
-	//インスタンスを生成
-	static void CreateInstance(void);
-
-	//インスタンスを取得
-	static SceneManager& GetInstance(void);
-
 	//初期化
-	void Init(void);
+	void Init(void)override;
 
 	//3D関連の初期化
 	void Init3D(void);
@@ -54,6 +51,9 @@ public:
 
 	//描画処理
 	void Draw(void);
+
+	//リソースの破棄
+	void Destroy(void)override;
 
 	/// @brief 先頭の（Updateが呼ばれる）シーンを切り替える
 	/// @param _sceneId 切り替え先のシーンID
@@ -84,9 +84,6 @@ public:
 
 	//シーンをリセットする
 	void ResetScene(void);
-
-	//リソースの破棄
-	void Destroy(void);
 
 	/// <summary>
 	/// シーンの状態遷移
@@ -128,9 +125,6 @@ private:
 
 	//条件人数
 	static constexpr int CASE_VALUE = 3;
-
-	// 静的インスタンス
-	static SceneManager* instance_;
 
 	//シーンID
 	SCENE_ID sceneId_;		//現在シーンID
@@ -188,8 +182,6 @@ private:
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする
 	SceneManager(void);
-	// コピーコンストラクタも同様
-	SceneManager(const SceneManager& manager) = delete;
 	// デストラクタも同様
 	~SceneManager(void);
 
