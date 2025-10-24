@@ -17,10 +17,8 @@ const std::wstring Application::PATH_EFFECT = L"Data/Effect/";
 const std::wstring Application::PATH_SOUND_BGM = L"Data/Sound/BGM/";
 const std::wstring Application::PATH_SOUND_SE = L"Data/Sound/SE/";
 const std::wstring Application::PATH_FONT = L"Data/Font/";
-const std::wstring Application::PATH_TEXT = L"Data/Text/";
-const std::wstring Application::PATH_JSON = L"Data/JSON/";
-const std::wstring Application::PATH_CSV = L"Data/CSV/";
 const std::wstring Application::PATH_SHADER = L"Data/Shader/";
+const std::wstring Application::PATH_OUTSIDE = L"Data/OutSide/";
 
 void Application::CreateInstance(void)
 {

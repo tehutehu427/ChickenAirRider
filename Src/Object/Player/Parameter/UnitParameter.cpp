@@ -1,3 +1,4 @@
+#include"../pch.h"
 #include "UnitParameter.h"
 
 UnitParameter UnitParameter::Calculate(const UnitParameter& _unitParam) const

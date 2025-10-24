@@ -1,22 +1,15 @@
 #pragma once
+#include<string>
 #include "../ObjectBase.h"
 
-class Stage : public ObjectBase
+class StageObject : public ObjectBase
 {
 public:
-
-	//オブジェクトの種類
-	enum class OBJECT_TYPE
-	{
-		GLASS,		//草地
-		BUILDING,	//ビル
-	};
-
 	//コンストラクタ
-	Stage(void);
+	StageObject(const VECTOR _pos, const VECTOR _scl, const Quaternion _quaRot);
 	
 	//デストラクタ
-	~Stage(void)override;
+	~StageObject(void)override;
 
 	//読み込み
 	void Load(void)override;
@@ -44,4 +37,3 @@ private:
 	//色
 	unsigned int color_;
 };
-

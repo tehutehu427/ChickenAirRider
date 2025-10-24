@@ -1,7 +1,11 @@
 #pragma once
+#include"../pch.h"
 
 struct UnitParameter
 {
+	//ユニット名
+	std::string name_;
+
 	//各ユニットの固定パラメータ―
 	float fixedMaxSpeed_ = 0.0f;		//固定最高速
 	float fixedAcceleration_ = 0.0f;	//固定加速度
@@ -34,3 +38,93 @@ struct UnitParameter
 	//演算
 	UnitParameter Calculate(const UnitParameter& _unitParam)const;
 };
+
+//Json呼び出し
+inline void FromJson(const nlohmann::json& _j, UnitParameter& _p)
+{
+	_p.name_ = _j["name"];
+	_p.fixedMaxSpeed_ = _j["fixedMaxSpeed"];
+	_p.fixedAcceleration_ = _j["fixedAcceleration"];
+	_p.fixedTurning_ = _j["fixedTurning"];
+	_p.fixedCharge_ = _j["fixedCharge"];
+	_p.fixedFlight_ = _j["fixedFlight"];
+	_p.fixedWeight_ = _j["fixedWeight"];
+	_p.fixedAttack_ = _j["fixedAttack"];
+	_p.fixedDefence_ = _j["fixedDefence"];
+	_p.fixedMaxHealth_ = _j["fixedMaxHealth"];
+
+	_p.affectMaxSpeed_ = _j["affectMaxSpeed"];
+	_p.affectAcceleration_ = _j["affectAcceleration"];
+	_p.affectTurning_ = _j["affectTurning"];
+	_p.affectCharge_ = _j["affectCharge"];
+	_p.affectFlight_ = _j["affectFlight"];
+	_p.affectWeight_ = _j["affectWeight"];
+	_p.affectAttack_ = _j["affectAttack"];
+	_p.affectDefence_ = _j["affectDefence"];
+	_p.affectMaxHealth_ = _j["affectMaxHealth"];
+
+	_p.chargeBraking_ = _j["chargeBraking"];
+	_p.chargeCapacity_ = _j["chargeCapacity"];
+	_p.chargeDamp_ = _j["chargeDamp"];
+	_p.boostRate_ = _j["boostRate"];
+	_p.boostPower_ = _j["boostPower"];
+}
+
+inline void FromCsv(std::stringstream& _ss, UnitParameter& _p) 
+{
+	//名前
+	std::getline(_ss, _p.name_, ',');
+	std::string fixedMaxSpeed, fixedAcceleration, fixedTurning, fixedCharge, fixedFlight, fixedWeight, fixedAttack, fixedDefence, fixedMaxHealth,
+		affectMaxSpeed, affectAcceleration, affectTurning, affectCharge, affectFlight, affectWeight, affectAttack, affectDefence, affectMaxHealth,
+		chargeBraking, chargeCapacity, chargeDamp, boostRate, boostPower;
+	
+	//変数に格納
+	std::getline(_ss, fixedMaxSpeed, ',');
+	std::getline(_ss, fixedAcceleration, ',');
+	std::getline(_ss, fixedTurning, ',');
+	std::getline(_ss, fixedCharge, ',');
+	std::getline(_ss, fixedFlight, ',');
+	std::getline(_ss, fixedWeight, ',');
+	std::getline(_ss, fixedAttack, ',');
+	std::getline(_ss, fixedDefence, ',');
+	std::getline(_ss, fixedMaxHealth, ',');
+	std::getline(_ss, affectMaxSpeed, ',');
+	std::getline(_ss, affectAcceleration, ',');
+	std::getline(_ss, affectTurning, ',');
+	std::getline(_ss, affectCharge, ',');
+	std::getline(_ss, affectFlight, ',');
+	std::getline(_ss, affectWeight, ',');
+	std::getline(_ss, affectAttack, ',');
+	std::getline(_ss, affectDefence, ',');
+	std::getline(_ss, affectMaxHealth, ',');
+	std::getline(_ss, chargeBraking, ',');
+	std::getline(_ss, chargeCapacity, ',');
+	std::getline(_ss, chargeDamp, ',');
+	std::getline(_ss, boostRate, ',');
+	std::getline(_ss, boostPower, ',');
+	
+	//適用
+	_p.fixedMaxSpeed_ = std::stoi(fixedMaxSpeed);
+	_p.fixedAcceleration_ = std::stoi(fixedAcceleration);
+	_p.fixedTurning_ = std::stof(fixedTurning);
+	_p.fixedCharge_ = std::stof(fixedCharge);
+	_p.fixedFlight_ = std::stof(fixedFlight);
+	_p.fixedWeight_ = std::stof(fixedWeight);
+	_p.fixedAttack_ = std::stof(fixedAttack);
+	_p.fixedDefence_ = std::stof(fixedDefence);
+	_p.fixedMaxHealth_ = std::stof(fixedMaxHealth);
+	_p.affectMaxSpeed_ = std::stof(affectMaxSpeed);
+	_p.affectAcceleration_ = std::stof(affectAcceleration);
+	_p.affectTurning_ = std::stof(affectTurning);
+	_p.affectCharge_ = std::stof(affectCharge);
+	_p.affectFlight_ = std::stof(affectFlight);
+	_p.affectWeight_ = std::stof(affectWeight);
+	_p.affectAttack_ = std::stof(affectAttack);
+	_p.affectDefence_ = std::stof(affectDefence);
+	_p.affectMaxHealth_ = std::stof(affectMaxHealth);
+	_p.chargeBraking_ = std::stof(chargeBraking);
+	_p.chargeCapacity_ = std::stof(chargeCapacity);
+	_p.chargeDamp_ = std::stof(chargeDamp);
+	_p.boostRate_ = std::stof(boostRate);
+	_p.boostPower_ = std::stof(boostPower);
+}

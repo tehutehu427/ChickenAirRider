@@ -2,18 +2,29 @@
 #include<vector>
 #include<memory>
 #include<string>
-
-class Stage;
+#include"../Object/Stage/StageObject.h"
 
 class StageManager
 {
 public:
+
+	//オブジェクトの種類
+	enum class OBJECT_TYPE
+	{
+		GLASS,		//草地
+		BUILDING,	//ビル
+
+		MAX,
+	};
 
 	//インスタンス生成
 	static void CreateInstance(void);
 
 	//インスタンス取得
 	static StageManager& GetInstance(void) { return *instance_; }
+
+	//読み込み
+	void Load(void);
 
 	//初期化
 	void Init(void);
@@ -27,16 +38,16 @@ public:
 	//解放
 	void Destroy(void);
 
-	//Jsonのロード
-	void LoadJsonFile(const std::string& _fileName);
-
 private:
+
+	//名前
+	std::unordered_map<OBJECT_TYPE, std::string> name_;
 
 	//静的インスタンス
 	static StageManager* instance_;
 
 	//ステージ
-	std::unique_ptr<Stage> stage_;
+    std::vector<std::unique_ptr<StageObject>> stages_;
 
 	//コンストラクタ
 	StageManager(void);
@@ -48,4 +59,3 @@ private:
 	//デストラクタ
 	~StageManager(void);
 };
-

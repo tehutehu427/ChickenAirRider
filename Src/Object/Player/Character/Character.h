@@ -16,7 +16,6 @@ public:
 		NONE = -1,
 
 		CHICKEN,
-		
 		MAX,
 	};
 

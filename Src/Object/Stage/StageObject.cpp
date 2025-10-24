@@ -1,18 +1,22 @@
 #include "../Utility/Utility.h"
 #include "../Manager/System/ResourceManager.h"
 #include "../Common/Geometry/Cube.h"
-#include "Stage.h"
+#include "StageObject.h"
 
-Stage::Stage(void)
+StageObject::StageObject(const VECTOR _pos, const VECTOR _scl, const Quaternion _quaRot)
 {
+	trans_.pos = _pos;
+	trans_.scl = _scl;
+	trans_.quaRot = _quaRot;
+
 	color_ = 0;
 }
 
-Stage::~Stage(void)
+StageObject::~StageObject(void)
 {
 }
 
-void Stage::Load(void)
+void StageObject::Load(void)
 {
 	auto& res = ResourceManager::GetInstance();
 
@@ -20,7 +24,7 @@ void Stage::Load(void)
 	trans_.localPos.y = -MODEL_SIZE_Y / 2.0f;
 }
 
-void Stage::Init(void)
+void StageObject::Init(void)
 {
 	trans_.pos.y = -100.0f;
 
@@ -29,12 +33,12 @@ void Stage::Init(void)
 	MakeCollider({ Collider::TAG::STAGE }, std::move(geo));
 }
 
-void Stage::Update(void)
+void StageObject::Update(void)
 {
 	trans_.Update();
 }
 
-void Stage::Draw(void)
+void StageObject::Draw(void)
 {
 	colParam_[0].geometry_->Draw(color_);
 
@@ -45,7 +49,7 @@ void Stage::Draw(void)
 	color_ = 0;
 }
 
-void Stage::OnHit(const std::weak_ptr<Collider> _hitCol)
+void StageObject::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
 	color_ = 0xff0000;
 }

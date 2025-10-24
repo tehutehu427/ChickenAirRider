@@ -1,15 +1,9 @@
 #include"../pch.h"
-#include "../Object/Stage/Stage.h"
+#include "../Object/Stage/StageObject.h"
 #include "StageManager.h"
 
 //静的インスタンスの初期化
 StageManager* StageManager::instance_ = nullptr;
-
-namespace
-{
-	//Jsonの簡略化
-	using json = nlohmann::json;
-}
 
 void StageManager::CreateInstance(void)
 {
@@ -19,43 +13,44 @@ void StageManager::CreateInstance(void)
 	}
 }
 
+void StageManager::Load(void)
+{
+}
+
 void StageManager::Init(void)
 {
 	//ステージの作成
-	stage_ = std::make_unique<Stage>();
-	stage_->Load();
-	stage_->Init();
 }
 
 void StageManager::Update(void)
 {
 	//ステージの更新
-	stage_->Update();
+	for (const auto& stage : stages_)
+	{
+		stage->Update();
+	}
 }
 
 void StageManager::Draw(void)
 {
 	//ステージの描画
-	stage_->Draw();
+	for (const auto& stage : stages_)
+	{
+		stage->Draw();
+	}
 }
 
 void StageManager::Destroy(void)
 {
 	//ステージを明示的に解放
-	stage_.reset();
-}
-
-void StageManager::LoadJsonFile(const std::string& _fileName)
-{
-	std::ifstream ifs(_fileName);
-	if (!ifs.is_open()) {
-		std::cerr << "ファイルが開けません: " << _fileName << "\n";
-		return;
-	}
+	stages_.clear();
 }
 
 StageManager::StageManager(void)
 {
+	//名前
+	name_[OBJECT_TYPE::GLASS] = "glass";
+	name_[OBJECT_TYPE::BUILDING] = "building";
 }
 
 StageManager::~StageManager(void)
