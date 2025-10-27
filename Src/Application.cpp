@@ -1,5 +1,6 @@
 #include"pch.h"
 #include "Common/SingletonRegistry.h"
+#include "Loader/DataRegistry.h"
 #include "Manager/System/InputManager.h"
 #include "Manager/System/KeyConfig.h"
 #include "Manager/System/ResourceManager.h"
@@ -57,6 +58,10 @@ void Application::Init(void)
 
 	// キー制御初期化
 	SetUseDirectInputFlag(true);
+
+	//外部ファイル管理初期化
+	DataRegistry::CreateInstance();
+	DataRegistry::GetInstance().CreateAll();
 
 	// リソース管理初期化
 	ResourceManager::CreateInstance();	

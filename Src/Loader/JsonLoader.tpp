@@ -1,23 +1,15 @@
 #pragma once
-#include"../Lib/nlohmann/json.hpp"
-#include"ILoader.h"
+#include <ofstream>
+#include <nlohmann/json.hpp>
 
 template<typename T>
-class JsonLoader : public ILoader<T>
+std::vector<T> Load(const std::string& _filename) override;
 {
-public:
-
-	/// @brief ロード
-	/// @param _filename jsonファイル名
-	/// @return データ
-	std::vector<T> Load(const std::string& _filename) override
-	{
         //ファイル名
         std::ifstream ifs(_filename);
         
         //Jsonファイルから出力
-        nlohmann::json j;
-        ifs >> j;
+        nlohmann::json j; ifs >> j;
 
         //戻り値
         std::vector<T> result;
@@ -29,5 +21,4 @@ public:
             result.push_back(data);
         }
         return result;
-	}
-};
+}

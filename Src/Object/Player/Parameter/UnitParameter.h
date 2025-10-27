@@ -1,5 +1,6 @@
 #pragma once
-#include"../pch.h"
+#include <string>
+#include"../Lib/nlohmann/json.hpp"
 
 struct UnitParameter
 {

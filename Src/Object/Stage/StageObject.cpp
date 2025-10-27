@@ -3,8 +3,9 @@
 #include "../Common/Geometry/Cube.h"
 #include "StageObject.h"
 
-StageObject::StageObject(const VECTOR _pos, const VECTOR _scl, const Quaternion _quaRot)
+StageObject::StageObject(const int _modelId, const VECTOR _pos, const VECTOR _scl, const Quaternion _quaRot)
 {
+	trans_.modelId = _modelId;
 	trans_.pos = _pos;
 	trans_.scl = _scl;
 	trans_.quaRot = _quaRot;
@@ -18,16 +19,11 @@ StageObject::~StageObject(void)
 
 void StageObject::Load(void)
 {
-	auto& res = ResourceManager::GetInstance();
 
-	trans_.modelId = res.LoadModelDuplicate(ResourceManager::SRC::GLASS);
-	trans_.localPos.y = -MODEL_SIZE_Y / 2.0f;
 }
 
 void StageObject::Init(void)
 {
-	trans_.pos.y = -100.0f;
-
 	//ÉRÉâÉCÉ_ê∂ê¨
 	std::unique_ptr<Geometry> geo = std::make_unique<Cube>(trans_.pos, trans_.quaRot, STAGE_SIZE);
 	MakeCollider({ Collider::TAG::STAGE }, std::move(geo));

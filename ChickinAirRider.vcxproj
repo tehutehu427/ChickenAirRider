@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Loader\DataRegistry.cpp" />
     <ClCompile Include="Src\Object\SkyDome\SkyDome.cpp" />
     <ClCompile Include="Src\Manager\Game\StageManager.cpp" />
     <ClCompile Include="Src\Object\Player\Action\ActionBase.cpp" />
@@ -218,6 +219,7 @@
     <ClCompile Include="Src\Common\Vector2F.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Loader\DataRegistry.h" />
     <ClInclude Include="Src\Loader\LoaderManager.h" />
     <ClInclude Include="Src\Loader\CsvLoader.h" />
     <ClInclude Include="Src\Loader\JsonLoader.h" />
@@ -350,6 +352,9 @@
     <ClInclude Include="Src\Utility\UtilityTemplates.h" />
     <ClInclude Include="Src\Manager\Game\Timer.h" />
     <ClInclude Include="Src\Common\Vector2F.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Src\Loader\JsonLoader.tpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

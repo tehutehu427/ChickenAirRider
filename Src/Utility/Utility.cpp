@@ -828,7 +828,6 @@ std::string Utility::WStrToStr(const std::wstring& wstr)
     int size = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
     std::string result(size, 0);
     WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &result[0], size, nullptr, nullptr);
-    result.pop_back(); // null•¶š‚ğíœ
     return result;
 }
 

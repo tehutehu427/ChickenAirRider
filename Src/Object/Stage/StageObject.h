@@ -6,7 +6,7 @@ class StageObject : public ObjectBase
 {
 public:
 	//コンストラクタ
-	StageObject(const VECTOR _pos, const VECTOR _scl, const Quaternion _quaRot);
+	StageObject(const int _modelId, const VECTOR _pos, const VECTOR _scl, const Quaternion _quaRot);
 	
 	//デストラクタ
 	~StageObject(void)override;

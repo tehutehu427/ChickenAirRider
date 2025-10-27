@@ -11,12 +11,12 @@ public:
 	enum class TYPE
 	{
 		NONE,
-		IMG,
-		IMGS,
-		MASK,
-		MODEL,
-		FONT,
-		EFFEKSEER
+		IMG,		//画像
+		IMGS,		//分割画像
+		MASK,		//マスク画像
+		MODEL,		//モデル
+		FONT,		//フォント
+		EFFEKSEER,	//エフェクト(エフェクシア)
 	};
 	// コンストラクタ
 	Resource(void);

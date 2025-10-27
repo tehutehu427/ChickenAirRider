@@ -28,6 +28,11 @@ public:
 	//インスタンスの取得
 	static T& GetInstance(void)
 	{
+		if (instance_ == nullptr)
+		{
+			CreateInstance();
+		}
+
 		return *instance_;
 	}
 

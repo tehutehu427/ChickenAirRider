@@ -1,4 +1,8 @@
 #include"../pch.h"
+#include"../Application.h"
+#include"../Utility/Utility.h"
+#include "../Loader/LoaderManager.h"
+#include "../Manager/System/ResourceManager.h"
 #include "../Object/Stage/StageObject.h"
 #include "StageManager.h"
 
@@ -15,11 +19,24 @@ void StageManager::CreateInstance(void)
 
 void StageManager::Load(void)
 {
+	//ステージ情報
+	importData_ = LoaderManager<ImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Stage.json"));
 }
 
 void StageManager::Init(void)
 {
 	//ステージの作成
+	for (const auto& data : importData_)
+	{
+		//ステージの生成
+		stages_.push_back(std::make_unique<StageObject>(modelId_[data.name], data.position, data.scale, data.quaternion));
+	}
+
+	//初期化
+	for (const auto& stage : stages_)
+	{
+		stage->Init();
+	}
 }
 
 void StageManager::Update(void)
@@ -48,9 +65,12 @@ void StageManager::Destroy(void)
 
 StageManager::StageManager(void)
 {
-	//名前
-	name_[OBJECT_TYPE::GLASS] = "glass";
-	name_[OBJECT_TYPE::BUILDING] = "building";
+	//インスタンス
+	auto& res = ResourceManager::GetInstance();
+
+	//リソース
+	modelId_["glass"] = res.LoadModelDuplicate(ResourceManager::SRC::GLASS);
+	modelId_["building"] = res.LoadModelDuplicate(ResourceManager::SRC::BUILDING);
 }
 
 StageManager::~StageManager(void)

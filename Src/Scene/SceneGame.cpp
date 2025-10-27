@@ -57,6 +57,7 @@ void SceneGame::Init(void)
 	timer_->SetCountValid(true);
 
 	//ステージ管理
+	stgMng.Load();
 	stgMng.Init();
 
 	//プレイヤーの初期化

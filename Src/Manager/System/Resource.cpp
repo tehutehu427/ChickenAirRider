@@ -83,7 +83,6 @@ void Resource::Load(void)
 		//フォント
 		handleId_ = AddFontResourceEx(path_.c_str(), FR_PRIVATE, NULL);
 		break;
-
 	}
 
 	//リソースが読み込めたか確認
