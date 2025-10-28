@@ -1,12 +1,16 @@
 #pragma once
 #include<string>
+#include<set>
+#include "StageImportData.h"
 #include "../ObjectBase.h"
+
+class StageManager;
 
 class StageObject : public ObjectBase
 {
 public:
 	//コンストラクタ
-	StageObject(const int _modelId, const VECTOR _pos, const VECTOR _scl, const Quaternion _quaRot);
+	StageObject(const ImportData& _data, const int _modelId, const std::set<Collider::TAG> _tags);
 	
 	//デストラクタ
 	~StageObject(void)override;
@@ -34,6 +38,19 @@ private:
 	//モデルサイズ
 	static constexpr float MODEL_SIZE_Y = 200.0f;
 
+	//データの保有
+	ImportData data_;
+
+	//当たり判定形状
+	std::unordered_map<std::string, std::function<std::unique_ptr<Geometry>(void)>> createGeo_;
+
 	//色
 	unsigned int color_;
+
+	//形状生成
+	std::unique_ptr<Geometry> MakeSphere(void);
+	std::unique_ptr<Geometry> MakeCapsule(void);
+	std::unique_ptr<Geometry> MakeCube(void);
+	std::unique_ptr<Geometry> MakeLine(void);
+	std::unique_ptr<Geometry> MakeModel(void);
 };

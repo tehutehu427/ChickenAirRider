@@ -16,7 +16,7 @@ public:
     /// @brief ファイルの全データを取得
     /// @param _fileName ファイル名 
     /// @return データ
-    const std::vector<T>& GetfileData(const std::string _fileName)
+    const std::vector<T>& GetfileData(const std::string& _fileName)
     {
         //ロード済みか
         if (!isFileDataLoaded_[_fileName])
@@ -32,7 +32,7 @@ public:
     /// @param _filename ファイル名
     /// @param _dataName データ名
     /// @return データ
-    const std::vector<T>& GetNameToData(const std::string _fileName, const std::string _dataName)
+    const std::vector<T>& GetNameToData(const std::string& _fileName, const std::string& _dataName)
     {
         //ロード済みか
         if (!isNameToDataLoaded_[_dataName])
@@ -65,7 +65,7 @@ private:
 
     /// @brief ロード
     /// @param filename ファイル名
-    void FileLoad(const std::string _fileName)
+    void FileLoad(const std::string& _fileName)
     {
         namespace fs = std::filesystem;
         fs::path path(_fileName);
@@ -97,7 +97,7 @@ private:
     }
 
     //オブジェクトの名前に対応したロード
-    void NameToDataLoad(const std::string _fileName)
+    void NameToDataLoad(const std::string& _fileName)
     {
         // 拡張子を取得
         auto pos = _fileName.find_last_of('.');

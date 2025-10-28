@@ -2,7 +2,12 @@
 #include<vector>
 #include<memory>
 #include<string>
-#include"../Object/Stage/StageObject.h"
+#include<functional>
+#include"../Object/Common/Collider.h"
+#include"../Object/Stage/StageImportData.h"
+
+class Geometry;
+class StageObject;
 
 class StageManager
 {
@@ -15,15 +20,6 @@ public:
 		BUILDING,	//ビル
 
 		MAX,
-	};
-
-	//外部インポート用
-	struct ImportData
-	{
-		std::string name;
-		VECTOR position;
-		VECTOR scale;
-		Quaternion quaternion;
 	};
 
 	//インスタンス生成
@@ -54,6 +50,7 @@ private:
 
 	//名前管理
 	std::unordered_map<std::string, int> modelId_;
+	std::unordered_map<std::string, Collider::TAG> tags_;
 
 	//静的インスタンス
 	static StageManager* instance_;
@@ -70,78 +67,4 @@ private:
 
 	//デストラクタ
 	~StageManager(void);
-
-	//外部管理用
-	friend void FromJson(const nlohmann::json&, ImportData&);
-	friend void FromCsv(std::stringstream& _ss, ImportData&);
 };
-
-//Json呼び出し
-inline void FromJson(const nlohmann::json& _j, StageManager::ImportData& _data)
-{
-	//名前
-	if (_j.contains("name"))
-	{
-		_data.name = _j.at("name").get<std::string>();
-	}
-	else
-	{
-		std::cerr << "StageObjectのJsonファイルにnameが存在しません" << "\n";
-		return;
-	}
-
-	//座標
-	if (_j[_data.name].contains("position"))
-	{
-		const auto& pos = _j.at("position");
-		_data.position.x = pos.value("x", 0.0f);
-		_data.position.y = pos.value("y", 0.0f);
-		_data.position.z = pos.value("z", 0.0f);
-	}
-
-	//大きさ
-	if (_j[_data.name].contains("scale"))
-	{
-		const auto& scl = _j.at("scale");
-		_data.scale.x = scl.value("x", 1.0f);
-		_data.scale.y = scl.value("y", 1.0f);
-		_data.scale.z = scl.value("z", 1.0f);
-	}
-
-	//回転
-	if (_j[_data.name].contains("quaternion"))
-	{
-		const auto& q = _j.at("quaternion");
-		_data.quaternion.w = q.value("w", 1.0f);
-		_data.quaternion.x = q.value("x", 0.0f);
-		_data.quaternion.y = q.value("y", 0.0f);
-		_data.quaternion.z = q.value("z", 0.0f);
-	}
-}
-
-inline void FromCsv(std::stringstream& _ss, StageManager::ImportData& _data)
-{
-	//格納内容
-	std::string token;
-
-	//インポート
-
-	//名前
-	std::getline(_ss, _data.name, ',');
-
-	//座標
-	std::getline(_ss, token, ',');	_data.position.x = std::stof(token);
-	std::getline(_ss, token, ',');	_data.position.y = std::stof(token);
-	std::getline(_ss, token, ',');	_data.position.z = std::stof(token);
-
-	//大きさ
-	std::getline(_ss, token, ',');	_data.scale.x = std::stof(token);
-	std::getline(_ss, token, ',');	_data.scale.y = std::stof(token);
-	std::getline(_ss, token, ',');	_data.scale.z = std::stof(token);
-
-	//回転
-	std::getline(_ss, token, ',');	_data.quaternion.w = std::stof(token);
-	std::getline(_ss, token, ',');	_data.quaternion.x = std::stof(token);
-	std::getline(_ss, token, ',');	_data.quaternion.y = std::stof(token);
-	std::getline(_ss, token, ',');	_data.quaternion.z = std::stof(token);
-}

@@ -25,11 +25,23 @@ void StageManager::Load(void)
 
 void StageManager::Init(void)
 {
+	//タグ
+	std::set<Collider::TAG> tags;
+
 	//ステージの作成
 	for (const auto& data : importData_)
 	{
+		//stringから変換
+		for(const auto& tagName : data.tags)
+		{
+			tags.emplace(tags_[tagName]);
+		}
+
 		//ステージの生成
-		stages_.push_back(std::make_unique<StageObject>(modelId_[data.name], data.position, data.scale, data.quaternion));
+		stages_.emplace_back(std::make_unique<StageObject>(data, modelId_[data.name], tags));
+
+		//削除
+		tags.clear();
 	}
 
 	//初期化
@@ -71,6 +83,9 @@ StageManager::StageManager(void)
 	//リソース
 	modelId_["glass"] = res.LoadModelDuplicate(ResourceManager::SRC::GLASS);
 	modelId_["building"] = res.LoadModelDuplicate(ResourceManager::SRC::BUILDING);
+
+	//タグ
+	tags_["stage"] = Collider::TAG::STAGE;
 }
 
 StageManager::~StageManager(void)

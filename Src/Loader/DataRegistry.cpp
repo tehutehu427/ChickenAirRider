@@ -2,6 +2,7 @@
 #include"LoaderManager.h"
 #include"../Object/Player/Parameter/UnitParameter.h"
 #include"../Manager/Game/StageManager.h"
+#include"../Object/Stage/StageImportData.h"
 #include"DataRegistry.h"
 
 void DataRegistry::CreateAll(void)
@@ -10,5 +11,5 @@ void DataRegistry::CreateAll(void)
 	LoaderManager<UnitParameter>::CreateInstance();
 	
 	//ステージの情報
-	LoaderManager<StageManager::ImportData>::CreateInstance();
+	LoaderManager<ImportData>::CreateInstance();
 }

@@ -14,6 +14,9 @@ public:
 	{
         //ファイル名
         std::ifstream ifs(_filename);
+        if (!ifs.is_open()) {
+            throw std::runtime_error("ファイルを開けません: " + _filename);
+        }
         
         //Jsonファイルから出力
         nlohmann::json j;
