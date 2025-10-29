@@ -10,7 +10,7 @@ class StageObject : public ObjectBase
 {
 public:
 	//コンストラクタ
-	StageObject(const ImportData& _data, const int _modelId, const std::set<Collider::TAG> _tags);
+	StageObject(const StageImportData& _data, const int _modelId, const std::set<Collider::TAG> _tags);
 	
 	//デストラクタ
 	~StageObject(void)override;
@@ -39,7 +39,7 @@ private:
 	static constexpr float MODEL_SIZE_Y = 200.0f;
 
 	//データの保有
-	ImportData data_;
+	StageImportData data_;
 
 	//当たり判定形状
 	std::unordered_map<std::string, std::function<std::unique_ptr<Geometry>(void)>> createGeo_;

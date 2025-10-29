@@ -1,4 +1,5 @@
 #include"../pch.h"
+#include"../Utility/Utility.h"
 #include "../../../Common/Quaternion.h"
 #include"Sphere.h"
 #include"Capsule.h"
@@ -10,18 +11,21 @@
 //ƒ‚ƒfƒ‹
 //***************************************************
 
-Model::Model(const VECTOR& _pos, const Quaternion& _rot, const int _modelId) : Geometry(_pos, _rot), parentModelId_(_modelId)
+Model::Model(const VECTOR& _pos, const VECTOR& _prePos, const Quaternion& _rot, const int _modelId)
+	: Geometry(_pos, _prePos,  _rot), parentModelId_(_modelId)
 {
 	hitLineInfo_ = {};
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_)); 
+	hitResult_ = {};
 }
 
 Model::Model(const Model& _copyBase)
-	: Geometry(_copyBase.GetColPos(), _copyBase.GetColRot())
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColPrePos(), _copyBase.GetColRot())
 {
 	parentModelId_ = _copyBase.GetParentModel();
 	hitLineInfo_ = {};
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_)); 
+	hitResult_ = {};
 }
 
 Model::~Model(void)

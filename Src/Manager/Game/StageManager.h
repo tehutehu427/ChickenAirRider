@@ -46,7 +46,7 @@ public:
 private:
 
 	//インポートデータ
-	std::vector<ImportData> importData_;
+	std::vector<StageImportData> importData_;
 
 	//名前管理
 	std::unordered_map<std::string, int> modelId_;

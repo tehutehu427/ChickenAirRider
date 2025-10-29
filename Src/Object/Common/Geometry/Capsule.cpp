@@ -11,22 +11,24 @@
 //ƒJƒvƒZƒ‹
 //***************************************************
 
-Capsule::Capsule(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _localPosTop, const VECTOR _localPosDown, const float _radius)
-	: Geometry(_pos,_rot),
+Capsule::Capsule(const VECTOR& _pos, const VECTOR& _prePos, const Quaternion& _rot, const VECTOR _localPosTop, const VECTOR _localPosDown, const float _radius)
+	: Geometry(_pos,_prePos,_rot),
 	localPosTop_(_localPosTop),
 	localPosDown_(_localPosDown),
 	radius_(_radius)
 {
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));
+	hitResult_ = {};
 }
 
 Capsule::Capsule(const Capsule& _copyBase)
-	: Geometry(_copyBase.GetColPos(), _copyBase.GetColRot())
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColPrePos(), _copyBase.GetColRot())
 {
 	radius_ = _copyBase.GetRadius();
 	localPosTop_ = _copyBase.GetLocalPosTop();
 	localPosDown_ = _copyBase.GetLocalPosDown();
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));
+	hitResult_ = {};
 }
 
 Capsule::~Capsule(void)
@@ -91,7 +93,7 @@ const bool Capsule::IsHit(Model& _model)
 
 const bool Capsule::IsHit(Cube& _cube)
 {
-	return false;
+	return _cube.IsHit(*this);
 }
 
 const bool Capsule::IsHit(Sphere& _sphere)

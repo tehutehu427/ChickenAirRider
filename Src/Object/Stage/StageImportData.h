@@ -6,7 +6,7 @@
 #include"../Common/Quaternion.h"
 
 //外部インポート用
-struct ImportData
+struct StageImportData
 {
 	//基本情報
 	std::string name;		//モデル名
@@ -24,12 +24,12 @@ struct ImportData
 private:
 
 	//外部管理用
-	friend void FromJson(const nlohmann::json&, ImportData&);
-	friend void FromCsv(std::stringstream& _ss, ImportData&);
+	friend void FromJson(const nlohmann::json&, StageImportData&);
+	friend void FromCsv(std::stringstream& _ss, StageImportData&);
 };
 
 //Json呼び出し
-inline void FromJson(const nlohmann::json& _j, ImportData& _data)
+inline void FromJson(const nlohmann::json& _j, StageImportData& _data)
 {
 	//名前
 	if (_j.contains("name"))
@@ -108,7 +108,7 @@ inline void FromJson(const nlohmann::json& _j, ImportData& _data)
 	}
 }
 
-inline void FromCsv(std::stringstream& _ss, ImportData& _s)
+inline void FromCsv(std::stringstream& _ss, StageImportData& _s)
 {
 	////格納内容
 	//std::string token;

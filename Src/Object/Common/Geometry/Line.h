@@ -8,15 +8,14 @@ public:
 
 	/// @brief コンストラクタ
 	/// @param _pos 追従する親の座標
+	/// @param _prePos 追従する親の移動前座標(移動しないなら座標と同じ)
 	/// @param _rot 追従する親の回転
 	/// @param _localPosPoint1 1つ目の点の座標
 	/// @param _localPosPoint2 2つ目の点の座標
-	Line(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _localPosPoint1, const VECTOR _localPosPoint2);
+	Line(const VECTOR& _pos, const VECTOR& _prePos, const Quaternion& _rot, const VECTOR _localPosPoint1, const VECTOR _localPosPoint2);
 
 	/// @brief コピーコンストラクタ
 	/// @param _copyBase コピー元
-	/// @param _pos 追従する親の座標
-	/// @param _rot 追従する親の回転
 	Line(const Line& _copyBase);
 
 	// デストラクタ

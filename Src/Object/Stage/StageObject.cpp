@@ -7,7 +7,7 @@
 #include "../Common/Geometry/Model.h"
 #include "StageObject.h"
 
-StageObject::StageObject(const ImportData& _data,const int _modelId, const std::set<Collider::TAG> _tags)
+StageObject::StageObject(const StageImportData& _data,const int _modelId, const std::set<Collider::TAG> _tags)
 {
 	trans_.modelId = _modelId;
 	trans_.pos = _data.position;
@@ -39,6 +39,8 @@ void StageObject::Load(void)
 
 void StageObject::Init(void)
 {
+	//‰ŠúXV
+	Update();
 }
 
 void StageObject::Update(void)
@@ -49,8 +51,6 @@ void StageObject::Update(void)
 void StageObject::Draw(void)
 {
 	colParam_[0].geometry_->Draw(color_);
-
-	DrawSphere3D(VGet(0.0f, 0.0f, 1000.0f), 100.0f, 20, color_, color_, true);
 
 	MV1DrawModel(trans_.modelId);
 
@@ -64,25 +64,25 @@ void StageObject::OnHit(const std::weak_ptr<Collider> _hitCol)
 
 std::unique_ptr<Geometry> StageObject::MakeSphere(void)
 {
-	return std::make_unique<Sphere>(trans_.pos, data_.radius);
+	return std::make_unique<Sphere>(trans_.pos, trans_.pos, data_.radius);
 }
 
 std::unique_ptr<Geometry> StageObject::MakeCapsule(void)
 {
-	return std::make_unique<Capsule>(trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2, data_.radius);
+	return std::make_unique<Capsule>(trans_.pos, trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2, data_.radius);
 }
 
 std::unique_ptr<Geometry> StageObject::MakeCube(void)
 {
-	return std::make_unique<Cube>(trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2);
+	return std::make_unique<Cube>(trans_.pos, trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2);
 }
 
 std::unique_ptr<Geometry> StageObject::MakeLine(void)
 {
-	return std::make_unique<Line>(trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2);
+	return std::make_unique<Line>(trans_.pos, trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2);
 }
 
 std::unique_ptr<Geometry> StageObject::MakeModel(void)
 {
-	return std::make_unique<Model>(trans_.pos, trans_.quaRot, trans_.modelId);
+	return std::make_unique<Model>(trans_.pos, trans_.pos, trans_.quaRot, trans_.modelId);
 }

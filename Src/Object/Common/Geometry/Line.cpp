@@ -1,4 +1,5 @@
 #include"../pch.h"
+#include"../Utility/Utility.h"
 #include "../../../Common/Quaternion.h"
 #include"Model.h"
 #include"Cube.h"
@@ -10,19 +11,22 @@
 //ê¸
 //***************************************************
 
-Line::Line(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _localPosPoint1, const VECTOR _localPosPoint2) : Geometry(_pos,_rot),
+Line::Line(const VECTOR& _pos, const VECTOR& _prePos, const Quaternion& _rot, const VECTOR _localPosPoint1, const VECTOR _localPosPoint2)
+	: Geometry(_pos, _prePos, _rot),
 	localPosPoint1_(_localPosPoint1),
 	localPosPoint2_(_localPosPoint2)
 {
 	hitInfo_ = {};
+	hitResult_ = {};
 }
 
 Line::Line(const Line& _copyBase)
-	: Geometry(_copyBase.GetColPos(), _copyBase.GetColRot())
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColPrePos(), _copyBase.GetColRot())
 {
 	localPosPoint1_ = _copyBase.GetLocalPosPoint1();
 	localPosPoint2_ = _copyBase.GetLocalPosPoint2();
 	hitInfo_ = {};
+	hitResult_ = {};
 }
 
 Line::~Line(void)

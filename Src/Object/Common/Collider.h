@@ -18,7 +18,8 @@ public :
 		PLAYER3,		//プレイヤー3
 		PLAYER4,		//プレイヤー4
 
-		STAGE,			//ステージ
+		NORMAL_OBJECT,	//通常オブジェ
+		GROUND,			//地面
 	};
 
 	/// @brief コンストラクタ

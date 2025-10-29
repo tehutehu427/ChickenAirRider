@@ -11,13 +11,14 @@
 #include "Action/ActionBase.h"
 #include "Action/CharacterAction.h"
 #include "Action/MachineAction.h"
+#include "Collision/PlayerOnHit.h"
 #include "Player.h"
 
 Player::Player(void)
 {
 	//初期化
 	state_ = STATE::NONE;
-	movedPos_ = Utility::VECTOR_ZERO;
+	prePos_ = Utility::VECTOR_ZERO;
 	movePow_ = Utility::VECTOR_ZERO;
 	isGrounded_ = false;
 
@@ -55,6 +56,9 @@ void Player::Init(void)
 	//行動基準
 	logic_ = std::make_unique<PlayerLogic>();
 
+	//当たり判定後処理
+	onHit_ = std::make_unique<PlayerOnHit>(*this);
+
 	//初期状態
 	ChangeState(STATE::RIDE_MACHINE);
 
@@ -62,15 +66,18 @@ void Player::Init(void)
 	changeAction_[state_]();
 
 	//当たり判定生成
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, RADIUS);
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, prePos_, RADIUS);
 	MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
 
 	//接地用
 	static const Quaternion GROUNDED_LINE = Quaternion();
 
 	//接地判定用の当たり判定
-	geo = std::make_unique<Line>(trans_.pos, GROUNDED_LINE, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
+	geo = std::make_unique<Line>(trans_.pos, prePos_, GROUNDED_LINE, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
+
+	//初期更新
+	Update();
 }
 
 void Player::Update(void)
@@ -79,19 +86,17 @@ void Player::Update(void)
 	auto& grvMng = GravityManager::GetInstance();
 
 	//移動更新
-	trans_.pos = movedPos_;
+	prePos_ = trans_.pos;
 
 	//行動
 	action_->Update();
 
 	//移動
-	movedPos_ = VAdd(movedPos_, movePow_);
-
-	trans_.pos = movedPos_;
+	trans_.pos = VAdd(trans_.pos, movePow_);
 
 	VECTOR grav = Utility::VECTOR_ZERO;
 	grvMng.CalcGravity(Utility::DIR_D, grav);
-	movedPos_ = VAdd(movedPos_, grav);
+	trans_.pos = VAdd(trans_.pos, grav);
 
 	isGrounded_ = false;
 
@@ -116,25 +121,8 @@ void Player::Draw(void)
 
 void Player::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
-	//タグ
-	auto& hitTags = _hitCol.lock()->GetTags();
-
-	//コライダ
-	auto& groundCol = colParam_[static_cast<int>(COL_VALUE::GROUNDED)].collider_;
-
-	//ステージとぶつかった
-	if (std::find(hitTags.begin(), hitTags.end(), Collider::TAG::STAGE) != hitTags.end())
-	{
-		//位置の補正
-		movedPos_ = trans_.pos;
-
-		//接地しているか
-		if (groundCol->IsHit())
-		{
-			action_->ResetAxisX();
-			isGrounded_ = true;
-		}
-	}
+	//ヒット処理
+	onHit_->OnHit(_hitCol);
 }
 
 const Parameter Player::GetAllParam(void)const

@@ -13,8 +13,8 @@ class CollisionManager
 public:
 
 	//当たり判定をする範囲
-	static constexpr float HIT_RANGE_NORMAL = 400.0f;	//通常の当たり判定距離
-	static constexpr float HIT_RANGE_STAGE = 10000.0f;	//床の当たり判定距離
+	static constexpr float HIT_RANGE_NORMAL = 1000.0f;	//通常の当たり判定距離
+	static constexpr float HIT_RANGE_GROUND = 15000.0f;	//床の当たり判定距離
 
 	//更新用
 	static constexpr int COL_UPDATE_FRAME = 0;		//更新ディレイフレーム

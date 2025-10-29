@@ -11,5 +11,5 @@ void DataRegistry::CreateAll(void)
 	LoaderManager<UnitParameter>::CreateInstance();
 	
 	//ステージの情報
-	LoaderManager<ImportData>::CreateInstance();
+	LoaderManager<StageImportData>::CreateInstance();
 }

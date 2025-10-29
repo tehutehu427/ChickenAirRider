@@ -124,7 +124,8 @@ CollisionManager::CollisionManager(void)
 	hitRange_[Collider::TAG::PLAYER2] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::PLAYER3] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::PLAYER4] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::STAGE] = HIT_RANGE_STAGE;
+	hitRange_[Collider::TAG::NORMAL_OBJECT] = HIT_RANGE_NORMAL;
+	hitRange_[Collider::TAG::GROUND] = HIT_RANGE_GROUND;
 }
 
 CollisionManager::~CollisionManager(void)

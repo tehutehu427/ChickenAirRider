@@ -8,9 +8,13 @@ class Character;
 class Machine;
 class LogicBase;
 class ActionBase;
+class PlayerOnHit;
 
 class Player : public ObjectBase
 {
+	//当たり判定後処理クラスに情報共有
+	friend class PlayerOnHit;
+
 public:
 
 	//現在の状態
@@ -79,6 +83,7 @@ private:
 	std::unique_ptr<Machine> machine_;		//機体
 	std::unique_ptr<LogicBase> logic_;		//行動操作者
 	std::unique_ptr<ActionBase> action_;	//行動
+	std::unique_ptr<PlayerOnHit> onHit_;	//当たり判定
 
 	//パラメーター
 	Parameter param_;
@@ -86,8 +91,8 @@ private:
 	//状態
 	STATE state_;
 
-	//移動後座標
-	VECTOR movedPos_;
+	//移動前座標
+	VECTOR prePos_;
 
 	//移動力
 	VECTOR movePow_;

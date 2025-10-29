@@ -11,14 +11,14 @@
 //球
 //***************************************************
 
-Sphere::Sphere(const VECTOR& _pos, const float _radius) : Geometry(_pos,Quaternion()),
+Sphere::Sphere(const VECTOR& _pos, const VECTOR& _prePos, const float _radius) : Geometry(_pos, _prePos, Quaternion()),
 	radius_(_radius)
 {
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));
 }
 
 Sphere::Sphere(const Sphere& _copyBase)
-	: Geometry(_copyBase.GetColPos(), Quaternion())
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColPrePos(), Quaternion())
 {
 	radius_ = _copyBase.GetRadius();
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));
@@ -87,6 +87,10 @@ const bool Sphere::IsHit(Cube& _cube)
 	//当たった
 	if (ret)
 	{
+		float dist = sqrtf(distSq);
+
+		_cube.SetHitDepth(radius_ - dist);
+
 		//法線方向の設定
 		_cube.SetHitNormal(VNorm(VSub(closest, pos_)));
 

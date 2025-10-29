@@ -9,11 +9,12 @@ public:
 
 	/// @brief コンストラクタ
 	/// @param _pos 追従する親の座標
+	/// @param _prePos 追従する親の移動前座標(移動しないなら座標と同じ)
 	/// @param _rot 追従する親の回転
 	/// @param _localPosTop 上側の相対座標
 	/// @param _localPosDown 下側の相対座標
 	/// @param _radius 半径
-	Capsule(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _localPosTop, const VECTOR _localPosDown, const float _radius);
+	Capsule(const VECTOR& _pos, const VECTOR& _prePos, const Quaternion& _rot, const VECTOR _localPosTop, const VECTOR _localPosDown, const float _radius);
 	
 	/// @brief コピーコンストラクタ
 	/// @param _copyBase コピー元

@@ -20,7 +20,7 @@ void StageManager::CreateInstance(void)
 void StageManager::Load(void)
 {
 	//ステージ情報
-	importData_ = LoaderManager<ImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Stage.json"));
+	importData_ = LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Stage.json"));
 }
 
 void StageManager::Init(void)
@@ -85,7 +85,8 @@ StageManager::StageManager(void)
 	modelId_["building"] = res.LoadModelDuplicate(ResourceManager::SRC::BUILDING);
 
 	//タグ
-	tags_["stage"] = Collider::TAG::STAGE;
+	tags_["normalObject"] = Collider::TAG::NORMAL_OBJECT;
+	tags_["ground"] = Collider::TAG::GROUND;
 }
 
 StageManager::~StageManager(void)

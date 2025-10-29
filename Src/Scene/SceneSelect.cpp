@@ -21,6 +21,8 @@ void SceneSelect::Init(void)
 
 void SceneSelect::Update(void)
 {
+
+
 	//シーン遷移デバッグ
 	if (KeyConfig::GetInstance().IsTrgDown(KeyConfig::CONTROL_TYPE::ENTER, KeyConfig::JOYPAD_NO::PAD1))
 	{
