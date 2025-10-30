@@ -18,7 +18,7 @@ Player::Player(void)
 {
 	//初期化
 	state_ = STATE::NONE;
-	prePos_ = Utility::VECTOR_ZERO;
+	movedPos_ = Utility::VECTOR_ZERO;
 	movePow_ = Utility::VECTOR_ZERO;
 	isGrounded_ = false;
 
@@ -66,14 +66,14 @@ void Player::Init(void)
 	changeAction_[state_]();
 
 	//当たり判定生成
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, prePos_, RADIUS);
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, RADIUS);
 	MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
 
 	//接地用
 	static const Quaternion GROUNDED_LINE = Quaternion();
 
 	//接地判定用の当たり判定
-	geo = std::make_unique<Line>(trans_.pos, prePos_, GROUNDED_LINE, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
+	geo = std::make_unique<Line>(trans_.pos, movedPos_, GROUNDED_LINE, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
 
 	//初期更新
@@ -86,17 +86,17 @@ void Player::Update(void)
 	auto& grvMng = GravityManager::GetInstance();
 
 	//移動更新
-	prePos_ = trans_.pos;
+	trans_.pos = movedPos_;
 
 	//行動
 	action_->Update();
 
 	//移動
-	trans_.pos = VAdd(trans_.pos, movePow_);
+	movedPos_ = VAdd(movedPos_, movePow_);
 
 	VECTOR grav = Utility::VECTOR_ZERO;
 	grvMng.CalcGravity(Utility::DIR_D, grav);
-	trans_.pos = VAdd(trans_.pos, grav);
+	movedPos_ = VAdd(movedPos_, grav);
 
 	isGrounded_ = false;
 
@@ -110,9 +110,9 @@ void Player::Draw(void)
 	//描画
 	draw_[state_]();
 
-	for (auto& col : colParam_)
+	for (auto& col : collider_)
 	{
-		col.geometry_->Draw(0);
+		col->GetGeometry().Draw(0);
 	}
 
 	DrawFormatString(0, 32, 0xffffff, L"%.2f,%.2f,%.2f", trans_.quaRot.ToEuler().x, trans_.quaRot.ToEuler().y, trans_.quaRot.ToEuler().z);

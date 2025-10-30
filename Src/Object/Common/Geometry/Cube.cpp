@@ -11,8 +11,8 @@
 //箱
 //***************************************************
 
-Cube::Cube(const VECTOR& _pos, const VECTOR& _prePos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max)
-	: Geometry(_pos, _prePos, _rot)
+Cube::Cube(const VECTOR& _pos, const VECTOR& _oldPos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max)
+	: Geometry(_pos, _oldPos, _rot)
 {
 	obb_.vMin = _min;
 	obb_.vMax = _max;
@@ -21,8 +21,8 @@ Cube::Cube(const VECTOR& _pos, const VECTOR& _prePos, const Quaternion& _rot, co
 	UpdateObbAxis();
 }
 
-Cube::Cube(const VECTOR& _pos, const VECTOR& _prePos, const Quaternion& _rot, const VECTOR _halfSize)
-	: Geometry(_pos, _prePos, _rot)
+Cube::Cube(const VECTOR& _pos, const VECTOR& _oldPos, const Quaternion& _rot, const VECTOR _halfSize)
+	: Geometry(_pos, _oldPos, _rot)
 {
 	obb_.vMin = VScale(_halfSize, -1.0f);
 	obb_.vMax = _halfSize;
@@ -32,7 +32,7 @@ Cube::Cube(const VECTOR& _pos, const VECTOR& _prePos, const Quaternion& _rot, co
 }
 
 Cube::Cube(const Cube& _copyBase)
-	: Geometry(_copyBase.GetColPos(), _copyBase.GetColPrePos(), _copyBase.GetColRot()),
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColOldPos(), _copyBase.GetColRot()),
 	obb_(_copyBase.GetObb())
 {
 	UpdateObbAxis();
@@ -253,14 +253,14 @@ const bool Cube::IsHit(Capsule& _capsule)
 		VECTOR normalLocal = VNorm(dir); // 法線（ローカル空間）
 
 		// OBBのワールド軸で戻す
-		VECTOR normalWorld = {
-			obb_.axis[0].x * normalLocal.x + obb_.axis[1].x * normalLocal.y + obb_.axis[2].x * normalLocal.z,
-			obb_.axis[0].y * normalLocal.x + obb_.axis[1].y * normalLocal.y + obb_.axis[2].y * normalLocal.z,
-			obb_.axis[0].z * normalLocal.x + obb_.axis[1].z * normalLocal.y + obb_.axis[2].z * normalLocal.z,
-		};
+		VECTOR normalWorld = VAdd(
+			VAdd(VScale(obb_.axis[0], normalLocal.x),
+				VScale(obb_.axis[1], normalLocal.y)),
+			VScale(obb_.axis[2], normalLocal.z)
+		);
 
 		//めり込み深度
-		hitResult_.depth = _capsule.GetRadius() - sqrtf(distSq);
+		hitResult_.depth = std::max(0.0f, _capsule.GetRadius() - sqrtf(distSq));
 
 		// 押し戻しや反射に使える
 		hitResult_.normal = VNorm(normalWorld);

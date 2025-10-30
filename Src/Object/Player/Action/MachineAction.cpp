@@ -10,10 +10,14 @@ MachineAction::MachineAction(Player& _player, const Machine _machine, LogicBase&
 	: ActionBase(_player,_logic),
 	machine_(_machine)
 {
+	movePow_ = Utility::VECTOR_ZERO;
 	driveCnt_ = 0.0f;
 	chargeCnt_ = 0.0f;
 	velocity_ = 0.0f;
 	speed_ = 0.0f;
+	flightPow_ = 0.0f;
+	isFlightNow_ = false;
+	gravPow_ = Utility::VECTOR_ZERO;
 
 	update_[true] = [this](void) {UpdateGround(); };
 	update_[false] = [this](void) {UpdateFlight(); };
@@ -35,6 +39,13 @@ void MachineAction::Update(void)
 
 	//状態ごとの更新
 	update_[player_.IsGrounded()]();
+
+	//最終的な移動力の合算
+	movePow_ = VGet(0.0f, flightPow_, speed_);
+	movePow_ = player_.GetTrans().quaRot.PosAxis(movePow_);
+
+	//プレイヤーに送る
+	player_.SetMovePow(movePow_);
 }
 
 void MachineAction::Draw(void)
@@ -46,6 +57,11 @@ void MachineAction::Draw(void)
 
 void MachineAction::UpdateGround(void)
 {
+	if (isFlightNow_)
+	{
+		isFlightNow_ = false;
+	}
+
 	//チャージをするか
 	if (logic_.StartCharge())
 	{
@@ -69,11 +85,11 @@ void MachineAction::UpdateGround(void)
 
 void MachineAction::UpdateFlight(void)
 {
-	//飛行
-	Flight();
-
 	//移動
 	Move();
+
+	//飛行
+	Flight();
 
 	//回転
 	Turn();
@@ -103,13 +119,6 @@ void MachineAction::Move(void)
 
 	//速度の方程式に当てはめる
 	speed_ = velocity_ + (param.acceleration_ * driveCnt_) + BASE_ACCELE;
-
-	//前方に移動力を作る
-	VECTOR movePow = VGet(0.0f, 0.0f, speed_);
-	movePow = player_.GetTrans().quaRot.PosAxis(movePow);
-
-	//プレイヤーに送る
-	player_.SetMovePow(movePow);
 
 	//チャージを初期化
 	chargeCnt_ = 0.0f;
@@ -144,13 +153,6 @@ void MachineAction::Charge(void)
 		{
 			speed_ = 0.0f;
 		}
-
-		//前方に移動力を作る
-		VECTOR movePow = VGet(0.0f, 0.0f, speed_);
-		//movePow = player_.GetTrans().quaRot.PosAxis(movePow);
-
-		//プレイヤーに送る
-		player_.SetMovePow(movePow);
 	}
 }
 
@@ -188,12 +190,33 @@ void MachineAction::Turn(void)
 
 void MachineAction::Flight(void)
 {
+	//パラメーター
+	const auto& param = player_.GetAllParam();
+
+	//デルタタイム
+	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//飛んだ瞬間
+	if (!isFlightNow_)
+	{
+		//移動力を保持
+		flightPow_ = speed_ * delta;
+
+		isFlightNow_ = true;
+	}
+
 	//回転量
 	float flightPow = logic_.TurnValue().y / COMP_TURN;
-
-	if (flightPow == 0.0f)return;
 
 	//X回転を設定
 	axis_.x += flightPow;
 	axis_.x = Utility::Deg2RadF(std::clamp(Utility::Rad2DegF(axis_.x), -45.0f, 45.0f));
+
+	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);
+
+	flightPow_ += delta * (gravPow_.y) + flightPow;
+}
+
+void MachineAction::FlightMove(void)
+{
 }

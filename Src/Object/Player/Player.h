@@ -92,7 +92,7 @@ private:
 	STATE state_;
 
 	//ˆÚ“®‘OÀ•W
-	VECTOR prePos_;
+	VECTOR movedPos_;
 
 	//ˆÚ“®—Í
 	VECTOR movePow_;

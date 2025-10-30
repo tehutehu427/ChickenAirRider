@@ -20,14 +20,14 @@ public:
 	/// @param _rot 追従する親の回転
 	/// @param _min 親から見た、箱の最小地点
 	/// @param _max 親から見た、箱の最大地点
-	Cube(const VECTOR& _pos, const VECTOR& _prePos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max);
+	Cube(const VECTOR& _pos, const VECTOR& _oldPos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max);
 	
 	/// @brief コンストラクタ
 	/// @param _pos 追従する親の座標
 	/// @param _prePos 追従する親の移動前座標(移動しないなら座標と同じ)
 	/// @param _rot 追従する親の回転
 	/// @param _halfSize 箱の半分サイズ
-	Cube(const VECTOR& _pos, const VECTOR& _prePos, const Quaternion& _rot, const VECTOR _halfSize);
+	Cube(const VECTOR& _pos, const VECTOR& _oldPos, const Quaternion& _rot, const VECTOR _halfSize);
 
 	/// @brief コピーコンストラクタ
 	/// @param _copyBase コピー元

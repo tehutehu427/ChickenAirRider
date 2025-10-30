@@ -44,7 +44,7 @@ public:
 	inline const VECTOR& GetColPos(void)const { return pos_; }
 
 	//親の移動前座標を返す
-	inline const VECTOR& GetColPrePos(void)const { return prePos_; }
+	inline const VECTOR& GetColOldPos(void)const { return oldPos_; }
 	
 	//親の回転を返す
 	inline const Quaternion& GetColRot(void)const { return quaRot_; }
@@ -61,6 +61,12 @@ public:
 	//めり込み深度の設定
 	inline void SetHitDepth(const float _depth) { hitResult_.depth = _depth; }
 
+	//当たった情報の取得
+	const HitResult& GetHitResult(void)const { return hitResult_; }
+
+	//当たった情報の設定
+	void SetHitResult(const HitResult _hitResult) { hitResult_ = _hitResult; }
+
 	// 相対座標を回転させてワールド座標で取得する
 	const VECTOR GetRotPos(const VECTOR& _localPos) const;
 	
@@ -74,7 +80,7 @@ protected:
 
 	//親情報
 	const VECTOR& pos_;			//親の座標
-	const VECTOR& prePos_;			//親の移動前座標
+	const VECTOR& oldPos_;		//親の移動前座標
 	const Quaternion& quaRot_;	//親の回転
 
 	//当たった情報
@@ -84,5 +90,5 @@ protected:
 	/// @param _pos 追従する親の座標
 	/// @param _prePos 追従する親の移動前座標(移動しないなら座標と同じ)
 	/// @param _rot 追従する親の回転
-	Geometry(const VECTOR& _pos, const VECTOR& _prePos,const Quaternion& _rot);
+	Geometry(const VECTOR& _pos, const VECTOR& _oldPos,const Quaternion& _rot);
 };

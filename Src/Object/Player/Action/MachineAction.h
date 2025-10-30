@@ -43,6 +43,9 @@ private:
 	//機体
 	const Machine& machine_;
 
+	//移動力
+	VECTOR movePow_;
+
 	//走行時間カウンタ
 	float driveCnt_;
 
@@ -54,6 +57,15 @@ private:
 
 	//総合速度
 	float speed_;
+
+	//飛行力
+	float flightPow_;
+
+	//地面から離れた瞬間
+	bool isFlightNow_;
+
+	//重力
+	VECTOR gravPow_;
 
 	//状態ごとの更新
 	std::map<bool, std::function<void(void)>> update_;
@@ -76,5 +88,8 @@ private:
 
 	//飛行
 	void Flight(void);
+
+	//飛行の移動
+	void FlightMove(void);
 };
 

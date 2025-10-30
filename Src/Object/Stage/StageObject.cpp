@@ -50,7 +50,7 @@ void StageObject::Update(void)
 
 void StageObject::Draw(void)
 {
-	colParam_[0].geometry_->Draw(color_);
+	collider_[0]->GetGeometry().Draw(color_);
 
 	MV1DrawModel(trans_.modelId);
 

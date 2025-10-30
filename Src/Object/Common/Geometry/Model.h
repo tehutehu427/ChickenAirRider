@@ -11,7 +11,7 @@ public:
 	/// @param _prePos 追従する親の移動前座標(移動しないなら座標と同じ)
 	/// @param _rot 追従する親の回転
 	/// @param _modelId 追従する親のモデルID
-	Model(const VECTOR& _pos, const VECTOR& _prePos, const Quaternion& _rot, const int _modelId);
+	Model(const VECTOR& _pos, const VECTOR& _oldPos, const Quaternion& _rot, const int _modelId);
 
 	/// @brief コピーコンストラクタ
 	/// @param _copyBase コピー元

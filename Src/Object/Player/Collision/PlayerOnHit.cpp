@@ -30,10 +30,10 @@ void PlayerOnHit::OnHit(const std::weak_ptr<Collider> _hitCol)
 void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 {
 	//コライダ
-	auto& groundCol = player_.colParam_[static_cast<int>(Player::COL_VALUE::GROUNDED)].collider_;
+	auto& groundCol = player_.collider_[static_cast<int>(Player::COL_VALUE::GROUNDED)];
 
 	//位置の補正
-	player_.trans_.pos = VSub(player_.trans_.pos, VScale(_hitCol.lock()->GetGeometry().GetHitNormal(), _hitCol.lock()->GetGeometry().GetHitDepth()));
+	player_.movedPos_ = VSub(player_.movedPos_, VScale(_hitCol.lock()->GetGeometry().GetHitNormal(), _hitCol.lock()->GetGeometry().GetHitDepth()));
 
 	//接地しているか
 	if (groundCol->IsHit())

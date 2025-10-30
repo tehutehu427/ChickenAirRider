@@ -15,13 +15,6 @@ class ObjectBase
 {
 public:
 
-	//当たり判定情報
-	struct ColParam
-	{
-		std::unique_ptr<Geometry> geometry_;	//形状情報
-		std::shared_ptr<Collider> collider_;	//全体の当たり判定情報
-	};
-
 	// コンストラクタ
 	ObjectBase(void);
 
@@ -60,7 +53,7 @@ protected:
 	Transform trans_;
 
 	//当たり判定関係
-	std::vector<ColParam> colParam_;
+	std::vector<std::shared_ptr<Collider>> collider_;	//全体の当たり判定情報
 
 	//エフェクト
 	std::unique_ptr<EffectController> effect_;

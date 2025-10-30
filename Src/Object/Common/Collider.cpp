@@ -3,10 +3,10 @@
 #include "Geometry/Geometry.h"
 #include "Collider.h"
 
-Collider::Collider(ObjectBase& _parent, const std::set<TAG> _tags, Geometry& _geometry, const std::set<TAG> _notHitTags) :
+Collider::Collider(ObjectBase& _parent, const std::set<TAG> _tags, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags) :
 	parent_(_parent),
 	tags_(_tags),
-	geometry_(_geometry),
+	geometry_(std::move(_geometry)),
 	notHitTags_(_notHitTags)
 {
 	isHit_ = false;
