@@ -1,0 +1,16 @@
+{
+  "geometry": "cube",
+  "tags": [
+    "normalObject"
+  ],
+  "localPos1": {
+    "x": -300.0,
+    "y": -900.0,
+    "z": -300.0
+  },
+  "localPos2": {
+    "x": 300.0,
+    "y": 900.0,
+    "z": 300.0
+  }
+}

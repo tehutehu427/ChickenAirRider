@@ -16,11 +16,9 @@ public:
 	//ヒット情報
 	struct HitResult
 	{
-		bool hit = false;
 		float t = 1.0f;        // 0～1：衝突した割合（移動途中の位置）
 		VECTOR point = { 0,0,0 };
 		VECTOR normal = { 0,0,0 };
-		float depth = 0.0f;
 	};
 
 	//デストラクタ
@@ -42,9 +40,6 @@ public:
 
 	//親の座標を返す
 	inline const VECTOR& GetColPos(void)const { return pos_; }
-
-	//親の移動前座標を返す
-	inline const VECTOR& GetColOldPos(void)const { return oldPos_; }
 	
 	//親の回転を返す
 	inline const Quaternion& GetColRot(void)const { return quaRot_; }
@@ -54,12 +49,6 @@ public:
 
 	//当たった法線方向の設定
 	inline void SetHitNormal(const VECTOR _hitNormal) { hitResult_.normal = _hitNormal; }
-
-	//めり込み深度の取得
-	inline const float GetHitDepth(void)const { return hitResult_.depth; }
-
-	//めり込み深度の設定
-	inline void SetHitDepth(const float _depth) { hitResult_.depth = _depth; }
 
 	//当たった情報の取得
 	const HitResult& GetHitResult(void)const { return hitResult_; }
@@ -80,7 +69,6 @@ protected:
 
 	//親情報
 	const VECTOR& pos_;			//親の座標
-	const VECTOR& oldPos_;		//親の移動前座標
 	const Quaternion& quaRot_;	//親の回転
 
 	//当たった情報
@@ -88,7 +76,6 @@ protected:
 
 	/// @brief コンストラクタ(外部で作る必要のない基底なのでprotected)
 	/// @param _pos 追従する親の座標
-	/// @param _prePos 追従する親の移動前座標(移動しないなら座標と同じ)
 	/// @param _rot 追従する親の回転
-	Geometry(const VECTOR& _pos, const VECTOR& _oldPos,const Quaternion& _rot);
+	Geometry(const VECTOR& _pos, const Quaternion& _rot);
 };

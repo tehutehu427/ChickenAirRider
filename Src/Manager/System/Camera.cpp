@@ -1,6 +1,7 @@
 #include"../pch.h"
 #include "../../Utility/Utility.h"
 #include "../../Object/Common/Transform.h"
+#include "../../Manager/System/SceneManager.h"
 #include "../../Manager/Game/GravityManager.h"
 #include "../../Application.h"
 #include "Camera.h"
@@ -15,6 +16,8 @@ Camera::Camera(int _userNum)
 	followTransform_ = nullptr;
 	padNo_ = static_cast<KeyConfig::JOYPAD_NO>(_userNum + 1);
 	localPos_ = Utility::VECTOR_ZERO;
+	rotPow_ = 0.0f;
+	leapTargetPos_ = Utility::VECTOR_ZERO;
 }
 
 Camera::~Camera(void)
@@ -45,6 +48,9 @@ void Camera::SetBeforeDraw(void)
 		break;
 	case Camera::MODE::FOLLOW:
 		SetBeforeDrawFollow();
+		break;
+	case Camera::MODE::FOLLOW_LEAP:
+		SetBeforeDrawFollowLeap();
 		break;
 	case Camera::MODE::FOLLOW_ROTATION:
 		SetBeforeDrawFollowRotation();
@@ -140,6 +146,9 @@ void Camera::ChangeMode(MODE mode)
 	case Camera::MODE::FOLLOW:
 		localPos_ = LOCAL_F2C_POS;
 		break;
+	case Camera::MODE::FOLLOW_LEAP:
+		localPos_ = LOCAL_F2C_POS;
+		break;
 	}
 
 }
@@ -186,11 +195,50 @@ void Camera::SyncFollow(void)
 
 	// カメラ位置
 	localPos = rot_.PosAxis(localPos_);
+
+	//補間
 	pos_ = VAdd(pos, localPos);
 
 	// カメラの上方向
 	cameraUp_ = gRot.GetUp();
+}
 
+void Camera::SyncFollowLeap(void)
+{
+	// 同期先の位置（プレイヤーなど）
+	VECTOR pos = followTransform_->pos;
+
+	// 重力の方向制御に従う（今は固定）
+	Quaternion gRot = Quaternion::Euler(VECTOR(0.0, 0.0, 0.0));
+
+	// 正面から設定されたY軸分、回転させる
+	rotOutX_ = gRot.Mult(Quaternion::AngleAxis(angles_.y, Utility::AXIS_Y));
+
+	// 正面から設定されたX軸分、回転させる
+	rot_ = rotOutX_;
+
+	// 注視点（対象のYを合わせる）
+	VECTOR localPos = rotOutX_.PosAxis(LOCAL_F2T_POS);
+	VECTOR desiredTargetPos = VAdd(pos, localPos);
+
+	// カメラの理想位置
+	localPos = rot_.PosAxis(localPos_);
+	VECTOR desiredCameraPos = VAdd(pos, localPos);
+
+	// --- 補間係数 ---
+	const float followRate = 0.1f; // 0.1～0.2くらいが自然
+
+	// --- スムーズに追従（Lerp） ---
+	pos_.x += (desiredCameraPos.x - pos_.x) * followRate;
+	pos_.y += (desiredCameraPos.y - pos_.y) * followRate;
+	pos_.z += (desiredCameraPos.z - pos_.z) * followRate;
+
+	targetPos_.x += (desiredTargetPos.x - targetPos_.x);
+	targetPos_.y += (desiredTargetPos.y - targetPos_.y);
+	targetPos_.z += (desiredTargetPos.z - targetPos_.z);
+
+	// 上方向
+	cameraUp_ = gRot.GetUp();
 }
 
 void Camera::SyncFollowFPS(void)
@@ -227,7 +275,6 @@ void Camera::SyncFollowFPS(void)
 void Camera::ProcessRot(void)
 {
 	auto& ins = KeyConfig::GetInstance();
-	float rotPow = Utility::Deg2RadF(SPEED);
 	auto keyType = KeyConfig::TYPE::ALL;
 	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_RIGHT, padNo_, keyType)) { angles_.y += rotPow; }
 	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_LEFT, padNo_, keyType)) { angles_.y -= rotPow; }
@@ -235,26 +282,13 @@ void Camera::ProcessRot(void)
 	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_DOWN, padNo_, keyType)) { angles_.x -= rotPow; }
 
 
-	auto rStick = ins.GetKnockRStickSize(padNo_);
-	rotPow = SPEED_PAD;
-	angles_.x += Utility::Deg2RadF(rStick.y * rotPow);
-	angles_.y += Utility::Deg2RadF(rStick.x * rotPow);
-	//if (keyType == KeyConfig::TYPE::ALL)
-	//{
-	//	auto mouseMove = ins.GetMouseMove();
-	//	rotPow = SPEED_MOUSE;
-	//	angles_.x += Utility::Deg2RadF(mouseMove.y * rotPow);
-	//	angles_.y += Utility::Deg2RadF(mouseMove.x * rotPow);
-	//}
-	//KeyConfig::GetInstance().SetMousePos({ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y});
-
-	if (angles_.x >= LIMIT_X_UP_RAD)
+	auto rStick = ins.GetKnockLStickSize(padNo_);
+	angles_.y += Utility::Deg2RadF(rStick.x * rotPow_);
+	if (keyType == KeyConfig::TYPE::ALL)
 	{
-		angles_.x = LIMIT_X_UP_RAD;
-	}
-	else if (angles_.x <= LIMIT_X_DW_RAD)
-	{
-		angles_.x = LIMIT_X_DW_RAD;
+		auto mouseMove = ins.GetMouseMove();
+		//angles_.x += Utility::Deg2RadF(mouseMove.y * rotPow);
+		angles_.y += Utility::Deg2RadF(mouseMove.x * rotPow_);
 	}
 }
 
@@ -313,13 +347,20 @@ void Camera::SetBeforeDrawFixedPoint(void)
 
 void Camera::SetBeforeDrawFollow(void)
 {
-
 	// カメラ操作
 	ProcessRot();
 
-	ProcessZoom();
 	// 追従対象との相対位置を同期
 	SyncFollow();
+}
+
+void Camera::SetBeforeDrawFollowLeap(void)
+{
+	// カメラ操作
+	ProcessRot();
+
+	//追従対象を遅れて追尾
+	SyncFollowLeap();
 }
 
 void Camera::SetBeforeDrawFollowRotation(void)

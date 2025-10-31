@@ -11,8 +11,8 @@
 //箱
 //***************************************************
 
-Cube::Cube(const VECTOR& _pos, const VECTOR& _oldPos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max)
-	: Geometry(_pos, _oldPos, _rot)
+Cube::Cube(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max)
+	: Geometry(_pos, _rot)
 {
 	obb_.vMin = _min;
 	obb_.vMax = _max;
@@ -21,8 +21,8 @@ Cube::Cube(const VECTOR& _pos, const VECTOR& _oldPos, const Quaternion& _rot, co
 	UpdateObbAxis();
 }
 
-Cube::Cube(const VECTOR& _pos, const VECTOR& _oldPos, const Quaternion& _rot, const VECTOR _halfSize)
-	: Geometry(_pos, _oldPos, _rot)
+Cube::Cube(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _halfSize)
+	: Geometry(_pos, _rot)
 {
 	obb_.vMin = VScale(_halfSize, -1.0f);
 	obb_.vMax = _halfSize;
@@ -32,7 +32,7 @@ Cube::Cube(const VECTOR& _pos, const VECTOR& _oldPos, const Quaternion& _rot, co
 }
 
 Cube::Cube(const Cube& _copyBase)
-	: Geometry(_copyBase.GetColPos(), _copyBase.GetColOldPos(), _copyBase.GetColRot()),
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColRot()),
 	obb_(_copyBase.GetObb())
 {
 	UpdateObbAxis();
@@ -190,10 +190,6 @@ const bool Cube::IsHit(Cube& _cube)
 	hitResult_.normal = bestAxis;
 	_cube.SetHitNormal(VScale(bestAxis, -1.0f));
 
-	//めり込み深度
-	hitResult_.depth = minOverlap;
-	_cube.SetHitDepth(-minOverlap);
-
 	// すべての軸で重なっている → 衝突
 	return true;
 }
@@ -259,11 +255,9 @@ const bool Cube::IsHit(Capsule& _capsule)
 			VScale(obb_.axis[2], normalLocal.z)
 		);
 
-		//めり込み深度
-		hitResult_.depth = std::max(0.0f, _capsule.GetRadius() - sqrtf(distSq));
-
 		// 押し戻しや反射に使える
 		hitResult_.normal = VNorm(normalWorld);
+		_capsule.SetHitNormal(VScale(VNorm(normalWorld), -1.0f));
 
 		return true;
 	}
@@ -368,9 +362,10 @@ const bool Cube::IsHit(Line& _line)
 	VECTOR diff = VSub(closestOnAABB, closestOnSegment);
 	float distSq = Utility::SqrMagnitudeF(diff);
 	float dist = sqrtf(distSq);
-	hitResult_.depth = -dist;
 
+	//法線ベクトル
 	hitResult_.normal = normalWorld;
+	_line.SetHitNormal(VScale(normalWorld, -1.0f));
 
 	return true;
 }
@@ -379,7 +374,6 @@ void Cube::HitAfter(void)
 {
 	//当たった情報の初期化
 	hitResult_.normal = Utility::VECTOR_ZERO;
-	hitResult_.depth = 0.0f;
 }
 
 void Cube::SetHalfSize(const VECTOR& _halfSize)

@@ -12,14 +12,16 @@
 //***************************************************
 
 Sphere::Sphere(const VECTOR& _pos, const VECTOR& _oldPos, const float _radius)
-	: Geometry(_pos, _oldPos, Quaternion()),
+	: Geometry(_pos, Quaternion()),
+	oldPos_(_oldPos),
 	radius_(_radius)
 {
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));
 }
 
 Sphere::Sphere(const Sphere& _copyBase)
-	: Geometry(_copyBase.GetColPos(), _copyBase.GetColOldPos(), Quaternion())
+	: Geometry(_copyBase.GetColPos(), Quaternion()),
+	oldPos_(_copyBase.oldPos_)
 {
 	radius_ = _copyBase.GetRadius();
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));
@@ -46,61 +48,90 @@ const bool Sphere::IsHit(Model& _model)
 
 const bool Sphere::IsHit(Cube& _cube)
 {
-	// OBBの中心（ローカルmin/maxの中点 + ワールド位置）
-	VECTOR obbCenter = VAdd(_cube.GetColPos(), VScale(VAdd(_cube.GetObb().vMin, _cube.GetObb().vMax), 0.5f));
+	// --- OBB情報 ---
+	const auto& obb = _cube.GetObb();
+	VECTOR center = VAdd(_cube.GetColPos(),
+		VScale(VAdd(obb.vMin, obb.vMax), 0.5f)); // OBB中心
+	VECTOR half = VScale(VSub(obb.vMax, obb.vMin), 0.5f); // 半サイズ
 
-	// 球の中心との相対ベクトル
-	VECTOR d = VSub(pos_, obbCenter);
+	// --- ローカル空間へ変換 ---
+	VECTOR relPos = VSub(pos_, center);
+	VECTOR velocity = VSub(oldPos_, pos_);
+	VECTOR localP0 = VGet(VDot(relPos, obb.axis[0]),
+		VDot(relPos, obb.axis[1]),
+		VDot(relPos, obb.axis[2]));
+	VECTOR localV = VGet(VDot(velocity, obb.axis[0]),
+		VDot(velocity, obb.axis[1]),
+		VDot(velocity, obb.axis[2]));
 
-	// OBBの半サイズ（各軸方向の長さの半分）
-	VECTOR halfSize = VScale(VSub(_cube.GetObb().vMax, _cube.GetObb().vMin), 0.5f);
+	// --- AABBスイープ ---
+	VECTOR boxMin = VScale(half, -1.0f);
+	VECTOR boxMax = half;
+	VECTOR bmin = VSub(boxMin, VGet(radius_, radius_, radius_));
+	VECTOR bmax = VAdd(boxMax, VGet(radius_, radius_, radius_));
 
-	// 最近接点をOBBの中心からスタート
-	VECTOR closest = obbCenter;
+	float tEnter = 0.0f;
+	float tExit = 1.0f;
 
-	// X軸方向
+	for (int i = 0; i < 3; i++)
 	{
-		float dist = VDot(d, _cube.GetObb().axis[0]);
-		dist = std::max(-halfSize.x, std::min(dist, halfSize.x));
-		closest = VAdd(closest, VScale(_cube.GetObb().axis[0], dist));
+		float start = (&localP0.x)[i];
+		float dir = (&localV.x)[i];
+		float minB = (&bmin.x)[i];
+		float maxB = (&bmax.x)[i];
+
+		if (fabs(dir) < 1e-6f)
+		{
+			if (start < minB || start > maxB)
+				return false; // 外れている → 衝突なし
+		}
+		else
+		{
+			float t1 = (minB - start) / dir;
+			float t2 = (maxB - start) / dir;
+			if (t1 > t2) std::swap(t1, t2);
+
+			tEnter = std::max(tEnter, t1);
+			tExit = std::min(tExit, t2);
+
+			if (tEnter > tExit)
+				return false;
+		}
 	}
 
-	// Y軸方向
+	// --- 衝突あり ---
+	hitResult_.t = std::max(0.0f, tEnter);
+
+	VECTOR localHitPos = VAdd(localP0, VScale(localV, hitResult_.t));
+
+	// --- 衝突法線 ---
+	VECTOR localNormal = VGet(0, 0, 0);
+	float eps = 1e-4f;
+	for (int i = 0; i < 3; i++)
 	{
-		float dist = VDot(d, _cube.GetObb().axis[1]);
-		dist = std::max(-halfSize.y, std::min(dist, halfSize.y));
-		closest = VAdd(closest, VScale(_cube.GetObb().axis[1], dist));
+		if (fabs((&localHitPos.x)[i] - (&bmin.x)[i]) < eps)
+			(&localNormal.x)[i] = -1.0f;
+		else if (fabs((&localHitPos.x)[i] - (&bmax.x)[i]) < eps)
+			(&localNormal.x)[i] = 1.0f;
 	}
 
-	// Z軸方向
-	{
-		float dist = VDot(d, _cube.GetObb().axis[2]);
-		dist = std::max(-halfSize.z, std::min(dist, halfSize.z));
-		closest = VAdd(closest, VScale(_cube.GetObb().axis[2], dist));
-	}
+	// --- ワールド座標に戻す ---
+	VECTOR hitWorld = center;
+	hitWorld = VAdd(hitWorld,
+		VAdd(VScale(obb.axis[0], localHitPos.x),
+			VAdd(VScale(obb.axis[1], localHitPos.y),
+				VScale(obb.axis[2], localHitPos.z))));
 
-	// 球と最近接点の距離²を計算
-	float distSq = Utility::SqrMagnitudeF(VSub(closest, pos_));
+	VECTOR normalWorld = VGet(
+		localNormal.x * obb.axis[0].x + localNormal.y * obb.axis[1].x + localNormal.z * obb.axis[2].x,
+		localNormal.x * obb.axis[0].y + localNormal.y * obb.axis[1].y + localNormal.z * obb.axis[2].y,
+		localNormal.x * obb.axis[0].z + localNormal.y * obb.axis[1].z + localNormal.z * obb.axis[2].z
+	);
 
-	//判定
-	bool ret = distSq <= (radius_ * radius_);
+	hitResult_.point = hitWorld;
+	hitResult_.normal = normalWorld;
 
-	//当たった
-	if (ret)
-	{
-		float dist = sqrtf(distSq);
-
-		_cube.SetHitDepth(radius_ - dist);
-
-		//法線方向の設定
-		_cube.SetHitNormal(VNorm(VSub(closest, pos_)));
-
-		//半径と比較
-		return true;
-	}
-
-	//当たらなかった
-	return false;
+	return true;
 }
 
 const bool Sphere::IsHit(Sphere& _sphere)

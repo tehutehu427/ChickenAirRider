@@ -9,7 +9,7 @@ public:
 	/// @brief コンストラクタ
 	/// @param _pos 追従する親の座標
 	/// @param _radius 半径
-	Sphere(const VECTOR& _pos, const VECTOR& _prePos, const  float _radius);
+	Sphere(const VECTOR& _pos, const VECTOR& _oldPos, const  float _radius);
 
 	/// @brief コピーコンストラクタ
 	/// @param _copyBase コピー元
@@ -46,6 +46,7 @@ public:
 
 private:
 
+	const VECTOR& oldPos_;
 	float radius_;						//半径
 	MV1_COLL_RESULT_POLY_DIM hitInfo_;	//当たった時の情報(モデル)
 };

@@ -69,20 +69,20 @@ std::unique_ptr<Geometry> StageObject::MakeSphere(void)
 
 std::unique_ptr<Geometry> StageObject::MakeCapsule(void)
 {
-	return std::make_unique<Capsule>(trans_.pos, trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2, data_.radius);
+	return std::make_unique<Capsule>(trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2, data_.radius);
 }
 
 std::unique_ptr<Geometry> StageObject::MakeCube(void)
 {
-	return std::make_unique<Cube>(trans_.pos, trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2);
+	return std::make_unique<Cube>(trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2);
 }
 
 std::unique_ptr<Geometry> StageObject::MakeLine(void)
 {
-	return std::make_unique<Line>(trans_.pos, trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2);
+	return std::make_unique<Line>(trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2);
 }
 
 std::unique_ptr<Geometry> StageObject::MakeModel(void)
 {
-	return std::make_unique<Model>(trans_.pos, trans_.pos, trans_.quaRot, trans_.modelId);
+	return std::make_unique<Model>(trans_.pos, trans_.quaRot, trans_.modelId);
 }

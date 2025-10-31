@@ -1,5 +1,7 @@
 #include"../pch.h"
 #include "../Utility/Utility.h"
+#include"../Manager/System/SceneManager.h"
+#include"../Manager/System/Camera.h"
 #include "../Manager/Game/GravityManager.h"
 #include "../Common/Geometry/Sphere.h"
 #include "../Common/Geometry/Line.h"
@@ -14,7 +16,8 @@
 #include "Collision/PlayerOnHit.h"
 #include "Player.h"
 
-Player::Player(void)
+Player::Player(std::weak_ptr<Camera> _camera)
+	:camera_(_camera)
 {
 	//初期化
 	state_ = STATE::NONE;
@@ -73,8 +76,12 @@ void Player::Init(void)
 	static const Quaternion GROUNDED_LINE = Quaternion();
 
 	//接地判定用の当たり判定
-	geo = std::make_unique<Line>(trans_.pos, movedPos_, GROUNDED_LINE, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
+	geo = std::make_unique<Line>(trans_.pos, GROUNDED_LINE, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
+
+	//当たり判定生成
+	//geo = std::make_unique<Sphere>(movedPos_, RADIUS);
+	//MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
 
 	//初期更新
 	Update();
@@ -88,6 +95,12 @@ void Player::Update(void)
 	//移動更新
 	trans_.pos = movedPos_;
 
+	//カメラ注視点までのベクトル
+	VECTOR vec = Utility::GetMoveVec(trans_.pos, camera_.lock()->GetTargetPos());
+	//vec.x = 0.0f;
+	//vec.z = 0.0f;
+	trans_.quaRot = trans_.quaRot.LookRotation(vec);
+	
 	//行動
 	action_->Update();
 

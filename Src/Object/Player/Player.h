@@ -9,11 +9,15 @@ class Machine;
 class LogicBase;
 class ActionBase;
 class PlayerOnHit;
+class Camera;
 
 class Player : public ObjectBase
 {
 	//当たり判定後処理クラスに情報共有
 	friend class PlayerOnHit;
+
+	//動作クラスに情報共有
+	friend class MachineAction;
 
 public:
 
@@ -34,7 +38,7 @@ public:
 	};
 
 	//コンストラクタ
-	Player(void);
+	Player(std::weak_ptr<Camera> _camera);
 	//デストラクタ
 	~Player(void);
 
@@ -60,13 +64,13 @@ public:
 	UnitParameter GetUnitParam(void)const;
 
 	//回転の設定
-	void SetQuaRot(const Quaternion _quaRot) { trans_.quaRot = _quaRot; }
+	void SetQuaRot(const Quaternion& _quaRot) { trans_.quaRot = _quaRot; }
 
 	//移動力変更
-	void SetMovePow(const VECTOR _movePow) { movePow_ = _movePow; }
+	void SetMovePow(const VECTOR& _movePow) { movePow_ = _movePow; }
 
 	//行動切り替え
-	void ChangeState(const STATE _state) { state_ = _state; }
+	void ChangeState(const STATE& _state) { state_ = _state; }
 
 	//接地判定
 	const bool IsGrounded(void) { return isGrounded_; }
@@ -74,9 +78,9 @@ public:
 private:
 
 	//当たり判定用
-	static constexpr float RADIUS = 30.0f;	//球体の半径
+	static constexpr float RADIUS = 30.0f;							//球体の半径
 	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };		//線判定の上相対座標
-	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-40.0f,0.0f };		//線判定の下相対座標
+	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-40.0f,0.0f };	//線判定の下相対座標
 
 	//基本機能
 	std::unique_ptr<Character> chara_;		//キャラクタ―
@@ -84,6 +88,9 @@ private:
 	std::unique_ptr<LogicBase> logic_;		//行動操作者
 	std::unique_ptr<ActionBase> action_;	//行動
 	std::unique_ptr<PlayerOnHit> onHit_;	//当たり判定
+
+	//カメラ
+	std::weak_ptr<Camera> camera_;
 
 	//パラメーター
 	Parameter param_;

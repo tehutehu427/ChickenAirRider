@@ -10,9 +10,8 @@ Geometry::~Geometry(void)
 {
 }
 
-Geometry::Geometry(const VECTOR& _pos, const VECTOR& _oldPos, const Quaternion& _rot) 
+Geometry::Geometry(const VECTOR& _pos, const Quaternion& _rot) 
 	: pos_(_pos), 
-	oldPos_(_oldPos), 
 	quaRot_(_rot)
 {
 	hitResult_ = {};

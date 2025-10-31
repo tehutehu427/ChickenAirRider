@@ -70,7 +70,7 @@ void SceneGame::Init(void)
 
 	//ƒJƒƒ‰Ý’è
 	camera->SetFollow(&plMng.GetPlayer(0).GetTrans());
-	camera->ChangeMode(Camera::MODE::FOLLOW);
+	camera->ChangeMode(Camera::MODE::FOLLOW_LEAP);
 }
 
 void SceneGame::Update(void)
@@ -105,9 +105,9 @@ void SceneGame::Update(void)
 	plMng.Update();
 
 	//ƒJƒƒ‰‚Ì‰ñ“]
-	VECTOR euler = plMng.GetPlayer(0).GetTrans().quaRot.ToEuler();
-	euler.x = 0.0f;
-	camera->SetAngles(euler);
+	//VECTOR euler = plMng.GetPlayer(0).GetTrans().quaRot.ToEuler();
+	//euler.x = 0.0f;
+	//camera->SetAngles(euler);
 
 	//“–‚½‚è”»’è‚Ì”jŠü
 	colMng.Sweep();

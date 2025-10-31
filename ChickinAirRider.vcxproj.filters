@@ -596,10 +596,10 @@
     <ClInclude Include="Src\Loader\DataRegistry.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Stage\StageImportData.h">
+    <ClInclude Include="Src\Object\Player\Collision\PlayerOnHit.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Player\Collision\PlayerOnHit.h">
+    <ClInclude Include="Src\Object\Stage\StageImportData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

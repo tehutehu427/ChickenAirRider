@@ -2,6 +2,7 @@
 #include "../Application.h"
 #include "../Utility/Utility.h"
 #include "../Manager/System/SceneManager.h"
+#include "../Manager/System/Camera.h"
 #include "../Manager/Game/GravityManager.h"
 #include "../Logic/LogicBase.h"
 #include "MachineAction.h"
@@ -35,7 +36,7 @@ void MachineAction::Init(void)
 void MachineAction::Update(void)
 {
 	//回転更新
-	player_.SetQuaRot(Quaternion::Euler(axis_));
+	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::Euler(axis_)));
 
 	//状態ごとの更新
 	update_[player_.IsGrounded()]();
@@ -73,11 +74,9 @@ void MachineAction::UpdateGround(void)
 		//チャージ解放
 		DisCharge();
 	}
-	else
-	{
-		//移動
-		Move();
-	}
+
+	//移動
+	Move();
 
 	//回転
 	Turn();
@@ -105,23 +104,30 @@ void MachineAction::Move(void)
 
 	//加速力を元にだんだん最高速まで速度を増やす
 
-	//最高速の制限
-	if (speed_ > param.maxSpeed_ * BASE_MAX_SPEED)
+	//チャージ中なら何もしない
+	if (!logic_.StartCharge())
 	{
-		//減速なのでカウンタ減少
-		driveCnt_ -= delta;
-	}
-	else
-	{
-		//カウンタ
-		driveCnt_ += delta;
+		//最高速の制限
+		if (speed_ > param.maxSpeed_ * BASE_MAX_SPEED)
+		{
+			//減速なのでカウンタ減少
+			driveCnt_ -= delta;
+		}
+		else
+		{
+			//カウンタ
+			driveCnt_ += delta;
+		}
 	}
 
 	//速度の方程式に当てはめる
-	speed_ = velocity_ + (param.acceleration_ * driveCnt_) + BASE_ACCELE;
+	speed_ = velocity_ + (param.acceleration_ * driveCnt_);
 
-	//チャージを初期化
-	chargeCnt_ = 0.0f;
+	//速度が負の値にならないようにする
+	if (speed_ < 0.0f)
+	{
+		speed_ = 0.0f;
+	}
 }
 
 void MachineAction::Charge(void)
@@ -134,7 +140,7 @@ void MachineAction::Charge(void)
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
 	//チャージカウンタ
-	chargeCnt_ += BASE_CHARGE * player_.GetAllParam().charge_ / unitParam.chargeCapacity_;
+	chargeCnt_ += BASE_CHARGE * param.charge_ / unitParam.chargeCapacity_;
 
 	//チャージの制限
 	if (chargeCnt_ > 1.0f)
@@ -142,17 +148,19 @@ void MachineAction::Charge(void)
 		chargeCnt_ = 1.0f;
 	}
 
+	//速度の下限
+	if (speed_ < 0.0f)return;
+
 	//ターンしていない
 	if (logic_.TurnValue().x == 0.0f)
 	{
 		//減速
-		speed_ = 0.0f;
-
-		//速度の下限
-		if (speed_ < 0.0f)
-		{
-			speed_ = 0.0f;
-		}
+		driveCnt_ -= delta * 50.0f;
+	}
+	else
+	{
+		//減速
+		driveCnt_ -= delta * 50.0f / 10.0f;
 	}
 }
 
@@ -167,25 +175,33 @@ void MachineAction::DisCharge(void)
 
 	//チャージの割合で初速度を決める
 	velocity_ = (param.maxSpeed_ * BASE_MAX_SPEED) * (1 + unitParam.boostRate_ * std::pow(chargeCnt_,unitParam.boostPower_)) * std::pow(chargeCnt_,unitParam.chargeDamp_);
+
+	//チャージを初期化
+	chargeCnt_ = 0.0f;
 }
 
 void MachineAction::Turn(void)
 {
 	//パラメーター
 	const auto& param = player_.GetAllParam();
+	
+	//デルタタイム
+	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
 	//回転量
-	float turnPow = logic_.TurnValue().x / COMP_TURN;
+	float turnPow = logic_.TurnValue().x * delta;
 
 	//回転量がないならスキップ
 	if (turnPow == 0.0f)return;
 
 	//パラメーターで回転しやすくする
-	turnPow += turnPow > 0.0f ? param.turning_ / COMP_TURN
-		: -param.turning_ / COMP_TURN;
+	turnPow += turnPow > 0.0f ? param.turning_ * delta
+		: -param.turning_ * delta;
+
+	turnPow = logic_.StartCharge() ? turnPow * 2.0f : turnPow;
 
 	//Y回転を設定
-	axis_.y += turnPow;
+	player_.camera_.lock()->SetRotPow(std::fabsf(Utility::Deg2RadF(turnPow)));
 }
 
 void MachineAction::Flight(void)
@@ -206,7 +222,7 @@ void MachineAction::Flight(void)
 	}
 
 	//回転量
-	float flightPow = logic_.TurnValue().y / COMP_TURN;
+	float flightPow = logic_.TurnValue().y * delta;
 
 	//X回転を設定
 	axis_.x += flightPow;
@@ -214,9 +230,5 @@ void MachineAction::Flight(void)
 
 	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);
 
-	flightPow_ += delta * (gravPow_.y) + flightPow;
-}
-
-void MachineAction::FlightMove(void)
-{
+	flightPow_ += delta * (gravPow_.y) + (flightPow * param.flight_);
 }

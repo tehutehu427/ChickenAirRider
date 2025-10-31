@@ -1,4 +1,6 @@
 #include"../pch.h"
+#include"../Manager/System/SceneManager.h"
+#include"../Manager/System/Camera.h"
 #include"../Object/Player/Player.h"
 #include "PlayerManager.h"
 
@@ -16,7 +18,7 @@ void PlayerManager::CreateInstance(void)
 void PlayerManager::Init(void)
 {
 	//プレイヤーの生成
-	players_.emplace_back(std::make_unique<Player>());
+	players_.emplace_back(std::make_unique<Player>(SceneManager::GetInstance().GetCamera(0)));
 
 	//各プレイヤーの初期化
 	for (auto& player : players_)

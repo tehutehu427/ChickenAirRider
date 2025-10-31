@@ -88,8 +88,5 @@ private:
 
 	//”òs
 	void Flight(void);
-
-	//”òs‚ÌˆÚ“®
-	void FlightMove(void);
 };
 
