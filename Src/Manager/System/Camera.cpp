@@ -213,26 +213,49 @@ void Camera::SyncFollowLeap(void)
 
 	// 正面から設定されたY軸分、回転させる
 	rotOutX_ = gRot.Mult(Quaternion::AngleAxis(angles_.y, Utility::AXIS_Y));
-
-	// 正面から設定されたX軸分、回転させる
 	rot_ = rotOutX_;
 
-	// 注視点（対象のYを合わせる）
+	// 注視点
 	VECTOR localPos = rotOutX_.PosAxis(LOCAL_F2T_POS);
 	VECTOR desiredTargetPos = VAdd(pos, localPos);
 
-	// カメラの理想位置
+	// カメラ理想位置
 	localPos = rot_.PosAxis(localPos_);
 	VECTOR desiredCameraPos = VAdd(pos, localPos);
 
-	// --- 補間係数 ---
-	const float followRate = 0.1f; // 0.1～0.2くらいが自然
+	// カメラの前方向（Z軸）ベクトル
+	VECTOR forward = rot_.PosAxis(VGet(0, 0, 1));
+	VECTOR up = rot_.PosAxis(VGet(0, 1, 0));
 
-	// --- スムーズに追従（Lerp） ---
-	pos_.x += (desiredCameraPos.x - pos_.x) * followRate;
-	pos_.y += (desiredCameraPos.y - pos_.y) * followRate;
-	pos_.z += (desiredCameraPos.z - pos_.z) * followRate;
+	// 現在との差
+	VECTOR diff = VSub(desiredCameraPos, pos_);
 
+	// forward方向成分を抽出（前後移動）
+	float front = diff.x * forward.x + diff.y * forward.y + diff.z * forward.z;
+	VECTOR frontMove = VScale(forward, front);
+
+	// 縦方向成分を抽出（上方向）
+	float upAmount = diff.x * up.x + diff.y * up.y + diff.z * up.z;
+	VECTOR upMove = VScale(up, upAmount);
+
+	// 残りをsideMoveとして計算（横移動）
+	VECTOR temp = VAdd(frontMove, upMove);
+	VECTOR sideMove = VSub(diff, temp);
+
+	// --- 各軸別補間係数 ---
+	const float rateFront = 0.4f;	// 前後：速く追従
+	const float rateSide = 0.1f;	// 横：なめらか
+	const float rateUp = 0.4f;		// 縦：速く追従
+
+	// 軸ごとに合成
+	pos_ = VAdd(pos_,
+		VAdd(
+			VAdd(VScale(frontMove, rateFront),
+				VScale(sideMove, rateSide)),
+			VScale(upMove, rateUp))
+	);
+
+	// 注視点は即追従（補間なし or わずか）
 	targetPos_.x += (desiredTargetPos.x - targetPos_.x);
 	targetPos_.y += (desiredTargetPos.y - targetPos_.y);
 	targetPos_.z += (desiredTargetPos.z - targetPos_.z);
@@ -287,7 +310,7 @@ void Camera::ProcessRot(void)
 	if (keyType == KeyConfig::TYPE::ALL)
 	{
 		auto mouseMove = ins.GetMouseMove();
-		//angles_.x += Utility::Deg2RadF(mouseMove.y * rotPow);
+		angles_.x += Utility::Deg2RadF(mouseMove.y * rotPow_);
 		angles_.y += Utility::Deg2RadF(mouseMove.x * rotPow_);
 	}
 }
