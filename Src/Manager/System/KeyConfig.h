@@ -97,7 +97,11 @@ public:
 		MACHINE_TURN_FRONT,		//機体の前回転
 		MACHINE_TURN_BACK,		//機体の後回転
 
-		PUSH_BUTTON,			//機体のチャージ
+		CAMERA_TURN_UP,			//カメラの前回転
+		CAMERA_TURN_DOWN,		//カメラの後回転
+
+		PUSH_BUTTON,			//プッシュボタン
+		SPECIAL_BUTTON,			//スペシャルボタン
 
 		DEBUG_CHANGE_TITLE,		//デバッグ用タイトル画面に戻る
 		DEBUG_CHANGE_CLEAR,		//デバッグ用クリア画面に戻る
@@ -137,6 +141,13 @@ public:
 	/// @param type 入力タイプ
 	/// @return true:押されている
 	bool IsTrgUp(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, TYPE type = TYPE::ALL);
+
+	/// @brief キーが保持されているか(離された瞬間のみ)
+	/// @param cType 操作名
+	/// @param no ゲームコントローラーの番号
+	/// @param type 入力タイプ
+	/// @return true:押されている
+	bool IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _holdTime, TYPE type = TYPE::ALL);
 
 	/// @brief 対応キーを追加
 	/// @param type キーの種類

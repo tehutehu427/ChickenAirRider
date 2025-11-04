@@ -49,7 +49,7 @@ private:
 	std::vector<StageImportData> importData_;
 
 	//名前管理
-	std::unordered_map<std::string, int> modelId_;
+	std::unordered_map<std::string, std::function<int(void)>> modelId_;
 	std::unordered_map<std::string, Collider::TAG> tags_;
 
 	//静的インスタンス

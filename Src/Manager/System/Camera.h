@@ -13,6 +13,7 @@ public:
 	static constexpr float SPEED = 1.0f;
 	static constexpr float SPEED_PAD = 0.0015f;
 	static constexpr float SPEED_MOUSE = 0.05f;
+	static constexpr float SPEED_ROT = 10.0f;
 
 	//カメラズームスピード
 	static constexpr float ZOOM_SPEED = 5.0f;

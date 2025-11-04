@@ -34,11 +34,13 @@ void KeyConfig::Init(void)
 	Add(CONTROL_TYPE::MACHINE_TURN_BACK, MOUSE::MOVE_DOWN);
 	Add(CONTROL_TYPE::MACHINE_TURN_BACK, JOYPAD_STICK::L_STICK_DOWN);
 
-	//機体のチャージ
+	//プッシュボタン
 	Add(CONTROL_TYPE::PUSH_BUTTON, MOUSE::CLICK_LEFT);
 	Add(CONTROL_TYPE::PUSH_BUTTON, JOYPAD_BTN::RIGHTBUTTON_RIGHT);
 
-	Add(CONTROL_TYPE::SELECT_SKIP, KeyConfig::JOYPAD_BTN::RIGHTBUTTON_TOP);
+	//スペシャルボタン
+	Add(CONTROL_TYPE::SPECIAL_BUTTON, MOUSE::CLICK_RIGHT);
+	Add(CONTROL_TYPE::SPECIAL_BUTTON, JOYPAD_BTN::RIGHTBUTTON_TOP);
 
 #ifdef _DEBUG
 	//デバッグ処理
@@ -249,6 +251,73 @@ bool KeyConfig::IsTrgUp(CONTROL_TYPE cType, JOYPAD_NO no, TYPE type)
 			for (auto stickI : stick.second)
 			{
 				if (inputManager_->IsStickUp(no, stickI))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool KeyConfig::IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _holdTime, TYPE type)
+{
+	if (type == TYPE::KEYBOARD_MOUSE || type == TYPE::ALL)
+	{
+		for (auto& key : keyInput_)
+		{
+			if (key.first != cType)
+			{
+				continue;
+			}
+			for (auto keyI : key.second)
+			{
+				if (inputManager_->IsTrgHold(keyI,_holdTime))
+				{
+					return true;
+				}
+			}
+		}
+		for (auto& mouse : mouseInput_)
+		{
+			if (mouse.first != cType)
+			{
+				continue;
+			}
+			for (auto mouseI : mouse.second)
+			{
+				if (inputManager_->IsMouseTrgHold(mouseI, _holdTime))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	if (type == TYPE::PAD || type == TYPE::ALL)
+	{
+		for (auto& con : conInput_)
+		{
+			if (con.first != cType)
+			{
+				continue;
+			}
+			for (auto conI : con.second)
+			{
+				if (inputManager_->IsPadBtnTrgHold(no, conI,_holdTime))
+				{
+					return true;
+				}
+			}
+		}
+		for (auto& stick : stickInput_)
+		{
+			if (stick.first != cType)
+			{
+				continue;
+			}
+			for (auto stickI : stick.second)
+			{
+				if (inputManager_->IsStickHold(no, stickI,_holdTime))
 				{
 					return true;
 				}

@@ -36,5 +36,8 @@ private:
 
 	//回転量
 	static constexpr float TURN_POW = 1.0f;
+
+	//チャージまでのプッシュ時間
+	static constexpr float CHARGE_START_PUSH_TIME = 0.1f;
 };
 

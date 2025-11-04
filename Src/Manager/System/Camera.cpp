@@ -299,20 +299,8 @@ void Camera::ProcessRot(void)
 {
 	auto& ins = KeyConfig::GetInstance();
 	auto keyType = KeyConfig::TYPE::ALL;
-	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_RIGHT, padNo_, keyType)) { angles_.y += rotPow; }
-	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_LEFT, padNo_, keyType)) { angles_.y -= rotPow; }
-	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_UP, padNo_, keyType)) { angles_.x += rotPow; }
-	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::PLAY_CAMERA_MOVE_DOWN, padNo_, keyType)) { angles_.x -= rotPow; }
-
-
-	auto rStick = ins.GetKnockLStickSize(padNo_);
-	angles_.y += Utility::Deg2RadF(rStick.x * rotPow_);
-	if (keyType == KeyConfig::TYPE::ALL)
-	{
-		auto mouseMove = ins.GetMouseMove();
-		angles_.x += Utility::Deg2RadF(mouseMove.y * rotPow_);
-		angles_.y += Utility::Deg2RadF(mouseMove.x * rotPow_);
-	}
+	if (ins.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_RIGHT, padNo_, keyType)) { angles_.y += rotPow_ * SPEED_ROT; }
+	if (ins.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_LEFT, padNo_, keyType)) { angles_.y -= rotPow_ * SPEED_ROT; }
 }
 
 void Camera::ProcessZoom(void)

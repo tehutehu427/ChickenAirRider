@@ -37,8 +37,11 @@ void StageManager::Init(void)
 			tags.emplace(tags_[tagName]);
 		}
 
+		//モデルの作成
+		int modelId = modelId_[data.name]();
+
 		//ステージの生成
-		stages_.emplace_back(std::make_unique<StageObject>(data, modelId_[data.name], tags));
+		stages_.emplace_back(std::make_unique<StageObject>(data, modelId, tags));
 
 		//削除
 		tags.clear();
@@ -77,12 +80,19 @@ void StageManager::Destroy(void)
 
 StageManager::StageManager(void)
 {
-	//インスタンス
-	auto& res = ResourceManager::GetInstance();
-
 	//リソース
-	modelId_["glass"] = res.LoadModelDuplicate(ResourceManager::SRC::GLASS);
-	modelId_["building"] = res.LoadModelDuplicate(ResourceManager::SRC::BUILDING);
+	modelId_["glass"] = [this](void)
+	{
+		//インスタンス
+		auto& res = ResourceManager::GetInstance();
+		return res.LoadModelDuplicate(ResourceManager::SRC::GLASS);
+	};
+	modelId_["building"] = [this](void)
+	{
+		//インスタンス
+		auto& res = ResourceManager::GetInstance();
+		return res.LoadModelDuplicate(ResourceManager::SRC::BUILDING);
+	};
 
 	//タグ
 	tags_["normalObject"] = Collider::TAG::NORMAL_OBJECT;

@@ -69,7 +69,8 @@ void MachineAction::UpdateGround(void)
 		//チャージ
 		Charge();
 	}
-	else if (logic_.DisCharge())
+	
+	if (logic_.DisCharge())
 	{
 		//チャージ解放
 		DisCharge();
@@ -170,11 +171,17 @@ void MachineAction::DisCharge(void)
 	const auto& param = player_.GetAllParam();
 	const auto& unitParam = player_.GetUnitParam();
 
-	//走行時間の初期化
-	driveCnt_ = 0.0f;
-
 	//チャージの割合で初速度を決める
-	velocity_ = (param.maxSpeed_ * BASE_MAX_SPEED) * (1 + unitParam.boostRate_ * std::pow(chargeCnt_,unitParam.boostPower_)) * std::pow(chargeCnt_,unitParam.chargeDamp_);
+	float velocity = (param.maxSpeed_ * BASE_MAX_SPEED) * (1 + unitParam.boostRate_ * std::pow(chargeCnt_,unitParam.boostPower_)) * std::pow(chargeCnt_,unitParam.chargeDamp_);
+
+	//速度
+	if (speed_ < velocity)
+	{
+		//走行時間の初期化
+		driveCnt_ = 0.0f;
+
+		velocity_ = velocity;
+	}
 
 	//チャージを初期化
 	chargeCnt_ = 0.0f;
@@ -201,7 +208,7 @@ void MachineAction::Turn(void)
 	turnPow = logic_.StartCharge() ? turnPow * 2.0f : turnPow;
 
 	//Y回転を設定
-	player_.camera_.lock()->SetRotPow(std::fabsf(Utility::Deg2RadF(turnPow)));
+	player_.GetCamera().lock()->SetRotPow(std::fabsf(Utility::Deg2RadF(turnPow)));
 }
 
 void MachineAction::Flight(void)

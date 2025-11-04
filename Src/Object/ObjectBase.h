@@ -38,7 +38,10 @@ public:
 	virtual void OnHit(const std::weak_ptr<Collider> _hitCol) = 0;
 
 	//モデル情報の取得
-	inline const Transform& GetTrans(void) const { return trans_; }
+	const Transform& GetTrans(void) const { return trans_; }
+
+	//コライダの取得
+	const std::vector<std::shared_ptr<Collider>>& GetColliders(void) { return collider_; };
 
 	//モデルの色を変える
 	virtual void ChangeModelColor(const COLOR_F _colorScale);

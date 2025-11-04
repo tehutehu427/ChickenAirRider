@@ -13,12 +13,6 @@ class Camera;
 
 class Player : public ObjectBase
 {
-	//当たり判定後処理クラスに情報共有
-	friend class PlayerOnHit;
-
-	//動作クラスに情報共有
-	friend class MachineAction;
-
 public:
 
 	//現在の状態
@@ -63,6 +57,9 @@ public:
 	//ユニットのみのパラメーター
 	UnitParameter GetUnitParam(void)const;
 
+	//状態
+	const STATE GetState(void) { return state_; }
+
 	//回転の設定
 	void SetQuaRot(const Quaternion& _quaRot) { trans_.quaRot = _quaRot; }
 
@@ -74,6 +71,21 @@ public:
 
 	//接地判定
 	const bool IsGrounded(void) { return isGrounded_; }
+
+	//接地判定の切り替え
+	void SetIsGrounded(const bool _isGrounded) { isGrounded_ = _isGrounded; }
+
+	//移動後座標の取得
+	const VECTOR& GetMovedPos(void) { return movedPos_; }
+
+	//移動後座標の設定
+	void SetMovedPos(const VECTOR _pos) { movedPos_ = _pos; }
+
+	//カメラの取得
+	std::weak_ptr<Camera> GetCamera(void) { return camera_; }
+
+	//基本機能を返す
+	ActionBase& GetAction(void) { return *action_; }
 
 private:
 

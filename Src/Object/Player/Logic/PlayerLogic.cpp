@@ -24,7 +24,7 @@ const bool PlayerLogic::StartCharge(void)
     auto& key = KeyConfig::GetInstance();
 
     //チャージ開始ボタンを押しているか
-    if (key.IsNew(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1))
+    if (key.IsTrgHold(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1, CHARGE_START_PUSH_TIME))
     {
         //押している
         return true;
@@ -40,7 +40,8 @@ const bool PlayerLogic::DisCharge(void)
     auto& key = KeyConfig::GetInstance();
 
     //チャージ開始ボタンを離したか
-    if (key.IsTrgUp(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1))
+    if (key.IsTrgUp(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1) &&
+        key.IsTrgHold(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1, CHARGE_START_PUSH_TIME))
     {
         //離した
         return true;

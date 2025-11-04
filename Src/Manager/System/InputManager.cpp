@@ -1,5 +1,6 @@
 #include"../pch.h"
 #include "../Application.h"
+#include "SceneManager.h"
 #include "InputManager.h"
 
 void InputManager::Init(void)
@@ -80,6 +81,8 @@ void InputManager::Init(void)
 
 void InputManager::Update(void)
 {
+	//デルタタイム
+	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
 	// キーボード検知
 	for (auto& p : keyInfos_)
@@ -88,6 +91,7 @@ void InputManager::Update(void)
 		p.second.keyNew = CheckHitKey(p.second.key);
 		p.second.keyTrgDown = p.second.keyNew && !p.second.keyOld;
 		p.second.keyTrgUp = !p.second.keyNew && p.second.keyOld;
+		p.second.keyTrgHoldCnt = p.second.keyOld ? p.second.keyTrgHoldCnt + delta : 0.0f;
 	}
 
 	// マウス検知
@@ -132,6 +136,7 @@ void InputManager::Update(void)
 		}
 		p.second.keyTrgDown = p.second.keyNew && !p.second.keyOld;
 		p.second.keyTrgUp = !p.second.keyNew && p.second.keyOld;
+		p.second.keyTrgHoldCnt = p.second.keyOld ? p.second.keyTrgHoldCnt + delta : 0.0f;
 	}
 
 	// パッド情報
@@ -149,6 +154,7 @@ void InputManager::Update(void)
 			stick.keyNew = overSize > STICK_THRESHOLD;
 			stick.keyTrgDown = !stick.keyOld && stick.keyNew;
 			stick.keyTrgUp = stick.keyOld && !stick.keyNew;
+			stick.keyTrgHoldCnt = stick.keyOld ? stick.keyTrgHoldCnt + delta : 0.0f;
 		}
 	}
 }
@@ -168,6 +174,7 @@ void InputManager::Add(int key)
 	info.keyNew = false;
 	info.keyTrgDown = false;
 	info.keyTrgUp = false;
+	info.keyTrgHoldCnt = 0.0f;
 	keyInfos_.emplace(key, info);
 }
 
@@ -189,6 +196,11 @@ bool InputManager::IsTrgDown(int key) const
 bool InputManager::IsTrgUp(int key) const
 {
 	return Find(key).keyTrgUp;
+}
+
+bool InputManager::IsTrgHold(int key, float _holdTime) const
+{
+	return Find(key).keyTrgHoldCnt >= _holdTime;
 }
 
 Vector2 InputManager::GetMousePos(void) const
@@ -275,6 +287,7 @@ XINPUT_STATE InputManager::GetJPadXInputState(KeyConfig::JOYPAD_NO no)
 
 void InputManager::SetJPadInState(KeyConfig::JOYPAD_NO jpNo)
 {
+	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
 	int no = static_cast<int>(jpNo);
 	auto stateNew = GetJPadInputState(jpNo);
@@ -293,6 +306,7 @@ void InputManager::SetJPadInState(KeyConfig::JOYPAD_NO jpNo)
 
 		stateNow.IsTrgDown[i] = stateNow.IsNew[i] && !stateNow.IsOld[i];
 		stateNow.IsTrgUp[i] = !stateNow.IsNew[i] && stateNow.IsOld[i];
+		stateNow.IsTrgHoldCnt[i] = stateNow.IsOld[i] ? stateNow.IsTrgHoldCnt[i] + delta : 0.0f;
 
 
 		stateNow.AKeyLX = stateNew.AKeyLX;
@@ -452,6 +466,11 @@ bool InputManager::IsPadBtnTrgUp(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN 
 	return padInfos_[static_cast<int>(no)].IsTrgUp[static_cast<int>(btn)];
 }
 
+bool InputManager::IsPadBtnTrgHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN btn, float _holdTime) const
+{
+	return padInfos_[static_cast<int>(no)].IsTrgHoldCnt[static_cast<int>(btn)] >= _holdTime;
+}
+
 bool InputManager::IsStickNew(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick) const
 {
 	for (auto& stickInfo : stickInfos_)
@@ -512,6 +531,26 @@ bool InputManager::IsStickUp(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK st
 	return false;
 }
 
+bool InputManager::IsStickHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick, float _holdTime) const
+{
+	for (auto& stickInfo : stickInfos_)
+	{
+		if (stickInfo.first != no)
+		{
+			continue;
+		}
+		for (auto& stickI : stickInfo.second)
+		{
+			if (stickI.key != stick)
+			{
+				continue;
+			}
+			return stickI.keyTrgHoldCnt >= _holdTime;
+		}
+	}
+	return false;
+}
+
 bool InputManager::IsMouseNew(KeyConfig::MOUSE mouse)
 {
 	return FindMouse(mouse).keyNew;
@@ -525,6 +564,11 @@ bool InputManager::IsMouseTrgUp(KeyConfig::MOUSE mouse)
 bool InputManager::IsMouseTrgDown(KeyConfig::MOUSE mouse)
 {
 	return FindMouse(mouse).keyTrgDown;
+}
+
+bool InputManager::IsMouseTrgHold(KeyConfig::MOUSE mouse, float _holdTime)
+{
+	return FindMouse(mouse).keyTrgHoldCnt >= _holdTime;
 }
 
 

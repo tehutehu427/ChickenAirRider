@@ -35,6 +35,7 @@ public:
 		bool IsNew[static_cast<int>(KeyConfig::JOYPAD_BTN::MAX)];
 		bool IsTrgDown[static_cast<int>(KeyConfig::JOYPAD_BTN::MAX)];
 		bool IsTrgUp[static_cast<int>(KeyConfig::JOYPAD_BTN::MAX)];
+		float IsTrgHoldCnt[static_cast<int>(KeyConfig::JOYPAD_BTN::MAX)];
 		int AKeyLX;
 		int AKeyLY;
 		int AKeyRX;
@@ -72,6 +73,9 @@ public:
 	// キーを離した時の判定
 	bool IsTrgUp(int key) const;
 
+	// キーの押しっぱなし判定
+	bool IsTrgHold(int key, float _holdTime) const;
+
 	// マウス座標の取得
 	Vector2 GetMousePos(void) const;
 
@@ -93,25 +97,32 @@ public:
 	bool IsPadBtnNew(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN btn) const;
 	bool IsPadBtnTrgDown(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN btn) const;
 	bool IsPadBtnTrgUp(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN btn) const;
+	bool IsPadBtnTrgHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN btn, float _holdTime) const;
 
 	// スティックが倒されたか
 	bool IsStickNew(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick) const;
 	bool IsStickDown(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick) const;
 	bool IsStickUp(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick) const;
+	bool IsStickHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick, float _holdTime) const;
 
+	//マウスが入力された
 	bool IsMouseNew(KeyConfig::MOUSE mouse);
 	bool IsMouseTrgUp(KeyConfig::MOUSE mouse);
 	bool IsMouseTrgDown(KeyConfig::MOUSE mouse);
+	bool IsMouseTrgHold(KeyConfig::MOUSE mouse, float _holdTime);
+
+
 private:
 
 	// キー情報
 	struct Info
 	{
-		int key;			// キーID
-		bool keyOld;		// 1フレーム前の押下状態
-		bool keyNew;		// 現フレームの押下状態
-		bool keyTrgDown;	// 現フレームでボタンが押されたか
-		bool keyTrgUp;		// 現フレームでボタンが離されたか
+		int key;				// キーID
+		bool keyOld;			// 1フレーム前の押下状態
+		bool keyNew;			// 現フレームの押下状態
+		bool keyTrgDown;		// 現フレームでボタンが押されたか
+		bool keyTrgUp;			// 現フレームでボタンが離されたか
+		float keyTrgHoldCnt;	// ボタンのホールド時間
 	};
 
 	// マウス
@@ -121,6 +132,7 @@ private:
 		bool keyNew = false;		// 現フレームの押下状態
 		bool keyTrgDown = false;	// 現フレームでボタンが押されたか
 		bool keyTrgUp = false;		// 現フレームでボタンが離されたか
+		float keyTrgHoldCnt = 0.0f;	// ボタンのホールド時間
 	};
 
 	struct StickInfo
@@ -130,6 +142,7 @@ private:
 		bool keyNew = false;
 		bool keyTrgDown = false;
 		bool keyTrgUp = false;
+		float keyTrgHoldCnt = 0.0f;
 	};
 
 	// コントローラ情報
