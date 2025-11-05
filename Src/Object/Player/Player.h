@@ -67,8 +67,8 @@ public:
 	void SetMovePow(const VECTOR& _movePow) { movePow_ = _movePow; }
 
 	//s“®Ø‚è‘Ö‚¦
-	void ChangeState(const STATE& _state) { state_ = _state; }
-
+	void ChangeState(const STATE& _state);
+	
 	//Ú’n”»’è
 	const bool IsGrounded(void) { return isGrounded_; }
 

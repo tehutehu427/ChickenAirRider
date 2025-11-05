@@ -15,6 +15,16 @@ PlayerLogic::~PlayerLogic(void)
 
 const bool PlayerLogic::IsPush(void) 
 {
+    //インスタンス
+    auto& key = KeyConfig::GetInstance();
+
+    //プッシュボタンを押しているか
+    if (key.IsNew(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1))
+    {
+        //押された
+        return true;
+    }
+
     return false;
 }
 
@@ -23,7 +33,7 @@ const bool PlayerLogic::StartCharge(void)
     //インスタンス
     auto& key = KeyConfig::GetInstance();
 
-    //チャージ開始ボタンを押しているか
+    //プッシュボタンを押しているか
     if (key.IsTrgHold(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1, CHARGE_START_PUSH_TIME))
     {
         //押している
@@ -86,4 +96,37 @@ const Vector2F PlayerLogic::TurnValue(void)
     if(GetJoypadNum() < 1)key.SetMousePos({ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y });
 
     return ret;
+}
+
+const bool PlayerLogic::IsSpecial(void)
+{
+    //インスタンス
+    auto& key = KeyConfig::GetInstance();
+
+    //スペシャルボタンを押したか
+    if (key.IsTrgUp(KeyConfig::CONTROL_TYPE::SPECIAL_BUTTON, KeyConfig::JOYPAD_NO::PAD1) &&
+        !IsGetOff())
+    {
+        //押した
+        return true;
+    }
+
+    //押していない
+    return false;
+}
+
+const bool PlayerLogic::IsGetOff(void)
+{
+    //インスタンス
+    auto& key = KeyConfig::GetInstance();
+
+    //スペシャルボタンを一定時間押し続けているか
+    if (key.IsTrgHold(KeyConfig::CONTROL_TYPE::SPECIAL_BUTTON, KeyConfig::JOYPAD_NO::PAD1, GETOFF_PUSH_TIME))
+    {
+        //押し続けた
+        return true;
+    }
+
+    //押していない又は離した
+    return false;
 }

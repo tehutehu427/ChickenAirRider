@@ -172,6 +172,9 @@ private:
 	//補間した注視点
 	VECTOR leapTargetPos_;
 
+	//カメラ速度
+	VECTOR vel_;
+
 	// カメラを初期位置に戻す
 	void SetDefault(void);
 

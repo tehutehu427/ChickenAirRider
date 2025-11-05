@@ -32,6 +32,16 @@ public:
 	/// @return 回転量(-値:左回転, +値:右回転)
 	const Vector2F TurnValue(void) override;
 
+	/// @brief スペシャルボタンを押した
+	/// @param  
+	/// @return スペシャルの有無(true:スペシャルを押した)
+	const bool IsSpecial(void) override;
+
+	/// @brief 機体から降りたか
+	/// @param  
+	/// @return 機体からの降下の有無(true:降りた)
+	const bool IsGetOff(void) override;
+
 private:
 
 	//回転量
@@ -39,5 +49,8 @@ private:
 
 	//チャージまでのプッシュ時間
 	static constexpr float CHARGE_START_PUSH_TIME = 0.1f;
+
+	//機体を降りるまでのスペシャルボタン押下時間
+	static constexpr float GETOFF_PUSH_TIME = 1.0f;
 };
 

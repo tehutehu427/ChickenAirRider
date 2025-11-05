@@ -40,6 +40,9 @@ private:
 	//回転量の補正
 	static constexpr float COMP_TURN = 500.0f;
 
+	//プッシュの落下補正
+	static constexpr float PUSH_FALL = 20.0f;
+
 	//機体
 	const Machine& machine_;
 

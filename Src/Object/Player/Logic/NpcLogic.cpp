@@ -28,3 +28,13 @@ const Vector2F NpcLogic::TurnValue(void)
 {
     return {0.0f,0.0f};
 }
+
+const bool NpcLogic::IsSpecial(void)
+{
+    return false;
+}
+
+const bool NpcLogic::IsGetOff(void)
+{
+    return false;
+}

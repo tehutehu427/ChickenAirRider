@@ -108,7 +108,7 @@ private:
 	SoundManager(void);
 
 	//デストラクタ
-	~SoundManager(void);
+	~SoundManager(void)override;
 
 	//内部読み込み処理
 	bool _Load(const SRC _src);

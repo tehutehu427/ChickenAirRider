@@ -1,4 +1,6 @@
 #pragma once
+#include<unordered_map>
+#include<string>
 #include"ActionBase.h"
 #include"../Character/Character.h"
 
@@ -10,7 +12,7 @@ public:
 	/// @param _player 親情報
 	/// @param _chara キャラクターの情報
 	/// @param _logic 行動情報
-	CharacterAction(Player& _player, const Character& _chara, LogicBase& _logic);
+	CharacterAction(Player& _player, Character& _chara, LogicBase& _logic);
 
 	//デストラクタ
 	~CharacterAction(void)override;
@@ -27,6 +29,9 @@ public:
 private:
 
 	//キャラクター
-	const Character& chara_;
+	Character& chara_;
+
+	//アニメーション番号
+	std::unordered_map<std::string, int> animNum_;
 };
 

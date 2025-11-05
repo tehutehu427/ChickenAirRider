@@ -30,5 +30,15 @@ public:
 	/// @param  
 	/// @return 回転量(-値:左回転, +値:右回転)
 	virtual const Vector2F TurnValue(void) = 0;
+
+	/// @brief スペシャルボタンを押した
+	/// @param  
+	/// @return スペシャルの有無(true:スペシャルを押した)
+	virtual const bool IsSpecial(void) = 0;
+
+	/// @brief 機体から降りたか
+	/// @param  
+	/// @return 機体からの降下の有無(true:降りた)
+	virtual const bool IsGetOff(void) = 0;
 };
 

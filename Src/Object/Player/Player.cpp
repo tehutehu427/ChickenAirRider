@@ -65,9 +65,6 @@ void Player::Init(void)
 	//初期状態
 	ChangeState(STATE::RIDE_MACHINE);
 
-	//行動
-	changeAction_[state_]();
-
 	//当たり判定生成
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, RADIUS);
 	MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
@@ -78,10 +75,6 @@ void Player::Init(void)
 	//接地判定用の当たり判定
 	geo = std::make_unique<Line>(trans_.pos, GROUNDED_LINE, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
-
-	//当たり判定生成
-	//geo = std::make_unique<Sphere>(movedPos_, RADIUS);
-	//MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
 
 	//初期更新
 	Update();
@@ -97,10 +90,15 @@ void Player::Update(void)
 
 	//カメラ注視点までのベクトル
 	VECTOR vec = Utility::GetMoveVec(trans_.pos, camera_.lock()->GetTargetPos());
-	//vec.x = 0.0f;
-	//vec.z = 0.0f;
 	trans_.quaRot = trans_.quaRot.LookRotation(vec);
-	
+
+	//降りたなら
+	if (state_ == STATE::RIDE_MACHINE && logic_->IsGetOff())
+	{
+		//キャラクターに遷移
+		changeAction_[STATE::NORMAL]();
+	}
+
 	//行動
 	action_->Update();
 
@@ -148,6 +146,18 @@ UnitParameter Player::GetUnitParam(void) const
 {
 	//キャラと機体の合計パラメーター
  	return chara_->GetUnitParam().Calculate(machine_->GetUnitParam());
+}
+
+void Player::ChangeState(const STATE& _state)
+{
+	//状態変更
+	state_ = _state;
+
+	//アクション状態遷移
+	changeAction_[state_]();
+
+	//初期化
+	action_->Init();
 }
 
 void Player::ChangeActionNormal(void)

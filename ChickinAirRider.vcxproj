@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Manager\Game\CharacterManager.cpp" />
     <ClCompile Include="Src\Object\Item\ItemBase.cpp" />
     <ClCompile Include="Src\Object\Player\Collision\PlayerOnHit.cpp" />
     <ClCompile Include="Src\Loader\DataRegistry.cpp" />
@@ -221,7 +222,9 @@
     <ClCompile Include="Src\Common\Vector2F.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Manager\Game\CharacterManager.h" />
     <ClInclude Include="Src\Object\Item\ItemBase.h" />
+    <ClInclude Include="Src\Object\Player\Character\CharaImportData.h" />
     <ClInclude Include="Src\Object\Player\Collision\PlayerOnHit.h" />
     <ClInclude Include="Src\Loader\DataRegistry.h" />
     <ClInclude Include="Src\Loader\LoaderManager.h" />

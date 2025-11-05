@@ -205,49 +205,61 @@ void Camera::SyncFollow(void)
 
 void Camera::SyncFollowLeap(void)
 {
-	// 同期先の位置（プレイヤーなど）
+	// --- プレイヤーの位置 ---
 	VECTOR pos = followTransform_->pos;
 
-	// 重力の方向制御に従う（今は固定）
+	// --- プレイヤーの速度（前フレームとの差から算出） ---
+	static VECTOR oldPos = pos;
+	VECTOR velocity = VSub(pos, oldPos);
+	oldPos = pos;
+
+	// --- 重力方向制御（今は固定） ---
 	Quaternion gRot = Quaternion::Euler(VECTOR(0.0, 0.0, 0.0));
 
-	// 正面から設定されたY軸分、回転させる
+	// --- 回転設定 ---
 	rotOutX_ = gRot.Mult(Quaternion::AngleAxis(angles_.y, Utility::AXIS_Y));
 	rot_ = rotOutX_;
 
-	// 注視点
-	VECTOR localPos = rotOutX_.PosAxis(LOCAL_F2T_POS);
-	VECTOR desiredTargetPos = VAdd(pos, localPos);
-
-	// カメラ理想位置
-	localPos = rot_.PosAxis(localPos_);
-	VECTOR desiredCameraPos = VAdd(pos, localPos);
-
-	// カメラの前方向（Z軸）ベクトル
+	// --- カメラ方向ベクトル ---
 	VECTOR forward = rot_.PosAxis(VGet(0, 0, 1));
 	VECTOR up = rot_.PosAxis(VGet(0, 1, 0));
 
-	// 現在との差
+	// --- プレイヤーの移動方向成分を前方向に投影 ---
+	float speedFront = velocity.x * forward.x + velocity.y * forward.y + velocity.z * forward.z;
+
+	// --- 注視点 ---
+	VECTOR localPos = rotOutX_.PosAxis(LOCAL_F2T_POS);
+	VECTOR desiredTargetPos = VAdd(pos, localPos);
+
+	// --- 移動速度に応じて注視点を前に押し出す ---
+	float lookAhead = std::clamp(speedFront * 15.0f, -100.0f, 300.0f);
+	desiredTargetPos = VAdd(desiredTargetPos, VScale(forward, lookAhead));
+
+	// --- カメラ理想位置 ---
+	localPos = rot_.PosAxis(localPos_);
+	VECTOR desiredCameraPos = VAdd(pos, localPos);
+
+	// --- 差分 ---
 	VECTOR diff = VSub(desiredCameraPos, pos_);
 
-	// forward方向成分を抽出（前後移動）
+	// forward方向成分
 	float front = diff.x * forward.x + diff.y * forward.y + diff.z * forward.z;
 	VECTOR frontMove = VScale(forward, front);
 
-	// 縦方向成分を抽出（上方向）
+	// up方向成分
 	float upAmount = diff.x * up.x + diff.y * up.y + diff.z * up.z;
 	VECTOR upMove = VScale(up, upAmount);
 
-	// 残りをsideMoveとして計算（横移動）
+	// side方向成分
 	VECTOR temp = VAdd(frontMove, upMove);
 	VECTOR sideMove = VSub(diff, temp);
 
-	// --- 各軸別補間係数 ---
-	const float rateFront = 0.4f;	// 前後：速く追従
-	const float rateSide = 0.1f;	// 横：なめらか
-	const float rateUp = 0.4f;		// 縦：速く追従
+	// --- 補間係数 ---
+	const float rateFront = 0.9f;	// 前後：速く追従
+	const float rateSide = 0.05f;	// 横：なめらか
+	const float rateUp = 0.6f;		// 縦：速く追従
 
-	// 軸ごとに合成
+	// --- カメラ位置補間 ---
 	pos_ = VAdd(pos_,
 		VAdd(
 			VAdd(VScale(frontMove, rateFront),
@@ -255,12 +267,17 @@ void Camera::SyncFollowLeap(void)
 			VScale(upMove, rateUp))
 	);
 
-	// 注視点は即追従（補間なし or わずか）
-	targetPos_.x += (desiredTargetPos.x - targetPos_.x);
-	targetPos_.y += (desiredTargetPos.y - targetPos_.y);
-	targetPos_.z += (desiredTargetPos.z - targetPos_.z);
+	// --- 注視点補間（スムーズに追従） ---
+	const float targetRate = 0.2f;
+	targetPos_.x += (desiredTargetPos.x - targetPos_.x) * targetRate;
+	targetPos_.y += (desiredTargetPos.y - targetPos_.y) * targetRate;
+	targetPos_.z += (desiredTargetPos.z - targetPos_.z) * targetRate;
 
-	// 上方向
+	float dist = VSize(VSub(targetPos_, pos_));
+	float adaptiveRate = std::clamp(0.2f + (10000.0f - dist) * 0.002f, 0.1f, 0.4f);
+	targetPos_ = VAdd(targetPos_, VScale(VSub(desiredTargetPos, targetPos_), adaptiveRate));
+
+	// --- 上方向 ---
 	cameraUp_ = gRot.GetUp();
 }
 

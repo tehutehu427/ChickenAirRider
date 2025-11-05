@@ -15,7 +15,7 @@ Character::~Character(void)
 void Character::Load(void)
 {
 	//キャラクターのステータスを外部から持ってくる
-	unitParam_.fixedMaxSpeed_ = PARAM_NORMAL;
+	unitParam_.fixedMaxSpeed_ = 10.0f;
 	unitParam_.fixedAcceleration_ = PARAM_NORMAL;
 	unitParam_.fixedTurning_ = PARAM_NORMAL;
 	unitParam_.fixedCharge_ = PARAM_NORMAL;
@@ -41,6 +41,9 @@ void Character::Load(void)
 	//モデル
 	trans_.quaRotLocal = Quaternion::AngleAxis(Utility::Deg2RadF(180.0f), Utility::AXIS_Y);
 	trans_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::CHICKEN).handleId_);
+	
+	//アニメーション
+	anim_ = std::make_unique<AnimationController>(trans_.modelId);
 }
 
 void Character::Init(void)
@@ -51,6 +54,9 @@ void Character::Update(void)
 {
 	//モデル用
 	trans_.Update();
+
+	//アニメーション
+	anim_->Update();
 }
 
 void Character::Draw(void)

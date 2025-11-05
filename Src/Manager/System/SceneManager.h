@@ -183,7 +183,7 @@ private:
 	// 外部から生成できない様にする
 	SceneManager(void);
 	// デストラクタも同様
-	~SceneManager(void);
+	~SceneManager(void)override;
 
 	// デルタタイムをリセットする
 	void ResetDeltaTime(void);

@@ -225,6 +225,7 @@ void MachineAction::Flight(void)
 		//移動力を保持
 		flightPow_ = speed_ * delta;
 
+		//飛び立った判定
 		isFlightNow_ = true;
 	}
 
@@ -235,7 +236,16 @@ void MachineAction::Flight(void)
 	axis_.x += flightPow;
 	axis_.x = Utility::Deg2RadF(std::clamp(Utility::Rad2DegF(axis_.x), -45.0f, 45.0f));
 
+	//重力制御
 	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);
 
+	//だんだん落ちていく
 	flightPow_ += delta * (gravPow_.y) + (flightPow * param.flight_);
+
+	//プッシュで
+	if (logic_.IsPush())
+	{
+		//速く落下
+		flightPow_ -= PUSH_FALL;
+	}
 }

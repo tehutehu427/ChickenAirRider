@@ -51,12 +51,11 @@ protected:
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする
 	ResourceManager(void);
-	~ResourceManager(void);
+	~ResourceManager(void)override;
 
 private:
 
 	// リソース管理の対象
-	
 	std::map<SRC, std::unique_ptr<Resource>> resourcesMap_;
 
 	// 読み込み済みリソース

@@ -1,5 +1,4 @@
 #include "../Utility/Utility.h"
-#include "../Manager/System/ResourceManager.h"
 #include "../Common/Geometry/Sphere.h"
 #include "../Common/Geometry/Capsule.h"
 #include "../Common/Geometry/Cube.h"
