@@ -5,6 +5,7 @@
 #include"../Manager/Game/GravityManager.h"
 #include"../Manager/Game/Timer.h"
 #include"../Manager/Game/StageManager.h"
+#include"../Manager/Game/CharacterManager.h"
 #include"../Manager/Game/PlayerManager.h"
 #include"../Object/SkyDome/SkyDome.h"
 #include"../Object/Player/Player.h"
@@ -19,6 +20,7 @@ SceneGame::~SceneGame(void)
 	GravityManager::GetInstance().Destroy();
 	CollisionManager::GetInstance().Destroy();
 	PlayerManager::GetInstance().Destroy();
+	CharacterManager::GetInstance().Destroy();
 	StageManager::GetInstance().Destroy();
 }
 
@@ -36,6 +38,9 @@ void SceneGame::Init(void)
 
 	//ステージ管理の生成
 	StageManager::CreateInstance();
+
+	//キャラクター情報管理の生成
+	CharacterManager::CreateInstance();
 
 	//プレイヤー管理の生成
 	PlayerManager::CreateInstance();

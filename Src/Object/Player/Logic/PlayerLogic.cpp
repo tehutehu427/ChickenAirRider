@@ -130,3 +130,37 @@ const bool PlayerLogic::IsGetOff(void)
     //押していない又は離した
     return false;
 }
+
+const Vector2F PlayerLogic::WalkValue(void)
+{
+    //インスタンス
+    auto& key = KeyConfig::GetInstance();
+
+    //返す値
+    Vector2F movePow = { 0.0f,0.0f };
+
+    //キーボード又はスティックの移動量
+    if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_LEFT, KeyConfig::JOYPAD_NO::PAD1))
+    {
+        //左方向なのでマイナス
+        movePow.x = -MOVE_POW;
+    }
+    else if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_RIGHT, KeyConfig::JOYPAD_NO::PAD1))
+    {
+        //右方向なのでプラス
+        movePow.x = MOVE_POW;
+    }
+
+    if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_FRONT, KeyConfig::JOYPAD_NO::PAD1))
+    {
+        //前方向なのでMOVE_POW
+        movePow.y = TURN_POW;
+    }
+    else if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_BACK, KeyConfig::JOYPAD_NO::PAD1))
+    {
+        //後方向なのでマイナス
+        movePow.y = -MOVE_POW;
+    }
+
+    return movePow;
+}

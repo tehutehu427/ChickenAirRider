@@ -26,20 +26,21 @@ public :
 	~AnimationController(void);
 
 	/// @brief 追加
-	/// @param type アニメーション番号
-	/// @param speed 速度
-	/// @param modelId モデルID
-	void Add(int type, const float speed,int modelId = -1);
+	/// @param _name アニメーション名
+	/// @param _type アニメーション番号
+	/// @param _speed 速度
+	/// @param _modelId モデルID
+	void Add(const std::string _name, const int _animNum, const float _speed, const int _modelId = -1);
 
 	/// @brief アニメーションプレイ
-	/// @param type アニメーション番号
+	/// @param _name アニメーション名
 	/// @param isLoop ループするか
 	/// @param startStep 再生開始フレーム
 	/// @param endStep 再生終了フレーム
 	/// @param isStop アニメーションを止める
 	/// @param isForce 同じアニメーションを再生したい場合はtrue
-	void Play(int type, bool isLoop = true, 
-		float startStep = 0.0f, float endStep = -1.0f, bool isStop = false, bool isForce = false);
+	void Play(const std::string _name, const bool _isLoop = true, 
+		const float _startStep = 0.0f, const float _endStep = -1.0f, const bool _isStop = false, const bool _isForce = false);
 
 	//更新
 	void Update(void);
@@ -48,7 +49,7 @@ public :
 	void SetEndLoop(float startStep, float endStep, float speed);
 
 	// 再生中のアニメーション
-	int GetPlayType(void) const;
+	const std::string GetPlayName(void) const;
 
 	//アニメーションステップゲッタ
 	const float GetAnimStep(void)const;
@@ -65,9 +66,12 @@ private :
 	int modelId_;
 
 	// 種類別のアニメーションデータ
-	std::map<int, Animation> animations_;
+	std::map<std::string, Animation> animations_;
+	
+	//再生中アニメーション名
+	std::string playName_;
 
-	int playType_;
+	//アニメーション情報
 	Animation playAnim_;
 
 	// アニメーションをループするかしないか

@@ -7,6 +7,7 @@ ActionBase::ActionBase(Player& _player, LogicBase& _logic)
 	: player_(_player),
 	logic_(_logic)
 {
+	movePow_ = Utility::VECTOR_ZERO;
 	axis_ = Utility::VECTOR_ZERO;
 }
 
@@ -23,5 +24,13 @@ void ActionBase::Update(void)
 }
 
 void ActionBase::Draw(void)
+{
+}
+
+void ActionBase::UpdateGround(void)
+{
+}
+
+void ActionBase::UpdateFlight(void)
 {
 }

@@ -12,6 +12,8 @@ public:
 	//デストラクタ
 	~PlayerLogic(void)override;
 
+#pragma region 機体
+
 	/// @brief プッシュしたか
 	/// @param  
 	/// @return プッシュの有無(true:プッシュした)
@@ -42,6 +44,17 @@ public:
 	/// @return 機体からの降下の有無(true:降りた)
 	const bool IsGetOff(void) override;
 
+#pragma endregion 機体
+
+#pragma region キャラクター
+
+	/// @brief 歩く
+	/// @param  
+	/// @return 歩きの値
+	const Vector2F WalkValue(void)override;
+
+#pragma endregion キャラクター
+		
 private:
 
 	//回転量
@@ -52,5 +65,8 @@ private:
 
 	//機体を降りるまでのスペシャルボタン押下時間
 	static constexpr float GETOFF_PUSH_TIME = 1.0f;
+
+	//移動量
+	static constexpr float MOVE_POW = 1.0f;
 };
 

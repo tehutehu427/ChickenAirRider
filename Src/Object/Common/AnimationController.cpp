@@ -6,7 +6,7 @@ AnimationController::AnimationController(int modelId)
 {
 	modelId_ = modelId;
 
-	playType_ = -1;
+	playName_ = "";
 	isLoop_ = false;
 
 	isStop_ = false;
@@ -24,72 +24,70 @@ AnimationController::~AnimationController(void)
 	}
 }
 
-void AnimationController::Add(int type, const float speed, int modelId)
+void AnimationController::Add(const std::string _name, const int _animNum, const float _speed, const int _modelId)
 {
 	Animation anim;
-	if (modelId != -1)
+	if (_modelId != -1)
 	{
 		//リソースマネージャでロードしたものを使う
-		anim.model=modelId;
+		anim.model = _modelId;
 	}
 	else
 	{
 		//持ち主のモデル
 		anim.model = modelId_;
 	}
-	anim.animIndex = type;
-	anim.speed = speed;
+	anim.animIndex = _animNum;
+	anim.speed = _speed;
 
 	//指定番号の配列にアニメーションが存在しない場合
-	if (animations_.count(type) == 0)
+	if (animations_.count(_name) == 0)
 	{
 		//追加
-		animations_.emplace(type, anim);
+		animations_.emplace(_name, anim);
 	}
 	//存在する場合
 	else
 	{
 		//上書き
-		animations_[type].model = anim.model;
-		animations_[type].animIndex = anim.animIndex;
-		animations_[type].attachNo = anim.attachNo;
-		animations_[type].totalTime = anim.totalTime;
+		animations_[_name].model = anim.model;
+		animations_[_name].animIndex = anim.animIndex;
+		animations_[_name].attachNo = anim.attachNo;
+		animations_[_name].totalTime = anim.totalTime;
 	}
 }
 
 
-void AnimationController::Play(int type, bool isLoop, 
-	float startStep, float endStep, bool isStop, bool isForce)
+void AnimationController::Play(const std::string _name, const bool _isLoop,
+const float _startStep, const float _endStep, const bool _isStop, const bool _isForce)
 {
 
-	if (playType_ != type || isForce) {
+	if (playName_ != _name || _isForce) {
 
-		if (playType_ != -1)
+		//再生中のアニメーションがあるなら
+		if (playName_ != "")
 		{
 			// モデルからアニメーションを外す
 			playAnim_.attachNo = MV1DetachAnim(modelId_, playAnim_.attachNo);
 		}
 
 		// アニメーション種別を変更
-		playType_ = type;
-		playAnim_ = animations_[type];
+		playName_ = _name;
+		playAnim_ = animations_[_name];
 
 		// 初期化
-		playAnim_.step = startStep;
+		playAnim_.step = _startStep;
 
 		// モデルにアニメーションを付ける
-		int animIdx = type;
-		//if (MV1GetAnimNum(playAnim_.model) > 1)
-		//{
-		//	// アニメーションが複数保存されていたら、番号1を指定
-		//	animIdx = 1;
-		//}
+		int animIdx = animations_[_name].animIndex;
+
+		//アニメーションを割り当てる
 		playAnim_.attachNo = MV1AttachAnim(modelId_, animIdx, playAnim_.model);
 
 		// アニメーション総時間の取得
-		if (endStep > 0.0f)
+		if (_endStep > 0.0f)
 		{
-			playAnim_.totalTime = endStep;
+			playAnim_.totalTime = _endStep;
 		}
 		else
 		{
@@ -97,10 +95,10 @@ void AnimationController::Play(int type, bool isLoop,
 		}
 
 		// アニメーションループ
-		isLoop_ = isLoop;
+		isLoop_ = _isLoop;
 
 		// アニメーションしない
-		isStop_ = isStop;
+		isStop_ = _isStop;
 
 		stepEndLoopStart_ = -1.0f;
 		stepEndLoopEnd_ = -1.0f;
@@ -190,9 +188,9 @@ void AnimationController::SetEndLoop(float startStep, float endStep, float speed
 	endLoopSpeed_ = speed;
 }
 
-int AnimationController::GetPlayType(void) const
+const std::string AnimationController::GetPlayName(void) const
 {
-	return playType_;
+	return playName_;
 }
 
 const float AnimationController::GetAnimStep(void) const

@@ -12,6 +12,9 @@ public:
 	//デストラクタ
 	~NpcLogic(void)override;
 
+
+#pragma region 機体
+
 	/// @brief プッシュしたか
 	/// @param  
 	/// @return プッシュの有無(true:プッシュした)
@@ -41,5 +44,16 @@ public:
 	/// @param  
 	/// @return 機体からの降下の有無(true:降りた)
 	const bool IsGetOff(void) override;
+
+#pragma endregion 機体
+
+#pragma region キャラクター
+
+	/// @brief 歩く
+	/// @param  
+	/// @return 歩きの値
+	const Vector2F WalkValue(void)override;
+
+#pragma endregion キャラクター
 };
 

@@ -11,6 +11,8 @@ public:
 	//デストラクタ
 	virtual ~LogicBase(void);
 
+#pragma region 機体
+
 	/// @brief プッシュしたか
 	/// @param  
 	/// @return プッシュの有無(true:プッシュした)
@@ -40,5 +42,16 @@ public:
 	/// @param  
 	/// @return 機体からの降下の有無(true:降りた)
 	virtual const bool IsGetOff(void) = 0;
+
+#pragma endregion 機体
+
+#pragma region キャラクター
+
+	/// @brief 歩く
+	/// @param  
+	/// @return 歩きの値
+	virtual const Vector2F WalkValue(void) = 0;
+
+#pragma endregion キャラクター
 };
 

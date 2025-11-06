@@ -97,6 +97,11 @@ public:
 		MACHINE_TURN_FRONT,		//機体の前回転
 		MACHINE_TURN_BACK,		//機体の後回転
 
+		CHARACTER_MOVE_RIGHT,	//キャラクターの右移動
+		CHARACTER_MOVE_LEFT,	//キャラクターの左移動
+		CHARACTER_MOVE_FRONT,	//キャラクターの前移動
+		CHARACTER_MOVE_BACK,	//キャラクターの後移動
+
 		CAMERA_TURN_UP,			//カメラの前回転
 		CAMERA_TURN_DOWN,		//カメラの後回転
 
@@ -105,7 +110,7 @@ public:
 
 		DEBUG_CHANGE_TITLE,		//デバッグ用タイトル画面に戻る
 		DEBUG_CHANGE_CLEAR,		//デバッグ用クリア画面に戻る
-		DEBUG_CHANGE_INPUT,			//デバッグ用入力デバイス切り替え
+		DEBUG_CHANGE_INPUT,		//デバッグ用入力デバイス切り替え
 		DATA_INPUT,				//データを入力
 		DATA_EXPORT,			//データを出力
 		SELECT_SKIP,

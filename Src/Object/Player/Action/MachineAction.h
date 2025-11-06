@@ -46,9 +46,6 @@ private:
 	//機体
 	const Machine& machine_;
 
-	//移動力
-	VECTOR movePow_;
-
 	//走行時間カウンタ
 	float driveCnt_;
 
@@ -71,11 +68,8 @@ private:
 	VECTOR gravPow_;
 
 	//状態ごとの更新
-	std::map<bool, std::function<void(void)>> update_;
-
-	//状態ごとの更新
-	void UpdateGround(void);
-	void UpdateFlight(void);
+	void UpdateGround(void)override;
+	void UpdateFlight(void)override;
 
 	//移動
 	void Move(void);

@@ -11,7 +11,6 @@ MachineAction::MachineAction(Player& _player, const Machine _machine, LogicBase&
 	: ActionBase(_player,_logic),
 	machine_(_machine)
 {
-	movePow_ = Utility::VECTOR_ZERO;
 	driveCnt_ = 0.0f;
 	chargeCnt_ = 0.0f;
 	velocity_ = 0.0f;

@@ -28,10 +28,29 @@ public:
 
 private:
 
+	//初期ジャンプ量
+	static constexpr float JUMP_POW = 10.0f;
+
 	//キャラクター
 	Character& chara_;
 
-	//アニメーション番号
-	std::unordered_map<std::string, int> animNum_;
+	//移動量
+	Vector2F walkPow_;
+
+	//ジャンプ量
+	float jumpPow_;
+
+	//状態ごとの更新
+	void UpdateGround(void)override;
+	void UpdateFlight(void)override;
+
+	//歩き
+	void Walk(void);
+
+	//ジャンプ
+	void Jump(void);
+
+	//重力
+	void CalcGravity(void);
 };
 

@@ -35,6 +35,16 @@ protected:
 	//行動判断
 	LogicBase& logic_;
 
+	//移動力
+	VECTOR movePow_;
+
 	//軸ごとの回転用
 	VECTOR axis_;
+
+	//状態ごとの更新
+	std::map<bool, std::function<void(void)>> update_;
+
+	//状態ごとの更新
+	virtual void UpdateGround(void);
+	virtual void UpdateFlight(void);
 };
