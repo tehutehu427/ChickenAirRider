@@ -139,28 +139,58 @@ const Vector2F PlayerLogic::WalkValue(void)
     //返す値
     Vector2F movePow = { 0.0f,0.0f };
 
-    //キーボード又はスティックの移動量
-    if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_LEFT, KeyConfig::JOYPAD_NO::PAD1))
-    {
-        //左方向なのでマイナス
-        movePow.x = -MOVE_POW;
-    }
-    else if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_RIGHT, KeyConfig::JOYPAD_NO::PAD1))
-    {
-        //右方向なのでプラス
-        movePow.x = MOVE_POW;
-    }
+    const float stickPow = 1000.0f;
 
-    if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_FRONT, KeyConfig::JOYPAD_NO::PAD1))
+    if (GetJoypadNum() < 1)
     {
-        //前方向なのでMOVE_POW
-        movePow.y = TURN_POW;
+        //キーボード又はスティックの移動量
+        if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_LEFT, KeyConfig::JOYPAD_NO::PAD1))
+        {
+            //左方向なのでマイナス
+            movePow.x = -MOVE_POW;
+        }
+        else if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_RIGHT, KeyConfig::JOYPAD_NO::PAD1))
+        {
+            //右方向なのでプラス
+            movePow.x = MOVE_POW;
+        }
+
+        if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_FRONT, KeyConfig::JOYPAD_NO::PAD1))
+        {
+            //前方向なのでプラス
+            movePow.y = MOVE_POW;
+        }
+        else if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_BACK, KeyConfig::JOYPAD_NO::PAD1))
+        {
+            //後方向なのでマイナス
+            movePow.y = -MOVE_POW;
+        }
     }
-    else if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_BACK, KeyConfig::JOYPAD_NO::PAD1))
+    else
     {
-        //後方向なのでマイナス
-        movePow.y = -MOVE_POW;
+        //スティック
+        Vector2F stick = key.GetKnockLStickSize(KeyConfig::JOYPAD_NO::PAD1).ToVector2F() / stickPow;
+
+        //スティックの傾き
+        movePow.x = stick.x;
+        movePow.y = -stick.y;
     }
 
     return movePow;
+}
+
+const bool PlayerLogic::IsJump(void)
+{
+    //インスタンス
+    auto& key = KeyConfig::GetInstance();
+
+    //ジャンプが押されたか
+    if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1))
+    {
+        //押された
+        return true;
+    }
+
+    //押されなかった
+    return false;
 }

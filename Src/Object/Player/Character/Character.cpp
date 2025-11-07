@@ -1,7 +1,7 @@
 #include"../pch.h"
 #include"../Utility/Utility.h"
 #include"../../Manager/System/SceneManager.h"
-#include"../../Manager/Game/CharacterManager.h"
+#include"../../Manager/Game/AnimationManager.h"
 #include"../../Manager/System/ResourceManager.h"
 #include "Character.h"
 
@@ -48,13 +48,13 @@ void Character::Load(void)
 	anim_ = std::make_unique<AnimationController>(trans_.modelId);
 
 	//アニメーション番号
-	const auto& animNums = CharacterManager::GetInstance().GetAnimationData("chicken");
+	const auto& animNums = AnimationManager::GetInstance().GetAnimationData("chicken");
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
 	//アニメーション割り当て
 	for (const auto& animNum : animNums)
 	{
-		anim_->Add(animNum.first, animNum.second, delta);
+		anim_->Add(animNum.first, animNum.second, 60.0f);
 	}
 }
 

@@ -52,8 +52,6 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	VECTOR slide = VSub(v, VScale(hit.normal, VDot(v, hit.normal)));
 	player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(slide, remain)));
 
-	player_.SetQuaRot(Quaternion::Euler(hitGeo.GetHitNormal()));
-
 	//Ú’n‚µ‚Ä‚¢‚é‚©
 	if (groundCol->IsHit())
 	{

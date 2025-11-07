@@ -19,6 +19,7 @@ public:
 		float t = 1.0f;        // 0～1：衝突した割合（移動途中の位置）
 		VECTOR point = { 0,0,0 };
 		VECTOR normal = { 0,0,0 };
+		float depth = 0.0f;   
 	};
 
 	//デストラクタ

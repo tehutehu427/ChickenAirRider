@@ -61,6 +61,12 @@ void AnimationController::Add(const std::string _name, const int _animNum, const
 void AnimationController::Play(const std::string _name, const bool _isLoop,
 const float _startStep, const float _endStep, const bool _isStop, const bool _isForce)
 {
+	//アニメーションが存在するか
+	if (!animations_.contains(_name))
+	{
+		std::cout << "アニメーション" + _name + "が存在しません" << std::endl;
+		return;
+	}
 
 	if (playName_ != _name || _isForce) {
 

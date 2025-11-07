@@ -147,7 +147,7 @@ void Camera::ChangeMode(MODE mode)
 		localPos_ = LOCAL_F2C_POS;
 		break;
 	case Camera::MODE::FOLLOW_LEAP:
-		localPos_ = LOCAL_F2C_POS;
+		localPos_ = LOCAL_F2C_LEAP_POS;
 		break;
 	}
 
@@ -228,7 +228,7 @@ void Camera::SyncFollowLeap(void)
 	float speedFront = velocity.x * forward.x + velocity.y * forward.y + velocity.z * forward.z;
 
 	// --- 注視点 ---
-	VECTOR localPos = rotOutX_.PosAxis(LOCAL_F2T_POS);
+	VECTOR localPos = rotOutX_.PosAxis(LOCAL_F2T_LEAP_POS);
 	VECTOR desiredTargetPos = VAdd(pos, localPos);
 
 	// --- 移動速度に応じて注視点を前に押し出す ---
@@ -316,6 +316,25 @@ void Camera::ProcessRot(void)
 {
 	auto& ins = KeyConfig::GetInstance();
 	auto keyType = KeyConfig::TYPE::ALL;
+	if (ins.IsNew(KeyConfig::CONTROL_TYPE::CAMERA_TURN_RIGHT, padNo_, keyType)) { angles_.y += SPEED_MOUSE; }
+	if (ins.IsNew(KeyConfig::CONTROL_TYPE::CAMERA_TURN_LEFT, padNo_, keyType)) { angles_.y -= SPEED_MOUSE; }
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::CAMERA_TURN_UP, padNo_, keyType)) { angles_.x += SPEED_MOUSE; }
+	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::CAMERA_TURN_DOWN, padNo_, keyType)) { angles_.x -= SPEED_MOUSE; }
+
+	//if (angles_.x < FPS_LIMIT_X_UP_RAD)
+	//{
+	//	angles_.x = FPS_LIMIT_X_UP_RAD;
+	//}
+	//else if (angles_.x > FPS_LIMIT_X_DW_RAD)
+	//{
+	//	angles_.x = FPS_LIMIT_X_DW_RAD;
+	//}
+}
+
+void Camera::ProcessRotMachine(void)
+{
+	auto& ins = KeyConfig::GetInstance();
+	auto keyType = KeyConfig::TYPE::ALL;
 	if (ins.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_RIGHT, padNo_, keyType)) { angles_.y += rotPow_ * SPEED_ROT; }
 	if (ins.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_LEFT, padNo_, keyType)) { angles_.y -= rotPow_ * SPEED_ROT; }
 }
@@ -385,7 +404,7 @@ void Camera::SetBeforeDrawFollow(void)
 void Camera::SetBeforeDrawFollowLeap(void)
 {
 	// カメラ操作
-	ProcessRot();
+	ProcessRotMachine();
 
 	//追従対象を遅れて追尾
 	SyncFollowLeap();

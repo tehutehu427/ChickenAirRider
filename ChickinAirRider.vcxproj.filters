@@ -198,7 +198,7 @@
     <ClCompile Include="Src\Object\Item\ItemBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\Game\CharacterManager.cpp">
+    <ClCompile Include="Src\Manager\Game\AnimationManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -611,10 +611,10 @@
     <ClInclude Include="Src\Object\Item\ItemBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\Game\CharacterManager.h">
+    <ClInclude Include="Src\Manager\Game\AnimationManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Player\Character\CharaImportData.h">
+    <ClInclude Include="Src\Object\Player\AnimationImportData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

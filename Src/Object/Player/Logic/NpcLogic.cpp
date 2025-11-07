@@ -43,3 +43,8 @@ const Vector2F NpcLogic::WalkValue(void)
 {
     return Vector2F();
 }
+
+const bool NpcLogic::IsJump(void)
+{
+    return false;
+}

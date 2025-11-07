@@ -121,11 +121,16 @@ private:
 
 	//関数ポインタ
 	std::map<STATE, std::function<void(void)>> changeAction_;	//行動切り替え
+	std::map<STATE, std::function<void(void)>> update_;			//行動切り替え
 	std::map<STATE, std::function<void(void)>> draw_;			//状態ごとの描画
 
 	//状態ごとのアクションの変更
 	void ChangeActionNormal(void);
 	void ChangeActionRide(void);
+
+	//状態ごとの更新
+	void UpdateNormal(void);
+	void UpdateRide(void);
 
 	//状態ごとの描画
 	void DrawNormal(void);

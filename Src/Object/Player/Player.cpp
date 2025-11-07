@@ -31,6 +31,11 @@ Player::Player(std::weak_ptr<Camera> _camera)
 	changeAction_[STATE::RIDE_MACHINE] = [this](void) {ChangeActionRide(); };
 
 	//描画
+	update_[STATE::NONE] = [this](void) {};
+	update_[STATE::NORMAL] = [this](void) {UpdateNormal(); };
+	update_[STATE::RIDE_MACHINE] = [this](void) {UpdateRide(); };
+
+	//描画
 	draw_[STATE::NONE] = [this](void) {};
 	draw_[STATE::NORMAL] = [this](void) {DrawNormal(); };
 	draw_[STATE::RIDE_MACHINE] = [this](void) {DrawRide(); };
@@ -88,32 +93,13 @@ void Player::Update(void)
 	//移動更新
 	trans_.pos = movedPos_;
 
-	//カメラ注視点までのベクトル
-	VECTOR vec = Utility::GetMoveVec(trans_.pos, camera_.lock()->GetTargetPos());
-	trans_.quaRot = trans_.quaRot.LookRotation(vec);
-
-	//降りたなら
-	if (state_ == STATE::RIDE_MACHINE && logic_->IsGetOff())
-	{
-		//キャラクターに遷移
-		changeAction_[STATE::NORMAL]();
-	}
-
-	//行動
-	action_->Update();
+	//状態ごとの更新
+	update_[state_]();
 
 	//移動
 	movedPos_ = VAdd(movedPos_, movePow_);
 
-	VECTOR grav = Utility::VECTOR_ZERO;
-	grvMng.CalcGravity(Utility::DIR_D, grav);
-	movedPos_ = VAdd(movedPos_, grav);
-
 	isGrounded_ = false;
-
-	//機体とキャラに座標と回転を同期させる
-	SynchronizeChara();
-	SynchronizeMachine();
 }
 
 void Player::Draw(void)
@@ -164,12 +150,60 @@ void Player::ChangeActionNormal(void)
 {
 	//キャラクターの行動に変更
 	action_ = std::make_unique<CharacterAction>(*this, *chara_, *logic_);
+
+	//カメラ状態の変更
+	camera_.lock()->ChangeMode(Camera::MODE::FOLLOW);
+
+	//アニメーションの変更
+	chara_->GetAnim().Play("idle");
 }
 
 void Player::ChangeActionRide(void)
 {
 	//機体の行動に変更
 	action_ = std::make_unique<MachineAction>(*this, *machine_, *logic_);
+
+	//カメラ状態の変更
+	camera_.lock()->ChangeMode(Camera::MODE::FOLLOW_LEAP);
+
+	//アニメーションの変更
+	chara_->GetAnim().Play("ride");
+}
+
+void Player::UpdateNormal(void)
+{
+	//行動
+	action_->Update();
+
+	//移動方向に向く
+	//trans_.quaRot = trans_.quaRot.LookRotation(VGet(movePow_.x, 0.0f, movePow_.z));
+
+	//機体とキャラに座標と回転を同期させる
+	SynchronizeChara();
+
+	//アニメーション
+	chara_->GetAnim().Update();
+}
+
+void Player::UpdateRide(void)
+{
+	//カメラ注視点までのベクトル
+	VECTOR vec = Utility::GetMoveVec(trans_.pos, camera_.lock()->GetTargetPos());
+	trans_.quaRot = trans_.quaRot.LookRotation(vec);
+
+	//降りたなら
+	if (state_ == STATE::RIDE_MACHINE && logic_->IsGetOff())
+	{
+		//キャラクターに遷移
+		ChangeState(STATE::NORMAL);
+	}
+
+	//行動
+	action_->Update();
+
+	//機体とキャラに座標と回転を同期させる
+	SynchronizeChara();
+	SynchronizeMachine();
 }
 
 void Player::DrawNormal(void)

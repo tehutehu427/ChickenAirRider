@@ -30,7 +30,8 @@ public:
 	static constexpr VECTOR DEFAULT_CAMERA_POS = { 0.0f, 100.0f, -500.0f };
 
 	// 追従位置からカメラ位置までの相対座標
-	static constexpr VECTOR LOCAL_F2C_POS = { 0.0f, 150.0f, -200.0f };
+	static constexpr VECTOR LOCAL_F2C_POS = { 0.0f, 30.0f, -200.0f };
+	static constexpr VECTOR LOCAL_F2C_LEAP_POS = { 0.0f, 150.0f, -200.0f };
 	//static constexpr VECTOR LOCAL_F2C_POS = { 0.0f, -1000.0f, -200.0f };
 
 	//FPSの時の相対座標
@@ -47,6 +48,7 @@ public:
 
 	// 追従位置から注視点までの相対座標
 	static constexpr VECTOR LOCAL_F2T_POS = { 0.0f, 0.0f, 200.0f };
+	static constexpr VECTOR LOCAL_F2T_LEAP_POS = { 0.0f, 0.0f, 200.0f };
 
 	// カメラのX回転上限度角
 	static constexpr float LIMIT_X_UP_RAD = 60.0f * (DX_PI_F / 180.0f);
@@ -189,6 +191,7 @@ private:
 
 	// カメラ操作
 	void ProcessRot(void);
+	void ProcessRotMachine(void);
 	void ProcessZoom(void);
 
 	//マウスでのカメラ操作

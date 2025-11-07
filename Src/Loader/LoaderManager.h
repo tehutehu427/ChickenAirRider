@@ -11,6 +11,7 @@ class LoaderManager : public Singleton<LoaderManager<T>>
     //継承元のコンストラクタ等にアクセスするため
     using LoaderType = LoaderManager<T>;
     friend class Singleton<LoaderType>;
+
 public:
 
     /// @brief ファイルの全データを取得

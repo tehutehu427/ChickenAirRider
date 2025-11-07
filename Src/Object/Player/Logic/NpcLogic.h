@@ -54,6 +54,11 @@ public:
 	/// @return 歩きの値
 	const Vector2F WalkValue(void)override;
 
+	/// @brief ジャンプの有無
+	/// @param  
+	/// @return true:ジャンプした
+	const bool IsJump(void)override;
+
 #pragma endregion キャラクター
 };
 

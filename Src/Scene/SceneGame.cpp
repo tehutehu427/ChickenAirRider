@@ -5,7 +5,7 @@
 #include"../Manager/Game/GravityManager.h"
 #include"../Manager/Game/Timer.h"
 #include"../Manager/Game/StageManager.h"
-#include"../Manager/Game/CharacterManager.h"
+#include"../Manager/Game/AnimationManager.h"
 #include"../Manager/Game/PlayerManager.h"
 #include"../Object/SkyDome/SkyDome.h"
 #include"../Object/Player/Player.h"
@@ -20,7 +20,6 @@ SceneGame::~SceneGame(void)
 	GravityManager::GetInstance().Destroy();
 	CollisionManager::GetInstance().Destroy();
 	PlayerManager::GetInstance().Destroy();
-	CharacterManager::GetInstance().Destroy();
 	StageManager::GetInstance().Destroy();
 }
 
@@ -40,7 +39,7 @@ void SceneGame::Init(void)
 	StageManager::CreateInstance();
 
 	//キャラクター情報管理の生成
-	CharacterManager::CreateInstance();
+	AnimationManager::CreateInstance();
 
 	//プレイヤー管理の生成
 	PlayerManager::CreateInstance();
@@ -94,9 +93,6 @@ void SceneGame::Update(void)
 	auto& plMng = PlayerManager::GetInstance();
 	auto camera = SceneManager::GetInstance().GetCamera(0).lock();
 
-	//当たり判定更新
-	colMng.Update();
-
 	//タイマーの更新
 	timer_->Update();
 
@@ -108,6 +104,9 @@ void SceneGame::Update(void)
 
 	//プレイヤーの更新
 	plMng.Update();
+
+	//当たり判定更新
+	colMng.Update();
 
 	//カメラの回転
 	//VECTOR euler = plMng.GetPlayer(0).GetTrans().quaRot.ToEuler();

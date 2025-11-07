@@ -105,6 +105,9 @@ public:
 		CAMERA_TURN_UP,			//カメラの前回転
 		CAMERA_TURN_DOWN,		//カメラの後回転
 
+		CAMERA_TURN_RIGHT,		//カメラの右回転(キャラクター用)
+		CAMERA_TURN_LEFT,		//カメラの左回転(キャラクター用)
+
 		PUSH_BUTTON,			//プッシュボタン
 		SPECIAL_BUTTON,			//スペシャルボタン
 

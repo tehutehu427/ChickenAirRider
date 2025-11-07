@@ -52,6 +52,11 @@ public:
 	/// @return 歩きの値
 	virtual const Vector2F WalkValue(void) = 0;
 
+	/// @brief ジャンプの有無
+	/// @param  
+	/// @return true:ジャンプした
+	virtual const bool IsJump(void) = 0;
+
 #pragma endregion キャラクター
 };
 

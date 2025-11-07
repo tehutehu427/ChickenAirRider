@@ -29,16 +29,22 @@ public:
 private:
 
 	//初期ジャンプ量
-	static constexpr float JUMP_POW = 10.0f;
+	static constexpr float JUMP_POW = 100.0f;
+
+	//移動量
+	static constexpr float WALK_POW = 10.0f;
 
 	//キャラクター
 	Character& chara_;
 
 	//移動量
-	Vector2F walkPow_;
+	VECTOR walkPow_;
 
 	//ジャンプ量
-	float jumpPow_;
+	VECTOR jumpPow_;
+
+	//向く方向
+	Quaternion rot_;
 
 	//状態ごとの更新
 	void UpdateGround(void)override;

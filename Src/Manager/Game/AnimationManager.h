@@ -1,19 +1,15 @@
 #pragma once
 #include "../Common/Singleton.h"
-#include "../Object/Player/Character/CharaImportData.h"
 
-class CharacterManager
+class AnimationManager : public Singleton<AnimationManager>
 {
+	//継承元のコンストラクタ等にアクセスするため
+	friend class Singleton<AnimationManager>;
+
 public:
 
-	//インスタンス生成
-	static void CreateInstance(void);
-
-	//インスタンス取得
-	static CharacterManager& GetInstance(void) { return *instance_; }
-
 	//読み込み
-	void Init(void);
+	void Init(void)override;
 
 	//解放
 	void Destroy(void);
@@ -25,16 +21,13 @@ public:
 
 private:
 
-	//静的インスタンス
-	static CharacterManager* instance_;
-
 	//アニメーション名に
 	std::unordered_map<std::string, std::unordered_map<std::string, int>> anim_;
 
 	//コンストラクタ
-	CharacterManager(void);
+	AnimationManager(void);
 
 	//デストラクタ
-	~CharacterManager(void);
+	~AnimationManager(void)override;
 };
 

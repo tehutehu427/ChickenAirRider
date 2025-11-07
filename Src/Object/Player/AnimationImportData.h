@@ -1,8 +1,10 @@
 #pragma once
+#include"../Lib/nlohmann/json.hpp"
+#include<iostream>
 #include<unordered_map>
 #include<string>
 
-struct CharaImportData
+struct AnimationImportData
 {
 	//名前
 	std::string name;
@@ -12,7 +14,7 @@ struct CharaImportData
 };
 
 //Json呼び出し
-inline void FromJson(const nlohmann::json& _j, CharaImportData& _data)
+inline void FromJson(const nlohmann::json& _j, AnimationImportData& _data)
 {
 	//名前
 	if (_j.contains("name"))
@@ -40,7 +42,7 @@ inline void FromJson(const nlohmann::json& _j, CharaImportData& _data)
 	}
 }
 
-inline void FromCsv(std::stringstream& _ss, CharaImportData& _s)
+inline void FromCsv(std::stringstream& _ss, AnimationImportData& _s)
 {
 	////格納内容
 	//std::string token;
