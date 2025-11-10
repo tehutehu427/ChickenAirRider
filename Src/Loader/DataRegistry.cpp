@@ -14,6 +14,9 @@ void DataRegistry::CreateAll(void)
 	//ステージの情報
 	LoaderManager<StageImportData>::CreateInstance();
 
-	//キャラクター情報
+	//アニメーション情報
+	LoaderManager<AnimationImportData>::CreateInstance();
+
+	//機体情報
 	LoaderManager<AnimationImportData>::CreateInstance();
 }

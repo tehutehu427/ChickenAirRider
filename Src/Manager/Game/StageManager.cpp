@@ -25,26 +25,14 @@ void StageManager::Load(void)
 
 void StageManager::Init(void)
 {
-	//タグ
-	std::set<Collider::TAG> tags;
-
 	//ステージの作成
 	for (const auto& data : importData_)
 	{
-		//stringから変換
-		for(const auto& tagName : data.tags)
-		{
-			tags.emplace(tags_[tagName]);
-		}
-
 		//モデルの作成
 		int modelId = modelId_[data.name]();
 
 		//ステージの生成
-		stages_.emplace_back(std::make_unique<StageObject>(data, modelId, tags));
-
-		//削除
-		tags.clear();
+		stages_.emplace_back(std::make_unique<StageObject>(data, modelId, tag_[data.tag]));
 	}
 
 	//初期化
@@ -95,8 +83,8 @@ StageManager::StageManager(void)
 	};
 
 	//タグ
-	tags_["normalObject"] = Collider::TAG::NORMAL_OBJECT;
-	tags_["ground"] = Collider::TAG::GROUND;
+	tag_["normalObject"] = Collider::TAG::NORMAL_OBJECT;
+	tag_["ground"] = Collider::TAG::GROUND;
 }
 
 StageManager::~StageManager(void)

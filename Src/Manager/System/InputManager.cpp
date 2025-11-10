@@ -198,9 +198,16 @@ bool InputManager::IsTrgUp(int key) const
 	return Find(key).keyTrgUp;
 }
 
-bool InputManager::IsTrgHold(int key, float _holdTime) const
+bool InputManager::IsTrgHold(int key, float _holdTime, bool _isReset)
 {
-	return Find(key).keyTrgHoldCnt >= _holdTime;
+	if (Find(key).keyTrgHoldCnt >= _holdTime)
+	{
+		//リセットの有無
+		if(_isReset)keyInfos_[key].keyTrgHoldCnt = 0.0f;
+
+		return true;
+	}
+	return false;
 }
 
 Vector2 InputManager::GetMousePos(void) const
@@ -466,9 +473,17 @@ bool InputManager::IsPadBtnTrgUp(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN 
 	return padInfos_[static_cast<int>(no)].IsTrgUp[static_cast<int>(btn)];
 }
 
-bool InputManager::IsPadBtnTrgHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN btn, float _holdTime) const
+bool InputManager::IsPadBtnTrgHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN btn, float _holdTime, bool _isReset)
 {
-	return padInfos_[static_cast<int>(no)].IsTrgHoldCnt[static_cast<int>(btn)] >= _holdTime;
+	if (padInfos_[static_cast<int>(no)].IsTrgHoldCnt[static_cast<int>(btn)] >= _holdTime)
+	{
+		//リセットの有無
+		if(_isReset)padInfos_[static_cast<int>(no)].IsTrgHoldCnt[static_cast<int>(btn)] = 0.0f;
+
+		return true;
+	}
+
+	return false;
 }
 
 bool InputManager::IsStickNew(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick) const
@@ -531,7 +546,7 @@ bool InputManager::IsStickUp(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK st
 	return false;
 }
 
-bool InputManager::IsStickHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick, float _holdTime) const
+bool InputManager::IsStickHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick, float _holdTime, bool _isReset)
 {
 	for (auto& stickInfo : stickInfos_)
 	{
@@ -545,7 +560,15 @@ bool InputManager::IsStickHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK 
 			{
 				continue;
 			}
-			return stickI.keyTrgHoldCnt >= _holdTime;
+
+			if (stickI.keyTrgHoldCnt >= _holdTime)
+			{
+				if (_isReset)stickI.keyTrgHoldCnt = 0.0f;
+
+				return true;
+			}
+
+			return false;
 		}
 	}
 	return false;
@@ -566,9 +589,16 @@ bool InputManager::IsMouseTrgDown(KeyConfig::MOUSE mouse)
 	return FindMouse(mouse).keyTrgDown;
 }
 
-bool InputManager::IsMouseTrgHold(KeyConfig::MOUSE mouse, float _holdTime)
+bool InputManager::IsMouseTrgHold(KeyConfig::MOUSE mouse, float _holdTime, bool _isReset)
 {
-	return FindMouse(mouse).keyTrgHoldCnt >= _holdTime;
+	if (FindMouse(mouse).keyTrgHoldCnt >= _holdTime)
+	{
+		//リセットの有無
+		if (_isReset)mouseInfos_[mouse].keyTrgHoldCnt = 0.0f;
+
+		return true;
+	}
+	return false;
 }
 
 

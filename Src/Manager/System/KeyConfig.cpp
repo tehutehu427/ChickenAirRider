@@ -292,7 +292,7 @@ bool KeyConfig::IsTrgUp(CONTROL_TYPE cType, JOYPAD_NO no, TYPE type)
 	return false;
 }
 
-bool KeyConfig::IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _holdTime, TYPE type)
+bool KeyConfig::IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _holdTime, bool _isReset, TYPE type)
 {
 	if (type == TYPE::KEYBOARD_MOUSE || type == TYPE::ALL)
 	{
@@ -304,7 +304,7 @@ bool KeyConfig::IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _ho
 			}
 			for (auto keyI : key.second)
 			{
-				if (inputManager_->IsTrgHold(keyI,_holdTime))
+				if (inputManager_->IsTrgHold(keyI,_holdTime, _isReset))
 				{
 					return true;
 				}
@@ -318,7 +318,7 @@ bool KeyConfig::IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _ho
 			}
 			for (auto mouseI : mouse.second)
 			{
-				if (inputManager_->IsMouseTrgHold(mouseI, _holdTime))
+				if (inputManager_->IsMouseTrgHold(mouseI, _holdTime, _isReset))
 				{
 					return true;
 				}
@@ -335,7 +335,7 @@ bool KeyConfig::IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _ho
 			}
 			for (auto conI : con.second)
 			{
-				if (inputManager_->IsPadBtnTrgHold(no, conI,_holdTime))
+				if (inputManager_->IsPadBtnTrgHold(no, conI,_holdTime,_isReset))
 				{
 					return true;
 				}
@@ -349,7 +349,7 @@ bool KeyConfig::IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _ho
 			}
 			for (auto stickI : stick.second)
 			{
-				if (inputManager_->IsStickHold(no, stickI,_holdTime))
+				if (inputManager_->IsStickHold(no, stickI,_holdTime,_isReset))
 				{
 					return true;
 				}

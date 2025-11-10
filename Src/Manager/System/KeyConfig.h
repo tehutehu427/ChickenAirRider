@@ -153,9 +153,11 @@ public:
 	/// @brief キーが保持されているか(離された瞬間のみ)
 	/// @param cType 操作名
 	/// @param no ゲームコントローラーの番号
+	/// @param _holdTime 保持時間
+	/// @param _isReset 判定後のリセットの有無
 	/// @param type 入力タイプ
 	/// @return true:押されている
-	bool IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _holdTime, TYPE type = TYPE::ALL);
+	bool IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _holdTime, bool _isReset = false, TYPE type = TYPE::ALL);
 
 	/// @brief 対応キーを追加
 	/// @param type キーの種類

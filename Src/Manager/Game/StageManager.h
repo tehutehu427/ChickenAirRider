@@ -50,7 +50,7 @@ private:
 
 	//名前管理
 	std::unordered_map<std::string, std::function<int(void)>> modelId_;
-	std::unordered_map<std::string, Collider::TAG> tags_;
+	std::unordered_map<std::string, Collider::TAG> tag_;
 
 	//静的インスタンス
 	static StageManager* instance_;

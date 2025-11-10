@@ -12,7 +12,7 @@ public:
 	/// @param _player 親情報
 	/// @param _machine 機体の情報
 	/// @param _logic 行動情報
-	MachineAction(Player& _player, const Machine _machine, LogicBase& _logic);
+	MachineAction(Player& _player, const Machine& _machine, LogicBase& _logic);
 
 	//デストラクタ
 	~MachineAction(void)override;
@@ -42,6 +42,10 @@ private:
 
 	//プッシュの落下補正
 	static constexpr float PUSH_FALL = 20.0f;
+
+	//ブレーキ力
+	static constexpr float BRAKE_POW = 100.0f;
+	static constexpr float TURN_BRAKE_POW = BRAKE_POW / 5.0f;
 
 	//機体
 	const Machine& machine_;

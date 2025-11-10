@@ -7,7 +7,7 @@
 #include "../Logic/LogicBase.h"
 #include "MachineAction.h"
 
-MachineAction::MachineAction(Player& _player, const Machine _machine, LogicBase& _logic)
+MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase& _logic)
 	: ActionBase(_player,_logic),
 	machine_(_machine)
 {
@@ -104,20 +104,21 @@ void MachineAction::Move(void)
 
 	//加速力を元にだんだん最高速まで速度を増やす
 
-	//チャージ中なら何もしない
-	if (!logic_.StartCharge())
+	//チャージ中　かつ　地上にいないなら加速しない
+	if (!logic_.StartCharge() && player_.IsGrounded())
 	{
-		//最高速の制限
-		if (speed_ > param.maxSpeed_ * BASE_MAX_SPEED)
-		{
-			//減速なのでカウンタ減少
-			driveCnt_ -= delta;
-		}
-		else
+		if(speed_ < param.maxSpeed_ * BASE_MAX_SPEED)
 		{
 			//カウンタ
 			driveCnt_ += delta;
 		}
+	}
+
+	//最高速の制限　又は　飛行中なら
+	if (speed_ > param.maxSpeed_ * BASE_MAX_SPEED || !player_.IsGrounded())
+	{
+		//減速なのでカウンタ減少
+		driveCnt_ -= delta;
 	}
 
 	//速度の方程式に当てはめる
@@ -155,12 +156,12 @@ void MachineAction::Charge(void)
 	if (logic_.TurnValue().x == 0.0f)
 	{
 		//減速
-		driveCnt_ -= delta * 50.0f;
+		driveCnt_ -= delta * BRAKE_POW;
 	}
 	else
 	{
 		//減速
-		driveCnt_ -= delta * 50.0f / 10.0f;
+		driveCnt_ -= delta * TURN_BRAKE_POW;
 	}
 }
 
@@ -204,7 +205,7 @@ void MachineAction::Turn(void)
 	turnPow += turnPow > 0.0f ? param.turning_ * delta
 		: -param.turning_ * delta;
 
-	turnPow = logic_.StartCharge() ? turnPow * 2.0f : turnPow;
+	if(player_.IsGrounded())turnPow = logic_.StartCharge() ? turnPow * 2.0f : turnPow;
 
 	//Y回転を設定
 	player_.GetCamera().lock()->SetRotPow(std::fabsf(Utility::Deg2RadF(turnPow)));
@@ -240,11 +241,4 @@ void MachineAction::Flight(void)
 
 	//だんだん落ちていく
 	flightPow_ += delta * (gravPow_.y) + (flightPow * param.flight_);
-
-	//プッシュで
-	if (logic_.IsPush())
-	{
-		//速く落下
-		flightPow_ -= PUSH_FALL;
-	}
 }

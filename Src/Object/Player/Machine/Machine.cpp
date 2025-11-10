@@ -1,10 +1,14 @@
 #include"../pch.h"
 #include"../../Manager/System/ResourceManager.h"
+#include "../Object/Common/Geometry/Sphere.h"
 #include "Machine.h"
 
-Machine::Machine(void)
+Machine::Machine(const int _modelId, const float _radius)
 {
 	trans_ = Transform();
+	trans_.modelId = _modelId;
+	radius_ = _radius;
+	health_ = 0.0f;
 }
 
 Machine::~Machine(void)
@@ -41,7 +45,6 @@ void Machine::Load(void)
 	unitParam_.boostPower_ = 6;
 
 	//モデル
-	trans_.modelId = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::WAKABA);
 	trans_.scl = MODEL_SIZE;
 	trans_.localPos.y -= 20.0f;
 }
@@ -58,5 +61,30 @@ void Machine::Update(void)
 void Machine::Draw(void)
 {
 	MV1DrawModel(trans_.modelId);
-	//DrawSphere3D(trans_.pos, 30.0f, 20, 0xff0000, 0xff0000, true);
+
+	for (const auto& col : collider_)
+	{
+		col->GetGeometry().Draw();
+	}
+}
+
+void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
+{
+}
+
+void Machine::CreateCol(void)
+{
+	//コライダ生成
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, radius_);
+	MakeCollider(Collider::TAG::MACHINE, std::move(geo), { Collider::TAG::MACHINE_RIDE });
+
+	//乗り判定コライダ
+	geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, RIDE_COL);
+	MakeCollider(Collider::TAG::MACHINE_RIDE, std::move(geo), { Collider::TAG::MACHINE,Collider::TAG::MACHINE_RIDE });
+}
+
+void Machine::DeleteCol(void)
+{
+	//コライダ削除
+	DeleteAllCollider();
 }

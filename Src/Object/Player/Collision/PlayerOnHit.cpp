@@ -1,5 +1,6 @@
 #include "../pch.h"
 #include "../Player.h"
+#include "../Manager/Game/MachineManager.h"
 #include "../Action/ActionBase.h"
 #include "PlayerOnHit.h"
 
@@ -9,6 +10,8 @@ PlayerOnHit::PlayerOnHit(Player& _player)
 	//タグごとのヒット処理格納
 	onHit_[Collider::TAG::NORMAL_OBJECT] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
 	onHit_[Collider::TAG::GROUND] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
+	onHit_[Collider::TAG::MACHINE] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
+	onHit_[Collider::TAG::MACHINE_RIDE] = [this](const std::weak_ptr<Collider> _hitCol) {RideMachineOnHit(_hitCol); };
 }
 
 PlayerOnHit::~PlayerOnHit(void)
@@ -18,13 +21,10 @@ PlayerOnHit::~PlayerOnHit(void)
 void PlayerOnHit::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
 	//タグ
-	const auto& hitTags = _hitCol.lock()->GetTags();
+	const auto& hitTag = _hitCol.lock()->GetTag();
 
-	for (const auto& hitTag : hitTags)
-	{
-		//タグごとのヒット処理
-		onHit_[hitTag](_hitCol);
-	}
+	//タグごとのヒット処理
+	onHit_[hitTag](_hitCol);
 }
 
 void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
@@ -33,7 +33,7 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 
 	//コライダ
 	auto& mainCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::MAIN)];
-	auto& groundCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED)];
+	auto& groundFrontCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED_FRONT)];
 
 	//位置の補正
 	const auto& hit = mainCol->GetGeometry().GetHitResult();
@@ -53,9 +53,27 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(slide, remain)));
 
 	//接地しているか
-	if (groundCol->IsHit())
+	if (groundFrontCol->IsHit())
 	{
 		player_.GetAction().ResetAxisX();
 		player_.SetIsGrounded(true);
 	}
+}
+
+void PlayerOnHit::RideMachineOnHit(const std::weak_ptr<Collider> _hitCol)
+{
+	//機体に乗っているなら処理なし
+	if (player_.GetState() == Player::STATE::RIDE_MACHINE)return;
+
+	//スペシャルボタンを押し続けた
+	if (!player_.GetLogic().IsGetOff())return;
+
+	//機体確定なので型変換
+	const Machine& machine = dynamic_cast<const Machine&>(_hitCol.lock()->GetParent());
+
+	//機体管理
+	auto& machineMng = MachineManager::GetInstance();
+
+	//機体を比較し取得
+	player_.RideMachine(std::move(machineMng.GetMachine(machine)));
 }

@@ -5,6 +5,7 @@
 #include"../Manager/Game/GravityManager.h"
 #include"../Manager/Game/Timer.h"
 #include"../Manager/Game/StageManager.h"
+#include"../Manager/Game/MachineManager.h"
 #include"../Manager/Game/AnimationManager.h"
 #include"../Manager/Game/PlayerManager.h"
 #include"../Object/SkyDome/SkyDome.h"
@@ -37,6 +38,9 @@ void SceneGame::Init(void)
 
 	//ステージ管理の生成
 	StageManager::CreateInstance();
+
+	//機体管理の生成
+	MachineManager::CreateInstance();
 
 	//キャラクター情報管理の生成
 	AnimationManager::CreateInstance();
@@ -90,6 +94,7 @@ void SceneGame::Update(void)
 	//インスタンス
 	auto& colMng = CollisionManager::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
+	auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto camera = SceneManager::GetInstance().GetCamera(0).lock();
 
@@ -101,6 +106,9 @@ void SceneGame::Update(void)
 
 	//ステージ更新
 	stgMng.Update();
+
+	//機体更新
+	machineMng.Update();
 
 	//プレイヤーの更新
 	plMng.Update();
@@ -128,6 +136,7 @@ void SceneGame::Draw(void)
 
 	//インスタンス
 	auto& stgMng = StageManager::GetInstance();
+	auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 
 	//タイマーの描画
@@ -138,6 +147,9 @@ void SceneGame::Draw(void)
 
 	//ステージの描画
 	stgMng.Draw();
+
+	//機体の描画
+	machineMng.Draw();
 
 	//プレイヤーの描画
 	plMng.Draw();

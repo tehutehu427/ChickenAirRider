@@ -18,6 +18,9 @@ public :
 		PLAYER3,		//プレイヤー3
 		PLAYER4,		//プレイヤー4
 
+		MACHINE,		//機体
+		MACHINE_RIDE,	//機体の乗り判定
+
 		NORMAL_OBJECT,	//通常オブジェ
 		GROUND,			//地面
 	};
@@ -27,19 +30,19 @@ public :
 	/// @param _tags 自身の衝突用タグ
 	/// @param _geometry 当たり判定の形状
 	/// @param _notHitTags 衝突させないタグ
-	Collider(ObjectBase& _parent, const std::set<TAG> _tags, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags);
+	Collider(ObjectBase& _parent, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags);
 
 	// デストラクタ
 	~Collider(void);
 
 	//衝突用タグの取得
-	inline const std::set<TAG> GetTags(void)const { return tags_; }
+	inline const TAG GetTag(void)const { return myTag_; }
 
 	//当たり判定の形状を取得
 	inline Geometry& GetGeometry(void)const { return *geometry_; }
 
 	//衝突させないタグの取得
-	inline const std::set<TAG> GetNotHitTags(void)const { return notHitTags_; }
+	inline const std::set<TAG>& GetNotHitTags(void)const { return notHitTags_; }
 
 	//親を取得
 	inline const ObjectBase& GetParent(void)const { return parent_; }
@@ -62,8 +65,8 @@ private:
 	//親
 	ObjectBase& parent_;
 
-	// 衝突用タグ
-	std::set<TAG> tags_;
+	// 自身の衝突用タグ
+	TAG myTag_;
 
 	// 衝突しないタグ
 	std::set<TAG> notHitTags_;

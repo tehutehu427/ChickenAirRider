@@ -6,7 +6,7 @@
 #include "../Common/Geometry/Model.h"
 #include "StageObject.h"
 
-StageObject::StageObject(const StageImportData& _data,const int _modelId, const std::set<Collider::TAG> _tags)
+StageObject::StageObject(const StageImportData& _data,const int _modelId, const Collider::TAG _tag)
 {
 	trans_.modelId = _modelId;
 	trans_.pos = _data.position;
@@ -23,7 +23,7 @@ StageObject::StageObject(const StageImportData& _data,const int _modelId, const 
 	
 	//ÉRÉâÉCÉ_ê∂ê¨
 	std::unique_ptr<Geometry> geo = createGeo_[data_.geometry]();
-	MakeCollider(_tags, std::move(geo));
+	MakeCollider(_tag, std::move(geo), { Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT });
 
 	color_ = 0;
 }

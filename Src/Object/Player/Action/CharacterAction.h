@@ -43,6 +43,9 @@ private:
 	//ƒWƒƒƒ“ƒv—Ê
 	VECTOR jumpPow_;
 
+	//d—Í
+	VECTOR gravPow_;
+
 	//Œü‚­•ûŒü
 	Quaternion rot_;
 

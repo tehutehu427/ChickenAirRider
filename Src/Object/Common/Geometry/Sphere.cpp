@@ -114,6 +114,23 @@ const bool Sphere::IsHit(Cube& _cube)
 		else if (fabs((&localHitPos.x)[i] - (&bmax.x)[i]) < eps)
 			(&localNormal.x)[i] = 1.0f;
 	}
+	
+	float dxMin = fabs(localHitPos.x - bmin.x);
+	float dxMax = fabs(localHitPos.x - bmax.x);
+	float dyMin = fabs(localHitPos.y - bmin.y);
+	float dyMax = fabs(localHitPos.y - bmax.y);
+	float dzMin = fabs(localHitPos.z - bmin.z);
+	float dzMax = fabs(localHitPos.z - bmax.z);
+
+	// 最小距離の軸が衝突面
+	float minDist = dxMin;
+	localNormal = VGet(-1, 0, 0);
+
+	if (dxMax < minDist) { minDist = dxMax; localNormal = VGet(1, 0, 0); }
+	if (dyMin < minDist) { minDist = dyMin; localNormal = VGet(0, -1, 0); }
+	if (dyMax < minDist) { minDist = dyMax; localNormal = VGet(0, 1, 0); }
+	if (dzMin < minDist) { minDist = dzMin; localNormal = VGet(0, 0, -1); }
+	if (dzMax < minDist) { minDist = dzMax; localNormal = VGet(0, 0, 1); }
 
 	// --- ワールド座標に戻す ---
 	VECTOR hitWorld = center;
@@ -127,6 +144,7 @@ const bool Sphere::IsHit(Cube& _cube)
 		localNormal.x * obb.axis[0].y + localNormal.y * obb.axis[1].y + localNormal.z * obb.axis[2].y,
 		localNormal.x * obb.axis[0].z + localNormal.y * obb.axis[1].z + localNormal.z * obb.axis[2].z
 	);
+	normalWorld = VNorm(normalWorld);
 
 	hitResult_.point = hitWorld;
 	hitResult_.normal = normalWorld;

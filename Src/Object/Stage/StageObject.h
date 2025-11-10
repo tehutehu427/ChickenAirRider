@@ -10,7 +10,7 @@ class StageObject : public ObjectBase
 {
 public:
 	//コンストラクタ
-	StageObject(const StageImportData& _data, const int _modelId, const std::set<Collider::TAG> _tags);
+	StageObject(const StageImportData& _data, const int _modelId, const Collider::TAG _tag);
 	
 	//デストラクタ
 	~StageObject(void)override;

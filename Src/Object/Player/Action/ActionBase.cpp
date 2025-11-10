@@ -27,6 +27,13 @@ void ActionBase::Draw(void)
 {
 }
 
+void ActionBase::ResetAxisX(void)
+{
+	Quaternion foot = player_.GetFoot();
+
+	axis_.x = foot.ToEuler().x;
+}
+
 void ActionBase::UpdateGround(void)
 {
 }

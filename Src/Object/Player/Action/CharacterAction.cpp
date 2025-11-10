@@ -12,6 +12,7 @@ CharacterAction::CharacterAction(Player& _player, Character& _chara, LogicBase& 
 	update_[false] = [this](void) {UpdateFlight(); };
 	walkPow_ = Utility::VECTOR_ZERO;
 	jumpPow_ = Utility::VECTOR_ZERO;
+	gravPow_ = Utility::VECTOR_ZERO;
 	rot_ = Quaternion();
 }
 
@@ -30,9 +31,13 @@ void CharacterAction::Update(void)
 	//状態ごとの更新
 	update_[player_.IsGrounded()]();
 
+	//重力
+	CalcGravity();
+
 	//最終的な移動力の合算
 	movePow_ = walkPow_;
 	movePow_ = VAdd(movePow_, jumpPow_);
+	movePow_ = VAdd(movePow_, gravPow_);
 
 	//移動量
 	player_.SetMovePow(movePow_);
@@ -96,11 +101,19 @@ void CharacterAction::Jump(void)
 void CharacterAction::CalcGravity(void)
 {
 	//重力
-	VECTOR gravPow;
+	VECTOR gravPow = Utility::VECTOR_ZERO;
 
 	//加算
-	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow);
-	jumpPow_ = VAdd(jumpPow_, gravPow);
+	GravityManager::GetInstance().CalcGravity(player_.GetFoot().PosAxis(Utility::DIR_D), gravPow);
+	gravPow_ = VAdd(gravPow_, gravPow);
+
+	//接地しているなら
+	if (player_.IsGrounded())
+	{
+		//ジャンプ力と重力をなしにする
+		jumpPow_ = Utility::VECTOR_ZERO;
+		gravPow_ = Utility::VECTOR_ZERO;
+	}
 }
 
 void CharacterAction::UpdateGround(void)
@@ -120,9 +133,6 @@ void CharacterAction::UpdateFlight(void)
 {
 	//歩き
 	Walk();
-
-	//重力
-	CalcGravity();
 
 	//ジャンプアニメーション
 	chara_.GetAnim().Play("jump", false);

@@ -2,6 +2,7 @@
 #include "../Utility/Utility.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
+#include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/GravityManager.h"
 #include "../Common/Geometry/Sphere.h"
 #include "../Common/Geometry/Line.h"
@@ -24,6 +25,7 @@ Player::Player(std::weak_ptr<Camera> _camera)
 	movedPos_ = Utility::VECTOR_ZERO;
 	movePow_ = Utility::VECTOR_ZERO;
 	isGrounded_ = false;
+	footLine_ = Quaternion();
 
 	//行動切り替え
 	changeAction_[STATE::NONE] = [this](void) {};
@@ -57,7 +59,12 @@ void Player::Init(void)
 	chara_->Init();
 
 	//機体
-	machine_ = std::make_unique<Machine>();
+	const auto& machineMng = MachineManager::GetInstance();
+	std::string name = "wakaba";
+	int modelId = machineMng.GetInstance().GetModelId(name);
+	float radius = machineMng.GetInstance().GetRadius(name);
+
+	machine_ = std::make_unique<Machine>(modelId, radius);
 	machine_->Load();
 	machine_->Init();
 
@@ -72,15 +79,12 @@ void Player::Init(void)
 
 	//当たり判定生成
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, RADIUS);
-	MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
-
-	//接地用
-	static const Quaternion GROUNDED_LINE = Quaternion();
+	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
 
 	//接地判定用の当たり判定
-	geo = std::make_unique<Line>(trans_.pos, GROUNDED_LINE, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
-	MakeCollider({ Collider::TAG::PLAYER1 }, std::move(geo));
-
+	geo = std::make_unique<Line>(trans_.pos, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
+	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
+	
 	//初期更新
 	Update();
 }
@@ -99,6 +103,14 @@ void Player::Update(void)
 	//移動
 	movedPos_ = VAdd(movedPos_, movePow_);
 
+	//着地していないなら
+	if (!isGrounded_)
+	{
+		//足元の回転をリセット
+		footLine_ = Quaternion();
+	}
+
+	//初期化
 	isGrounded_ = false;
 }
 
@@ -146,6 +158,18 @@ void Player::ChangeState(const STATE& _state)
 	action_->Init();
 }
 
+void Player::RideMachine(std::unique_ptr<Machine> _machine)
+{
+	//コライダ削除
+	_machine->DeleteCol();
+
+	//機体格納
+	machine_ = std::move(_machine);
+
+	//機体乗車
+	ChangeState(STATE::RIDE_MACHINE);
+}
+
 void Player::ChangeActionNormal(void)
 {
 	//キャラクターの行動に変更
@@ -191,15 +215,21 @@ void Player::UpdateRide(void)
 	VECTOR vec = Utility::GetMoveVec(trans_.pos, camera_.lock()->GetTargetPos());
 	trans_.quaRot = trans_.quaRot.LookRotation(vec);
 
+	//行動
+	action_->Update();
+
 	//降りたなら
 	if (state_ == STATE::RIDE_MACHINE && logic_->IsGetOff())
 	{
+		//降りた機体を保存
+		MachineManager::GetInstance().SaveGetOffMachine(std::move(machine_));
+
 		//キャラクターに遷移
 		ChangeState(STATE::NORMAL);
-	}
 
-	//行動
-	action_->Update();
+		//処理終了
+		return;
+	}
 
 	//機体とキャラに座標と回転を同期させる
 	SynchronizeChara();

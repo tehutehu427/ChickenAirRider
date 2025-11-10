@@ -14,6 +14,7 @@ public:
 
 	//当たり判定をする範囲
 	static constexpr float HIT_RANGE_NORMAL = 1000.0f;	//通常の当たり判定距離
+	static constexpr float HIT_RANGE_OBJECT = 2000.0f;	//通常の当たり判定距離
 	static constexpr float HIT_RANGE_GROUND = 15000.0f;	//床の当たり判定距離
 
 	//更新用
@@ -72,12 +73,6 @@ private:
 	/// @param _col2Num 2つ目のコライダ番号
 	/// @return true:当たり判定をする
 	const bool JudgeIsCollision(const int _col1Num, const int _col2Num)const;
-
-	/// @brief タグごとでの当たり判定するかどうか
-	/// @param _tag1 1つ目のタグ
-	/// @param _tag2 2つ目のタグ
-	/// @return true:当たり判定をする
-	const bool JudgeIsColTag(const Collider::TAG _tag1, const Collider::TAG _tag2)const;
 
 	/// @brief 当たり判定
 	/// @param _col1 1つ目のコライダ

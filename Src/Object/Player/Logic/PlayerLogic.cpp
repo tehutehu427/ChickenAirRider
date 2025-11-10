@@ -121,7 +121,7 @@ const bool PlayerLogic::IsGetOff(void)
     auto& key = KeyConfig::GetInstance();
 
     //スペシャルボタンを一定時間押し続けているか
-    if (key.IsTrgHold(KeyConfig::CONTROL_TYPE::SPECIAL_BUTTON, KeyConfig::JOYPAD_NO::PAD1, GETOFF_PUSH_TIME))
+    if (key.IsTrgHold(KeyConfig::CONTROL_TYPE::SPECIAL_BUTTON, KeyConfig::JOYPAD_NO::PAD1, GETOFF_PUSH_TIME, true))
     {
         //押し続けた
         return true;

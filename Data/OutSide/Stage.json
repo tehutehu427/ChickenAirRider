@@ -19,9 +19,7 @@
     },
 
     "geometry": "cube",
-    "tags": [
-      "ground"
-    ],
+    "tag": "ground",
     "localPos1": {
       "x": -10000.0,
       "y": -100.0,
@@ -53,9 +51,7 @@
     },
 
     "geometry": "cube",
-    "tags": [
-      "normalObject"
-    ],
+    "tag": "normalObject",
     "localPos1": {
       "x": -300.0,
       "y": -900.0,
@@ -88,9 +84,7 @@
     },
 
     "geometry": "cube",
-    "tags": [
-      "normalObject"
-    ],
+    "tag": "normalObject",
     "localPos1": {
       "x": -300.0,
       "y": -900.0,

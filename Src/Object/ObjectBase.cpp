@@ -42,7 +42,7 @@ void ObjectBase::ChangeModelColor(const COLOR_F _colorScale)
 	}
 }
 
-void ObjectBase::MakeCollider(const std::set<Collider::TAG> _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags)
+void ObjectBase::MakeCollider(const Collider::TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags)
 {
 	//情報を使ってコライダの作成
 	std::shared_ptr<Collider> collider = std::make_shared<Collider>(*this, _tag, std::move(_geometry), _notHitTags);

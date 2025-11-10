@@ -225,7 +225,7 @@ void Camera::SyncFollowLeap(void)
 	VECTOR up = rot_.PosAxis(VGet(0, 1, 0));
 
 	// --- プレイヤーの移動方向成分を前方向に投影 ---
-	float speedFront = velocity.x * forward.x + velocity.y * forward.y + velocity.z * forward.z;
+	float speedFront = VDot(velocity, forward);
 
 	// --- 注視点 ---
 	VECTOR localPos = rotOutX_.PosAxis(LOCAL_F2T_LEAP_POS);
@@ -243,11 +243,11 @@ void Camera::SyncFollowLeap(void)
 	VECTOR diff = VSub(desiredCameraPos, pos_);
 
 	// forward方向成分
-	float front = diff.x * forward.x + diff.y * forward.y + diff.z * forward.z;
+	float front = VDot(diff, forward);
 	VECTOR frontMove = VScale(forward, front);
 
 	// up方向成分
-	float upAmount = diff.x * up.x + diff.y * up.y + diff.z * up.z;
+	float upAmount = VDot(diff, up);
 	VECTOR upMove = VScale(up, upAmount);
 
 	// side方向成分
@@ -257,7 +257,7 @@ void Camera::SyncFollowLeap(void)
 	// --- 補間係数 ---
 	const float rateFront = 0.9f;	// 前後：速く追従
 	const float rateSide = 0.05f;	// 横：なめらか
-	const float rateUp = 0.6f;		// 縦：速く追従
+	const float rateUp = 0.9f;		// 縦：速く追従
 
 	// --- カメラ位置補間 ---
 	pos_ = VAdd(pos_,

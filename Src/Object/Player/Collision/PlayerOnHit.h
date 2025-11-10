@@ -28,5 +28,6 @@ private:
 
 	//ƒqƒbƒgˆ—
 	void NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol);
+	void RideMachineOnHit(const std::weak_ptr<Collider> _hitCol);
 };
 

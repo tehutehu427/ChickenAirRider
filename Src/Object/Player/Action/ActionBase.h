@@ -25,7 +25,7 @@ public:
 	virtual void Draw(void);
 
 	//X²‰ñ“]‚Ì‰Šú‰»
-	void ResetAxisX(void) { axis_.x = 0.0f; };
+	void ResetAxisX(void);
 
 protected:
 
