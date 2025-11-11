@@ -23,6 +23,8 @@ public :
 
 		NORMAL_OBJECT,	//通常オブジェ
 		GROUND,			//地面
+
+		POWER_UP,		//パワーアップアイテム
 	};
 
 	/// @brief コンストラクタ

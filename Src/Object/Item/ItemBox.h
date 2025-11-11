@@ -1,15 +1,15 @@
 #pragma once
 #include "../ObjectBase.h"
 
-class ItemBase : public ObjectBase
+class ItemBox : public ObjectBase
 {
 public:
 
 	//コンストラクタ
-	ItemBase(VECTOR _pos);
+	ItemBox(VECTOR _pos);
 
 	//デストラクタ
-	~ItemBase(void)override;
+	~ItemBox(void)override;
 
 	//読み込み
 	void Load(void)override;
@@ -27,17 +27,13 @@ public:
 	void OnHit(std::weak_ptr<Collider> _hitCol)override;
 
 	//死亡判定の取得
-	const bool IsDead(void) { return isDead_; }
+	const bool IsDead(void)const { return isDead_; }
 
 private:
 
-	//画像の大きさ
-	static constexpr float IMG_SIZE = 64.0f * 3.0f;
-
-	//半径
-	static constexpr float RADIUS = 100.0f;
+	//当たり判定の半分
+	static constexpr VECTOR BOX_HALF = { 100.0f,100.0f,100.0f };
 
 	//死亡判定
 	bool isDead_;
 };
-

@@ -38,6 +38,9 @@ void MachineManager::Update(void)
 
 		//XV
 		machine->Update();
+
+		//“–‚½‚è”»’è‚Ì®—
+		machine->Sweep();
 	}
 }
 

@@ -8,6 +8,7 @@
 #include"../Manager/Game/MachineManager.h"
 #include"../Manager/Game/AnimationManager.h"
 #include"../Manager/Game/PlayerManager.h"
+#include"../Manager/Game/ItemManager.h"
 #include"../Object/SkyDome/SkyDome.h"
 #include"../Object/Player/Player.h"
 #include "SceneGame.h"
@@ -48,10 +49,14 @@ void SceneGame::Init(void)
 	//プレイヤー管理の生成
 	PlayerManager::CreateInstance();
 
+	//アイテム管理の生成
+	ItemManager::CreateInstance();
+
 	//インスタンス
 	auto& grvMng = GravityManager::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
+	auto& itemMng = ItemManager::GetInstance();
 	auto camera = SceneManager::GetInstance().GetCamera(0).lock();
 
 	//重力
@@ -70,6 +75,9 @@ void SceneGame::Init(void)
 
 	//プレイヤーの初期化
 	plMng.Init();
+
+	//アイテムの初期化
+	itemMng.Init();
 
 	//スカイドーム
 	sky_ = std::make_unique<SkyDome>(plMng.GetPlayer(0).GetTrans().pos);
@@ -96,6 +104,7 @@ void SceneGame::Update(void)
 	auto& stgMng = StageManager::GetInstance();
 	auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
+	auto& itemMng = ItemManager::GetInstance();
 	auto camera = SceneManager::GetInstance().GetCamera(0).lock();
 
 	//タイマーの更新
@@ -113,13 +122,11 @@ void SceneGame::Update(void)
 	//プレイヤーの更新
 	plMng.Update();
 
+	//アイテムの更新
+	itemMng.Update();
+
 	//当たり判定更新
 	colMng.Update();
-
-	//カメラの回転
-	//VECTOR euler = plMng.GetPlayer(0).GetTrans().quaRot.ToEuler();
-	//euler.x = 0.0f;
-	//camera->SetAngles(euler);
 
 	//当たり判定の破棄
 	colMng.Sweep();
@@ -138,6 +145,7 @@ void SceneGame::Draw(void)
 	auto& stgMng = StageManager::GetInstance();
 	auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
+	auto& itemMng = ItemManager::GetInstance();
 
 	//タイマーの描画
 	timer_->Draw();
@@ -153,6 +161,9 @@ void SceneGame::Draw(void)
 
 	//プレイヤーの描画
 	plMng.Draw();
+
+	//アイテムの描画
+	itemMng.Draw();
 }
 
 void SceneGame::Release(void)

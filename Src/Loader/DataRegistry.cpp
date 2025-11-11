@@ -4,6 +4,8 @@
 #include"../Manager/Game/StageManager.h"
 #include"../Object/Stage/StageImportData.h"
 #include"../Object/Player/AnimationImportData.h"
+#include"../Object/Player/Machine/MachineImportData.h"
+#include"../Object/Item/ItemImportData.h"
 #include"DataRegistry.h"
 
 void DataRegistry::CreateAll(void)
@@ -18,5 +20,8 @@ void DataRegistry::CreateAll(void)
 	LoaderManager<AnimationImportData>::CreateInstance();
 
 	//機体情報
-	LoaderManager<AnimationImportData>::CreateInstance();
+	LoaderManager<MachineImportData>::CreateInstance();
+
+	//アイテム情報
+	LoaderManager<ItemImportData>::CreateInstance();
 }

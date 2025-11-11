@@ -27,6 +27,12 @@ public:
 		GLASS,				//草地モデル
 		BUILDING,			//ビルモデル
 
+		//アイテムモデル
+		ITEM_BOX,			//アイテムボックス
+
+		//アイテム画像
+		MAX_SPEED,			//最高速
+
 		//スカイドーム
 		SKY_DOME,			//スカイドーム
 	};

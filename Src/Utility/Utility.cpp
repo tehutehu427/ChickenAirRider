@@ -1,3 +1,4 @@
+#include <random>
 #include "../pch.h"
 #include "../Manager/System/SceneManager.h"
 #include "Utility.h"
@@ -859,4 +860,16 @@ float Utility::PingPongUpdate(const float _value, const float _step, const float
     }
 
     return value;
+}
+
+int Utility::GetRandomValue(int _min, int _max)
+{
+    //ランダムエンジン
+    static std::mt19937 mt(std::random_device{}());
+
+    // min ～ max の範囲で一様分布
+    std::uniform_int_distribution<int> dist(_min, _max);
+
+    //ランダムの値
+    return dist(mt);
 }

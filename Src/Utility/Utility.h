@@ -295,4 +295,10 @@ public:
 	/// @param _dir 増加方向（参照）1なら増加中、-1なら減少中
 	/// @return 処理後の値
 	static float PingPongUpdate(const float _value, const float _step, const float _max, const float _min, int& _dir);
+
+	/// @brief ランダムの値を取得
+	/// @param _min 最小値
+	/// @param _max 最大値
+	/// @return ランダムの値
+	static int GetRandomValue(int _min, int _max);
 };

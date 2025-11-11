@@ -1,5 +1,6 @@
 #include"../pch.h"
 #include "../Utility/Utility.h"
+#include "../Manager/System/SceneManager.h"
 #include "../Manager/System/Camera.h"
 #include "../Manager/Game/GravityManager.h"
 #include "CharacterAction.h"
@@ -28,19 +29,14 @@ void CharacterAction::Init(void)
 
 void CharacterAction::Update(void)
 {
-	//状態ごとの更新
-	update_[player_.IsGrounded()]();
-
 	//重力
 	CalcGravity();
 
-	//最終的な移動力の合算
-	movePow_ = walkPow_;
-	movePow_ = VAdd(movePow_, jumpPow_);
-	movePow_ = VAdd(movePow_, gravPow_);
+	//状態ごとの更新
+	update_[player_.IsGrounded()]();
 
-	//移動量
-	player_.SetMovePow(movePow_);
+	//最終的な移動力の合算
+	player_.SetMovePow(VGet(walkPow_.x, jumpPow_.y, walkPow_.z));
 }
 
 void CharacterAction::Draw(void)
@@ -104,8 +100,9 @@ void CharacterAction::CalcGravity(void)
 	VECTOR gravPow = Utility::VECTOR_ZERO;
 
 	//加算
-	GravityManager::GetInstance().CalcGravity(player_.GetFoot().PosAxis(Utility::DIR_D), gravPow);
-	gravPow_ = VAdd(gravPow_, gravPow);
+	GravityManager::GetInstance().CalcGravity(player_.GetFoot().PosAxis(Utility::DIR_D), gravPow_,100.0f);
+
+	jumpPow_ = VAdd(jumpPow_, gravPow_);
 
 	//接地しているなら
 	if (player_.IsGrounded())

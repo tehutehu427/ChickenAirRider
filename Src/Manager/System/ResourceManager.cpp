@@ -15,6 +15,12 @@ void ResourceManager::Init(void)
 
 #pragma region 画像
 
+	//アイテム画像のパス
+	std::wstring itemImage = PATH_IMG + L"Item/";
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"MaxSpeed.png");
+	resourcesMap_.emplace(SRC::MAX_SPEED, std::move(res));
+
 #pragma endregion 
 
 
@@ -44,6 +50,12 @@ void ResourceManager::Init(void)
 
 	res = std::make_unique<Resource>(Resource::TYPE::MODEL, stagePath + L"Building.mv1");
 	resourcesMap_.emplace(SRC::BUILDING, std::move(res));
+
+	//アイテムのパス
+	std::wstring itemPath = PATH_MDL + L"Item/";
+
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, itemPath + L"ItemBox.mv1");
+	resourcesMap_.emplace(SRC::ITEM_BOX, std::move(res));
 
 	//スカイドームのパス
 	std::wstring skyDomePath = PATH_MDL + L"SkyDome/";

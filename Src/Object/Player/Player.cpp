@@ -58,12 +58,13 @@ void Player::Init(void)
 	chara_->Load();
 	chara_->Init();
 
-	//機体
+	//初期機体情報
 	const auto& machineMng = MachineManager::GetInstance();
 	std::string name = "wakaba";
 	int modelId = machineMng.GetInstance().GetModelId(name);
 	float radius = machineMng.GetInstance().GetRadius(name);
 
+	//機体
 	machine_ = std::make_unique<Machine>(modelId, radius);
 	machine_->Load();
 	machine_->Init();
@@ -83,6 +84,10 @@ void Player::Init(void)
 
 	//接地判定用の当たり判定
 	geo = std::make_unique<Line>(trans_.pos, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
+	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
+
+	//移動後接地判定
+	geo = std::make_unique<Line>(movedPos_, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
 	
 	//初期更新
@@ -198,9 +203,6 @@ void Player::UpdateNormal(void)
 {
 	//行動
 	action_->Update();
-
-	//移動方向に向く
-	//trans_.quaRot = trans_.quaRot.LookRotation(VGet(movePow_.x, 0.0f, movePow_.z));
 
 	//機体とキャラに座標と回転を同期させる
 	SynchronizeChara();

@@ -11,9 +11,9 @@
 //球
 //***************************************************
 
-Sphere::Sphere(const VECTOR& _pos, const VECTOR& _oldPos, const float _radius)
+Sphere::Sphere(const VECTOR& _pos, const VECTOR& _movedPos, const float _radius)
 	: Geometry(_pos, Quaternion()),
-	oldPos_(_oldPos),
+	movedPos_(_movedPos),
 	radius_(_radius)
 {
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));
@@ -21,7 +21,7 @@ Sphere::Sphere(const VECTOR& _pos, const VECTOR& _oldPos, const float _radius)
 
 Sphere::Sphere(const Sphere& _copyBase)
 	: Geometry(_copyBase.GetColPos(), Quaternion()),
-	oldPos_(_copyBase.oldPos_)
+	movedPos_(_copyBase.movedPos_)
 {
 	radius_ = _copyBase.GetRadius();
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));
@@ -56,7 +56,7 @@ const bool Sphere::IsHit(Cube& _cube)
 
 	// --- ローカル空間へ変換 ---
 	VECTOR relPos = VSub(pos_, center);
-	VECTOR velocity = VSub(oldPos_, pos_);
+	VECTOR velocity = VSub(movedPos_, pos_);
 	VECTOR localP0 = VGet(VDot(relPos, obb.axis[0]),
 		VDot(relPos, obb.axis[1]),
 		VDot(relPos, obb.axis[2]));

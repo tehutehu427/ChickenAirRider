@@ -1,0 +1,92 @@
+[
+  {
+    "name": "maxSpeed",
+    "Parameter": {
+      "maxSpeed": 1
+    },
+
+    "geometry": "sphere",
+    "tag": "powerUp",
+    "radius": 30.0
+  },
+  {
+    "name": "acceleration",
+    "Parameter": {
+      "acceleration": 1
+    },
+
+    "geometry": "sphere",
+    "tag": "powerUp",
+    "radius": 30.0
+  },
+  {
+    "name": "turning",
+    "Parameter": {
+      "turning": 1
+    },
+
+    "geometry": "sphere",
+    "tag": "powerUp",
+    "radius": 30.0
+  },
+  {
+    "name": "charge",
+    "Parameter": {
+      "charge": 1
+    },
+
+    "geometry": "sphere",
+    "tag": "powerUp",
+    "radius": 30.0
+  },
+  {
+    "name": "flight",
+    "Parameter": {
+      "flight": 1
+    },
+
+    "geometry": "sphere",
+    "tag": "powerUp",
+    "radius": 30.0
+  },
+  {
+    "name": "weight",
+    "Parameter": {
+      "weight": 1
+    },
+
+    "geometry": "sphere",
+    "tag": "powerUp",
+    "radius": 30.0
+  },
+  {
+    "name": "attack",
+    "Parameter": {
+      "attack": 1
+    },
+
+    "geometry": "sphere",
+    "tag": "powerUp",
+    "radius": 30.0
+  },
+  {
+    "name": "defense",
+    "Parameter": {
+      "defense": 1
+    },
+
+    "geometry": "sphere",
+    "tag": "powerUp",
+    "radius": 30.0
+  },
+  {
+    "name": "maxHealth",
+    "Parameter": {
+      "maxHealth": 1
+    },
+
+    "geometry": "sphere",
+    "tag": "powerUp",
+    "radius": 30.0
+  }
+]

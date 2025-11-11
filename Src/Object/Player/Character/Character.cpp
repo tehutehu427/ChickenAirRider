@@ -17,7 +17,7 @@ Character::~Character(void)
 void Character::Load(void)
 {
 	//キャラクターのステータスを外部から持ってくる
-	unitParam_.fixedMaxSpeed_ = 10.0f;
+	unitParam_.fixedMaxSpeed_ = PARAM_NORMAL;
 	unitParam_.fixedAcceleration_ = PARAM_NORMAL;
 	unitParam_.fixedTurning_ = PARAM_NORMAL;
 	unitParam_.fixedCharge_ = PARAM_NORMAL;

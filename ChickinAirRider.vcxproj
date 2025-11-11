@@ -155,6 +155,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Manager\Game\ItemManager.cpp" />
+    <ClCompile Include="Src\Object\Item\ItemBox.cpp" />
     <ClCompile Include="Src\Manager\Game\MachineManager.cpp" />
     <ClCompile Include="Src\Manager\Game\AnimationManager.cpp" />
     <ClCompile Include="Src\Object\Item\ItemBase.cpp" />
@@ -223,9 +225,12 @@
     <ClCompile Include="Src\Common\Vector2F.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Manager\Game\ItemManager.h" />
+    <ClInclude Include="Src\Object\Item\ItemBox.h" />
     <ClInclude Include="Src\Manager\Game\MachineManager.h" />
     <ClInclude Include="Src\Manager\Game\AnimationManager.h" />
     <ClInclude Include="Src\Object\Item\ItemBase.h" />
+    <ClInclude Include="Src\Object\Item\ItemImportData.h" />
     <ClInclude Include="Src\Object\Player\AnimationImportData.h" />
     <ClInclude Include="Src\Object\Player\Collision\PlayerOnHit.h" />
     <ClInclude Include="Src\Loader\DataRegistry.h" />
@@ -363,9 +368,6 @@
     <ClInclude Include="Src\Utility\UtilityTemplates.h" />
     <ClInclude Include="Src\Manager\Game\Timer.h" />
     <ClInclude Include="Src\Common\Vector2F.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Src\Loader\JsonLoader.tpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
