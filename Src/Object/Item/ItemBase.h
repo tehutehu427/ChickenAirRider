@@ -1,12 +1,13 @@
 #pragma once
 #include "../ObjectBase.h"
+#include "../Object/Player/Parameter/Parameter.h"
 
 class ItemBase : public ObjectBase
 {
 public:
 
 	//コンストラクタ
-	ItemBase(VECTOR _pos);
+	ItemBase(const VECTOR _pos, const Parameter& _param);
 
 	//デストラクタ
 	~ItemBase(void)override;
@@ -27,7 +28,10 @@ public:
 	void OnHit(std::weak_ptr<Collider> _hitCol)override;
 
 	//死亡判定の取得
-	const bool IsDead(void) { return isDead_; }
+	const bool IsDead(void)const { return isDead_; }
+
+	//パラメーターの取得
+	const Parameter& GetParam(void)const { return param_; }
 
 private:
 
@@ -39,5 +43,8 @@ private:
 
 	//死亡判定
 	bool isDead_;
+
+	//パラメーター
+	Parameter param_;
 };
 

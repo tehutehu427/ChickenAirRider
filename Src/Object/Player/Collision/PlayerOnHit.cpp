@@ -1,6 +1,8 @@
 #include "../pch.h"
 #include "../Player.h"
 #include "../Manager/Game/MachineManager.h"
+#include "../Parameter/Parameter.h"
+#include "../Object/Item/ItemBase.h"
 #include "../Action/ActionBase.h"
 #include "PlayerOnHit.h"
 
@@ -12,7 +14,7 @@ PlayerOnHit::PlayerOnHit(Player& _player)
 	onHit_[Collider::TAG::GROUND] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
 	onHit_[Collider::TAG::MACHINE] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
 	onHit_[Collider::TAG::MACHINE_RIDE] = [this](const std::weak_ptr<Collider> _hitCol) {RideMachineOnHit(_hitCol); };
-	onHit_[Collider::TAG::POWER_UP] = [this](const std::weak_ptr<Collider> _hitCol) {RideMachineOnHit(_hitCol); };
+	onHit_[Collider::TAG::POWER_UP] = [this](const std::weak_ptr<Collider> _hitCol) {PowerUpItemOnHit(_hitCol); };
 }
 
 PlayerOnHit::~PlayerOnHit(void)
@@ -82,4 +84,12 @@ void PlayerOnHit::RideMachineOnHit(const std::weak_ptr<Collider> _hitCol)
 
 void PlayerOnHit::PowerUpItemOnHit(const std::weak_ptr<Collider> _hitCol)
 {
+	//対象パワーアップアイテム
+	const auto& powerUpItem = dynamic_cast<const ItemBase&>(_hitCol.lock()->GetParent());
+
+	//パラメーター
+	Parameter param = powerUpItem.GetParam();
+
+	//プレイヤーに加算
+	player_.SetParam(player_.GetParam() + param);
 }

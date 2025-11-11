@@ -27,7 +27,7 @@ void Character::Load(void)
 	unitParam_.fixedDefence_ = PARAM_NORMAL;
 	unitParam_.fixedMaxHealth_ = PARAM_NORMAL;
 
-	unitParam_.affectMaxSpeed_ = 0.1f;
+	unitParam_.affectMaxSpeed_ = 0.5f;
 	unitParam_.affectAcceleration_ = 0.1f;
 	unitParam_.affectTurning_ = 0.1f;
 	unitParam_.affectCharge_ = 0.1f;

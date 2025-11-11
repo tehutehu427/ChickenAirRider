@@ -4,9 +4,10 @@
 #include "../Object/Common/Geometry/Sphere.h"
 #include "ItemBase.h"
 
-ItemBase::ItemBase(VECTOR _pos)
+ItemBase::ItemBase(const VECTOR _pos, const Parameter& _param)
 {
 	trans_.pos = _pos;
+	param_ = _param;
 	isDead_ = false;
 }
 

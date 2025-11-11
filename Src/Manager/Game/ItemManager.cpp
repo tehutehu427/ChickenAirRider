@@ -91,9 +91,10 @@ void ItemManager::CreateItem(void)
 
 	for (int i = 0 ; i < createNum ; i++)
 	{
+		//ランダムでアイテムの種類決め
 		rand = Utility::GetRandomValue(0, importSize - 1);
 
-		std::unique_ptr<ItemBase> item = std::make_unique<ItemBase>(VGet(300.0f, 0.0f, -300.0f));
+		std::unique_ptr<ItemBase> item = std::make_unique<ItemBase>(VGet(300.0f, 0.0f, -300.0f), itemData_[0].param);
 		item->Load();
 		item->Init();
 

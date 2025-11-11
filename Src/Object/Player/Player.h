@@ -52,6 +52,12 @@ public:
 	//当たり判定処理
 	void OnHit(const std::weak_ptr<Collider> _hitCol)override;
 
+	//パラメーターの取得
+	const Parameter& GetParam(void) { return param_; }
+
+	//パラメーターの設定
+	void SetParam(const Parameter& _param) { param_ = _param; }
+
 	//総合パラメーター
 	const Parameter GetAllParam(void)const;
 
