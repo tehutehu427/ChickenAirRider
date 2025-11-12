@@ -24,7 +24,7 @@ const std::unordered_map<std::string, int>& AnimationManager::GetAnimationData(c
 AnimationManager::AnimationManager(void)
 {
 	//情報取得
-	const auto& importData = LoaderManager<AnimationImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Character.json"));
+	const auto& importData = LoaderManager<AnimationImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Animation.json"));
 
 	//アニメーション格納
 	for (const auto& data : importData)

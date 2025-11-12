@@ -8,7 +8,6 @@
 #include "../../Common/Singleton.h"
 #include "../../Common/Fader.h"
 
-class Grid;
 class SceneBase;
 class Fader;
 class Camera;
@@ -134,7 +133,6 @@ private:
 	CHANGE_SCENE_STATE changeSceneState_;
 
 	//ポインタ
-	std::unique_ptr<Grid> grid_;					//デバッググリッド
 	std::list<std::unique_ptr<SceneBase>> scene_;	//各種シーン	
 	std::unique_ptr<Fader> fader_;					//フェード
 	std::vector<std::shared_ptr<Camera>> cameras_;	//カメラ

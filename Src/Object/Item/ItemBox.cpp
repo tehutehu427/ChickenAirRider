@@ -1,4 +1,5 @@
 #include "../pch.h"
+#include "../Manager/Game/ItemManager.h"
 #include "../Manager/System/ResourceManager.h"
 #include "../Object/Common/Geometry/Cube.h"
 #include "ItemBox.h"
@@ -47,5 +48,8 @@ void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
 
 		//€–S”»’è
 		isDead_ = true;
+
+		//ƒAƒCƒeƒ€¶¬
+		ItemManager::GetInstance().CreateItem(trans_.pos);
 	}
 }

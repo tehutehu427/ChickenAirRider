@@ -79,7 +79,7 @@ void Player::Init(void)
 	ChangeState(STATE::RIDE_MACHINE);
 
 	//“–‚½‚è”»’è¶¬
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, RADIUS);
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, RIDE_RADIUS);
 	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
 
 	//Ú’n”»’è—p‚Ì“–‚½‚è”»’è

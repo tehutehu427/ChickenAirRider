@@ -12,7 +12,6 @@ void ItemManager::Init(void)
 	itemData_ = LoaderManager<ItemImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Item.json"));
 
 	CreateItemBox();
-	CreateItem();
 }
 
 void ItemManager::Update(void)
@@ -78,23 +77,34 @@ void ItemManager::CreateItemBox(void)
 	itemBoxes_.push_back(std::move(itemBox));
 }
 
-void ItemManager::CreateItem(void)
+void ItemManager::CreateItem(VECTOR _pos)
 {
 	//サイズ
 	int importSize = static_cast<int>(itemData_.size());
 
+	//生成位置
+	VECTOR createPos = Utility::VECTOR_ZERO;
+	VECTOR localPos = CREATE_LOCAL_POS;
+
 	//生成数
-	int createNum = Utility::GetRandomValue(2, 4);
+	int createNum = 4;//Utility::GetRandomValue(2, 4);
 
 	//データの値
 	int rand = 0;
 
 	for (int i = 0 ; i < createNum ; i++)
 	{
+		//生成位置
+		createPos = VAdd(_pos, localPos);
+
+		//位置の反転
+		if (i % 2 == 0)localPos.x = -localPos.x;
+		else if (i / 2 == 0)localPos.z = -localPos.z;
+
 		//ランダムでアイテムの種類決め
 		rand = Utility::GetRandomValue(0, importSize - 1);
 
-		std::unique_ptr<ItemBase> item = std::make_unique<ItemBase>(VGet(300.0f, 0.0f, -300.0f), itemData_[0].param);
+		std::unique_ptr<ItemBase> item = std::make_unique<ItemBase>(createPos, itemData_[0].param);
 		item->Load();
 		item->Init();
 

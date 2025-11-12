@@ -1,12 +1,12 @@
 #include"../pch.h"
-#include "../Game/CollisionManager.h"
 #include "Camera.h"
 #include "ResourceManager.h"
 #include "SoundManager.h"
-#include "../Object/Grid.h"
+#include "../FpsControl/FpsControl.h"
 #include "../Scene/SceneTitle.h"
 #include "../Scene/SceneSelect.h"
 #include "../Scene/SceneGame.h"
+#include "../Game/CollisionManager.h"
 #include"../Application.h"
 #include"SceneManager.h"
 
@@ -28,7 +28,7 @@ SceneManager::SceneManager(void)
 	splitScreens_.clear();
 
 	// デルタタイム
-	deltaTime_ = 1.0f / 60.0f;
+	deltaTime_ = 1.0f / FPS;
 	totalTime_ = -1.0f;
 
 	//シーン生成用関数ポインタ
@@ -56,10 +56,6 @@ void SceneManager::Init(void)
 	//初期シーン
 	sceneId_ = SCENE_ID::TITLE;
 	waitSceneId_ = SCENE_ID::NONE;
-
-	//グリッド
-	grid_ = std::make_unique<Grid>();
-	grid_->Init();
 
 	//フェーダー
 	fader_ = std::make_unique<Fader>();
@@ -124,7 +120,7 @@ void SceneManager::Update(void)
 	auto nowTime = std::chrono::system_clock::now();
 	//deltaTime_ = static_cast<float>(
 	//	std::chrono::duration_cast<std::chrono::nanoseconds>(nowTime - preTime_).count() / 1000000000.0);
-	deltaTime_ = 1.0f / 60.0f;
+	deltaTime_ = 1.0f / FPS;
 	preTime_ = nowTime;
 	totalTime_ += deltaTime_;
 
@@ -180,9 +176,6 @@ void SceneManager::Draw(void)
 			if (scene == nullptr)continue;
 			scene->Draw();
 		}
-
-		//グリッド
-		grid_->Draw();
 
 		// 主にポストエフェクト用
 		cameras_[0]->Draw();

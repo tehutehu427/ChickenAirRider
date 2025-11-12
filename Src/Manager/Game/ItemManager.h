@@ -20,8 +20,15 @@ public:
 
 	//描画
 	void Draw(void);
+
+	/// @brief アイテム生成
+	/// @param _pos	生成位置
+	void CreateItem(VECTOR _pos);
 	
 private:
+
+	//生成相対位置
+	static constexpr VECTOR CREATE_LOCAL_POS = { 300.0f,0.0f,300.0f };
 
 	//インポートデータ
 	std::vector<ItemImportData> itemData_;
@@ -40,8 +47,5 @@ private:
 
 	//アイテムボックス生成
 	void CreateItemBox(void);
-
-	//アイテム生成
-	void CreateItem(void);
 };
 
