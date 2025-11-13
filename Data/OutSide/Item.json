@@ -70,9 +70,9 @@
     "radius": 30.0
   },
   {
-    "name": "defense",
+    "name": "defence",
     "Parameter": {
-      "defense": 1
+      "defence": 1
     },
 
     "geometry": "sphere",

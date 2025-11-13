@@ -2,6 +2,7 @@
 #include"../Application.h"
 #include"../Utility/Utility.h"
 #include"../Loader/LoaderManager.h"
+#include"../Manager/System/ResourceManager.h"
 #include"../Object/Item/ItemBox.h"
 #include"../Object/Item/ItemBase.h"
 #include "ItemManager.h"
@@ -58,6 +59,43 @@ void ItemManager::Draw(void)
 
 ItemManager::ItemManager(void)
 {
+	//画像ID
+	getImageId_["maxSpeed"] = [](void)
+	{
+		return ResourceManager::GetInstance().Load(ResourceManager::SRC::MAX_SPEED).handleId_;
+	};
+	getImageId_["acceleration"] = [](void)
+	{
+		return ResourceManager::GetInstance().Load(ResourceManager::SRC::ACCELERATION).handleId_;
+	};
+	getImageId_["turning"] = [](void)
+	{
+		return ResourceManager::GetInstance().Load(ResourceManager::SRC::TURNING).handleId_;
+	};
+	getImageId_["charge"] = [](void)
+	{
+		return ResourceManager::GetInstance().Load(ResourceManager::SRC::CHARGE).handleId_;
+	};
+	getImageId_["flight"] = [](void)
+	{
+		return ResourceManager::GetInstance().Load(ResourceManager::SRC::FLIGHT).handleId_;
+	};
+	getImageId_["weight"] = [](void)
+	{
+		return ResourceManager::GetInstance().Load(ResourceManager::SRC::WEIGHT).handleId_;
+	};
+	getImageId_["attack"] = [](void)
+	{
+		return ResourceManager::GetInstance().Load(ResourceManager::SRC::ATTACK).handleId_;
+	};
+	getImageId_["defence"] = [](void)
+	{
+		return ResourceManager::GetInstance().Load(ResourceManager::SRC::DEFENCE).handleId_;
+	};
+	getImageId_["maxHealth"] = [](void)
+	{
+		return ResourceManager::GetInstance().Load(ResourceManager::SRC::MAX_HEALTH).handleId_;
+	};
 }
 
 ItemManager::~ItemManager(void)
@@ -87,7 +125,7 @@ void ItemManager::CreateItem(VECTOR _pos)
 	VECTOR localPos = CREATE_LOCAL_POS;
 
 	//生成数
-	int createNum = 4;//Utility::GetRandomValue(2, 4);
+	int createNum = Utility::GetRandomValue(CREATE_MIN, CREATE_MAX);
 
 	//データの値
 	int rand = 0;
@@ -102,12 +140,14 @@ void ItemManager::CreateItem(VECTOR _pos)
 		else if (i / 2 == 0)localPos.z = -localPos.z;
 
 		//ランダムでアイテムの種類決め
-		rand = Utility::GetRandomValue(0, importSize - 1);
+		rand =  Utility::GetRandomValue(0, importSize - 1);
 
-		std::unique_ptr<ItemBase> item = std::make_unique<ItemBase>(createPos, itemData_[0].param);
+		//生成
+		std::unique_ptr<ItemBase> item = std::make_unique<ItemBase>(createPos, itemData_[rand].param, getImageId_[itemData_[rand].name]());
 		item->Load();
 		item->Init();
 
+		//配列格納
 		items_.push_back(std::move(item));
 	}
 }

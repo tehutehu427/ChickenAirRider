@@ -68,7 +68,7 @@ inline void FromJson(const nlohmann::json& _j, ItemImportData& _data)
 		{
 			_data.param.attack_ = parameter.value("attack", 0);
 		}
-		if (parameter.contains("defense"))
+		if (parameter.contains("defence"))
 		{
 			_data.param.defense_ = parameter.value("defense", 0);
 		}

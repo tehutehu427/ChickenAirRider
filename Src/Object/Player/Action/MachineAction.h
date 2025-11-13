@@ -37,6 +37,12 @@ private:
 	//チャージの固定上昇値
 	static constexpr float BASE_CHARGE = 50.0f;
 
+	//飛行の固定値
+	static constexpr float BASE_FLIGHT = 10.0f;
+
+	//重さの固定値
+	static constexpr float BASE_WEIGHT = 10.0f;
+
 	//回転量の補正
 	static constexpr float COMP_TURN = 500.0f;
 
@@ -46,6 +52,9 @@ private:
 	//ブレーキ力
 	static constexpr float BRAKE_POW = 100.0f;
 	static constexpr float TURN_BRAKE_POW = BRAKE_POW / 5.0f;
+
+	//空中の速度減衰率
+	static constexpr float FLIGHT_DECELERATION = 2.0f;
 
 	//機体
 	const Machine& machine_;

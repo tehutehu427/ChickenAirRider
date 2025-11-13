@@ -1,4 +1,5 @@
 #pragma once
+#include<functional>
 #include "../Common/Singleton.h"
 #include "../Object/Item/ItemImportData.h"
 
@@ -30,8 +31,15 @@ private:
 	//生成相対位置
 	static constexpr VECTOR CREATE_LOCAL_POS = { 300.0f,0.0f,300.0f };
 
+	//アイテム生成数
+	static constexpr int CREATE_MAX = 4;
+	static constexpr int CREATE_MIN = 1;
+
 	//インポートデータ
 	std::vector<ItemImportData> itemData_;
+
+	//モデルID取得
+	std::unordered_map<std::string, std::function<int(void)>> getImageId_;
 
 	//アイテムボックス
 	std::vector<std::unique_ptr<ItemBox>> itemBoxes_;

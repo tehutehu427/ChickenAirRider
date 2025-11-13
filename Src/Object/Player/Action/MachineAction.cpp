@@ -115,10 +115,15 @@ void MachineAction::Move(void)
 	}
 
 	//最高速の制限　又は　飛行中なら
-	if (speed_ > param.maxSpeed_ * BASE_MAX_SPEED || !player_.IsGrounded())
+	if (speed_ > param.maxSpeed_ * BASE_MAX_SPEED)
 	{
 		//減速なのでカウンタ減少
 		driveCnt_ -= delta;
+	}
+	else if (!player_.IsGrounded())
+	{
+		//減速なのでカウンタ減少
+		driveCnt_ -= delta / FLIGHT_DECELERATION;
 	}
 
 	//速度の方程式に当てはめる
@@ -240,5 +245,5 @@ void MachineAction::Flight(void)
 	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);
 
 	//だんだん落ちていく
-	flightPow_ += delta * (gravPow_.y) + (flightPow * param.flight_);
+	flightPow_ += (delta * gravPow_.y * param.weight_ / BASE_WEIGHT) / param.flight_ * BASE_FLIGHT;
 }

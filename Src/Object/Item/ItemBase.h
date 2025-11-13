@@ -7,7 +7,7 @@ class ItemBase : public ObjectBase
 public:
 
 	//コンストラクタ
-	ItemBase(const VECTOR _pos, const Parameter& _param);
+	ItemBase(const VECTOR _pos, const Parameter& _param, const int _imageId);
 
 	//デストラクタ
 	~ItemBase(void)override;

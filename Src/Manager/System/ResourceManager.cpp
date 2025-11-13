@@ -21,6 +21,30 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"MaxSpeed.png");
 	resourcesMap_.emplace(SRC::MAX_SPEED, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"Acceleration.png");
+	resourcesMap_.emplace(SRC::ACCELERATION, std::move(res));
+	
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"Turning.png");
+	resourcesMap_.emplace(SRC::TURNING, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"Charge.png");
+	resourcesMap_.emplace(SRC::CHARGE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"Flight.png");
+	resourcesMap_.emplace(SRC::FLIGHT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"Weight.png");
+	resourcesMap_.emplace(SRC::WEIGHT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"Attack.png");
+	resourcesMap_.emplace(SRC::ATTACK, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"Defence.png");
+	resourcesMap_.emplace(SRC::DEFENCE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"MaxHealth.png");
+	resourcesMap_.emplace(SRC::MAX_HEALTH, std::move(res));
+
 #pragma endregion 
 
 

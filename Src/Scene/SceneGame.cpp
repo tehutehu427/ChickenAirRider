@@ -76,9 +76,6 @@ void SceneGame::Init(void)
 	//プレイヤーの初期化
 	plMng.Init();
 
-	//アイテムの初期化
-	itemMng.Init();
-
 	//スカイドーム
 	sky_ = std::make_unique<SkyDome>(plMng.GetPlayer(0).GetTrans().pos);
 	sky_->Load();
