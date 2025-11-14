@@ -88,3 +88,13 @@ void Machine::DeleteCol(void)
 	//ÉRÉâÉCÉ_çÌèú
 	DeleteAllCollider();
 }
+
+void Machine::SetScale(const VECTOR& _scale)
+{
+	VECTOR scale = _scale;
+	scale.x = scale.x * MODEL_SIZE.x;
+	scale.y = scale.y * MODEL_SIZE.y;
+	scale.z = scale.z * MODEL_SIZE.z;
+
+	trans_.scl = scale;
+}

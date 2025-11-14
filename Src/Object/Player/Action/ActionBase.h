@@ -27,6 +27,9 @@ public:
 	//X²‰ñ“]‚Ì‰Šú‰»
 	void ResetAxisX(void);
 
+	//“–‚½‚è”»’è‚Ì—L–³
+	virtual const bool IsHit(void) { return true; };
+
 protected:
 
 	//Š—LÒ

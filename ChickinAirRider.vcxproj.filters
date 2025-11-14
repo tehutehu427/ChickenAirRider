@@ -641,5 +641,8 @@
     <ClInclude Include="Src\Object\Item\ItemImportData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Object\Item\BoxCreatePositionData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

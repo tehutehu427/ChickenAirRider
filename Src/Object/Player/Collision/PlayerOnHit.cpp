@@ -37,7 +37,7 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	//コライダ
 	auto& mainCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::MAIN)];
 	auto& groundPreCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED_PRE)];
-	auto& groundOldCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED_OLD)];
+	//auto& groundOldCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED_OLD)];
 
 	//位置の補正
 	const auto& hit = mainCol->GetGeometry().GetHitResult();
@@ -49,7 +49,7 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	player_.SetMovedPos(VAdd(player_.GetTrans().pos, VScale(v, hit.t)));
 
 	// 少し押し戻す（めり込み回避）
-	player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(hit.normal, 0.01f)));
+	player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(hit.normal, 0.007f)));
 
 	// 残り移動をスライド方向へ
 	float remain = 1.0f - hit.t;
@@ -57,7 +57,7 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(slide, remain)));
 
 	//接地しているか
-	if (groundPreCol->IsHit() && groundOldCol)
+	if (groundPreCol->IsHit() && player_.GetAction().IsHit())
 	{
 		player_.GetAction().ResetAxisX();
 		player_.SetIsGrounded(true);
@@ -77,6 +77,9 @@ void PlayerOnHit::RideMachineOnHit(const std::weak_ptr<Collider> _hitCol)
 
 	//機体管理
 	auto& machineMng = MachineManager::GetInstance();
+
+	//機体に移動
+	player_.SetMovedPos(machine.GetTrans().pos);
 
 	//機体を比較し取得
 	player_.RideMachine(std::move(machineMng.GetMachine(machine)));

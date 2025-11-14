@@ -70,6 +70,9 @@ public:
 	//回転の設定
 	void SetQuaRot(const Quaternion& _quaRot) { trans_.quaRot = _quaRot; }
 
+	//大きさの設定
+	void SetScale(const VECTOR _scale) { trans_.scl = _scale; }
+
 	//移動力変更
 	void SetMovePow(const VECTOR& _movePow) { movePow_ = _movePow; }
 
@@ -100,6 +103,7 @@ public:
 	//基本機能を返す
 	ActionBase& GetAction(void) { return *action_; }
 	LogicBase& GetLogic(void) { return *logic_; }
+	Character& GetChara(void) { return *chara_; }
 
 	//機体に乗る
 	void RideMachine(std::unique_ptr<Machine> _machine);
@@ -111,7 +115,7 @@ private:
 	static constexpr float RIDE_RADIUS = 35.0f;								//乗車時の球体の半径
 	static constexpr VECTOR LOCAL_LINE_FRONT_BACK = { 0.0f,0.0f,15.0f };	//線判定の前後相対座標
 	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };				//線判定の上相対座標
-	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-40.0f,0.0f };			//線判定の下相対座標
+	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-26.0f,0.0f };			//線判定の下相対座標
 
 	//基本機能
 	std::unique_ptr<Character> chara_;		//キャラクタ―

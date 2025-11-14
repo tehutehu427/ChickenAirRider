@@ -13,6 +13,7 @@ CharacterAction::CharacterAction(Player& _player, Character& _chara, LogicBase& 
 	update_[false] = [this](void) {UpdateFlight(); };
 	walkPow_ = Utility::VECTOR_ZERO;
 	jumpPow_ = Utility::VECTOR_ZERO;
+	jumpCnt_ = 0.0f;
 	gravPow_ = Utility::VECTOR_ZERO;
 	rot_ = Quaternion();
 }
@@ -25,13 +26,13 @@ void CharacterAction::Init(void)
 {
 	//立ち状態
 	chara_.GetAnim().Play("idle");
+
+	//初期ジャンプ
+	Jump();
 }
 
 void CharacterAction::Update(void)
 {
-	//重力
-	CalcGravity();
-
 	//状態ごとの更新
 	update_[player_.IsGrounded()]();
 
@@ -41,6 +42,11 @@ void CharacterAction::Update(void)
 
 void CharacterAction::Draw(void)
 {
+}
+
+const bool CharacterAction::IsHit(void)
+{
+	return jumpCnt_ >= JUMP_CNT;
 }
 
 void CharacterAction::Walk(void)
@@ -90,6 +96,9 @@ void CharacterAction::Jump(void)
 	//初動ジャンプ力
 	jumpPow_.y = JUMP_POW;
 
+	//カウンタの初期化
+	jumpCnt_ = 0.0f;
+
 	//空中に
 	player_.SetIsGrounded(false);
 }
@@ -128,6 +137,14 @@ void CharacterAction::UpdateGround(void)
 
 void CharacterAction::UpdateFlight(void)
 {
+	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//重力
+	CalcGravity();
+
+	//ジャンプカウンタ
+	jumpCnt_ += delta;
+
 	//歩き
 	Walk();
 

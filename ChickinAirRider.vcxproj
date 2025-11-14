@@ -226,6 +226,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Manager\Game\ItemManager.h" />
+    <ClInclude Include="Src\Object\Item\BoxCreatePositionData.h" />
     <ClInclude Include="Src\Object\Item\ItemBox.h" />
     <ClInclude Include="Src\Manager\Game\MachineManager.h" />
     <ClInclude Include="Src\Manager\Game\AnimationManager.h" />

@@ -2,6 +2,7 @@
 #include<functional>
 #include "../Common/Singleton.h"
 #include "../Object/Item/ItemImportData.h"
+#include "../Object/Item/BoxCreatePositionData.h"
 
 class ItemBox;
 class ItemBase;
@@ -35,8 +36,12 @@ private:
 	static constexpr int CREATE_MAX = 4;
 	static constexpr int CREATE_MIN = 1;
 
+	//アイテムボックスの生成間隔
+	static constexpr float BOX_CREATE_TIME = 2.0f;
+
 	//インポートデータ
 	std::vector<ItemImportData> itemData_;
+	std::vector<BoxCreatePositionData> boxPosData_;
 
 	//モデルID取得
 	std::unordered_map<std::string, std::function<int(void)>> getImageId_;
@@ -46,6 +51,9 @@ private:
 	
 	//アイテム
 	std::vector<std::unique_ptr<ItemBase>> items_;
+
+	//生成カウンタ
+	float boxCreateCnt_;
 
 	//コンストラクタ
 	ItemManager(void);

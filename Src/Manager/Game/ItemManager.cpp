@@ -3,6 +3,7 @@
 #include"../Utility/Utility.h"
 #include"../Loader/LoaderManager.h"
 #include"../Manager/System/ResourceManager.h"
+#include"../Manager/System/SceneManager.h"
 #include"../Object/Item/ItemBox.h"
 #include"../Object/Item/ItemBase.h"
 #include "ItemManager.h"
@@ -11,6 +12,7 @@ void ItemManager::Init(void)
 {
 	//インポートデータ
 	itemData_ = LoaderManager<ItemImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Item.json"));
+	boxPosData_ = LoaderManager<BoxCreatePositionData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"BoxCreatePositionData.json"));
 
 	CreateItemBox();
 }
@@ -39,6 +41,21 @@ void ItemManager::Update(void)
 
 		//当たり判定の整理
 		item->Sweep();
+	}
+
+	//デルタタイム
+	const float& delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//カウンタ
+	boxCreateCnt_ += delta;
+
+	if (boxCreateCnt_ > BOX_CREATE_TIME)
+	{
+		//生成
+		CreateItemBox();
+
+		//初期化
+		boxCreateCnt_ = 0.0f;
 	}
 }
 
@@ -96,6 +113,9 @@ ItemManager::ItemManager(void)
 	{
 		return ResourceManager::GetInstance().Load(ResourceManager::SRC::MAX_HEALTH).handleId_;
 	};
+
+	//初期化
+	boxCreateCnt_ = 0.0f;
 }
 
 ItemManager::~ItemManager(void)
@@ -106,8 +126,11 @@ ItemManager::~ItemManager(void)
 
 void ItemManager::CreateItemBox(void)
 {
+	//ランダム生成
+	int rand = Utility::GetRandomValue(0, static_cast<int>(boxPosData_.size()) - 1);
+
 	//アイテムボックス
-	std::unique_ptr<ItemBox> itemBox = std::make_unique<ItemBox>(VGet(300.0f,0.0f,300.0f));
+	std::unique_ptr<ItemBox> itemBox = std::make_unique<ItemBox>(boxPosData_[rand].pos);
 	itemBox->Load();
 	itemBox->Init();
 
@@ -130,6 +153,7 @@ void ItemManager::CreateItem(VECTOR _pos)
 	//データの値
 	int rand = 0;
 
+	//ランダムで決めた生成数分アイテムを生成する
 	for (int i = 0 ; i < createNum ; i++)
 	{
 		//生成位置

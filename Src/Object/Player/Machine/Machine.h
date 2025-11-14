@@ -50,6 +50,9 @@ public:
 	//À•W‚Ìİ’è
 	void SetPos(const VECTOR& _pos) { trans_.pos = _pos; }
 
+	//‘å‚«‚³İ’è
+	void SetScale(const VECTOR& _scale);
+
 	//‰ñ“]‚Ìİ’è
 	void SetQuaRot(const Quaternion& _quaRot) { trans_.quaRot = _quaRot; }
 

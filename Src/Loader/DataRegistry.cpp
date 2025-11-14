@@ -6,6 +6,7 @@
 #include"../Object/Player/AnimationImportData.h"
 #include"../Object/Player/Machine/MachineImportData.h"
 #include"../Object/Item/ItemImportData.h"
+#include"../Object/Item/BoxCreatePositionData.h"
 #include"DataRegistry.h"
 
 void DataRegistry::CreateAll(void)
@@ -24,4 +25,7 @@ void DataRegistry::CreateAll(void)
 
 	//アイテム情報
 	LoaderManager<ItemImportData>::CreateInstance();
+
+	//アイテム情報
+	LoaderManager<BoxCreatePositionData>::CreateInstance();
 }

@@ -153,6 +153,14 @@ void MachineAction::Charge(void)
 	{
 		chargeCnt_ = 1.0f;
 	}
+	else
+	{
+		VECTOR scale = player_.GetTrans().scl;
+		scale.y -= chargeCnt_ / 100.0f;
+		scale.x += chargeCnt_ / 100.0f;
+		scale.z += chargeCnt_ / 100.0f;
+		player_.SetScale(scale);
+	}
 
 	//速度の下限
 	if (speed_ < 0.0f)return;
@@ -190,6 +198,9 @@ void MachineAction::DisCharge(void)
 
 	//チャージを初期化
 	chargeCnt_ = 0.0f;
+
+	//大きさ初期化
+	player_.SetScale(Utility::VECTOR_ONE);
 }
 
 void MachineAction::Turn(void)

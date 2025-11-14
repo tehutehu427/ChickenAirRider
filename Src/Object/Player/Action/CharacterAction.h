@@ -26,10 +26,16 @@ public:
 	//描画
 	void Draw(void)override;
 
+	//当たり判定
+	const bool IsHit(void)override;
+
 private:
 
 	//初期ジャンプ量
 	static constexpr float JUMP_POW = 100.0f;
+
+	//ジャンプの当たり判定カウンタ
+	static constexpr float JUMP_CNT = 0.2f;
 
 	//移動量
 	static constexpr float WALK_POW = 10.0f;
@@ -42,6 +48,9 @@ private:
 
 	//ジャンプ量
 	VECTOR jumpPow_;
+
+	//ジャンプ開始時間
+	float jumpCnt_;
 
 	//重力
 	VECTOR gravPow_;

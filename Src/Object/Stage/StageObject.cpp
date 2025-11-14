@@ -14,6 +14,12 @@ StageObject::StageObject(const StageImportData& _data,const int _modelId, const 
 	trans_.quaRot = _data.quaternion;
 
 	data_ = _data;
+	data_.localPos1.x = data_.localPos1.x * data_.scale.x;
+	data_.localPos1.y = data_.localPos1.y * data_.scale.y;
+	data_.localPos1.z = data_.localPos1.z * data_.scale.z;
+	data_.localPos2.x = data_.localPos2.x * data_.scale.x;
+	data_.localPos2.y = data_.localPos2.y * data_.scale.y;
+	data_.localPos2.z = data_.localPos2.z * data_.scale.z;
 
 	createGeo_["sphere"] = [this](void) { return MakeSphere(); };
 	createGeo_["capsule"] = [this](void) { return MakeCapsule(); };

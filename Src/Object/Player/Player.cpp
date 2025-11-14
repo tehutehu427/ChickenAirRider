@@ -79,7 +79,7 @@ void Player::Init(void)
 	ChangeState(STATE::RIDE_MACHINE);
 
 	//当たり判定生成
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, RIDE_RADIUS);
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, NORMAL_RADIUS);
 	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
 
 	//接地判定用の当たり判定
@@ -87,8 +87,8 @@ void Player::Init(void)
 	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
 
 	//移動後接地判定
-	geo = std::make_unique<Line>(movedPos_, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
-	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
+	//geo = std::make_unique<Line>(movedPos_, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
+	//MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
 	
 	//初期更新
 	Update();
@@ -179,6 +179,7 @@ void Player::ChangeActionNormal(void)
 {
 	//キャラクターの行動に変更
 	action_ = std::make_unique<CharacterAction>(*this, *chara_, *logic_);
+	action_->Init();
 
 	//カメラ状態の変更
 	camera_.lock()->ChangeMode(Camera::MODE::FOLLOW);
@@ -191,6 +192,7 @@ void Player::ChangeActionRide(void)
 {
 	//機体の行動に変更
 	action_ = std::make_unique<MachineAction>(*this, *machine_, *logic_);
+	action_->Init();
 
 	//カメラ状態の変更
 	camera_.lock()->ChangeMode(Camera::MODE::FOLLOW_LEAP);
@@ -226,6 +228,9 @@ void Player::UpdateRide(void)
 		//降りた機体を保存
 		MachineManager::GetInstance().SaveGetOffMachine(std::move(machine_));
 
+		//大きさを初期化
+		trans_.scl = Utility::VECTOR_ONE;
+
 		//キャラクターに遷移
 		ChangeState(STATE::NORMAL);
 
@@ -260,6 +265,7 @@ void Player::SynchronizeChara(void)
 {
 	//座標と回転の同期
 	chara_->SetPos(trans_.pos);
+	chara_->SetScale(trans_.scl);
 	chara_->SetQuaRot(trans_.quaRot);
 	chara_->Update();
 }
@@ -268,6 +274,7 @@ void Player::SynchronizeMachine(void)
 {
 	//座標と回転の同期
 	machine_->SetPos(trans_.pos);
+	//machine_->SetScale(trans_.scl);
 	machine_->SetQuaRot(trans_.quaRot);
 	machine_->Update();
 }
