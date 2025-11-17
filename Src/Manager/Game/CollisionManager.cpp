@@ -26,15 +26,16 @@ void CollisionManager::AddCollider(const std::shared_ptr<Collider> _collider)
 
 void CollisionManager::Sweep(void)
 {
-	//終了したコライダを並び変える
-	auto it = std::remove_if(colliders_.begin(), colliders_.end(),
-		[](const std::shared_ptr<Collider> _col)
-		{
-			return _col->IsDead();
-		});
-
 	//終了したコライダを削除する
-	colliders_.erase(it, colliders_.end());
+	std::erase_if(colliders_, [](const std::shared_ptr<Collider> _col) {return _col->IsDead(); });
+
+	//auto it = std::remove_if(colliders_.begin(), colliders_.end(),
+	//	[](const std::shared_ptr<Collider> _col)
+	//	{
+	//		return _col->IsDead();
+	//	});
+
+	//colliders_.erase(it, colliders_.end());
 }
 
 void CollisionManager::Update(void)

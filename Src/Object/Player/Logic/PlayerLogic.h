@@ -44,6 +44,11 @@ public:
 	/// @return 機体からの降下の有無(true:降りた)
 	const bool IsGetOff(void) override;
 
+	/// @brief レバガチャ判定
+	/// @param  
+	/// @return レバガチャ(true:レバガチャした)
+	const bool IsButtonMeshing(void)override;
+
 #pragma endregion 機体
 
 #pragma region キャラクター
@@ -73,5 +78,11 @@ private:
 
 	//移動量
 	static constexpr float MOVE_POW = 1.0f;
+
+	//レバガチャ受付時間
+	//static constexpr float BUTTON_MESHING_
+
+	//レバガチャカウンタ
+	int buttonMeshingCnt_;
 };
 

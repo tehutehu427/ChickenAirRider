@@ -43,6 +43,11 @@ public:
 	/// @return 機体からの降下の有無(true:降りた)
 	virtual const bool IsGetOff(void) = 0;
 
+	/// @brief レバガチャ判定
+	/// @param  
+	/// @return レバガチャ(true:レバガチャした)
+	virtual const bool IsButtonMeshing(void) = 0;
+
 #pragma endregion 機体
 
 #pragma region キャラクター

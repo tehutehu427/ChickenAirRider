@@ -39,6 +39,11 @@ const bool NpcLogic::IsGetOff(void)
     return false;
 }
 
+const bool NpcLogic::IsButtonMeshing(void)
+{
+    return false;
+}
+
 const Vector2F NpcLogic::WalkValue(void)
 {
     return Vector2F();

@@ -131,6 +131,11 @@ const bool PlayerLogic::IsGetOff(void)
     return false;
 }
 
+const bool PlayerLogic::IsButtonMeshing(void)
+{
+    return false;
+}
+
 const Vector2F PlayerLogic::WalkValue(void)
 {
     //インスタンス

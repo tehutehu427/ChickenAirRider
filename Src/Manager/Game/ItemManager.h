@@ -34,10 +34,13 @@ private:
 
 	//アイテム生成数
 	static constexpr int CREATE_MAX = 4;
-	static constexpr int CREATE_MIN = 1;
+	static constexpr int CREATE_MIN = 2;
 
 	//アイテムボックスの生成間隔
-	static constexpr float BOX_CREATE_TIME = 2.0f;
+	static constexpr float BOX_CREATE_TIME = 10.0f;
+
+	//アイテムボックス生成上限
+	static constexpr int BOX_CREATE_MAX = 7;
 
 	//インポートデータ
 	std::vector<ItemImportData> itemData_;

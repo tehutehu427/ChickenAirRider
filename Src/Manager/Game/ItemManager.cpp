@@ -126,8 +126,18 @@ ItemManager::~ItemManager(void)
 
 void ItemManager::CreateItemBox(void)
 {
+	//生成上限ならスキップ
+	if (static_cast<int>(itemBoxes_.size()) > BOX_CREATE_MAX - 1)return;
+
 	//ランダム生成
 	int rand = Utility::GetRandomValue(0, static_cast<int>(boxPosData_.size()) - 1);
+
+	//生成済みか
+	for (const auto& itemBox : itemBoxes_)
+	{
+		//生成済みならスキップ
+		if (Utility::Equals(itemBox->GetTrans().pos, boxPosData_[rand].pos))return;
+	}
 
 	//アイテムボックス
 	std::unique_ptr<ItemBox> itemBox = std::make_unique<ItemBox>(boxPosData_[rand].pos);
