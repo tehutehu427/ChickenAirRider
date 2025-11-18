@@ -13,7 +13,7 @@ Parameter Parameter::operator+(const Parameter& _param)const
     ret.flight_ = flight_ + _param.flight_;
     ret.weight_ = weight_ + _param.weight_;
     ret.attack_ = attack_ + _param.attack_;
-    ret.defense_ = defense_ + _param.defense_;
+    ret.defence_ = defence_ + _param.defence_;
     ret.maxHealth_ = maxHealth_ + _param.maxHealth_;
 
     return ret;
@@ -29,7 +29,7 @@ void Parameter::operator+=(const Parameter& _param)
     flight_ += _param.flight_;
     weight_ += _param.weight_;
     attack_ += _param.attack_;
-    defense_ += _param.defense_;
+    defence_ += _param.defence_;
     maxHealth_ += _param.maxHealth_;
 }
 
@@ -44,7 +44,7 @@ Parameter Parameter::CalcUnitParam(const UnitParameter& _unitParam)const
     ret.flight_ = (flight_ * _unitParam.affectFlight_) + _unitParam.fixedFlight_;
     ret.weight_ = (weight_ * _unitParam.affectWeight_) + _unitParam.fixedWeight_;
     ret.attack_ = (attack_ * _unitParam.affectAttack_) + _unitParam.fixedAttack_;
-    ret.defense_ = (defense_ * _unitParam.affectDefence_) + _unitParam.fixedDefence_;
+    ret.defence_ = (defence_ * _unitParam.affectDefence_) + _unitParam.fixedDefence_;
     ret.maxHealth_ = (maxHealth_ * _unitParam.affectMaxHealth_) + _unitParam.fixedMaxHealth_;
 
     return ret;

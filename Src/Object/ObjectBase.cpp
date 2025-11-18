@@ -54,10 +54,24 @@ void ObjectBase::MakeCollider(const Collider::TAG _tag, std::unique_ptr<Geometry
 	collider_.push_back(collider);
 }
 
+void ObjectBase::DeleteColliderAtTag(Collider::TAG _tag)
+{
+	for (auto& collider : collider_)
+	{
+		//そのコライダが存在しない　又は　指定タグと違う
+		if (collider == nullptr || collider->GetTag() != _tag)continue;
+		collider->Kill();
+	}
+
+	//削除
+	std::erase_if(collider_, [](std::weak_ptr<Collider> _collider) {return _collider.lock()->IsDead(); });
+}
+
 void ObjectBase::DeleteAllCollider(void)
 {
 	for (auto& collider : collider_)
 	{
+		//そのコライダが存在しない
 		if (collider == nullptr)continue;
 		collider->Kill();
 	}

@@ -1,9 +1,9 @@
 [
   {
-    "name": "glass",
+    "name": "stage",
     "position": {
       "x": 0.0,
-      "y": -200.0,
+      "y": 0.0,
       "z": 0.0
     },
     "scale": {
@@ -18,149 +18,7 @@
       "z": 0.0
     },
 
-    "geometry": "cube",
-    "tag": "ground",
-    "localPos1": {
-      "x": -10000.0,
-      "y": -100.0,
-      "z": -10000.0
-    },
-    "localPos2": {
-      "x": 10000.0,
-      "y": 100.0,
-      "z": 10000.0
-    }
-  },
-  {
-    "name": "building",
-    "position": {
-      "x": 1000.0,
-      "y": 600.0,
-      "z": 1000.0
-    },
-    "scale": {
-      "x": 1.0,
-      "y": 1.0,
-      "z": 1.0
-    },
-    "quaternion": {
-      "w": 1.0,
-      "x": 0.0,
-      "y": 0.0,
-      "z": 0.0
-    },
-
-    "geometry": "cube",
-    "tag": "normalObject",
-    "localPos1": {
-      "x": -300.0,
-      "y": -900.0,
-      "z": -300.0
-    },
-    "localPos2": {
-      "x": 300.0,
-      "y": 900.0,
-      "z": 300.0
-    }
-
-  },
-  {
-    "name": "building",
-    "position": {
-      "x": -1000.0,
-      "y": 600.0,
-      "z": 1000.0
-    },
-    "scale": {
-      "x": 1.0,
-      "y": 1.0,
-      "z": 1.0
-    },
-    "quaternion": {
-      "w": 1.0,
-      "x": 0.0,
-      "y": 0.0,
-      "z": 0.0
-    },
-
-    "geometry": "cube",
-    "tag": "normalObject",
-    "localPos1": {
-      "x": -300.0,
-      "y": -900.0,
-      "z": -300.0
-    },
-    "localPos2": {
-      "x": 300.0,
-      "y": 900.0,
-      "z": 300.0
-    }
-
-  },
-  {
-    "name": "building",
-    "position": {
-      "x": 1000.0,
-      "y": 600.0,
-      "z": -1000.0
-    },
-    "scale": {
-      "x": 1.0,
-      "y": 1.0,
-      "z": 1.0
-    },
-    "quaternion": {
-      "w": 1.0,
-      "x": 0.0,
-      "y": 0.0,
-      "z": 0.0
-    },
-
-    "geometry": "cube",
-    "tag": "normalObject",
-    "localPos1": {
-      "x": -300.0,
-      "y": -900.0,
-      "z": -300.0
-    },
-    "localPos2": {
-      "x": 300.0,
-      "y": 900.0,
-      "z": 300.0
-    }
-
-  },
-  {
-    "name": "building",
-    "position": {
-      "x": -1000.0,
-      "y": 600.0,
-      "z": -1000.0
-    },
-    "scale": {
-      "x": 1.0,
-      "y": 1.0,
-      "z": 1.0
-    },
-    "quaternion": {
-      "w": 1.0,
-      "x": 0.0,
-      "y": 0.0,
-      "z": 0.0
-    },
-
-    "geometry": "cube",
-    "tag": "normalObject",
-    "localPos1": {
-      "x": -300.0,
-      "y": -900.0,
-      "z": -300.0
-    },
-    "localPos2": {
-      "x": 300.0,
-      "y": 900.0,
-      "z": 300.0
-    }
-
+    "geometry": "model",
+    "tag": "ground"
   }
 ]

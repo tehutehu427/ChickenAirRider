@@ -70,7 +70,7 @@ inline void FromJson(const nlohmann::json& _j, ItemImportData& _data)
 		}
 		if (parameter.contains("defence"))
 		{
-			_data.param.defense_ = parameter.value("defense", 0);
+			_data.param.defence_ = parameter.value("defence", 0);
 		}
 		if (parameter.contains("maxHealth"))
 		{

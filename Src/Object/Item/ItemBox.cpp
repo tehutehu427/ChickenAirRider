@@ -24,7 +24,7 @@ void ItemBox::Init(void)
 {
 	//“–‚½‚è”»’è
 	std::unique_ptr<Geometry> geo = std::make_unique<Cube>(trans_.pos, trans_.quaRot, BOX_HALF);
-	MakeCollider(Collider::TAG::NORMAL_OBJECT, std::move(geo));
+	MakeCollider(Collider::TAG::ITEM_BOX, std::move(geo));
 }
 
 void ItemBox::Update(void)

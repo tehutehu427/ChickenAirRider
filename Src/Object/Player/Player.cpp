@@ -25,6 +25,7 @@ Player::Player(std::weak_ptr<Camera> _camera)
 	movedPos_ = Utility::VECTOR_ZERO;
 	movePow_ = Utility::VECTOR_ZERO;
 	isGrounded_ = false;
+	isSpin_ = false;
 	footLine_ = Quaternion();
 
 	//行動切り替え
@@ -73,7 +74,7 @@ void Player::Init(void)
 	logic_ = std::make_unique<PlayerLogic>();
 
 	//当たり判定後処理
-	onHit_ = std::make_unique<PlayerOnHit>(*this);
+	onHit_ = std::make_unique<PlayerOnHit>(*this, trans_);
 
 	//初期状態
 	ChangeState(STATE::RIDE_MACHINE);
@@ -163,6 +164,27 @@ void Player::ChangeState(const STATE& _state)
 	action_->Init();
 }
 
+void Player::SetIsSpin(const bool _isSpin)
+{
+	//同じなら何もしない
+	if (isSpin_ == _isSpin)return;
+
+	//判定
+	isSpin_ = _isSpin;
+
+	if (_isSpin)
+	{
+		//スピンコライダを生成
+		std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SPIN_RADIUS);
+		MakeCollider(Collider::TAG::SPIN, std::move(geo), { Collider::TAG::PLAYER1,Collider::TAG::NORMAL_OBJECT, Collider::TAG::GROUND,Collider::TAG::MACHINE_RIDE });
+	}
+	else
+	{
+		//スピンコライダを消す
+		DeleteColliderAtTag(Collider::TAG::SPIN);
+	}
+}
+
 void Player::RideMachine(std::unique_ptr<Machine> _machine)
 {
 	//コライダ削除
@@ -206,6 +228,9 @@ void Player::UpdateNormal(void)
 	//行動
 	action_->Update();
 
+	//モデルと回転同期
+	modelQuaRot_ = trans_.quaRot;
+
 	//機体とキャラに座標と回転を同期させる
 	SynchronizeChara();
 
@@ -221,6 +246,18 @@ void Player::UpdateRide(void)
 
 	//行動
 	action_->Update();
+
+	//スピン中か
+	if (!isSpin_)
+	{
+		//モデルと回転同期
+		modelQuaRot_ = trans_.quaRot;
+	}
+	else
+	{
+		//スピン
+		modelQuaRot_ = modelQuaRot_.Mult(Quaternion::AngleAxis(Utility::Deg2RadF(40.0f), Utility::AXIS_Y));
+	}
 
 	//降りたなら
 	if (state_ == STATE::RIDE_MACHINE && logic_->IsGetOff())
@@ -266,7 +303,7 @@ void Player::SynchronizeChara(void)
 	//座標と回転の同期
 	chara_->SetPos(trans_.pos);
 	chara_->SetScale(trans_.scl);
-	chara_->SetQuaRot(trans_.quaRot);
+	chara_->SetQuaRot(modelQuaRot_);
 	chara_->Update();
 }
 
@@ -275,6 +312,6 @@ void Player::SynchronizeMachine(void)
 	//座標と回転の同期
 	machine_->SetPos(trans_.pos);
 	//machine_->SetScale(trans_.scl);
-	machine_->SetQuaRot(trans_.quaRot);
+	machine_->SetQuaRot(modelQuaRot_);
 	machine_->Update();
 }

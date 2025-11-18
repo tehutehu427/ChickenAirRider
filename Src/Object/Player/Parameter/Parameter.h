@@ -11,7 +11,7 @@ struct Parameter
 	float flight_ = 0.0f;		//”òs—Í
 	float weight_ = 0.0f;		//d—Ê
 	float attack_ = 0.0f;		//UŒ‚—Í
-	float defense_ = 0.0f;		//–hŒä—Í
+	float defence_ = 0.0f;		//–hŒä—Í
 	float maxHealth_ = 0.0f;	//Å‘å‘Ì—Í
 
 	//‰‰Z

@@ -67,6 +67,9 @@ protected:
 	/// @param _notHitTags 衝突させないタグ
 	void MakeCollider(const Collider::TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags = {});
 
+	//該当タグで当たり判定削除
+	void DeleteColliderAtTag(Collider::TAG _tag);
+
 	//全当たり判定の消去
 	void DeleteAllCollider(void);
 };

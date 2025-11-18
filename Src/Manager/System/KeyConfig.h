@@ -110,6 +110,8 @@ public:
 
 		PUSH_BUTTON,			//プッシュボタン
 		SPECIAL_BUTTON,			//スペシャルボタン
+		SPIN_ATTACK_R,			//スピンアタック
+		SPIN_ATTACK_L,			//スピンアタック
 
 		DEBUG_CHANGE_TITLE,		//デバッグ用タイトル画面に戻る
 		DEBUG_CHANGE_CLEAR,		//デバッグ用クリア画面に戻る

@@ -1,11 +1,14 @@
 #include"../pch.h"
+#include"../Application.h"
 #include"../Manager/System/KeyConfig.h"
 #include"../Manager/System/SceneManager.h"
+#include "../Manager/System/ResourceManager.h"
 #include "SceneSelect.h"
 #include "SceneTitle.h"
 
 SceneTitle::SceneTitle(void)
 {
+	logoImg_ = -1;
 }
 
 SceneTitle::~SceneTitle(void)
@@ -18,7 +21,7 @@ void SceneTitle::Load(void)
 
 void SceneTitle::Init(void)
 {
-	
+	logoImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE_LOGO).handleId_;
 }
 
 void SceneTitle::Update(void)
@@ -42,6 +45,8 @@ void SceneTitle::Draw(void)
 	DebugDraw();
 
 #endif // _DEBUG
+
+	DrawExtendGraph(0,0,Application::SCREEN_SIZE_X,Application::SCREEN_SIZE_Y, logoImg_, true);
 }
 
 void SceneTitle::Release(void)

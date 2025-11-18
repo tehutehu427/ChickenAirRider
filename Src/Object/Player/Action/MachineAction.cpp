@@ -18,6 +18,7 @@ MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase
 	flightPow_ = 0.0f;
 	isFlightNow_ = false;
 	gravPow_ = Utility::VECTOR_ZERO;
+	spinCnt_ = 0.0f;
 
 	update_[true] = [this](void) {UpdateGround(); };
 	update_[false] = [this](void) {UpdateFlight(); };
@@ -34,8 +35,28 @@ void MachineAction::Init(void)
 
 void MachineAction::Update(void)
 {
+	//デルタタイム
+	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//スピン時間
+	if (player_.IsSpin())
+	{
+		//カウンタ
+		spinCnt_ += delta;
+
+		//スピン時間
+		if (spinCnt_ > SPIN_TIME)
+		{
+			//初期化
+			spinCnt_ = 0.0f;
+
+			//スピン終了
+			player_.SetIsSpin(false);
+		}
+	}
+
 	//回転更新
-	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::Euler(axis_)));
+	if(!player_.IsSpin())player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::Euler(axis_)));
 
 	//状態ごとの更新
 	update_[player_.IsGrounded()]();
@@ -57,6 +78,7 @@ void MachineAction::Draw(void)
 
 void MachineAction::UpdateGround(void)
 {
+	//飛んだ判定のリセット
 	if (isFlightNow_)
 	{
 		isFlightNow_ = false;
@@ -69,10 +91,18 @@ void MachineAction::UpdateGround(void)
 		Charge();
 	}
 	
+	//チャージを解放したか
 	if (logic_.DisCharge())
 	{
 		//チャージ解放
 		DisCharge();
+	}
+
+	//スピン判定
+	if (logic_.IsButtonMeshing() && !player_.IsSpin())
+	{
+		//スピン開始
+		player_.SetIsSpin(true);
 	}
 
 	//移動
@@ -156,9 +186,9 @@ void MachineAction::Charge(void)
 	else
 	{
 		VECTOR scale = player_.GetTrans().scl;
-		scale.y -= chargeCnt_ / 100.0f;
-		scale.x += chargeCnt_ / 100.0f;
-		scale.z += chargeCnt_ / 100.0f;
+		scale.y -= chargeCnt_ / CHARGE_MODEL_TRANS;
+		scale.x += chargeCnt_ / CHARGE_MODEL_TRANS;
+		scale.z += chargeCnt_ / CHARGE_MODEL_TRANS;
 		player_.SetScale(scale);
 	}
 
@@ -221,7 +251,8 @@ void MachineAction::Turn(void)
 	turnPow += turnPow > 0.0f ? param.turning_ * delta
 		: -param.turning_ * delta;
 
-	if(player_.IsGrounded())turnPow = logic_.StartCharge() ? turnPow * 2.0f : turnPow;
+	//チャージ中だと回転しやすい
+	if(player_.IsGrounded())turnPow = logic_.StartCharge() ? turnPow * CHARGE_TURN : turnPow;
 
 	//Y回転を設定
 	player_.GetCamera().lock()->SetRotPow(std::fabsf(Utility::Deg2RadF(turnPow)));
@@ -250,7 +281,7 @@ void MachineAction::Flight(void)
 
 	//X回転を設定
 	axis_.x += flightPow;
-	axis_.x = Utility::Deg2RadF(std::clamp(Utility::Rad2DegF(axis_.x), -45.0f, 45.0f));
+	axis_.x = Utility::Deg2RadF(std::clamp(Utility::Rad2DegF(axis_.x), -AXIS_X_LIMIT, AXIS_X_LIMIT));
 
 	//重力制御
 	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);

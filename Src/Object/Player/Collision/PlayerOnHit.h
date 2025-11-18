@@ -10,7 +10,7 @@ public:
 
 	/// @brief コンストラクタ
 	/// @param _player 親
-	PlayerOnHit(Player& _player);
+	PlayerOnHit(Player& _player, Transform& _trans);
 
 	//デストラクタ
 	~PlayerOnHit(void);
@@ -22,6 +22,7 @@ private:
 
 	//親
 	Player& player_;
+	Transform& playerTrans_;
 
 	//コライダごとのヒット処理
 	std::unordered_map<Collider::TAG, std::function<void(const std::weak_ptr<Collider> _hitCol)>> onHit_;

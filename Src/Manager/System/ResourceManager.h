@@ -24,6 +24,8 @@ public:
 		WAKABA,				//若葉モデル
 
 		//ステージオブジェクトモデル
+		STAGE,				//ステージモデル
+
 		GLASS,				//草地モデル
 		BUILDING,			//ビルモデル
 
@@ -43,6 +45,8 @@ public:
 
 		//スカイドーム
 		SKY_DOME,			//スカイドーム
+
+		TITLE_LOGO,
 	};
 
 	// 初期化

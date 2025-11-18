@@ -73,6 +73,9 @@ public:
 	//大きさの設定
 	void SetScale(const VECTOR _scale) { trans_.scl = _scale; }
 
+	//移動力取得
+	const VECTOR& GetMovePow(void)const { return movePow_; }
+
 	//移動力変更
 	void SetMovePow(const VECTOR& _movePow) { movePow_ = _movePow; }
 
@@ -84,6 +87,12 @@ public:
 
 	//接地判定の切り替え
 	void SetIsGrounded(const bool _isGrounded) { isGrounded_ = _isGrounded; }
+
+	//スピン判定の取得
+	const bool IsSpin(void)const { return isSpin_; }
+
+	//スピン判定の設定
+	void SetIsSpin(const bool _isSpin);
 
 	//移動後座標の取得
 	const VECTOR& GetMovedPos(void) { return movedPos_; }
@@ -112,7 +121,7 @@ private:
 
 	//当たり判定用
 	static constexpr float NORMAL_RADIUS = 25.0f;							//通常時の球体の半径
-	static constexpr float RIDE_RADIUS = 35.0f;								//乗車時の球体の半径
+	static constexpr float SPIN_RADIUS = 60.0f;								//スピンの球体の半径
 	static constexpr VECTOR LOCAL_LINE_FRONT_BACK = { 0.0f,0.0f,15.0f };	//線判定の前後相対座標
 	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };				//線判定の上相対座標
 	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-26.0f,0.0f };			//線判定の下相対座標
@@ -142,8 +151,14 @@ private:
 	//足元
 	Quaternion footLine_;
 
+	//モデル回転用
+	Quaternion modelQuaRot_;
+
 	//接地しているか
 	bool isGrounded_;
+
+	//スピンしているか
+	bool isSpin_;
 
 	//関数ポインタ
 	std::map<STATE, std::function<void(void)>> changeAction_;	//行動切り替え

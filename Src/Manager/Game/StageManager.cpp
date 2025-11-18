@@ -69,6 +69,12 @@ void StageManager::Destroy(void)
 StageManager::StageManager(void)
 {
 	//リソース
+	modelId_["stage"] = [this](void)
+	{
+		//インスタンス
+		auto& res = ResourceManager::GetInstance();
+		return res.LoadModelDuplicate(ResourceManager::SRC::STAGE);
+	};
 	modelId_["glass"] = [this](void)
 	{
 		//インスタンス

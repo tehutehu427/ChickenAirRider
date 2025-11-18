@@ -4,8 +4,8 @@ struct Vector2;
 
 struct Vector2F
 {
-	float x;
-	float y;
+	float x = 0.0f;
+	float y = 0.0f;
 
 	//‰‰ŽZ
 	Vector2F operator+(const Vector2F _value)const;

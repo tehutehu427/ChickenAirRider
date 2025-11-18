@@ -46,6 +46,15 @@ private:
 	//回転量の補正
 	static constexpr float COMP_TURN = 500.0f;
 
+	//チャージ時の回転しやすさ
+	static constexpr float CHARGE_TURN = 2.0f;
+
+	//チャージ時のモデル変形補正
+	static constexpr float CHARGE_MODEL_TRANS = 100.0f;
+
+	//X回転の上下限値
+	static constexpr float AXIS_X_LIMIT = 45.0f;
+
 	//プッシュの落下補正
 	static constexpr float PUSH_FALL = 20.0f;
 
@@ -55,6 +64,9 @@ private:
 
 	//空中の速度減衰率
 	static constexpr float FLIGHT_DECELERATION = 2.0f;
+
+	//スピン時間
+	static constexpr float SPIN_TIME = 0.7f;
 
 	//機体
 	const Machine& machine_;
@@ -79,6 +91,9 @@ private:
 
 	//重力
 	VECTOR gravPow_;
+
+	//スピン時間カウント
+	float spinCnt_;
 
 	//状態ごとの更新
 	void UpdateGround(void)override;

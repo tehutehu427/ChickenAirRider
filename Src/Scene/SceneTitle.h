@@ -23,6 +23,8 @@ public:
 
 private:
 
+	int logoImg_;
+
 	//デバッグ描画
 	void DebugDraw(void)override;
 };

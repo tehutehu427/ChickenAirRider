@@ -44,6 +44,8 @@ void ResourceManager::Init(void)
 
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"MaxHealth.png");
 	resourcesMap_.emplace(SRC::MAX_HEALTH, std::move(res));
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"TitleLogo.png");
+	resourcesMap_.emplace(SRC::TITLE_LOGO, std::move(res));
 
 #pragma endregion 
 
@@ -68,6 +70,9 @@ void ResourceManager::Init(void)
 
 	//ステージオブジェクトのパス
 	std::wstring stagePath = PATH_MDL + L"StageObject/";
+
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, stagePath + L"Stage.mv1");
+	resourcesMap_.emplace(SRC::STAGE, std::move(res));
 
 	res = std::make_unique<Resource>(Resource::TYPE::MODEL, stagePath + L"Glass.mv1");
 	resourcesMap_.emplace(SRC::GLASS, std::move(res));

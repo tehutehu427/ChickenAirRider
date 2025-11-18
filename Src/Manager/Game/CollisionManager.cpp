@@ -125,10 +125,12 @@ CollisionManager::CollisionManager(void)
 	hitRange_[Collider::TAG::PLAYER2] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::PLAYER3] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::PLAYER4] = HIT_RANGE_NORMAL;
+	hitRange_[Collider::TAG::SPIN] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::MACHINE] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::MACHINE_RIDE] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::NORMAL_OBJECT] = HIT_RANGE_OBJECT;
 	hitRange_[Collider::TAG::GROUND] = HIT_RANGE_GROUND;
+	hitRange_[Collider::TAG::ITEM_BOX] = HIT_RANGE_OBJECT;
 	hitRange_[Collider::TAG::POWER_UP] = HIT_RANGE_NORMAL;
 }
 
