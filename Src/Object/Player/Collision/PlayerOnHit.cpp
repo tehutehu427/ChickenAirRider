@@ -37,70 +37,36 @@ void PlayerOnHit::OnHit(const std::weak_ptr<Collider> _hitCol)
 
 void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 {
-	//const auto& hitGeo = _hitCol.lock()->GetGeometry();
+	//当たった形状情報
+	const auto& hitGeo = _hitCol.lock()->GetGeometry();
 
 	//コライダ
 	auto& mainCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::MAIN)];
 	auto& groundPreCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED_PRE)];
-	////auto& groundOldCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED_OLD)];
+	//auto& groundOldCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED_OLD)];
 
-	////位置の補正
-	//const auto& hit = mainCol->GetGeometry().GetHitResult();
+	//位置の補正
+	const auto& hit = mainCol->GetGeometry().GetHitResult();
 
-	////移動前から移動後までのベクトル
-	//VECTOR v = VSub(player_.GetMovedPos(), player_.GetTrans().pos);
+	//移動前から移動後までのベクトル
+	VECTOR v = VSub(player_.GetMovedPos(), player_.GetTrans().pos);
 
-	//// 衝突時位置まで移動
-	//player_.SetMovedPos(VAdd(player_.GetTrans().pos, VScale(v, hit.t)));
+	// 衝突時位置まで移動
+	player_.SetMovedPos(VAdd(player_.GetTrans().pos, VScale(v, hit.t)));
 
-	//// 少し押し戻す（めり込み回避）
-	//player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(hit.normal, 0.007f)));
+	// 少し押し戻す（めり込み回避）
+	player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(hit.normal, 0.007f)));
 
-	//// 残り移動をスライド方向へ
-	//float remain = 1.0f - hit.t;
-	//VECTOR slide = VSub(v, VScale(hit.normal, VDot(v, hit.normal)));
-	//player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(slide, remain)));
+	// 残り移動をスライド方向へ
+	float remain = 1.0f - hit.t;
+	VECTOR slide = VSub(v, VScale(hit.normal, VDot(v, hit.normal)));
+	player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(slide, remain)));
 
-	////接地しているか
-	//if (groundPreCol->IsHit() && player_.GetAction().IsHit())
-	//{
-	//	player_.GetAction().ResetAxisX();
-	//	player_.SetIsGrounded(true);
-	//}
-
-	//モデル
-	Model& model = dynamic_cast<Model&>(_hitCol.lock()->GetGeometry());
-	const int hitNum = model.GetHitInfo().HitNum;
-
-	//球
-	Sphere& mainSphere = dynamic_cast<Sphere&>(mainCol->GetGeometry());
-	
-	//半径
-	float radius = mainSphere.GetRadius();
-
-	if (mainCol->IsHit())
+	//接地しているか
+	if (groundPreCol->IsHit() && player_.GetAction().IsHit())
 	{
-		for (int i = 0; i < hitNum; i++)
-		{
-			//当たった箇所
-			auto hit = model.GetHitInfo().Dim[i];
-			VECTOR hitPos = hit.HitPosition;
-
-			//三角メッシュとの判定
-			int pHit = HitCheck_Sphere_Triangle(playerTrans_.pos, radius, hit.Position[0], hit.Position[1], hit.Position[2]);
-
-			//当たっているなら
-			if (pHit)
-			{
-				//法線
-				VECTOR normal = hit.Normal;
-
-				//押し出し
-				player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(normal, 3.0f)));
-				playerTrans_.pos = player_.GetMovedPos();
-				playerTrans_.Update();
-			}
-		}
+		player_.GetAction().ResetAxisX();
+		player_.SetIsGrounded(true);
 	}
 }
 

@@ -124,7 +124,7 @@ private:
 	static constexpr float SPIN_RADIUS = 60.0f;								//スピンの球体の半径
 	static constexpr VECTOR LOCAL_LINE_FRONT_BACK = { 0.0f,0.0f,15.0f };	//線判定の前後相対座標
 	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };				//線判定の上相対座標
-	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-26.0f,0.0f };			//線判定の下相対座標
+	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-40.0f,0.0f };			//線判定の下相対座標
 
 	//基本機能
 	std::unique_ptr<Character> chara_;		//キャラクタ―
