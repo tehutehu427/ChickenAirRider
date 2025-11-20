@@ -136,7 +136,7 @@ void ItemManager::CreateItemBox(void)
 	for (const auto& itemBox : itemBoxes_)
 	{
 		//生成済みならスキップ
-		if (Utility::Equals(itemBox->GetTrans().pos, boxPosData_[rand].pos))return;
+		if (Utility::Equals(itemBox->GetCreatePos(), boxPosData_[rand].pos))return;
 	}
 
 	//アイテムボックス

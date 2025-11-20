@@ -69,19 +69,19 @@ void StageManager::Destroy(void)
 StageManager::StageManager(void)
 {
 	//リソース
-	modelId_["stage"] = [this](void)
+	modelId_["Stage"] = [this](void)
 	{
 		//インスタンス
 		auto& res = ResourceManager::GetInstance();
 		return res.LoadModelDuplicate(ResourceManager::SRC::STAGE);
 	};
-	modelId_["glass"] = [this](void)
+	modelId_["Glass"] = [this](void)
 	{
 		//インスタンス
 		auto& res = ResourceManager::GetInstance();
 		return res.LoadModelDuplicate(ResourceManager::SRC::GLASS);
 	};
-	modelId_["building"] = [this](void)
+	modelId_["Building"] = [this](void)
 	{
 		//インスタンス
 		auto& res = ResourceManager::GetInstance();
@@ -90,6 +90,8 @@ StageManager::StageManager(void)
 
 	//タグ
 	tag_["normalObject"] = Collider::TAG::NORMAL_OBJECT;
+	tag_["building"] = Collider::TAG::NORMAL_OBJECT;
+	tag_["glass"] = Collider::TAG::GROUND;
 	tag_["ground"] = Collider::TAG::GROUND;
 }
 

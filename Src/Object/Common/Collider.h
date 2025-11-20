@@ -22,6 +22,8 @@ public :
 		PLAYER3,		//プレイヤー3
 		PLAYER4,		//プレイヤー4
 
+		FOOT,			//足元
+
 		SPIN,			//スピン
 
 		MACHINE,		//機体

@@ -15,7 +15,7 @@ public:
 	//当たり判定をする範囲
 	static constexpr float HIT_RANGE_NORMAL = 1000.0f;	//通常の当たり判定距離
 	static constexpr float HIT_RANGE_OBJECT = 2000.0f;	//通常の当たり判定距離
-	static constexpr float HIT_RANGE_GROUND = 15000.0f;	//床の当たり判定距離
+	static constexpr float HIT_RANGE_GROUND = 35000.0f;	//床の当たり判定距離
 
 	//更新用
 	static constexpr int COL_UPDATE_FRAME = 0;		//更新ディレイフレーム

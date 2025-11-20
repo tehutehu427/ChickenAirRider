@@ -81,11 +81,11 @@ void Player::Init(void)
 
 	//当たり判定生成
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, NORMAL_RADIUS);
-	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
+	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1,Collider::TAG::FOOT });
 
 	//接地判定用の当たり判定
 	geo = std::make_unique<Line>(trans_.pos, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
-	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
+	MakeCollider(Collider::TAG::FOOT, std::move(geo), { Collider::TAG::PLAYER1,Collider::TAG::FOOT });
 
 	//移動後接地判定
 	//geo = std::make_unique<Line>(movedPos_, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
@@ -101,6 +101,7 @@ void Player::Update(void)
 	auto& grvMng = GravityManager::GetInstance();
 
 	//移動更新
+	prePos_ = trans_.pos;
 	trans_.pos = movedPos_;
 
 	//状態ごとの更新
@@ -116,7 +117,7 @@ void Player::Update(void)
 		footLine_ = Quaternion();
 	}
 
-	//初期化
+	//接地判定初期化
 	isGrounded_ = false;
 }
 
@@ -176,7 +177,12 @@ void Player::SetIsSpin(const bool _isSpin)
 	{
 		//スピンコライダを生成
 		std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SPIN_RADIUS);
-		MakeCollider(Collider::TAG::SPIN, std::move(geo), { Collider::TAG::PLAYER1,Collider::TAG::NORMAL_OBJECT, Collider::TAG::GROUND,Collider::TAG::MACHINE_RIDE });
+		MakeCollider(Collider::TAG::SPIN, std::move(geo), 
+			{ Collider::TAG::PLAYER1,
+			Collider::TAG::FOOT,
+			Collider::TAG::NORMAL_OBJECT,
+			Collider::TAG::GROUND,
+			Collider::TAG::MACHINE_RIDE });
 	}
 	else
 	{
@@ -256,7 +262,7 @@ void Player::UpdateRide(void)
 	else
 	{
 		//スピン
-		modelQuaRot_ = modelQuaRot_.Mult(Quaternion::AngleAxis(Utility::Deg2RadF(40.0f), Utility::AXIS_Y));
+		modelQuaRot_ = modelQuaRot_.Mult(Quaternion::AngleAxis(Utility::Deg2RadF(SPIN_SPEED), Utility::AXIS_Y));
 	}
 
 	//降りたなら

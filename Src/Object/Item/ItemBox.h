@@ -29,11 +29,42 @@ public:
 	//死亡判定の取得
 	const bool IsDead(void)const { return isDead_; }
 
+	//生成座標の取得
+	const VECTOR& GetCreatePos(void) { return createPos_; }
+
 private:
+	
+	//当たり判定
+	static constexpr int FOOT_COL = 1;	//足元判定のコライダ番号
 
 	//当たり判定の半分
 	static constexpr VECTOR BOX_HALF = { 100.0f,100.0f,100.0f };
 
+	//足元判定
+	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };				//線判定の上相対座標
+	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-110.0f,0.0f };		//線判定の下相対座標
+
+	//体力の最大値
+	static constexpr float HEALTH_MAX = 20.0f;
+
+	//無敵時間
+	static constexpr float INVINCIBLE = 0.5f;
+
+	//落下時の回転量
+	static constexpr float FALL_ROT = 12.0f;
+
 	//死亡判定
 	bool isDead_;
+
+	//生成された座標
+	VECTOR createPos_;
+
+	//足元
+	Quaternion footLine_;
+
+	//体力
+	float health_;
+
+	//無敵時間
+	float invincible_;
 };

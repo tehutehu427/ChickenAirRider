@@ -15,8 +15,8 @@ PlayerOnHit::PlayerOnHit(Player& _player, Transform& _trans)
 {
 	//タグごとのヒット処理格納
 	onHit_[Collider::TAG::NORMAL_OBJECT] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
-	onHit_[Collider::TAG::GROUND] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
-	onHit_[Collider::TAG::MACHINE] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
+	onHit_[Collider::TAG::GROUND] = [this](const std::weak_ptr<Collider> _hitCol) {GroundOnHit(_hitCol); };
+	onHit_[Collider::TAG::MACHINE] = [this](const std::weak_ptr<Collider> _hitCol) {/*NormalObjectOnHit(_hitCol); */};
 	onHit_[Collider::TAG::MACHINE_RIDE] = [this](const std::weak_ptr<Collider> _hitCol) {RideMachineOnHit(_hitCol); };
 	onHit_[Collider::TAG::ITEM_BOX] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
 	onHit_[Collider::TAG::POWER_UP] = [this](const std::weak_ptr<Collider> _hitCol) {PowerUpItemOnHit(_hitCol); };
@@ -66,8 +66,75 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	if (groundPreCol->IsHit() && player_.GetAction().IsHit())
 	{
 		player_.GetAction().ResetAxisX();
-		player_.SetIsGrounded(true);
+		//player_.SetIsGrounded(true);
 	}
+}
+
+void PlayerOnHit::GroundOnHit(const std::weak_ptr<Collider> _hitCol)
+{
+    //各コライダ
+    auto& mainCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::MAIN)];
+    auto& groundPreCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED_PRE)];
+
+    //相手モデル
+    Model& model = dynamic_cast<Model&>(_hitCol.lock()->GetGeometry());
+    const int hitNum = model.GetHitInfo().HitNum;
+
+    //自身の線
+    Line& line = dynamic_cast<Line&>(groundPreCol->GetGeometry());
+
+    //自身の球
+    Sphere& mainSphere = dynamic_cast<Sphere&>(mainCol->GetGeometry());
+    float radius = mainSphere.GetRadius();
+
+	//移動後座標
+	VECTOR pos = player_.GetMovedPos();
+	VECTOR totalNormal = VGet(0, 0, 0);
+	float maxDepth = 0.0f;
+
+	// grounded の判定は最後に行う
+	bool groundedThisFrame = false;
+
+	//足元のみ判定
+	if (groundPreCol->IsHit())
+	{
+		//当たった座標
+		VECTOR hitPos = line.GetHitInfo().HitPosition;
+		
+		//法線
+		VECTOR normal = VNorm(line.GetHitInfo().Normal);
+		
+		//深度
+		float depth = radius - VDot(normal, VSub(pos, hitPos));
+
+		//めり込んでるなら
+		if (depth > 0.0f)
+		{
+			//保存
+			totalNormal = VAdd(totalNormal, normal);
+			maxDepth = std::max(maxDepth, depth);
+
+			// 接地判定
+			groundedThisFrame = true;
+
+			// 回転を元に戻す
+			player_.GetAction().ResetAxisX();
+		}
+	}
+
+	// 押し戻し
+	if (maxDepth > 0.0f)
+	{
+		VECTOR N = VNorm(totalNormal);
+		pos = VAdd(pos, VScale(N, maxDepth));
+	}
+
+	player_.SetMovedPos(pos);
+
+	// ---- grounded の更新は最後に1回だけ ----
+	player_.SetIsGrounded(groundedThisFrame);
+    // ---- 最後に前フレームの位置を保存（次フレーム用） ----
+    player_.SetPrePos(pos);
 }
 
 void PlayerOnHit::RideMachineOnHit(const std::weak_ptr<Collider> _hitCol)
