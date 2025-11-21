@@ -61,6 +61,12 @@ public:
 	//総合パラメーター
 	const Parameter GetAllParam(void)const;
 
+	//攻撃パラメーター
+	const float GetAttack(void)const;
+
+	//防御パラメーター
+	const float GetDefence(void)const;
+
 	//ユニットのみのパラメーター
 	UnitParameter GetUnitParam(void)const;
 
@@ -132,6 +138,10 @@ private:
 	static constexpr VECTOR LOCAL_LINE_FRONT_BACK = { 0.0f,0.0f,15.0f };	//線判定の前後相対座標
 	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };				//線判定の上相対座標
 	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-40.0f,0.0f };			//線判定の下相対座標
+
+	//パラメーター関係
+	static constexpr float WEIGHT_AFFECT = 0.2f;
+	static constexpr float FLIGHT_AFFECT = 0.1f;
 
 	//基本機能
 	std::unique_ptr<Character> chara_;		//キャラクタ―

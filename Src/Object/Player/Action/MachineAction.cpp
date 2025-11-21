@@ -38,6 +38,13 @@ void MachineAction::Update(void)
 	//デルタタイム
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
+	//スピン判定
+	if (logic_.IsButtonMeshing() && !player_.IsSpin())
+	{
+		//スピン開始
+		player_.SetIsSpin(true);
+	}
+
 	//スピン時間
 	if (player_.IsSpin())
 	{
@@ -56,7 +63,7 @@ void MachineAction::Update(void)
 	}
 
 	//回転更新
-	if(!player_.IsSpin())player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::Euler(axis_)));
+	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::Euler(axis_)));
 
 	//状態ごとの更新
 	update_[player_.IsGrounded()]();
@@ -96,13 +103,6 @@ void MachineAction::UpdateGround(void)
 	{
 		//チャージ解放
 		DisCharge();
-	}
-
-	//スピン判定
-	if (logic_.IsButtonMeshing() && !player_.IsSpin())
-	{
-		//スピン開始
-		player_.SetIsSpin(true);
 	}
 
 	//移動
@@ -203,8 +203,17 @@ void MachineAction::Charge(void)
 	}
 	else
 	{
-		//減速
-		driveCnt_ -= delta * TURN_BRAKE_POW;
+		//チャージがたまるまで
+		if (chargeCnt_ < 1.0f)
+		{
+			//減速は少なく
+			driveCnt_ -= delta;
+		}
+		else
+		{
+			//減速
+			driveCnt_ -= delta * TURN_BRAKE_POW;
+		}
 	}
 }
 

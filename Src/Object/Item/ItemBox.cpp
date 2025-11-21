@@ -88,7 +88,7 @@ void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
 		const auto& player = dynamic_cast<const Player&>(_hitCol.lock()->GetParent());
 
 		//攻撃力分ダメージ
-		health_ -= player.GetAllParam().attack_;
+		health_ -= player.GetAttack();
 
 		//無敵時間リセット
 		invincible_ = 0.0f;

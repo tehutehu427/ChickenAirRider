@@ -10,6 +10,7 @@ PlayerLogic::PlayerLogic(void)
     buttonMeshingCnt_ = 0;
     cnt_ = 0.0f;
     oldTurnValue_ = {};
+    newTurnValue_ = {};
 }
 
 PlayerLogic::~PlayerLogic(void)
@@ -143,20 +144,18 @@ const bool PlayerLogic::IsButtonMeshing(void)
     const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
     //傾けた量
-    Vector2F vec = TurnValue();
+    oldTurnValue_ = newTurnValue_;
+    newTurnValue_ = TurnValue();
 
     //前フレームと比べて+-値が反対なら
-    if (oldTurnValue_.x <= 0 && vec.x > 0
-        || oldTurnValue_.x >= 0 && vec.x < 0)
+    if (oldTurnValue_.x <= 0 && newTurnValue_.x > 0
+        || oldTurnValue_.x >= 0 && newTurnValue_.x < 0)
     {
         //レバガチャ判定
         buttonMeshingCnt_++;
 
         //受付時間カウンタリセット
         cnt_ = 0.0f;
-
-        //前回のを保存
-        oldTurnValue_ = vec;
     }
     else
     {

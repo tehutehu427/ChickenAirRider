@@ -147,6 +147,22 @@ const Parameter Player::GetAllParam(void)const
 	return param_.CalcUnitParam(GetUnitParam());
 }
 
+const float Player::GetAttack(void) const
+{
+	//パラメータ
+	const Parameter& param = GetAllParam();
+
+	return param.attack_ + (param.weight_ * WEIGHT_AFFECT) - (param.flight_ * FLIGHT_AFFECT);
+}
+
+const float Player::GetDefence(void) const
+{
+	//パラメータ
+	const Parameter& param = GetAllParam();
+
+	return param.defence_ + (param.weight_ * WEIGHT_AFFECT) - (param.flight_ * FLIGHT_AFFECT);
+}
+
 UnitParameter Player::GetUnitParam(void) const
 {
 	//キャラと機体の合計パラメーター

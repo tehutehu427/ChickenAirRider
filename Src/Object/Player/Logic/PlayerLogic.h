@@ -80,13 +80,16 @@ private:
 	static constexpr float MOVE_POW = 1.0f;
 
 	//レバガチャ数
-	static constexpr int BUTTON_MESHING_MAX = 5;
+	static constexpr int BUTTON_MESHING_MAX = 2;
 
 	//レバガチャ受付時間
-	static constexpr float BUTTON_MESHING_RIMIT = 0.5f;
+	static constexpr float BUTTON_MESHING_RIMIT = 0.25f;
 
 	//一フレーム前の回転量
 	Vector2F oldTurnValue_;
+
+	//新しい回転量
+	Vector2F newTurnValue_;
 
 	//レバガチャカウンタ
 	int buttonMeshingCnt_;
