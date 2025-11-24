@@ -16,6 +16,7 @@ ItemBase::ItemBase(const VECTOR _pos, const Parameter& _param, const int _imageI
 
 ItemBase::~ItemBase(void)
 {
+	hiter_.reset();
 }
 
 void ItemBase::Load(void)
@@ -63,6 +64,9 @@ void ItemBase::Draw(void)
 	}
 	else
 	{
+		//取得者がいないとスキップ
+		if (hiter_.lock() == nullptr)return;
+
 		//取得者の座標
 		VECTOR hiterPos = hiter_.lock()->GetParent().GetTrans().pos;
 

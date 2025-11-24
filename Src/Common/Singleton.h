@@ -10,8 +10,11 @@ public:
 	Singleton(const Singleton& _copy) = delete;
 	Singleton& operator=(const Singleton& _copy) = delete;
 
-	//明示的にインスタンスの生成
-	static void CreateInstance(void)
+	/// <summary>
+	/// 明示的にインスタンスの生成
+	/// </summary>
+	/// <param name="_timing">解放タイミング</param>
+	static void CreateInstance(SingletonRegistry::DESTROY_TIMING _timing)
 	{
 		if (instance_ != nullptr)return;
 		
@@ -22,7 +25,7 @@ public:
 		instance_->Init();
 
 		//レジスタに格納
-		SingletonRegistry::GetInstance().RegistryDestroyer([](void) { instance_->Destroy(); });
+		SingletonRegistry::GetInstance().RegistryDestroyer(_timing, [](void) { instance_->Destroy(); });
 	}
 
 	//インスタンスの取得
@@ -30,7 +33,7 @@ public:
 	{
 		if (instance_ == nullptr)
 		{
-			CreateInstance();
+			CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 		}
 
 		return *instance_;

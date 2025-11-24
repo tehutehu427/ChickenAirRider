@@ -51,6 +51,9 @@ public:
 	// 解放成功／失敗の判定
 	bool IsReleaseFail(void) const;
 
+	//プログラム終了
+	void LoopEnd(void) { isGameEnd_ = true; }
+
 private:
 
 	// 静的インスタンス
@@ -61,6 +64,9 @@ private:
 
 	// 解放失敗
 	bool isReleaseFail_;
+
+	//ゲーム終了判定
+	bool isGameEnd_;
 
 	//FPS
 	std::unique_ptr<FpsControl> fps_;

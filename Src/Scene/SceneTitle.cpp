@@ -8,6 +8,7 @@
 
 SceneTitle::SceneTitle(void)
 {
+	backImg_ = -1;
 	logoImg_ = -1;
 }
 
@@ -17,11 +18,13 @@ SceneTitle::~SceneTitle(void)
 
 void SceneTitle::Load(void)
 {
+	//âÊëúÇÃì«Ç›çûÇ›
+	backImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE_BACK).handleId_;
+	logoImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE_LOGO).handleId_;
 }
 
 void SceneTitle::Init(void)
 {
-	logoImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE_LOGO).handleId_;
 }
 
 void SceneTitle::Update(void)
@@ -46,7 +49,11 @@ void SceneTitle::Draw(void)
 
 #endif // _DEBUG
 
-	DrawExtendGraph(0,0,Application::SCREEN_SIZE_X,Application::SCREEN_SIZE_Y, logoImg_, true);
+	//îwåi
+	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backImg_, true);
+
+	//ÉçÉS
+	DrawExtendGraph(LOGO_POS_X_1, LOGO_POS_Y_1, LOGO_POS_X_2, LOGO_POS_Y_2, logoImg_, true);
 }
 
 void SceneTitle::Release(void)

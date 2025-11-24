@@ -89,6 +89,11 @@ public:
 	enum class CONTROL_TYPE 	
 	{
 		ENTER,					//決定
+		SELECT_UP,				//選択肢の上入力
+		SELECT_DOWN,			//選択肢の下入力
+		SELECT_RIGHT,			//選択肢の右入力
+		SELECT_LEFT,			//選択肢の左入力
+
 		CAMERA_ZOOM_IN,			//カメラのズームイン
 		CAMERA_ZOOM_OUT,		//カメラのズームアウト
 

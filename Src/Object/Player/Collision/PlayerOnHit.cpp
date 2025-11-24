@@ -66,7 +66,7 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	if (groundPreCol->IsHit() && player_.GetAction().IsHit())
 	{
 		player_.GetAction().ResetAxisX();
-		//player_.SetIsGrounded(true);
+		player_.SetIsGrounded(true);
 	}
 }
 

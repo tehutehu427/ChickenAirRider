@@ -23,6 +23,16 @@ public:
 
 private:
 
+	//タイトルロゴ位置
+	static constexpr float LOGO_POS_X_1 = 150.0f;
+	static constexpr float LOGO_POS_X_2 = 850.0f;
+	static constexpr float LOGO_POS_Y_1 = 100.0f;
+	static constexpr float LOGO_POS_Y_2 = 400.0f;
+
+	//タイトル背景
+	int backImg_;
+
+	//タイトルロゴ
 	int logoImg_;
 
 	//デバッグ描画

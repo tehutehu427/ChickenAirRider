@@ -18,7 +18,7 @@ public:
 		NONE,
 
 		//キャラクターモデル
-		CHICKEN,			//チキンモデル		
+		CHICKEN,			//チキンモデル
 		
 		//マシンモデル
 		WAKABA,				//若葉モデル
@@ -46,7 +46,8 @@ public:
 		//スカイドーム
 		SKY_DOME,			//スカイドーム
 
-		TITLE_LOGO,
+		TITLE_BACK,			//タイトル背景
+		TITLE_LOGO,			//タイトルロゴ
 	};
 
 	// 初期化

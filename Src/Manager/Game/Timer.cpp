@@ -1,4 +1,6 @@
 #include "../pch.h"
+#include "../Application.h"
+#include "../Utility/Utility.h"
 #include "../Manager/System/SceneManager.h"
 #include "Timer.h"
 
@@ -37,13 +39,13 @@ void Timer::Draw(void)
 	if (IsTimeLimit())
 	{
 		//écÇËéûä‘
-		DrawFormatString(0, 64, 0xffffff, L"%02d:%02d", Minute(RemainingTime()), Second(RemainingTime()));
+		DrawFormatString(Application::SCREEN_HALF_X, 64, Utility::RED, L"%02d:%02d", Minute(RemainingTime()), Second(RemainingTime()));
 	}
 	//éûä‘êßå¿Ç»Çµ
 	else
 	{
 		//åoâﬂéûä‘
-		DrawFormatString(0, 64, 0xffffff, L"%02d:%02d", Minute(cnt_), Second(cnt_));
+		DrawFormatString(Application::SCREEN_HALF_X, 64, Utility::RED, L"%02d:%02d", Minute(cnt_), Second(cnt_));
 	}
 }
 

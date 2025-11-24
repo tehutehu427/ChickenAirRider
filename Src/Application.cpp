@@ -53,6 +53,9 @@ void Application::Init(void)
 		return;
 	}
 
+	//ゲーム終了判定の初期化
+	isGameEnd_ = false;
+
 	// Effekseerの初期化
 	InitEffekseer();
 
@@ -60,20 +63,20 @@ void Application::Init(void)
 	SetUseDirectInputFlag(true);
 
 	//外部ファイル管理初期化
-	DataRegistry::CreateInstance();
+	DataRegistry::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 	DataRegistry::GetInstance().CreateAll();
 
 	// リソース管理初期化
-	ResourceManager::CreateInstance();	
+	ResourceManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 	
 	//入力管理の初期化
-	KeyConfig::CreateInstance();
+	KeyConfig::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//サウンド関係の初期化
-	SoundManager::CreateInstance();
+	SoundManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	// シーン管理初期化
-	SceneManager::CreateInstance();
+	SceneManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	// FPS初期化
 	fps_ = std::make_unique<FpsControl>();
@@ -92,7 +95,7 @@ void Application::Run(void)
 	auto& sceneManager = SceneManager::GetInstance();
 
 	// ゲームループ
-	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
+	while (ProcessMessage() == 0 && !isGameEnd_)
 	{
 		//フレームレートを更新
 		if (!fps_->UpdateFrameRate()) continue;
@@ -106,6 +109,9 @@ void Application::Run(void)
 		fps_->CalcFrameRate();
 
 		ScreenFlip();
+
+		//終了(デバッグ)
+		if (CheckHitKey(KEY_INPUT_ESCAPE))isGameEnd_ = true;
 	}
 
 }
@@ -115,7 +121,7 @@ void Application::Destroy(void)
 	fontReg_->Destroy();
 
 	//シングルトンインスタンスの一括解放
-	SingletonRegistry::GetInstance().AllDelete();
+	SingletonRegistry::GetInstance().Delete(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	// Effekseerを終了する。
 	Effkseer_End();

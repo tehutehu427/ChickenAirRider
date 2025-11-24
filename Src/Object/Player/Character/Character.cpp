@@ -12,6 +12,7 @@ Character::Character(void)
 
 Character::~Character(void)
 {
+
 }
 
 void Character::Load(void)
@@ -42,7 +43,7 @@ void Character::Load(void)
 
 	//モデル
 	trans_.quaRotLocal = Quaternion::AngleAxis(Utility::Deg2RadF(180.0f), Utility::AXIS_Y);
-	trans_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::CHICKEN).handleId_);
+	trans_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::CHICKEN));
 	
 	//アニメーション
 	anim_ = std::make_unique<AnimationController>(trans_.modelId);

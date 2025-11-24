@@ -431,8 +431,8 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 void SceneManager::ResetChangeScene(const bool _isFade)
 {
 	// リソースの解放
-	ResourceManager::GetInstance().Release();	
-	SoundManager::GetInstance().Release();	
+	//ResourceManager::GetInstance().Release();	
+	//SoundManager::GetInstance().Release();	
 
 	//デルタタイムリセット
 	ResetDeltaTime();
@@ -492,7 +492,10 @@ void SceneManager::DrawMultiScreen()
 		UpdateEffekseer3D();
 
 		// 描画
-		scene_.back()->Draw();
+		for (const auto& scene : scene_)
+		{
+			scene->Draw();
+		}
 
 		// 主にポストエフェクト用
 		cameras_[index]->Draw();

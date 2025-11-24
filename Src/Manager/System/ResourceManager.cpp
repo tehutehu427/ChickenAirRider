@@ -18,6 +18,9 @@ void ResourceManager::Init(void)
 	//アイテム画像のパス
 	std::wstring itemImage = PATH_IMG + L"Item/";
 
+	//タイトル画像のパス
+	std::wstring titleImage = PATH_IMG + L"Title/";
+
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"MaxSpeed.png");
 	resourcesMap_.emplace(SRC::MAX_SPEED, std::move(res));
 
@@ -44,7 +47,11 @@ void ResourceManager::Init(void)
 
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"MaxHealth.png");
 	resourcesMap_.emplace(SRC::MAX_HEALTH, std::move(res));
-	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"TitleLogo.png");
+	
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, titleImage + L"Title.png");
+	resourcesMap_.emplace(SRC::TITLE_BACK, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, titleImage + L"TitleLogo.png");
 	resourcesMap_.emplace(SRC::TITLE_LOGO, std::move(res));
 
 #pragma endregion 

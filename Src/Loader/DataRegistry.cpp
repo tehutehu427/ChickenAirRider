@@ -12,20 +12,20 @@
 void DataRegistry::CreateAll(void)
 {
 	//ユニットのパラメーター
-	LoaderManager<UnitParameter>::CreateInstance();
+	LoaderManager<UnitParameter>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 	
 	//ステージの情報
-	LoaderManager<StageImportData>::CreateInstance();
+	LoaderManager<StageImportData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//アニメーション情報
-	LoaderManager<AnimationImportData>::CreateInstance();
+	LoaderManager<AnimationImportData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//機体情報
-	LoaderManager<MachineImportData>::CreateInstance();
+	LoaderManager<MachineImportData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//アイテム情報
-	LoaderManager<ItemImportData>::CreateInstance();
+	LoaderManager<ItemImportData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//アイテム情報
-	LoaderManager<BoxCreatePositionData>::CreateInstance();
+	LoaderManager<BoxCreatePositionData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 }

@@ -1,4 +1,5 @@
 #include"../pch.h"
+#include"../Common/SingletonRegistry.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
 #include"../Manager/Game/CollisionManager.h"
@@ -19,10 +20,11 @@ SceneGame::SceneGame(void)
 
 SceneGame::~SceneGame(void)
 {
-	GravityManager::GetInstance().Destroy();
-	CollisionManager::GetInstance().Destroy();
 	PlayerManager::GetInstance().Destroy();
 	StageManager::GetInstance().Destroy();
+	GravityManager::GetInstance().Destroy();
+	CollisionManager::GetInstance().Destroy();
+	SingletonRegistry::GetInstance().Delete(SingletonRegistry::DESTROY_TIMING::GAME_END);
 }
 
 void SceneGame::Load(void)
@@ -41,16 +43,16 @@ void SceneGame::Init(void)
 	StageManager::CreateInstance();
 
 	//機体管理の生成
-	MachineManager::CreateInstance();
+	MachineManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
 
 	//キャラクター情報管理の生成
-	AnimationManager::CreateInstance();
+	AnimationManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
 
 	//プレイヤー管理の生成
 	PlayerManager::CreateInstance();
 
 	//アイテム管理の生成
-	ItemManager::CreateInstance();
+	ItemManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
 
 	//インスタンス
 	auto& grvMng = GravityManager::GetInstance();
@@ -63,7 +65,7 @@ void SceneGame::Init(void)
 	grvMng.Init();
 
 	//タイマー
-	timer_ = std::make_unique<Timer>();
+	timer_ = std::make_unique<Timer>(120);
 	timer_->Init();
 
 	//カウント開始
@@ -144,9 +146,6 @@ void SceneGame::Draw(void)
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
 
-	//タイマーの描画
-	timer_->Draw();
-
 	//スカイドーム
 	sky_->Draw();
 
@@ -161,6 +160,9 @@ void SceneGame::Draw(void)
 
 	//アイテムの描画
 	itemMng.Draw();
+
+	//タイマーの描画
+	timer_->Draw();
 }
 
 void SceneGame::Release(void)
