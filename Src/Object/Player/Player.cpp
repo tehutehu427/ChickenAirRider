@@ -126,13 +126,13 @@ void Player::Draw(void)
 	//•`‰æ
 	draw_[state_]();
 
-	for (auto& col : collider_)
-	{
-		col->GetGeometry().Draw(0);
-	}
+	//for (auto& col : collider_)
+	//{
+	//	col->GetGeometry().Draw(0);
+	//}
 
-	DrawFormatString(0, 32, 0xffffff, L"%.2f,%.2f,%.2f", trans_.quaRot.ToEuler().x, trans_.quaRot.ToEuler().y, trans_.quaRot.ToEuler().z);
-	DrawFormatString(0, 80, 0xffffff, L"%.2f,%.2f,%.2f", trans_.pos.x, trans_.pos.y, trans_.pos.z);
+	//DrawFormatString(0, 32, 0xffffff, L"%.2f,%.2f,%.2f", trans_.quaRot.ToEuler().x, trans_.quaRot.ToEuler().y, trans_.quaRot.ToEuler().z);
+	//DrawFormatString(0, 80, 0xffffff, L"%.2f,%.2f,%.2f", trans_.pos.x, trans_.pos.y, trans_.pos.z);
 }
 
 void Player::OnHit(const std::weak_ptr<Collider> _hitCol)

@@ -63,7 +63,7 @@ private:
 
 	//モデルのサイズ
 	static constexpr VECTOR MODEL_SIZE = { 0.33f,0.33f,0.33f };
-	static constexpr float RIDE_COL = 150.0f;
+	static constexpr float RIDE_COL = 250.0f;
 
 	//パラメーター
 	UnitParameter unitParam_;
