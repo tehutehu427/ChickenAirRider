@@ -22,11 +22,13 @@ Player::Player(std::weak_ptr<Camera> _camera)
 {
 	//初期化
 	state_ = STATE::NONE;
+	prePos_ = Utility::VECTOR_ZERO;
 	movedPos_ = Utility::VECTOR_ZERO;
 	movePow_ = Utility::VECTOR_ZERO;
 	isGrounded_ = false;
 	isSpin_ = false;
 	footLine_ = Quaternion();
+	health_ = 0.0f;
 
 	//行動切り替え
 	changeAction_[STATE::NONE] = [this](void) {};
@@ -91,6 +93,9 @@ void Player::Init(void)
 	//geo = std::make_unique<Line>(movedPos_, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	//MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
 	
+	//体力
+	health_ = GetAllParam().maxHealth_;
+
 	//初期更新
 	Update();
 }
@@ -139,6 +144,40 @@ void Player::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
 	//ヒット処理
 	onHit_->OnHit(_hitCol);
+}
+
+void Player::SetParam(const Parameter& _param)
+{
+	//セット
+	param_ = _param;
+
+	//上下限値
+	if (param_.maxSpeed_ > MAX_PARAM)param_.maxSpeed_ = MAX_PARAM;
+	else if (param_.maxSpeed_ < 0)param_.maxSpeed_ = 0;
+
+	if (param_.acceleration_ > MAX_PARAM)param_.acceleration_ = MAX_PARAM;
+	else if (param_.acceleration_ < 0)param_.acceleration_ = 0;
+
+	if (param_.turning_ > MAX_PARAM)param_.turning_ = MAX_PARAM;
+	else if (param_.turning_ < 0)param_.turning_ = 0;
+
+	if (param_.charge_ > MAX_PARAM)param_.charge_ = MAX_PARAM;
+	else if (param_.charge_ < 0)param_.charge_ = 0;
+
+	if (param_.flight_ > MAX_PARAM)param_.flight_ = MAX_PARAM;
+	else if (param_.flight_ < 0)param_.flight_ = 0;
+
+	if (param_.weight_ > MAX_PARAM)param_.weight_ = MAX_PARAM;
+	else if (param_.weight_ < 0)param_.weight_ = 0;
+
+	if (param_.attack_ > MAX_PARAM)param_.attack_ = MAX_PARAM;
+	else if (param_.attack_ < 0)param_.attack_ = 0;
+
+	if (param_.defence_ > MAX_PARAM)param_.defence_ = MAX_PARAM;
+	else if (param_.defence_ < 0)param_.defence_ = 0;
+
+	if (param_.maxHealth_ > MAX_PARAM)param_.maxHealth_ = MAX_PARAM;
+	else if (param_.maxHealth_ < 0)param_.maxHealth_ = 0;
 }
 
 const Parameter Player::GetAllParam(void)const

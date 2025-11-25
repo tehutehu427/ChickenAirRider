@@ -155,11 +155,11 @@ void SceneGame::Draw(void)
 	//機体の描画
 	machineMng.Draw();
 
-	//プレイヤーの描画
-	plMng.Draw();
-
 	//アイテムの描画
 	itemMng.Draw();
+
+	//プレイヤーの描画
+	plMng.Draw();
 
 	//タイマーの描画
 	timer_->Draw();

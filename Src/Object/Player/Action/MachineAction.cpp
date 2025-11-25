@@ -78,9 +78,59 @@ void MachineAction::Update(void)
 
 void MachineAction::Draw(void)
 {
+	const auto& param = player_.GetAllParam();
+	const float nowHealth = player_.GetNowHealth();
+
 	//速度
 	DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 32, 0xffffff, L"Speed = %.2f", speed_);
-	DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 64, 0xffffff, L"Charge = %.2f", chargeCnt_);
+	//DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 64, 0xffffff, L"Charge = %.2f", chargeCnt_);
+
+	const int div = 64; // 分割数（多いほど滑らか）
+	const float maxAngle = chargeCnt_ * DX_TWO_PI;
+
+	float cx = Application::SCREEN_SIZE_X - 320;
+	float cy = Application::SCREEN_SIZE_Y - 108;
+	float radius = 30.0f;
+	float prevX = cx;
+	float prevY = cy - radius; // 角度0（上）から開始したい場合
+
+	for (int i = 0; i <= div; i++)
+	{
+		float t = (float)i / div;
+		float angle = -DX_PI / 2.0f + maxAngle * t; // 上方向から時計回り
+
+		float x = cx + cosf(angle) * radius;
+		float y = cy + sinf(angle) * radius;
+
+		// 中心 + 直前の点 + 今の点 の三角形を描画
+		DrawTriangle(
+			cx, cy,
+			prevX, prevY,
+			x, y,
+			Utility::BLUE, TRUE
+		);
+
+		prevX = x;
+		prevY = y;
+		if (t >= chargeCnt_) break; // 余計な描画を防ぐ
+	}
+
+	//最大体力
+	DrawBox(HEALTH_BOX_POS_X_1, 
+		HEALTH_BOX_POS_Y, 
+		HEALTH_BOX_POS_X_2, 
+		HEALTH_BOX_POS_Y - param.maxHealth_ * HEALTH_BOX, 
+		Utility::BLACK, true);
+	
+	if (nowHealth > 0.0f)
+	{
+		//体力
+		DrawBox(HEALTH_BOX_POS_X_1 + HEALTH_LOCAL,
+			HEALTH_BOX_POS_Y - HEALTH_LOCAL,
+			HEALTH_BOX_POS_X_2 - HEALTH_LOCAL,
+			HEALTH_BOX_POS_Y - (param.maxHealth_ * HEALTH_BOX) * (nowHealth / param.maxHealth_) + HEALTH_LOCAL,
+			Utility::RED, true);
+	}
 }
 
 void MachineAction::UpdateGround(void)

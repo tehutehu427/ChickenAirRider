@@ -56,7 +56,7 @@ public:
 	const Parameter& GetParam(void) { return param_; }
 
 	//パラメーターの設定
-	void SetParam(const Parameter& _param) { param_ = _param; }
+	void SetParam(const Parameter& _param);
 
 	//総合パラメーター
 	const Parameter GetAllParam(void)const;
@@ -118,6 +118,9 @@ public:
 	//足元方向の設定
 	void SetFootLine(const Quaternion _foot) { footLine_ = _foot; }
 
+	//現在体力を返す
+	const float GetNowHealth(void)const { return health_; }
+
 	//カメラの取得
 	std::weak_ptr<Camera> GetCamera(void) { return camera_; }
 
@@ -142,6 +145,7 @@ private:
 	//パラメーター関係
 	static constexpr float WEIGHT_AFFECT = 0.2f;
 	static constexpr float FLIGHT_AFFECT = 0.1f;
+	static constexpr float MAX_PARAM = 15;
 
 	//基本機能
 	std::unique_ptr<Character> chara_;		//キャラクタ―
@@ -180,9 +184,12 @@ private:
 	//スピンしているか
 	bool isSpin_;
 
+	//現在体力
+	float health_;
+
 	//関数ポインタ
 	std::map<STATE, std::function<void(void)>> changeAction_;	//行動切り替え
-	std::map<STATE, std::function<void(void)>> update_;			//行動切り替え
+	std::map<STATE, std::function<void(void)>> update_;			//状態ごとの更新
 	std::map<STATE, std::function<void(void)>> draw_;			//状態ごとの描画
 
 	//状態ごとのアクションの変更

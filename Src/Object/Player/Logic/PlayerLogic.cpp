@@ -144,12 +144,16 @@ const bool PlayerLogic::IsButtonMeshing(void)
     const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
     //傾けた量
+    Vector2F turn = TurnValue();
     oldTurnValue_ = newTurnValue_;
-    newTurnValue_ = TurnValue();
+    if (turn.x != 0.0f)
+    {
+        newTurnValue_ = turn;
+    }
 
     //前フレームと比べて+-値が反対なら
-    if (oldTurnValue_.x <= 0 && newTurnValue_.x > 0
-        || oldTurnValue_.x >= 0 && newTurnValue_.x < 0)
+    if (oldTurnValue_.x <= 0.0f && newTurnValue_.x > 0.0f
+        || oldTurnValue_.x >= 0.0f && newTurnValue_.x < 0.0f)
     {
         //レバガチャ判定
         buttonMeshingCnt_++;

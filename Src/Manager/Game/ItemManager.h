@@ -30,7 +30,7 @@ public:
 private:
 
 	//生成相対位置
-	static constexpr VECTOR CREATE_LOCAL_POS = { 300.0f,0.0f,300.0f };
+	static constexpr VECTOR CREATE_MOVE_VEC = { 1.0f,0.0f,1.0f };
 
 	//アイテム生成数
 	static constexpr int CREATE_MAX = 4;

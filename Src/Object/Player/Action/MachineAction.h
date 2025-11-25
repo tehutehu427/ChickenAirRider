@@ -68,6 +68,13 @@ private:
 	//ƒXƒsƒ“ŽžŠÔ
 	static constexpr float SPIN_TIME = 0.7f;
 
+	//‘Ì—Í
+	static constexpr int HEALTH_BOX_POS_X_1 = 970;
+	static constexpr int HEALTH_BOX_POS_X_2 = 1000;
+	static constexpr int HEALTH_BOX_POS_Y = 350;
+	static constexpr int HEALTH_BOX = 25;
+	static constexpr int HEALTH_LOCAL = 3;
+
 	//‹@‘Ì
 	const Machine& machine_;
 

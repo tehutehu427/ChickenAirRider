@@ -154,8 +154,7 @@ void ItemManager::CreateItem(VECTOR _pos)
 	int importSize = static_cast<int>(itemData_.size());
 
 	//生成位置
-	VECTOR createPos = Utility::VECTOR_ZERO;
-	VECTOR localPos = CREATE_LOCAL_POS;
+	VECTOR moveVec = CREATE_MOVE_VEC;
 
 	//生成数
 	int createNum = Utility::GetRandomValue(CREATE_MIN, CREATE_MAX);
@@ -166,18 +165,15 @@ void ItemManager::CreateItem(VECTOR _pos)
 	//ランダムで決めた生成数分アイテムを生成する
 	for (int i = 0 ; i < createNum ; i++)
 	{
-		//生成位置
-		createPos = VAdd(_pos, localPos);
-
 		//位置の反転
-		if (i % 2 == 0)localPos.x = -localPos.x;
-		else if (i / 2 == 0)localPos.z = -localPos.z;
+		if (i % 2 == 0)moveVec.x = -moveVec.x;
+		else if (i / 2 == 0)moveVec.z = -moveVec.z;
 
 		//ランダムでアイテムの種類決め
 		rand =  Utility::GetRandomValue(0, importSize - 1);
 
 		//生成
-		std::unique_ptr<ItemBase> item = std::make_unique<ItemBase>(createPos, itemData_[rand].param, getImageId_[itemData_[rand].name]());
+		std::unique_ptr<ItemBase> item = std::make_unique<ItemBase>(_pos, moveVec, itemData_[rand].param, getImageId_[itemData_[rand].name]());
 		item->Load();
 		item->Init();
 
