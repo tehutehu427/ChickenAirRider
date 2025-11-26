@@ -28,7 +28,7 @@ Player::Player(std::weak_ptr<Camera> _camera)
 	isGrounded_ = false;
 	isSpin_ = false;
 	footLine_ = Quaternion();
-	health_ = 0.0f;
+	damage_ = 0.0f;
 
 	//s“®Ø‚è‘Ö‚¦
 	changeAction_[STATE::NONE] = [this](void) {};
@@ -94,7 +94,7 @@ void Player::Init(void)
 	//MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
 	
 	//‘Ì—Í
-	health_ = GetAllParam().maxHealth_;
+	damage_ = 0.0f;
 
 	//‰ŠúXV
 	Update();

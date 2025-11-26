@@ -335,8 +335,14 @@ void Camera::ProcessRotMachine(void)
 {
 	auto& ins = KeyConfig::GetInstance();
 	auto keyType = KeyConfig::TYPE::ALL;
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_RIGHT, padNo_, keyType)) { angles_.y += rotPow_ * SPEED_ROT; }
-	if (ins.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_LEFT, padNo_, keyType)) { angles_.y -= rotPow_ * SPEED_ROT; }
+	if (ins.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_RIGHT, padNo_, keyType)) 
+	{
+		angles_.y += rotPow_ * SPEED_ROT; 
+	}
+	if (ins.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_LEFT, padNo_, keyType)) 
+	{
+		angles_.y -= rotPow_ * SPEED_ROT; 
+	}
 }
 
 void Camera::ProcessZoom(void)

@@ -119,7 +119,7 @@ public:
 	void SetFootLine(const Quaternion _foot) { footLine_ = _foot; }
 
 	//現在体力を返す
-	const float GetNowHealth(void)const { return health_; }
+	const float GetNowHealth(void)const { return GetAllParam().maxHealth_ - damage_; }
 
 	//カメラの取得
 	std::weak_ptr<Camera> GetCamera(void) { return camera_; }
@@ -184,8 +184,8 @@ private:
 	//スピンしているか
 	bool isSpin_;
 
-	//現在体力
-	float health_;
+	//現在ダメージ
+	float damage_;
 
 	//関数ポインタ
 	std::map<STATE, std::function<void(void)>> changeAction_;	//行動切り替え

@@ -217,7 +217,11 @@ Vector2 InputManager::GetMousePos(void) const
 
 Vector2 InputManager::GetMousePosDistance(void) const
 {
-	return { mousePos_.x - mousePrePos_.x ,mousePos_.y - mousePrePos_.y };
+	Vector2 ret;
+	ret.x = mousePos_.x - mousePrePos_.x;
+	ret.y = mousePos_.y - mousePrePos_.y;
+
+	return ret;
 }
 
 void InputManager::SetMousePosScreen(void)

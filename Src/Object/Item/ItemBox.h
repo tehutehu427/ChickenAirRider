@@ -53,6 +53,9 @@ private:
 	//—‰º‚Ì‰ñ“]—Ê
 	static constexpr float FALL_ROT = 12.0f;
 
+	//d—Í‰e‹¿“x
+	static constexpr float GRAVITY_POW = 300.0f;
+
 	//€–S”»’è
 	bool isDead_;
 

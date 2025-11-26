@@ -73,31 +73,18 @@ const Vector2F PlayerLogic::TurnValue(void)
     //返す値
     Vector2F ret = {0.0f,0.0f};
 
-    //キーボード又はスティックの移動量
-    if (key.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_LEFT, KeyConfig::JOYPAD_NO::PAD1))
-    {
-        //左方向なのでマイナス
-        ret.x = -TURN_POW;
-    }
-    else if (key.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_RIGHT, KeyConfig::JOYPAD_NO::PAD1))
-    {
-        //右方向なのでプラス
-        ret.x = TURN_POW;
-    }
-
-    if (key.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_FRONT, KeyConfig::JOYPAD_NO::PAD1))
-    {
-        //前方向なのでプラス
-        ret.y = TURN_POW;
-    }
-    else if (key.IsNew(KeyConfig::CONTROL_TYPE::MACHINE_TURN_BACK, KeyConfig::JOYPAD_NO::PAD1))
-    {
-        //後方向なのでマイナス
-        ret.y = -TURN_POW;
-    }
-
     //ゲームコントローラーがついてないなら
-    if(GetJoypadNum() < 1)key.SetMousePos({ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y });
+    if (GetJoypadNum() < 1)
+    {
+        ret = key.GetMouseMove().ToVector2F() / TURN_MOUSE;
+    }
+    else
+    {
+        ret.x -= static_cast<float>(key.PadStickOverSize(KeyConfig::JOYPAD_NO::PAD1, KeyConfig::JOYPAD_STICK::L_STICK_RIGHT)) / TURN_STICK;
+        ret.x += static_cast<float>(key.PadStickOverSize(KeyConfig::JOYPAD_NO::PAD1, KeyConfig::JOYPAD_STICK::L_STICK_LEFT)) / TURN_STICK;
+        ret.y += static_cast<float>(key.PadStickOverSize(KeyConfig::JOYPAD_NO::PAD1, KeyConfig::JOYPAD_STICK::L_STICK_UP)) / TURN_STICK;
+        ret.y -= static_cast<float>(key.PadStickOverSize(KeyConfig::JOYPAD_NO::PAD1, KeyConfig::JOYPAD_STICK::L_STICK_DOWN)) / TURN_STICK;
+    }
 
     return ret;
 }

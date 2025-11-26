@@ -1,4 +1,5 @@
 #include"../pch.h"
+#include"../Application.h"
 #include"../Common/SingletonRegistry.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
@@ -105,6 +106,7 @@ void SceneGame::Update(void)
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
 	auto camera = SceneManager::GetInstance().GetCamera(0).lock();
+	auto& key = KeyConfig::GetInstance();
 
 	//タイマーの更新
 	timer_->Update();
@@ -129,6 +131,12 @@ void SceneGame::Update(void)
 
 	//当たり判定の破棄
 	colMng.Sweep();
+
+	if (GetJoypadNum() < 1)
+	{
+		//マウス位置の初期化
+		key.SetMousePos({ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y });
+	}
 }
 
 void SceneGame::Draw(void)

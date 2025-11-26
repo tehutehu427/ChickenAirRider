@@ -645,4 +645,35 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Src\Shader\Common\Pixel\PixelShader2DHeader.hlsli" />
+    <None Include="Src\Shader\Common\Pixel\PixelShader3DHeader.hlsli" />
+    <None Include="Src\Shader\Common\Vertex\CommonShader3DHeader.hlsli" />
+    <None Include="Src\Shader\Common\Vertex\VertexInput.hlsli" />
+    <None Include="Src\Shader\Common\Vertex\VertexInputType.hlsli" />
+    <None Include="Src\Shader\Common\Vertex\VertexShader3DHeader.hlsli" />
+    <None Include="Src\Shader\Common\VertexToPixelHeader.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Src\Shader\Model\MetalModelPS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\MetalModelVS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\MistModelPS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\MistModelVS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\NoTexPS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\NoTexVS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\PointLightPS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\PointLightVS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\RimModelPS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\RimModelVS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\StdModelPS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\StdModelVS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\WaterWaveModelPS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\WaterWaveModelVS.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\LensDistortion.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\Monotone.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\ScanLine.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\Vignette.hlsl" />
+    <FxCompile Include="Src\Shader\Model\BoxCrackPS.hlsl" />
+    <FxCompile Include="Src\Shader\Model\BoxCrackVS.hlsl" />
+  </ItemGroup>
 </Project>

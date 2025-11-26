@@ -58,7 +58,7 @@ void ItemBox::Update(void)
 
 	//重力
 	VECTOR grav = Utility::VECTOR_ZERO;
-	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, grav);
+	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, grav, GRAVITY_POW);
 	trans_.pos = VAdd(trans_.pos, grav);
 
 	//落下時の回転
@@ -111,8 +111,12 @@ void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
 	{
 		if (footCol->IsHit())
 		{
-			//押し戻し
-			trans_.pos = VAdd(trans_.pos, VScale(Utility::DIR_U, 3.0f));
+			//重力
+			VECTOR grav = Utility::VECTOR_ZERO;
+			GravityManager::GetInstance().CalcGravity(Utility::DIR_D, grav, GRAVITY_POW);
+
+			//重力分押し戻し
+			trans_.pos = VAdd(trans_.pos, VScale(Utility::DIR_U, -grav.y));
 
 			//回転リセット
 			trans_.quaRot = Quaternion();

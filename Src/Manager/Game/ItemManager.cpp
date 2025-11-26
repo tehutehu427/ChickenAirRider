@@ -13,8 +13,6 @@ void ItemManager::Init(void)
 	//インポートデータ
 	itemData_ = LoaderManager<ItemImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Item.json"));
 	boxPosData_ = LoaderManager<BoxCreatePositionData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"BoxCreatePositionData.json"));
-
-	CreateItemBox();
 }
 
 void ItemManager::Update(void)
@@ -167,7 +165,7 @@ void ItemManager::CreateItem(VECTOR _pos)
 	{
 		//位置の反転
 		if (i % 2 == 0)moveVec.x = -moveVec.x;
-		else if (i / 2 == 0)moveVec.z = -moveVec.z;
+		else if (i % 2 == 1)moveVec.z = -moveVec.z;
 
 		//ランダムでアイテムの種類決め
 		rand =  Utility::GetRandomValue(0, importSize - 1);

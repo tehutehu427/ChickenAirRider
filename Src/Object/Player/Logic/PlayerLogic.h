@@ -68,7 +68,8 @@ public:
 private:
 
 	//回転量
-	static constexpr float TURN_POW = 1.0f;
+	static constexpr float TURN_STICK = 500.0f;
+	static constexpr float TURN_MOUSE = 25.0f;
 
 	//チャージまでのプッシュ時間
 	static constexpr float CHARGE_START_PUSH_TIME = 0.1f;
