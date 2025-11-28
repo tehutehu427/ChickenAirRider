@@ -49,9 +49,6 @@ void SceneGame::Init(void)
 	//キャラクター情報管理の生成
 	AnimationManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
 
-	//プレイヤー管理の生成
-	PlayerManager::CreateInstance();
-
 	//アイテム管理の生成
 	ItemManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
 

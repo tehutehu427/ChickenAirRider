@@ -26,6 +26,9 @@ VS_OUTPUT main(VS_INPUT VSInput)
 	lWorldPosition.w = 1.0f;
 	lWorldPosition.xyz = mul(lLocalPosition, g_base.localWorldMatrix);
 
+	//頂点座標(ワールド座標)
+	ret.worldPos = lWorldPosition.xyz;
+
 	// ワールド座標をビュー座標に変換
 	lViewPosition.w = 1.0f;
 	lViewPosition.xyz = mul(lWorldPosition, g_base.viewMatrix);

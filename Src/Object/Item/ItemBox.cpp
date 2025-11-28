@@ -7,12 +7,15 @@
 #include "../Object/Common/Geometry/Cube.h"
 #include "../Object/Common/Geometry/Line.h"
 #include "../Object/Player/Player.h"
+#include "../Renderer/ModelRenderer.h"
+#include "../Renderer/ModelMaterial.h"
 #include "ItemBox.h"
 
 ItemBox::ItemBox(VECTOR _pos)
 {
 	trans_.pos = _pos;
 	createPos_ = _pos;
+	crackImg_ = -1;
 	isDead_ = false;
 	footLine_ = Quaternion();
 	health_ = 0.0f;
@@ -27,6 +30,31 @@ void ItemBox::Load(void)
 {
 	//モデル設定
 	trans_.modelId = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::ITEM_BOX);
+
+	//ひび画像
+	crackImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::BOX_CRACK).handleId_;
+
+	//マテリアル
+	material_ = std::make_unique<ModelMaterial>(
+		L"BoxCrackVS.cso", 0,
+		L"BoxCrackPS.cso", 1
+		);
+
+	//体力の割合
+	float healthRatio = 0.0f;
+	if (HEALTH_MAX > 0.0f)
+	{
+		healthRatio	= health_ / HEALTH_MAX;
+	}
+
+	//体力
+	material_->AddConstBufPS({ healthRatio,0.0f,0.0f,0.0 });
+
+	//ひび画像
+	material_->SetTextureBuf(CRACK_IMG_BUFF, crackImg_);
+
+	//レンダラー
+	renderer_ = std::make_unique<ModelRenderer>(trans_.modelId, *material_);
 }
 
 void ItemBox::Init(void)
@@ -70,8 +98,23 @@ void ItemBox::Update(void)
 
 void ItemBox::Draw(void)
 {
+	//死亡済みなら描画しない
+	if (isDead_)return;
+
+	//定数バッファ更新
+
+	//体力の割合
+	float healthRatio = 0.0f;
+	if (HEALTH_MAX > 0.0f)
+	{
+		healthRatio = health_ / HEALTH_MAX;
+	}
+
+	material_->SetConstBufPS(0, { healthRatio,0.0f,0.0f,0.0f });
+
 	//モデル描画
-	MV1DrawModel(trans_.modelId);
+	//MV1DrawModel(trans_.modelId);
+	renderer_->Draw();
 }
 
 void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)

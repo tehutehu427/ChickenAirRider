@@ -31,6 +31,7 @@ public:
 
 		//アイテムモデル
 		ITEM_BOX,			//アイテムボックス
+		BOX_CRACK,			//箱のひび
 
 		//アイテム画像
 		MAX_SPEED,			//最高速

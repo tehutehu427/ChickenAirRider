@@ -19,23 +19,18 @@ cbuffer cbParam : register(b4)
 
 float4 main(PS_INPUT PSInput) : SV_TARGET0
 {
-    float2 uv = PSInput.uv;
+float2 uv = PSInput.uv;
 
     float4 baseColor = diffuseMapTexture.Sample(diffuseMapSampler, uv);
-    float crackValue = crackTexture.Sample(crackSampler, uv).r;
+    float crackVal = crackTexture.Sample(crackSampler, uv).r;
 
-    // crackValue は 0=白, 1=黒と仮定
-    // 黒い部分が閾値以下になったらひび割れとして描画
-    float threshold = lerp(1.0, 0.0, crackProgress);  // 時間で減る
+    // crackProgress = 0 → 全部ひび表示
+    // crackProgress = 1 → 全くひび無し
+    float threshold = crackProgress;
 
-    // ひび部分を抽出（黒いところ）
-    float crackMask = step(crackValue, threshold);
+    float crackMask = step(threshold, crackVal);
 
-    // ひび色（黒）
-    float4 crackColor = float4(0, 0, 0, 1);
+    float4 crackColor = float4(0,0,0,1);
 
-    // ひびを上に合成
-    float4 result = lerp(baseColor, crackColor, crackMask);
-
-    return result;
+    return lerp(baseColor, crackColor, crackMask); 
 }

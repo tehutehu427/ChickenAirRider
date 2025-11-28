@@ -182,14 +182,6 @@ public:
 	/// @return 判定結果を返す
 	static bool IsPointInRect(const Vector2 _pos, const Vector2 _leftTop, const Vector2 _rightBotm);
 
-	/// <summary>
-	/// 特定の円の範囲内に座標が含まれてるか調べる
-	/// </summary>
-	/// <param name="_pos">調べる座標</param>
-	/// <param name="_circlePos">円の座標</param>
-	/// <param name="_radius">半径</param>
-	/// <returns></returns>
-
 	/// @brief 特定の円の範囲内に座標が含まれてるか調べる
 	/// @param _pos 調べる座標
 	/// @param _circlePos 円の座標

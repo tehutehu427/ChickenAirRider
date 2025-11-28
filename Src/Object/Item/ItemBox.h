@@ -1,6 +1,9 @@
 #pragma once
 #include "../ObjectBase.h"
 
+class ModelMaterial;
+class ModelRenderer;
+
 class ItemBox : public ObjectBase
 {
 public:
@@ -45,16 +48,28 @@ private:
 	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-110.0f,0.0f };		//線判定の下相対座標
 
 	//体力の最大値
-	static constexpr float HEALTH_MAX = 20.0f;
+	static constexpr float HEALTH_MAX = 150.0f;
 
 	//無敵時間
-	static constexpr float INVINCIBLE = 0.5f;
+	static constexpr float INVINCIBLE = 0.05f;
 
 	//落下時の回転量
 	static constexpr float FALL_ROT = 12.0f;
 
 	//重力影響度
 	static constexpr float GRAVITY_POW = 300.0f;
+
+	//テクスチャバッファ
+	static constexpr int CRACK_IMG_BUFF = 11;
+
+	//ひび画像
+	int crackImg_;
+
+	//マテリアル
+	std::unique_ptr<ModelMaterial>material_;
+
+	//レンダラー
+	std::unique_ptr<ModelRenderer>renderer_;
 
 	//死亡判定
 	bool isDead_;

@@ -21,6 +21,9 @@ void ResourceManager::Init(void)
 	//タイトル画像のパス
 	std::wstring titleImage = PATH_IMG + L"Title/";
 
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"BoxCrack.png");
+	resourcesMap_.emplace(SRC::BOX_CRACK, std::move(res));
+
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"MaxSpeed.png");
 	resourcesMap_.emplace(SRC::MAX_SPEED, std::move(res));
 

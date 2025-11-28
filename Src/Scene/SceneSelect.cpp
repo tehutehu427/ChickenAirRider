@@ -4,6 +4,7 @@
 #include"../Manager/System/ResourceManager.h"
 #include"../Manager/System/KeyConfig.h"
 #include"../Manager/System/SceneManager.h"
+#include"../Manager/Game/PlayerManager.h"
 #include "SceneSelect.h"
 
 SceneSelect::SceneSelect(void)
@@ -102,6 +103,13 @@ void SceneSelect::DebugDraw(void)
 
 void SceneSelect::SelectGameStart(void)
 {
+	//プレイヤー管理の生成
+	PlayerManager::CreateInstance();
+
+	//プレイヤーの作成数
+	PlayerManager::GetInstance().SetUserNum(2);
+	PlayerManager::GetInstance().SetNpcNum(0);
+
 	//シーンの削除
 	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME, true, true);
 	return;
