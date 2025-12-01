@@ -4,6 +4,7 @@
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
 #include"../Manager/Game/CollisionManager.h"
+#include"../Manager/Game/GameSetting.h"
 #include"../Manager/Game/GravityManager.h"
 #include"../Manager/Game/Timer.h"
 #include"../Manager/Game/StageManager.h"
@@ -49,6 +50,9 @@ void SceneGame::Init(void)
 	//キャラクター情報管理の生成
 	AnimationManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
 
+	//プレイヤー管理の生成
+	PlayerManager::CreateInstance();
+
 	//アイテム管理の生成
 	ItemManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
 
@@ -57,7 +61,6 @@ void SceneGame::Init(void)
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
-	auto camera = SceneManager::GetInstance().GetCamera(0).lock();
 
 	//重力
 	grvMng.Init();
@@ -80,10 +83,6 @@ void SceneGame::Init(void)
 	sky_ = std::make_unique<SkyDome>(plMng.GetPlayer(0).GetTrans().pos);
 	sky_->Load();
 	sky_->Init();
-
-	//カメラ設定
-	camera->SetFollow(&plMng.GetPlayer(0).GetTrans());
-	camera->ChangeMode(Camera::MODE::FOLLOW_LEAP);
 }
 
 void SceneGame::Update(void)
@@ -102,7 +101,6 @@ void SceneGame::Update(void)
 	auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
-	auto camera = SceneManager::GetInstance().GetCamera(0).lock();
 	auto& key = KeyConfig::GetInstance();
 
 	//タイマーの更新

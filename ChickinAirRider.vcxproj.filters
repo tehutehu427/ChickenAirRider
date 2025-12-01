@@ -147,7 +147,7 @@
     <ClCompile Include="Src\Object\Player\Logic\LogicBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Player\Logic\PlayerLogic.cpp">
+    <ClCompile Include="Src\Object\Player\Logic\UserLogic.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Player\Logic\NpcLogic.cpp">
@@ -208,6 +208,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Manager\Game\ItemManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Manager\Game\GameSetting.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -548,7 +551,7 @@
     <ClInclude Include="Src\Object\Player\Logic\LogicBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Player\Logic\PlayerLogic.h">
+    <ClInclude Include="Src\Object\Player\Logic\UserLogic.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Player\Logic\NpcLogic.h">
@@ -642,6 +645,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Item\BoxCreatePositionData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Manager\Game\GameSetting.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,15 +2,15 @@
 #include "LogicBase.h"
 #include "../Common/Vector2F.h"
 
-class PlayerLogic : public LogicBase
+class UserLogic : public LogicBase
 {
 public:
 
 	//コンストラクタ
-	PlayerLogic(void);
+	UserLogic(KeyConfig::JOYPAD_NO _padNo);
 
 	//デストラクタ
-	~PlayerLogic(void)override;
+	~UserLogic(void)override;
 
 #pragma region 機体
 
@@ -85,6 +85,9 @@ private:
 
 	//レバガチャ受付時間
 	static constexpr float BUTTON_MESHING_RIMIT = 0.25f;
+
+	//パッド番号
+	KeyConfig::JOYPAD_NO padNo_;
 
 	//一フレーム前の回転量
 	Vector2F oldTurnValue_;

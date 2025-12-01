@@ -20,6 +20,7 @@ PlayerOnHit::PlayerOnHit(Player& _player, Transform& _trans)
 	onHit_[Collider::TAG::MACHINE_RIDE] = [this](const std::weak_ptr<Collider> _hitCol) {RideMachineOnHit(_hitCol); };
 	onHit_[Collider::TAG::ITEM_BOX] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
 	onHit_[Collider::TAG::POWER_UP] = [this](const std::weak_ptr<Collider> _hitCol) {PowerUpItemOnHit(_hitCol); };
+	onHit_[Collider::TAG::SPIN] = [this](const std::weak_ptr<Collider> _hitCol) { };
 }
 
 PlayerOnHit::~PlayerOnHit(void)

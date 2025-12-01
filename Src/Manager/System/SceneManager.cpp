@@ -2,11 +2,13 @@
 #include "Camera.h"
 #include "ResourceManager.h"
 #include "SoundManager.h"
+#include "../Game/PlayerManager.h"
 #include "../FpsControl/FpsControl.h"
 #include "../Scene/SceneTitle.h"
 #include "../Scene/SceneSelect.h"
 #include "../Scene/SceneGame.h"
 #include "../Game/CollisionManager.h"
+#include "../Game/GameSetting.h"
 #include"../Application.h"
 #include"SceneManager.h"
 
@@ -53,6 +55,9 @@ SceneManager::~SceneManager(void)
 
 void SceneManager::Init(void)
 {
+	//ゲーム設定
+	auto& setting = GameSetting::GetInstance();
+
 	//初期シーン
 	sceneId_ = SCENE_ID::TITLE;
 	waitSceneId_ = SCENE_ID::NONE;
@@ -61,9 +66,11 @@ void SceneManager::Init(void)
 	fader_ = std::make_unique<Fader>();
 	fader_->Init();
 
-	// カメラ（初期化時は1つのみ生成）
-	CreateCameras(1);
+	// 初期のカメラは1つなので人数を初期化しておく
+	setting.SetUserNum(1);
+	setting.SetNpcNum(0);
 
+	//シーンチェンジ中か
 	isSceneChanging_ = true;
 
 	// デルタタイム
@@ -164,8 +171,11 @@ void SceneManager::Draw(void)
 	}
 	else
 	{
-		// カメラ設定
-		cameras_[0]->SetBeforeDraw();
+		for (auto& camera : cameras_)
+		{
+			// カメラ設定
+			camera->SetBeforeDraw();
+		}
 
 		// Effekseerにより再生中のエフェクトを更新する。
 		UpdateEffekseer3D();
@@ -177,8 +187,11 @@ void SceneManager::Draw(void)
 			scene->Draw();
 		}
 
-		// 主にポストエフェクト用
-		cameras_[0]->Draw();
+		for (auto& camera : cameras_)
+		{
+			// 主にポストエフェクト用
+			camera->Draw();
+		}
 
 		// Effekseerにより再生中のエフェクトを描画する。
 		DrawEffekseer3D();
@@ -194,7 +207,10 @@ void SceneManager::Draw(void)
 	ClearDrawScreen();
 
 	// カメラ設定
-	cameras_[0]->CameraSetting();
+	for (auto& camera : cameras_)
+	{
+		camera->CameraSetting();
+	}
 
 	//メインスクリーンを描画
 	DrawGraph(0, 0, mainScreen_, false);
@@ -272,7 +288,7 @@ void SceneManager::ResetScene(void)
 	// 現在のシーンを解放
 	if (!scene_.empty())
 	{
-		scene_.front().reset();
+		scene_.back().reset();
 	}
 }
 
@@ -349,20 +365,26 @@ void SceneManager::CreateSplitScreen(const int _playerNum)
 	isSplitMode_ = true;
 
 	int createNum = _playerNum;	//生成数
+	int divX = 1;				//Xの分割数
 	int divY = 1;				//Yの分割数
 	
 	//人数が条件以上の場合
 	if (_playerNum >= CASE_VALUE)
 	{
 		createNum = 4;	//最大人数分生成
-		divY++;			//画面分割数増加
+		divX++;			//画面分割数増加
+		divY++;			
+	}
+	else if (_playerNum == 2)
+	{
+		divY++;
 	}
 
 	//スクリーン生成
 	for (int i = 0; i < createNum; i++)
 	{
 		int screen = MakeScreen(
-			Application::SCREEN_HALF_X,
+			Application::SCREEN_SIZE_X / divX,
 			Application::SCREEN_SIZE_Y / divY,
 			true);
 		splitScreens_.push_back(screen);
@@ -457,14 +479,25 @@ void SceneManager::Fade(void)
 
 void SceneManager::DrawMultiScreen()
 {
+	const int userNum = GameSetting::GetInstance().GetUserNum();
+
 	//描画位置（分割スクリーンの左上位置）
-	const Vector2 screenPos[4] =
+	Vector2 screenPos[PlayerManager::PLAYER_MAX_NUM] =
 	{
-		{ 0, 0 },													// 1P: 左上
-		{ Application::SCREEN_HALF_X, 0 },							// 2P: 右上
-		{ 0, Application::SCREEN_HALF_Y },							// 3P: 左下
-		{ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y }	// 4P: 右下
+		{ 0, 0 },													// 左上
+		{ 0, Application::SCREEN_HALF_Y},							// 左下
+		{ Application::SCREEN_HALF_X, 0 },							// 右上
+		{ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y }	// 右下
 	};
+
+	//3人以上なら
+	if (userNum >= CASE_VALUE)
+	{
+		//2Pを右上に、3Pを左下に入れ替える
+		Vector2 savePos = screenPos[1];
+		screenPos[1] = screenPos[2];
+		screenPos[2] = savePos;
+	}
 
 	//スクリーン数分描画
 	for (int i = 0; i < splitScreens_.size(); i++)
@@ -472,8 +505,8 @@ void SceneManager::DrawMultiScreen()
 		//プレイ人数が3人の時の4つ目の画面を1Pの画面を表示する
 		screenIndex_ = i;	//分割スクリーンのインデックス
 		int index = i;
-		//if (CASE_VALUE == DateBank::GetInstance().GetPlayerNum() &&
-		//	index == PlayerManager::PLAYER_NUM_MAX - 1)
+		if (CASE_VALUE == userNum &&
+			index == CASE_VALUE)
 		{
 			index = 1;
 			screenIndex_ = 1;
@@ -569,6 +602,15 @@ void SceneManager::FadeOut(void)
 	{
 		//シーンIDの変更
 		sceneId_ = waitSceneId_;
+
+		//シーンに合わせて生成数を設定
+		const int createNum = (sceneId_ == SCENE_ID::GAME) ? GameSetting::GetInstance().GetPlayerNum() : 1;
+
+		//カメラ生成
+		CreateCameras(createNum);
+
+		//分割スクリーン生成
+		CreateSplitScreen(createNum);
 
 		//シーンの遷移
 		changeScene_[changeSceneState_]();

@@ -1,4 +1,5 @@
 #include"../pch.h"
+#include"GameSetting.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
 #include"../Object/Player/Player.h"
@@ -17,8 +18,22 @@ void PlayerManager::CreateInstance(void)
 
 void PlayerManager::Init(void)
 {
+	const auto& setting = GameSetting::GetInstance();
+
 	//プレイヤーの生成
-	players_.emplace_back(std::make_unique<Player>(SceneManager::GetInstance().GetCamera(0)));
+	for (int i = 0; i < setting.GetPlayerNum(); i++)
+	{
+		//ユーザーを先に生成
+		if (i < setting.GetUserNum())
+		{
+			CreateUserPlayer(i);
+		}
+		//ユーザーが終わったらNPCを生成
+		else
+		{
+			CreateNpcPlayer(i);
+		}
+	}
 
 	//各プレイヤーの初期化
 	for (auto& player : players_)
@@ -56,14 +71,43 @@ void PlayerManager::Destroy(void)
 	players_.clear();
 }
 
-void PlayerManager::CreatePlayer(const int _userNum, const int _npcNum)
-{
-}
-
 PlayerManager::PlayerManager(void)
 {
 }
 
 PlayerManager::~PlayerManager(void)
 {
+}
+
+void PlayerManager::CreateUserPlayer(const int _playerIndex)
+{
+	//インスタンス
+	auto& scnMng = SceneManager::GetInstance();
+
+	//プレイヤー
+	std::unique_ptr<Player> player = std::make_unique<Player>
+		(SceneManager::GetInstance().GetCamera(_playerIndex),
+			Player::OPERATION_TYPE::USER,
+			static_cast<KeyConfig::JOYPAD_NO>(_playerIndex )
+		);
+	players_.emplace_back(std::move(player));
+
+	//カメラ設定
+	auto camera = scnMng.GetCamera(_playerIndex).lock();
+	camera->SetFollow(&GetPlayer(_playerIndex).GetTrans());
+	camera->ChangeMode(Camera::MODE::FOLLOW_LEAP);
+}
+
+void PlayerManager::CreateNpcPlayer(const int _playerIndex)
+{
+	//インスタンス
+	auto& scnMng = SceneManager::GetInstance();
+
+	//プレイヤー
+	std::unique_ptr<Player> player = std::make_unique<Player>
+		(scnMng.GetCamera(0),
+			Player::OPERATION_TYPE::NPC,
+			static_cast<KeyConfig::JOYPAD_NO>(_playerIndex + 1)
+		);
+	players_.emplace_back(std::move(player));
 }

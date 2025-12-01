@@ -163,6 +163,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Manager\Game\GameSetting.cpp" />
     <ClCompile Include="Src\Manager\Game\ItemManager.cpp" />
     <ClCompile Include="Src\Object\Item\ItemBox.cpp" />
     <ClCompile Include="Src\Manager\Game\MachineManager.cpp" />
@@ -180,7 +181,7 @@
     <ClCompile Include="Src\Object\Player\Parameter\Parameter.cpp" />
     <ClCompile Include="Src\Object\Player\Logic\LogicBase.cpp" />
     <ClCompile Include="Src\Object\Player\Logic\NpcLogic.cpp" />
-    <ClCompile Include="Src\Object\Player\Logic\PlayerLogic.cpp" />
+    <ClCompile Include="Src\Object\Player\Logic\UserLogic.cpp" />
     <ClCompile Include="Src\Object\Player\Machine\Machine.cpp" />
     <ClCompile Include="Src\Object\Player\Character\Character.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
@@ -233,6 +234,7 @@
     <ClCompile Include="Src\Common\Vector2F.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Manager\Game\GameSetting.h" />
     <ClInclude Include="Src\Manager\Game\ItemManager.h" />
     <ClInclude Include="Src\Object\Item\BoxCreatePositionData.h" />
     <ClInclude Include="Src\Object\Item\ItemBox.h" />
@@ -260,7 +262,7 @@
     <ClInclude Include="Src\Object\Player\Parameter\Parameter.h" />
     <ClInclude Include="Src\Object\Player\Logic\LogicBase.h" />
     <ClInclude Include="Src\Object\Player\Logic\NpcLogic.h" />
-    <ClInclude Include="Src\Object\Player\Logic\PlayerLogic.h" />
+    <ClInclude Include="Src\Object\Player\Logic\UserLogic.h" />
     <ClInclude Include="Src\Object\Player\Machine\Machine.h" />
     <ClInclude Include="Src\Object\Player\Character\Character.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />

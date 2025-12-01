@@ -3,21 +3,22 @@
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/KeyConfig.h"
 #include "../Common/Vector2F.h"
-#include "PlayerLogic.h"
+#include "UserLogic.h"
 
-PlayerLogic::PlayerLogic(void)
+UserLogic::UserLogic(KeyConfig::JOYPAD_NO _padNo)
 {
+    padNo_ = _padNo;
     buttonMeshingCnt_ = 0;
     cnt_ = 0.0f;
     oldTurnValue_ = {};
     newTurnValue_ = {};
 }
 
-PlayerLogic::~PlayerLogic(void)
+UserLogic::~UserLogic(void)
 {
 }
 
-const bool PlayerLogic::IsPush(void) 
+const bool UserLogic::IsPush(void)
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -32,7 +33,7 @@ const bool PlayerLogic::IsPush(void)
     return false;
 }
 
-const bool PlayerLogic::StartCharge(void)
+const bool UserLogic::StartCharge(void)
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -48,7 +49,7 @@ const bool PlayerLogic::StartCharge(void)
     return false;
 }
 
-const bool PlayerLogic::DisCharge(void) 
+const bool UserLogic::DisCharge(void)
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -65,7 +66,7 @@ const bool PlayerLogic::DisCharge(void)
     return false;
 }
 
-const Vector2F PlayerLogic::TurnValue(void)
+const Vector2F UserLogic::TurnValue(void)
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -89,7 +90,7 @@ const Vector2F PlayerLogic::TurnValue(void)
     return ret;
 }
 
-const bool PlayerLogic::IsSpecial(void)
+const bool UserLogic::IsSpecial(void)
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -106,7 +107,7 @@ const bool PlayerLogic::IsSpecial(void)
     return false;
 }
 
-const bool PlayerLogic::IsGetOff(void)
+const bool UserLogic::IsGetOff(void)
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -122,7 +123,7 @@ const bool PlayerLogic::IsGetOff(void)
     return false;
 }
 
-const bool PlayerLogic::IsButtonMeshing(void)
+const bool UserLogic::IsButtonMeshing(void)
 {
     //インスタンス
     const auto& key = KeyConfig::GetInstance();
@@ -174,7 +175,7 @@ const bool PlayerLogic::IsButtonMeshing(void)
     return false;
 }
 
-const Vector2F PlayerLogic::WalkValue(void)
+const Vector2F UserLogic::WalkValue(void)
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -222,7 +223,7 @@ const Vector2F PlayerLogic::WalkValue(void)
     return movePow;
 }
 
-const bool PlayerLogic::IsJump(void)
+const bool UserLogic::IsJump(void)
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();

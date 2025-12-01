@@ -9,7 +9,7 @@
 #include "Character/Character.h"
 #include "Machine/Machine.h"
 #include "Logic/LogicBase.h"
-#include "Logic/PlayerLogic.h"
+#include "Logic/UserLogic.h"
 #include "Logic/NpcLogic.h"
 #include "Action/ActionBase.h"
 #include "Action/CharacterAction.h"
@@ -17,10 +17,12 @@
 #include "Collision/PlayerOnHit.h"
 #include "Player.h"
 
-Player::Player(std::weak_ptr<Camera> _camera)
+Player::Player(std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo)
 	:camera_(_camera)
 {
 	//初期化
+	operation_ = _operation;
+	padNo_ = _padNo;
 	state_ = STATE::NONE;
 	prePos_ = Utility::VECTOR_ZERO;
 	movedPos_ = Utility::VECTOR_ZERO;
@@ -29,6 +31,10 @@ Player::Player(std::weak_ptr<Camera> _camera)
 	isSpin_ = false;
 	footLine_ = Quaternion();
 	damage_ = 0.0f;
+
+	//操作タイプ
+	createLogic_[OPERATION_TYPE::USER] = [this](void) {	logic_ = std::make_unique<UserLogic>(padNo_); };
+	createLogic_[OPERATION_TYPE::NPC] = [this](void) {logic_ = std::make_unique<NpcLogic>(); };
 
 	//行動切り替え
 	changeAction_[STATE::NONE] = [this](void) {};
@@ -73,7 +79,7 @@ void Player::Init(void)
 	machine_->Init();
 
 	//行動基準
-	logic_ = std::make_unique<PlayerLogic>();
+	createLogic_[operation_]();
 
 	//当たり判定後処理
 	onHit_ = std::make_unique<PlayerOnHit>(*this, trans_);

@@ -3,6 +3,7 @@
 #include <functional>
 #include "../ObjectBase.h"
 #include "Parameter/Parameter.h"
+#include "../Manager/System/KeyConfig.h"
 
 class Character;
 class Machine;
@@ -14,6 +15,13 @@ class Camera;
 class Player : public ObjectBase
 {
 public:
+
+	//操作タイプ
+	enum class OPERATION_TYPE
+	{
+		USER,	//人
+		NPC,	//コンピューター
+	};
 
 	//現在の状態
 	enum class STATE
@@ -33,7 +41,7 @@ public:
 	};
 
 	//コンストラクタ
-	Player(std::weak_ptr<Camera> _camera);
+	Player(std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo);
 	//デストラクタ
 	~Player(void);
 
@@ -51,6 +59,9 @@ public:
 
 	//当たり判定処理
 	void OnHit(const std::weak_ptr<Collider> _hitCol)override;
+
+	//パッド番号の取得
+	const KeyConfig::JOYPAD_NO GetPadNo(void) { return padNo_; }
 
 	//パラメーターの取得
 	const Parameter& GetParam(void) { return param_; }
@@ -157,6 +168,12 @@ private:
 	//カメラ
 	std::weak_ptr<Camera> camera_;
 
+	//操作タイプ
+	OPERATION_TYPE operation_;
+
+	//パッド番号
+	KeyConfig::JOYPAD_NO padNo_;
+
 	//パラメーター
 	Parameter param_;
 
@@ -188,9 +205,10 @@ private:
 	float damage_;
 
 	//関数ポインタ
-	std::map<STATE, std::function<void(void)>> changeAction_;	//行動切り替え
-	std::map<STATE, std::function<void(void)>> update_;			//状態ごとの更新
-	std::map<STATE, std::function<void(void)>> draw_;			//状態ごとの描画
+	std::map<OPERATION_TYPE, std::function<void(void)>> createLogic_;	//操作
+	std::map<STATE, std::function<void(void)>> changeAction_;			//行動切り替え
+	std::map<STATE, std::function<void(void)>> update_;					//状態ごとの更新
+	std::map<STATE, std::function<void(void)>> draw_;					//状態ごとの描画
 
 	//状態ごとのアクションの変更
 	void ChangeActionNormal(void);

@@ -131,7 +131,6 @@ VECTOR Camera::GetForward(void) const
 
 void Camera::ChangeMode(MODE mode)
 {
-
 	// カメラの初期設定
 	SetDefault();
 
@@ -155,7 +154,6 @@ void Camera::ChangeMode(MODE mode)
 
 void Camera::SetDefault(void)
 {
-
 	// カメラの初期設定
 	pos_ = DEFAULT_CAMERA_POS;
 
@@ -174,7 +172,6 @@ void Camera::SetDefault(void)
 
 void Camera::SyncFollow(void)
 {
-
 	// 同期先の位置
 	VECTOR pos = followTransform_->pos;
 
@@ -232,7 +229,7 @@ void Camera::SyncFollowLeap(void)
 	VECTOR desiredTargetPos = VAdd(pos, localPos);
 
 	// --- 移動速度に応じて注視点を前に押し出す ---
-	float lookAhead = std::clamp(speedFront * 15.0f, -100.0f, 300.0f);
+	float lookAhead = std::clamp(speedFront * 5.0f, -0.0f, 0.0f);			//※0,0なのはカメラ追従がバグるため後回し
 	desiredTargetPos = VAdd(desiredTargetPos, VScale(forward, lookAhead));
 
 	// --- カメラ理想位置 ---
@@ -255,7 +252,7 @@ void Camera::SyncFollowLeap(void)
 	VECTOR sideMove = VSub(diff, temp);
 
 	// --- 補間係数 ---
-	const float rateFront = 0.9f;	// 前後：速く追従
+	const float rateFront = 0.85f;	// 前後：速く追従
 	const float rateSide = 0.05f;	// 横：なめらか
 	const float rateUp = 0.9f;		// 縦：速く追従
 
@@ -274,7 +271,7 @@ void Camera::SyncFollowLeap(void)
 	targetPos_.z += (desiredTargetPos.z - targetPos_.z) * targetRate;
 
 	float dist = VSize(VSub(targetPos_, pos_));
-	float adaptiveRate = std::clamp(0.2f + (10000.0f - dist) * 0.002f, 0.1f, 0.4f);
+	float adaptiveRate = std::clamp(0.2f + (10000.0f - dist) * 0.002f, 0.1f, 0.3f);
 	targetPos_ = VAdd(targetPos_, VScale(VSub(desiredTargetPos, targetPos_), adaptiveRate));
 
 	// --- 上方向 ---

@@ -36,7 +36,7 @@ void SkyDome::Init(void)
 void SkyDome::Update(void)
 {
 	//ÉÇÉfÉãêßå‰
-	MV1SetPosition(modelId_, VAdd(follow_, LOCAL_POS));
+	MV1SetPosition(modelId_, LOCAL_POS/*VAdd(follow_, LOCAL_POS)*/);
 	MV1SetScale(modelId_, scale_);
 	MV1SetRotationXYZ(modelId_, rot_);
 }
