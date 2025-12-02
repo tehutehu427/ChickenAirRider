@@ -20,7 +20,7 @@ PlayerOnHit::PlayerOnHit(Player& _player, Transform& _trans)
 	onHit_[Collider::TAG::MACHINE_RIDE] = [this](const std::weak_ptr<Collider> _hitCol) {RideMachineOnHit(_hitCol); };
 	onHit_[Collider::TAG::ITEM_BOX] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
 	onHit_[Collider::TAG::POWER_UP] = [this](const std::weak_ptr<Collider> _hitCol) {PowerUpItemOnHit(_hitCol); };
-	onHit_[Collider::TAG::SPIN] = [this](const std::weak_ptr<Collider> _hitCol) { };
+	onHit_[Collider::TAG::SPIN] = [this](const std::weak_ptr<Collider> _hitCol) { SpinOnHit(_hitCol); };
 }
 
 PlayerOnHit::~PlayerOnHit(void)
@@ -73,20 +73,42 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 
 void PlayerOnHit::GroundOnHit(const std::weak_ptr<Collider> _hitCol)
 {
-    //各コライダ
-    auto& mainCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::MAIN)];
-    auto& groundPreCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED_PRE)];
+	//各コライダ
+	auto& mainCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::MAIN)];
+	auto& groundPreCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED_PRE)];
 
-    //相手モデル
-    Model& model = dynamic_cast<Model&>(_hitCol.lock()->GetGeometry());
-    const int hitNum = model.GetHitInfo().HitNum;
+	//相手モデル
+	Model& model = dynamic_cast<Model&>(_hitCol.lock()->GetGeometry());
+	const int hitNum = model.GetHitInfo().HitNum;
 
-    //自身の線
-    Line& line = dynamic_cast<Line&>(groundPreCol->GetGeometry());
+	//自身の線
+	Line& line = dynamic_cast<Line&>(groundPreCol->GetGeometry());
 
-    //自身の球
-    Sphere& mainSphere = dynamic_cast<Sphere&>(mainCol->GetGeometry());
-    float radius = mainSphere.GetRadius();
+	//自身の球
+	Sphere& mainSphere = dynamic_cast<Sphere&>(mainCol->GetGeometry());
+	float radius = mainSphere.GetRadius();
+
+	//for (int i = 0; i < hitNum; i++)
+	//{
+	//	auto hit = model.GetHitInfo().Dim[i];
+
+	//	for (int tryCnt = 0; tryCnt < 10; tryCnt++)
+	//	{
+	//		int pHit = HitCheck_Sphere_Triangle(
+	//			mainSphere.GetColPos(), radius,
+	//			hit.Position[0], hit.Position[1], hit.Position[2]
+	//		);
+
+	//		if (pHit)
+	//		{
+	//			player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(hit.Normal, 3.0f)));
+
+	//			playerTrans_.pos = player_.GetMovedPos();
+	//			continue;
+	//		}
+	//		break;
+	//	}
+	//}
 
 	//移動後座標
 	VECTOR pos = player_.GetMovedPos();
@@ -169,4 +191,16 @@ void PlayerOnHit::PowerUpItemOnHit(const std::weak_ptr<Collider> _hitCol)
 
 	//プレイヤーに加算
 	player_.SetParam(player_.GetParam() + param);
+}
+
+void PlayerOnHit::SpinOnHit(const std::weak_ptr<Collider> _hitCol)
+{
+	//スピンの相手
+	const auto& spinParent = dynamic_cast<const Player&>(_hitCol.lock()->GetParent());
+
+	//攻撃力
+	float attack = spinParent.GetAttack();
+
+	//ダメージ処理
+	player_.Damage(attack);
 }

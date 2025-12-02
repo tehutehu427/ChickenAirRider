@@ -109,7 +109,7 @@ void CharacterAction::CalcGravity(void)
 	VECTOR gravPow = Utility::VECTOR_ZERO;
 
 	//‰ÁŽZ
-	GravityManager::GetInstance().CalcGravity(player_.GetFoot().PosAxis(Utility::DIR_D), gravPow_,100.0f);
+	GravityManager::GetInstance().CalcGravity(player_.GetFoot().PosAxis(Utility::DIR_D), gravPow_,10.0f);
 
 	jumpPow_ = VAdd(jumpPow_, gravPow_);
 

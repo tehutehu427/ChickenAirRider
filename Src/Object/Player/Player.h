@@ -143,20 +143,23 @@ public:
 	//機体に乗る
 	void RideMachine(std::unique_ptr<Machine> _machine);
 
+	//ダメージ処理
+	void Damage(const float _damage);
+
 private:
 
 	//当たり判定用
 	static constexpr float NORMAL_RADIUS = 25.0f;							//通常時の球体の半径
 	static constexpr float SPIN_RADIUS = 60.0f;								//スピンの球体の半径
 	static constexpr float SPIN_SPEED = 40.0f;								//スピンの速度
-	static constexpr VECTOR LOCAL_LINE_FRONT_BACK = { 0.0f,0.0f,15.0f };	//線判定の前後相対座標
 	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };				//線判定の上相対座標
 	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-40.0f,0.0f };			//線判定の下相対座標
 
 	//パラメーター関係
-	static constexpr float WEIGHT_AFFECT = 0.2f;
-	static constexpr float FLIGHT_AFFECT = 0.1f;
-	static constexpr float MAX_PARAM = 15;
+	static constexpr float WEIGHT_AFFECT = 0.2f;	//攻防の重さの影響度
+	static constexpr float FLIGHT_AFFECT = 0.1f;	//攻防の飛行の影響度
+	static constexpr float MAX_PARAM = 15;			//上昇最大値
+	static constexpr float DEFENCE_AFFECT = 0.8f;	//防御の影響度
 
 	//基本機能
 	std::unique_ptr<Character> chara_;		//キャラクタ―
@@ -185,6 +188,10 @@ private:
 
 	//移動後座標
 	VECTOR movedPos_;
+
+	//前後座標
+	VECTOR flontPos_;
+	VECTOR backPos_;
 
 	//移動力
 	VECTOR movePow_;

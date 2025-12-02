@@ -32,7 +32,7 @@ public:
 private:
 
 	//初期ジャンプ量
-	static constexpr float JUMP_POW = 100.0f;
+	static constexpr float JUMP_POW = 20.0f;
 
 	//ジャンプの当たり判定カウンタ
 	static constexpr float JUMP_CNT = 0.2f;

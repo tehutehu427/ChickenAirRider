@@ -26,6 +26,8 @@ Player::Player(std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConf
 	state_ = STATE::NONE;
 	prePos_ = Utility::VECTOR_ZERO;
 	movedPos_ = Utility::VECTOR_ZERO;
+	flontPos_ = Utility::VECTOR_ZERO;
+	backPos_ = Utility::VECTOR_ZERO;
 	movePow_ = Utility::VECTOR_ZERO;
 	isGrounded_ = false;
 	isSpin_ = false;
@@ -94,10 +96,6 @@ void Player::Init(void)
 	//接地判定用の当たり判定
 	geo = std::make_unique<Line>(trans_.pos, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	MakeCollider(Collider::TAG::FOOT, std::move(geo), { Collider::TAG::PLAYER1,Collider::TAG::FOOT });
-
-	//移動後接地判定
-	//geo = std::make_unique<Line>(movedPos_, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
-	//MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1 });
 	
 	//体力
 	damage_ = 0.0f;
@@ -137,10 +135,10 @@ void Player::Draw(void)
 	//描画
 	draw_[state_]();
 
-	//for (auto& col : collider_)
-	//{
-	//	col->GetGeometry().Draw(0);
-	//}
+	for (auto& col : collider_)
+	{
+		col->GetGeometry().Draw(0);
+	}
 
 	//DrawFormatString(0, 32, 0xffffff, L"%.2f,%.2f,%.2f", trans_.quaRot.ToEuler().x, trans_.quaRot.ToEuler().y, trans_.quaRot.ToEuler().z);
 	//DrawFormatString(0, 80, 0xffffff, L"%.2f,%.2f,%.2f", trans_.pos.x, trans_.pos.y, trans_.pos.z);
@@ -205,7 +203,7 @@ const float Player::GetDefence(void) const
 	//パラメータ
 	const Parameter& param = GetAllParam();
 
-	return param.defence_ + (param.weight_ * WEIGHT_AFFECT) - (param.flight_ * FLIGHT_AFFECT);
+	return (param.defence_ + (param.weight_ * WEIGHT_AFFECT) - (param.flight_ * FLIGHT_AFFECT)) * DEFENCE_AFFECT;
 }
 
 UnitParameter Player::GetUnitParam(void) const
@@ -262,6 +260,21 @@ void Player::RideMachine(std::unique_ptr<Machine> _machine)
 
 	//機体乗車
 	ChangeState(STATE::RIDE_MACHINE);
+}
+
+void Player::Damage(const float _damage)
+{
+	//ダメージ総合
+	float resultDamage = _damage - GetDefence();
+
+	//ダメージの下限
+	if (resultDamage < 0.0f)
+	{
+		resultDamage = 0.0f;
+	}
+
+	//ダメージ
+	damage_ += resultDamage;
 }
 
 void Player::ChangeActionNormal(void)

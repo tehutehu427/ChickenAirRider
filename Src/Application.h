@@ -13,6 +13,8 @@ public:
 	// スクリーンサイズ
 	static constexpr int SCREEN_SIZE_X = 1024;
 	static constexpr int SCREEN_SIZE_Y = 640;
+	//static constexpr int SCREEN_SIZE_X = 1920;
+	//static constexpr int SCREEN_SIZE_Y = 1080;
 
 	// スクリーンサイズハーフ
 	static constexpr int SCREEN_HALF_X = SCREEN_SIZE_X / 2;

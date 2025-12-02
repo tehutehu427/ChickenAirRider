@@ -40,11 +40,11 @@ void CollisionManager::Sweep(void)
 
 void CollisionManager::Update(void)
 {
+	//コライダが一つもないなら処理を飛ばす
+	if (colliders_.empty())return;
+
 	//コライダの数
 	const auto& colSize = colliders_.size();
-
-	//コライダが一つもないなら処理を飛ばす
-	if (colSize <= 0)return;
 
 	//当たり判定フレーム
 	if (updateFrame_ < COL_UPDATE_FRAME)

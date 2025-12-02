@@ -92,6 +92,7 @@ void Camera::CameraSetting()
 
 void Camera::Draw(void)
 {
+	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x000000, false);
 }
 
 void Camera::SetFollow(const Transform* follow)
