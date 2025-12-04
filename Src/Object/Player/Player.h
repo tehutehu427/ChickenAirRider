@@ -150,7 +150,7 @@ private:
 
 	//当たり判定用
 	static constexpr float NORMAL_RADIUS = 25.0f;							//通常時の球体の半径
-	static constexpr float SPIN_RADIUS = 60.0f;								//スピンの球体の半径
+	static constexpr float SPIN_RADIUS = 90.0f;								//スピンの球体の半径
 	static constexpr float SPIN_SPEED = 40.0f;								//スピンの速度
 	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };				//線判定の上相対座標
 	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-40.0f,0.0f };			//線判定の下相対座標

@@ -90,6 +90,9 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::MODEL, stagePath + L"Building.mv1");
 	resourcesMap_.emplace(SRC::BUILDING, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, stagePath + L"Tree.mv1");
+	resourcesMap_.emplace(SRC::TREE, std::move(res));
+
 	//アイテムのパス
 	std::wstring itemPath = PATH_MDL + L"Item/";
 

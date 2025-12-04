@@ -70,6 +70,7 @@ const bool Sphere::IsHit(Cube& _cube)
 	VECTOR bmin = VSub(boxMin, VGet(radius_, radius_, radius_));
 	VECTOR bmax = VAdd(boxMax, VGet(radius_, radius_, radius_));
 
+	//スラブ法で衝突しているかを判定
 	float tEnter = 0.0f;
 	float tExit = 1.0f;
 
@@ -100,7 +101,13 @@ const bool Sphere::IsHit(Cube& _cube)
 	}
 
 	// --- 衝突あり ---
+
+	//衝突した瞬間を格納
 	hitResult_.t = std::max(0.0f, tEnter);
+	
+	//Cube側も格納しておく
+	HitResult cubeResult;
+	cubeResult.t = hitResult_.t;
 
 	VECTOR localHitPos = VAdd(localP0, VScale(localV, hitResult_.t));
 
@@ -132,6 +139,16 @@ const bool Sphere::IsHit(Cube& _cube)
 	if (dzMin < minDist) { minDist = dzMin; localNormal = VGet(0, 0, -1); }
 	if (dzMax < minDist) { minDist = dzMax; localNormal = VGet(0, 0, 1); }
 
+	//深度
+	float depth = 0.0f;
+
+	if (localNormal.x > 0) depth = bmax.x - localHitPos.x;
+	else if (localNormal.x < 0) depth = localHitPos.x - bmin.x;
+	else if (localNormal.y > 0) depth = bmax.y - localHitPos.y;
+	else if (localNormal.y < 0) depth = localHitPos.y - bmin.y;
+	else if (localNormal.z > 0) depth = bmax.z - localHitPos.z;
+	else if (localNormal.z < 0) depth = localHitPos.z - bmin.z;
+
 	// --- ワールド座標に戻す ---
 	VECTOR hitWorld = center;
 	hitWorld = VAdd(hitWorld,
@@ -146,8 +163,15 @@ const bool Sphere::IsHit(Cube& _cube)
 	);
 	normalWorld = VNorm(normalWorld);
 
+	//情報の格納
+	hitResult_.depth = depth;
 	hitResult_.point = hitWorld;
 	hitResult_.normal = normalWorld;
+
+	//Cube側も渡す
+	cubeResult.depth = depth;
+	cubeResult.point = hitWorld;
+	cubeResult.normal = VScale(normalWorld, -1.0f);
 
 	return true;
 }

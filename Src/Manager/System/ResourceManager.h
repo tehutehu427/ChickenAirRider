@@ -28,6 +28,7 @@ public:
 
 		GLASS,				//草地モデル
 		BUILDING,			//ビルモデル
+		TREE,				//木モデル
 
 		//アイテムモデル
 		ITEM_BOX,			//アイテムボックス

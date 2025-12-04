@@ -31,6 +31,7 @@ public :
 
 		NORMAL_OBJECT,	//通常オブジェ
 		GROUND,			//地面
+		TREE,			//木
 
 		ITEM_BOX,		//アイテムボックス
 		POWER_UP,		//パワーアップアイテム

@@ -87,10 +87,17 @@ StageManager::StageManager(void)
 		auto& res = ResourceManager::GetInstance();
 		return res.LoadModelDuplicate(ResourceManager::SRC::BUILDING);
 	};
+	modelId_["Tree"] = [this](void)
+	{
+		//インスタンス
+		auto& res = ResourceManager::GetInstance();
+		return res.LoadModelDuplicate(ResourceManager::SRC::TREE);
+	};
 
 	//タグ
 	tag_["normalObject"] = Collider::TAG::NORMAL_OBJECT;
 	tag_["building"] = Collider::TAG::NORMAL_OBJECT;
+	tag_["tree"] = Collider::TAG::TREE;
 	tag_["glass"] = Collider::TAG::GROUND;
 	tag_["ground"] = Collider::TAG::GROUND;
 }
