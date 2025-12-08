@@ -104,7 +104,7 @@ void SceneSelect::DebugDraw(void)
 void SceneSelect::SelectGameStart(void)
 {
 	//プレイヤーの作成数
-	GameSetting::GetInstance().SetUserNum(1);
+	GameSetting::GetInstance().SetUserNum(3);
 	GameSetting::GetInstance().SetNpcNum(0);
 
 	//シーンの削除

@@ -163,6 +163,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Player\UI\PlayerUI.cpp" />
     <ClCompile Include="Src\Manager\Game\GameSetting.cpp" />
     <ClCompile Include="Src\Manager\Game\ItemManager.cpp" />
     <ClCompile Include="Src\Object\Item\ItemBox.cpp" />
@@ -234,6 +235,7 @@
     <ClCompile Include="Src\Common\Vector2F.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Player\UI\PlayerUI.h" />
     <ClInclude Include="Src\Manager\Game\GameSetting.h" />
     <ClInclude Include="Src\Manager\Game\ItemManager.h" />
     <ClInclude Include="Src\Object\Item\BoxCreatePositionData.h" />

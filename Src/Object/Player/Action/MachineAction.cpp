@@ -78,18 +78,21 @@ void MachineAction::Update(void)
 
 void MachineAction::Draw(void)
 {
-	const auto& param = player_.GetAllParam();
+	const SceneManager& scnMng = SceneManager::GetInstance();
+	const int screenSizeX = Application::SCREEN_SIZE_X;
+	const int screenSizeY = Application::SCREEN_SIZE_Y;
+	const Parameter& param = player_.GetAllParam();
 	const float nowHealth = player_.GetNowHealth();
 
 	//速度
-	DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 32, 0xffffff, L"Speed = %.2f", speed_);
+	DrawFormatString(screenSizeX - 320, screenSizeY - 32, 0xffffff, L"Speed = %.2f", speed_);
 	//DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 64, 0xffffff, L"Charge = %.2f", chargeCnt_);
 
 	const int div = 64; // 分割数（多いほど滑らか）
 	const float maxAngle = chargeCnt_ * DX_TWO_PI;
 
-	float cx = Application::SCREEN_SIZE_X - 320;
-	float cy = Application::SCREEN_SIZE_Y - 108;
+	float cx = screenSizeX - 320;
+	float cy = screenSizeY - 108;
 	float radius = 30.0f;
 	float prevX = cx;
 	float prevY = cy - radius; // 角度0（上）から開始したい場合
@@ -116,19 +119,19 @@ void MachineAction::Draw(void)
 	}
 
 	//最大体力
-	DrawBox(HEALTH_BOX_POS_X_1, 
-		HEALTH_BOX_POS_Y, 
-		HEALTH_BOX_POS_X_2, 
-		HEALTH_BOX_POS_Y - param.maxHealth_ * HEALTH_BOX, 
+	DrawBox(screenSizeX + HEALTH_BOX_LOCAL_POS_X_1,
+		screenSizeY + HEALTH_BOX_LOCAL_POS_Y_1,
+		screenSizeX + HEALTH_BOX_LOCAL_POS_X_2,
+		screenSizeY + HEALTH_BOX_LOCAL_POS_Y_1 - param.maxHealth_ * HEALTH_BOX,
 		Utility::BLACK, true);
 	
 	if (nowHealth > 0.0f)
 	{
 		//体力
-		DrawBox(HEALTH_BOX_POS_X_1 + HEALTH_LOCAL,
-			HEALTH_BOX_POS_Y - HEALTH_LOCAL,
-			HEALTH_BOX_POS_X_2 - HEALTH_LOCAL,
-			HEALTH_BOX_POS_Y - (param.maxHealth_ * HEALTH_BOX) * (nowHealth / param.maxHealth_) + HEALTH_LOCAL,
+		DrawBox(screenSizeX + HEALTH_BOX_LOCAL_POS_X_1 + HEALTH_LOCAL,
+			screenSizeY + HEALTH_BOX_LOCAL_POS_Y_1 - HEALTH_LOCAL,
+			screenSizeX + HEALTH_BOX_LOCAL_POS_X_2 - HEALTH_LOCAL,
+			screenSizeY + HEALTH_BOX_LOCAL_POS_Y_1 - (param.maxHealth_ * HEALTH_BOX) * (nowHealth / param.maxHealth_) + HEALTH_LOCAL,
 			Utility::RED, true);
 	}
 }

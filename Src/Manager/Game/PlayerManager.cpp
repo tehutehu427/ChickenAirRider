@@ -88,7 +88,7 @@ void PlayerManager::CreateUserPlayer(const int _playerIndex)
 	std::unique_ptr<Player> player = std::make_unique<Player>
 		(SceneManager::GetInstance().GetCamera(_playerIndex),
 			Player::OPERATION_TYPE::USER,
-			static_cast<KeyConfig::JOYPAD_NO>(_playerIndex )
+			static_cast<KeyConfig::JOYPAD_NO>(_playerIndex + 1 )
 		);
 	players_.emplace_back(std::move(player));
 

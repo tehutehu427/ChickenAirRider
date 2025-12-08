@@ -11,8 +11,8 @@
 //カプセル
 //***************************************************
 
-Capsule::Capsule(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _localPosTop, const VECTOR _localPosDown, const float _radius)
-	: Geometry(_pos,_rot),
+Capsule::Capsule(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR _localPosTop, const VECTOR _localPosDown, const float _radius)
+	: Geometry(_pos, _movedPos, _rot),
 	localPosTop_(_localPosTop),
 	localPosDown_(_localPosDown),
 	radius_(_radius)
@@ -22,7 +22,7 @@ Capsule::Capsule(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _local
 }
 
 Capsule::Capsule(const Capsule& _copyBase)
-	: Geometry(_copyBase.GetColPos(), _copyBase.GetColRot())
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColMovedPos(), _copyBase.GetColRot())
 {
 	radius_ = _copyBase.GetRadius();
 	localPosTop_ = _copyBase.GetLocalPosTop();
@@ -105,6 +105,8 @@ const bool Capsule::IsHit(Sphere& _sphere)
 
 const bool Capsule::IsHit(Capsule& _capsule)
 {
+	HitResult hitResult;
+
 	VECTOR d1 = VSub(GetPosDown(), GetPosTop());					// 線分1の方向ベクトル
 	VECTOR d2 = VSub(_capsule.GetPosDown(), _capsule.GetPosTop());	// 線分2の方向ベクトル
 	VECTOR r = VSub(GetPosTop(), _capsule.GetPosTop());
@@ -141,18 +143,62 @@ const bool Capsule::IsHit(Capsule& _capsule)
 		s = std::clamp((b - c) / a, 0.0f, 1.0f);
 	}
 
+	//衝突したか
 	VECTOR c1 = VAdd(GetPosTop(), VScale(d1, s));
 	VECTOR c2 = VAdd(_capsule.GetPosTop(), VScale(d2, t));
-	float distance = VSize(VSub(c1, c2));
+	VECTOR diff = VSub(c1, c2);
+	float distance = VSize(diff);
 
-	//衝突したか
-	return distance <= (GetRadius() + _capsule.GetRadius());
+	// 判定
+	bool isHit = distance <= (GetRadius() + _capsule.GetRadius());
+
+	if (isHit)
+	{
+		// normal（衝突法線：カプセル2 → 1）
+		VECTOR normal;
+		if (distance > 1e-6f)
+			normal = VScale(diff, 1.0f / distance);
+		else
+			normal = { 0.0f, 1.0f, 0.0f }; // 完全一致したら適当な軸を返す
+
+		// depth（めり込み量）
+		float depth = GetRadius() + _capsule.GetRadius() - distance;
+		depth = std::max(depth, 0.0f);
+
+		// 衝突点（point）
+		float r1 = GetRadius();
+		float r2 = _capsule.GetRadius();
+
+		// どちらの中心にも寄りすぎない中間点
+		VECTOR point = VAdd(
+			c2,
+			VScale(normal, r2 - depth * 0.5f)
+		);
+
+		//結果
+		hitResult.normal = normal;
+		hitResult.depth = depth;
+		hitResult.point = point;
+		hitResult.t = t;
+
+		//保存
+		hitResult_ = hitResult;
+
+		//相手側も
+		hitResult.normal = VScale(hitResult.normal, -1.0f);
+		_capsule.SetHitResult(hitResult);
+	}
+
+	return isHit;
 }
 
 const bool Capsule::IsHit(Line& _line)
 {
-	VECTOR u = VSub(_line.GetPosPoint2(), _line.GetPosPoint1());
-	VECTOR v = VSub(GetPosDown(), GetPosTop());
+	HitResult result;
+
+	// --- ベクトル準備 ---
+	VECTOR u = VSub(_line.GetPosPoint2(), _line.GetPosPoint1());      // 線分1
+	VECTOR v = VSub(GetPosDown(), GetPosTop());						  // カプセル側の線分
 	VECTOR w = VSub(_line.GetPosPoint1(), GetPosTop());
 
 	float a = VDot(u, u);
@@ -164,23 +210,62 @@ const bool Capsule::IsHit(Line& _line)
 	float denom = a * c - b * b;
 	float s = 0.0f, t = 0.0f;
 
+	// --- s の計算 ---
 	if (denom != 0.0f) {
 		s = std::clamp((b * e - c * d) / denom, 0.0f, 1.0f);
 	}
 
+	// --- t の計算 ---
 	t = (b * s + e) / c;
 	t = std::clamp(t, 0.0f, 1.0f);
 
+	// --- s の再計算（相互依存のため） ---
 	s = (b * t - d) / a;
 	s = std::clamp(s, 0.0f, 1.0f);
 
-	VECTOR closest1 = VAdd(_line.GetPosPoint1(), VScale(u, s));
-	VECTOR closest2 = VAdd(GetPosTop(), VScale(v, t));
+	// --- 最近接点を求める ---
+	VECTOR closest1 = VAdd(_line.GetPosPoint1(), VScale(u, s));     // 直線側
+	VECTOR closest2 = VAdd(GetPosTop(), VScale(v, t));				// カプセル軸側
+
 	VECTOR diff = VSub(closest1, closest2);
+	float distance = sqrtf(VDot(diff, diff));
 
-	float distance = sqrt(VDot(diff, diff));
+	float radius = radius_;
 
-	return distance <= GetRadius();
+	// --- 判定 ---
+	if (distance > radius) {
+		return false;   // 当たっていない
+	}
+
+	// --- 以下：衝突情報の計算 ---
+
+	// 法線
+	VECTOR normal;
+	if (distance > 1e-6f)
+		normal = VScale(diff, 1.0f / distance);
+	else
+		normal = { 1,0,0 }; // 重なりすぎて方向が無いので暫定
+
+	// 深度
+	float depth = radius - distance;
+
+	// 衝突点（line と capsule の間の接触点）
+	VECTOR point = VAdd(closest2, VScale(normal, radius - depth * 0.5f));
+
+	// 結果
+	result.normal = normal;
+	result.point = point;
+	result.depth = depth;
+	result.t = t;
+
+	//保存
+	hitResult_ = result;
+
+	//相手側も
+	result.normal = VScale(result.normal, -1.0f);
+	_line.SetHitResult(result);
+
+	return true;
 }
 
 void Capsule::HitAfter(void)

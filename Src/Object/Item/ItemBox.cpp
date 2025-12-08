@@ -60,11 +60,11 @@ void ItemBox::Load(void)
 void ItemBox::Init(void)
 {
 	//ìñÇΩÇËîªíË
-	std::unique_ptr<Geometry> geo = std::make_unique<Cube>(trans_.pos, trans_.quaRot, BOX_HALF);
+	std::unique_ptr<Geometry> geo = std::make_unique<Cube>(trans_.pos, trans_.pos, trans_.quaRot, BOX_HALF);
 	MakeCollider(Collider::TAG::ITEM_BOX, std::move(geo), { Collider::TAG::FOOT });
 
 	//ë´å≥ÇÃîªíË
-	geo = std::make_unique<Line>(trans_.pos, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
+	geo = std::make_unique<Line>(trans_.pos, trans_.pos, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	MakeCollider(Collider::TAG::FOOT, std::move(geo), { Collider::TAG::ITEM_BOX });
 
 	//ïœêî

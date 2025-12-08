@@ -56,6 +56,7 @@ Player::Player(std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConf
 
 Player::~Player(void)
 {
+	camera_.reset();
 }
 
 void Player::Load(void)
@@ -94,7 +95,7 @@ void Player::Init(void)
 	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1,Collider::TAG::FOOT });
 
 	//ê⁄ínîªíËópÇÃìñÇΩÇËîªíË
-	geo = std::make_unique<Line>(trans_.pos, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
+	geo = std::make_unique<Line>(trans_.pos, movedPos_, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	MakeCollider(Collider::TAG::FOOT, std::move(geo), { Collider::TAG::PLAYER1,Collider::TAG::FOOT });
 	
 	//ëÃóÕ
@@ -373,9 +374,6 @@ void Player::DrawRide(void)
 
 	//ã@ëÃÇÃï`âÊ
 	machine_->Draw();
-
-	//UI
-	action_->Draw();
 }
 
 void Player::SynchronizeChara(void)

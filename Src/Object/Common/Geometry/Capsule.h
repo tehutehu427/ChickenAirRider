@@ -13,7 +13,7 @@ public:
 	/// @param _localPosTop 上側の相対座標
 	/// @param _localPosDown 下側の相対座標
 	/// @param _radius 半径
-	Capsule(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _localPosTop, const VECTOR _localPosDown, const float _radius);
+	Capsule(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR _localPosTop, const VECTOR _localPosDown, const float _radius);
 	
 	/// @brief コピーコンストラクタ
 	/// @param _copyBase コピー元
@@ -47,6 +47,8 @@ public:
 	// ワールド座標を取得
 	inline const VECTOR GetPosTop(void) const { return GetRotPos(localPosTop_); }
 	inline const VECTOR GetPosDown(void) const { return GetRotPos(localPosDown_); }
+	inline const VECTOR GetMovedPosTop(void) const { return GetRotMovedPos(localPosTop_); }
+	inline const VECTOR GetMovedPosDown(void) const { return GetRotMovedPos(localPosDown_); }
 
 	// 半径
 	inline const float GetRadius(void) const { return radius_; }

@@ -195,7 +195,7 @@ private:
 	void ProcessZoom(void);
 
 	//マウスでのカメラ操作
-	void ProcessRotMause(float* x_m, float* y_m, const float fov_per = 1.0f);
+	void ProcessRotMouse(float* x_m, float* y_m, const float fov_per = 1.0f);
 
 	// モード別更新ステップ
 	void SetBeforeDrawFixedPoint(void);

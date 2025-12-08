@@ -11,8 +11,8 @@
 //ƒ‚ƒfƒ‹
 //***************************************************
 
-Model::Model(const VECTOR& _pos, const Quaternion& _rot, const int _modelId)
-	: Geometry(_pos,  _rot), parentModelId_(_modelId)
+Model::Model(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const int _modelId)
+	: Geometry(_pos, _movedPos, _rot), parentModelId_(_modelId)
 {
 	hitLineInfo_ = {};
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_)); 
@@ -20,7 +20,7 @@ Model::Model(const VECTOR& _pos, const Quaternion& _rot, const int _modelId)
 }
 
 Model::Model(const Model& _copyBase)
-	: Geometry(_copyBase.GetColPos(), _copyBase.GetColRot())
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColMovedPos(), _copyBase.GetColRot())
 {
 	parentModelId_ = _copyBase.GetParentModel();
 	hitLineInfo_ = {};

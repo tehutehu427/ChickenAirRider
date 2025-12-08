@@ -18,7 +18,7 @@ public:
 	// DxLib定数、DX_INPUT_PAD1等に対応
 	enum class JOYPAD_NO
 	{
-		KEY_PAD1,		// キー入力とパッド１入力
+		KEY_PAD1 = 0,		// キー入力とパッド１入力
 		PAD1,				// パッド１入力
 		PAD2,				// パッド２入力
 		PAD3,				// パッド３入力

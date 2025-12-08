@@ -18,6 +18,7 @@ Camera::Camera(int _userNum)
 	localPos_ = Utility::VECTOR_ZERO;
 	rotPow_ = 0.0f;
 	leapTargetPos_ = Utility::VECTOR_ZERO;
+	vel_ = Utility::VECTOR_ZERO;
 }
 
 Camera::~Camera(void)
@@ -363,7 +364,7 @@ void Camera::ProcessZoom(void)
 	}
 }
 
-void Camera::ProcessRotMause(float* x_m, float* y_m, const float fov_per)
+void Camera::ProcessRotMouse(float* x_m, float* y_m, const float fov_per)
 {
 	int x_t, y_t;
 	GetMousePoint(&x_t, &y_t);
@@ -458,7 +459,7 @@ void Camera::SetBeforeDrawSelfShot(void)
 void Camera::SetBeforeDrawFPS(void)
 {
 	//マウスでのカメラ操作
-	ProcessRotMause(&angles_.y, &angles_.x, 0.2f);
+	ProcessRotMouse(&angles_.y, &angles_.x, 0.2f);
 
 	// 追従対象との相対位置を同期
 	SyncFollowFPS();

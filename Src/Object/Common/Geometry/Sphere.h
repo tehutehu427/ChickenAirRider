@@ -46,7 +46,6 @@ public:
 
 private:
 
-	const VECTOR& movedPos_;
 	float radius_;						//”¼Œa
 	MV1_COLL_RESULT_POLY_DIM hitInfo_;	//“–‚½‚Á‚½‚Ìî•ñ(ƒ‚ƒfƒ‹)
 };

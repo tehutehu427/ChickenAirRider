@@ -66,7 +66,7 @@ void SceneGame::Init(void)
 	grvMng.Init();
 
 	//タイマー
-	timer_ = std::make_unique<Timer>(120);
+	timer_ = std::make_unique<Timer>(10);
 	timer_->Init();
 
 	//カウント開始

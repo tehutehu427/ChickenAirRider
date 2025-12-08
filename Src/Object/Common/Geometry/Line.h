@@ -11,7 +11,7 @@ public:
 	/// @param _rot 追従する親の回転
 	/// @param _localPosPoint1 1つ目の点の座標
 	/// @param _localPosPoint2 2つ目の点の座標
-	Line(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _localPosPoint1, const VECTOR _localPosPoint2);
+	Line(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR _localPosPoint1, const VECTOR _localPosPoint2);
 
 	/// @brief コピーコンストラクタ
 	/// @param _copyBase コピー元
@@ -42,6 +42,12 @@ public:
 
 	// 回転済みの2つ目の点の座標を取得
 	inline const VECTOR GetPosPoint2(void) const { return GetRotPos(localPosPoint2_); }
+	
+	// 回転済みの1つ目の点の移動後座標を取得
+	inline const VECTOR GetMovedPosPoint1(void) const { return GetRotMovedPos(localPosPoint1_); }
+
+	// 回転済みの2つ目の点の移動後座標を取得
+	inline const VECTOR GetMovedPosPoint2(void) const { return GetRotMovedPos(localPosPoint2_); }
 
 	//1つ目の点の座標の設定
 	inline void SetLocalPosPoint1(const VECTOR _pos) { localPosPoint1_ = _pos; }

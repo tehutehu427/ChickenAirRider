@@ -41,6 +41,9 @@ public:
 
 	//親の座標を返す
 	inline const VECTOR& GetColPos(void)const { return pos_; }
+
+	//親の移動後座標を返す
+	inline const VECTOR& GetColMovedPos(void)const { return movedPos_; }
 	
 	//親の回転を返す
 	inline const Quaternion& GetColRot(void)const { return quaRot_; }
@@ -59,6 +62,7 @@ public:
 
 	// 相対座標を回転させてワールド座標で取得する
 	const VECTOR GetRotPos(const VECTOR& _localPos) const;
+	const VECTOR GetRotMovedPos(const VECTOR& _localPos) const;
 	
 	// 相対座標を逆回転させてワールド座標で取得する
 	const VECTOR GetInvRotPos(const VECTOR& _localPos) const;
@@ -70,6 +74,7 @@ protected:
 
 	//親情報
 	const VECTOR& pos_;			//親の座標
+	const VECTOR& movedPos_;	//親の移動後座標
 	const Quaternion& quaRot_;	//親の回転
 
 	//当たった情報
@@ -78,5 +83,5 @@ protected:
 	/// @brief コンストラクタ(外部で作る必要のない基底なのでprotected)
 	/// @param _pos 追従する親の座標
 	/// @param _rot 追従する親の回転
-	Geometry(const VECTOR& _pos, const Quaternion& _rot);
+	Geometry(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot);
 };

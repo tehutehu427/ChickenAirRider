@@ -98,19 +98,19 @@ public:
 	void SetIsSplitMode(const bool _isSplitMode) { isSplitMode_ = _isSplitMode; }
 
 	//シーンIDの取得
-	SCENE_ID GetSceneID(void) const { return sceneId_; }
+	const SCENE_ID GetSceneID(void) const { return sceneId_; }
 
 	//メインスクリーンの取得
-	int GetMainScreen() const { return mainScreen_; }
+	const int GetMainScreen() const { return mainScreen_; }
 	
 	//スクリーンの取得
-	int GetScreen(int _screenNum) const { return splitScreens_[_screenNum]; }
+	const int GetScreen(int _screenNum) const { return splitScreens_[_screenNum]; }
 
 	//デルタタイムの取得
-	float GetDeltaTime(void) const { return deltaTime_; }
+	const float GetDeltaTime(void) const { return deltaTime_; }
 
 	//経過時間の所得
-	float GetTotalTime(void) const { return totalTime_; }
+	const float GetTotalTime(void) const { return totalTime_; }
 
 	/// @brief カメラの取得
 	/// @param _playerIndex プレイヤー番号
@@ -118,7 +118,7 @@ public:
 	std::weak_ptr<Camera> GetCamera(const int _playerIndex) const;
 
 	//スクリーンの番号の取得
-	int GetScreenIndex(void)const { return screenIndex_; }
+	const int GetScreenIndex(void)const { return screenIndex_; }
 
 private:
 

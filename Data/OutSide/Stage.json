@@ -209,17 +209,17 @@
       "z": 0.0,
       "w": 1.0
     },
-    "geometry": "model",
+    "geometry": "capsule",
     "tag": "tree",
-    "radius": 30.0,
+    "radius": 50.0,
     "localPos1": {
-      "x": 50.0,
-      "y": 0.0,
-      "z": 50.0
+      "x": 0.0,
+      "y": 400.0,
+      "z": 0.0
     },
     "localPos2": {
       "x": 0.0,
-      "y": 400.0,
+      "y": 0.0,
       "z": 0.0
     }
   },

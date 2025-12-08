@@ -78,7 +78,7 @@ void SceneManager::Init(void)
 
 	// メインスクリーン
 	mainScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
-
+	
 	//ウィンドウがアクティブ状態でなくとも処理を行う
 	SetAlwaysRunFlag(true);
 
@@ -171,11 +171,9 @@ void SceneManager::Draw(void)
 	}
 	else
 	{
-		for (auto& camera : cameras_)
-		{
-			// カメラ設定
-			camera->SetBeforeDraw();
-		}
+		// カメラ設定(単体カメラなので最初のカメラのみ)
+		if (!cameras_.empty())
+			cameras_.front()->SetBeforeDraw();
 
 		// Effekseerにより再生中のエフェクトを更新する。
 		UpdateEffekseer3D();
@@ -187,11 +185,9 @@ void SceneManager::Draw(void)
 			scene->Draw();
 		}
 
-		for (auto& camera : cameras_)
-		{
-			// 主にポストエフェクト用
-			camera->Draw();
-		}
+		// 主にポストエフェクト用
+		if (!cameras_.empty())
+			cameras_.front()->Draw();
 
 		// Effekseerにより再生中のエフェクトを描画する。
 		DrawEffekseer3D();
@@ -331,6 +327,7 @@ void SceneManager::CreateCameras(const int _playerNum)
 		//カメラの中身を削除
 		cameras_.clear();
 	}
+
 	//カメラ生成
 	for (int i = 0; i < _playerNum; i++)
 	{
@@ -348,8 +345,8 @@ void SceneManager::CreateSplitScreen(const int _playerNum)
 	// 最大人数を超える場合,
 	// または引数と現在のスクリーン数が同じとき
 	if (_playerNum <= 1 || 
-		_playerNum > 4 ||
-		splitScreens_.size() == _playerNum)
+		_playerNum > 4/* ||
+		splitScreens_.size() == _playerNum*/)
 	{
 		isSplitMode_ = false;	//分割しない
 		return;					//生成しない

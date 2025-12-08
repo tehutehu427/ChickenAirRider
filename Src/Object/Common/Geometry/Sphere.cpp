@@ -12,16 +12,14 @@
 //***************************************************
 
 Sphere::Sphere(const VECTOR& _pos, const VECTOR& _movedPos, const float _radius)
-	: Geometry(_pos, Quaternion()),
-	movedPos_(_movedPos),
+	: Geometry(_pos, _movedPos, Quaternion()),
 	radius_(_radius)
 {
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));
 }
 
 Sphere::Sphere(const Sphere& _copyBase)
-	: Geometry(_copyBase.GetColPos(), Quaternion()),
-	movedPos_(_copyBase.movedPos_)
+	: Geometry(_copyBase.GetColPos(),_copyBase.GetColMovedPos(), Quaternion())
 {
 	radius_ = _copyBase.GetRadius();
 	std::memset(&hitInfo_, 0, sizeof(hitInfo_));
@@ -56,7 +54,17 @@ const bool Sphere::IsHit(Cube& _cube)
 
 	// --- ローカル空間へ変換 ---
 	VECTOR relPos = VSub(pos_, center);
-	VECTOR velocity = VSub(movedPos_, pos_);
+
+	// Sphere の移動
+	VECTOR sphereMoveVec = VSub(movedPos_, pos_);
+
+	// OBB の移動
+	VECTOR cubeMoveVec = VSub(_cube.GetColMovedPos(), _cube.GetColPos());
+
+	// 相対速度にする
+	VECTOR velocity = VSub(sphereMoveVec, cubeMoveVec);	
+
+	//ローカル変換
 	VECTOR localP0 = VGet(VDot(relPos, obb.axis[0]),
 		VDot(relPos, obb.axis[1]),
 		VDot(relPos, obb.axis[2]));
@@ -178,104 +186,334 @@ const bool Sphere::IsHit(Cube& _cube)
 
 const bool Sphere::IsHit(Sphere& _sphere)
 {
-	// 球体同士の衝突判定
-	bool ret = false;
+	//結果
+	HitResult result;
 
-	// お互いの半径の合計
-	float radius = GetRadius() + _sphere.GetRadius();
+	VECTOR mySpherePos = pos_;
+	VECTOR partnerSpherePos = _sphere.GetColPos();
 
-	// 座標の差からお互いの距離を取る
-	VECTOR diff = VSub(_sphere.GetColPos(), GetColPos());
+	float mySphereRadius = GetRadius();
+	float partnerSphereRadius = _sphere.GetRadius();
 
-	// 三平方の定理で比較(SqrMagnitudeと同じ)
-	float dis = (diff.x * diff.x) + (diff.y * diff.y) + (diff.z * diff.z);
-	if (dis < (radius * radius))
+	VECTOR diff = VSub(partnerSpherePos, mySpherePos);
+	float distSq = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
+	float sumRadius = mySphereRadius + partnerSphereRadius;
+
+	// 衝突していない
+	if (distSq >= sumRadius * sumRadius)
 	{
-		ret = true;
+		return false;
 	}
 
-	return ret;
+	result.t = 0.0f; // 静止物体の場合は必ず 0
+
+	float dist = sqrtf(distSq);
+
+	if (dist == 0.0f)
+	{
+		// 完全に同位置 → 適当な法線を与える
+		result.normal = { 1,0,0 };
+		result.depth = sumRadius;
+		result.point = mySpherePos;
+	}
+	else
+	{
+		// 法線
+		result.normal = VScale(diff, 1.0f / dist);
+
+		// 深度
+		result.depth = sumRadius - dist;
+
+		// 接触点
+		result.point = VAdd(mySpherePos, VScale(result.normal, mySphereRadius));
+	}
+
+	//保存
+	hitResult_ = result;
+
+	//相手側も保存
+	result.normal = VScale(result.normal, -1.0f);
+	_sphere.SetHitResult(result);
+
+	return true;
 }
 
 const bool Sphere::IsHit(Capsule& _capsule)
 {
-	//球体とカプセルの当たり判定
-	bool ret = false;
+	//結果
+	HitResult result;
 
-	// カプセル球体の中心を繋ぐベクトル
-	VECTOR cap1to2 = VSub(_capsule.GetPosDown(), _capsule.GetPosTop());
+	//各要素
+	VECTOR spherePos = pos_;
+	VECTOR sphereMovedPos = movedPos_;
+	VECTOR capTopPos = _capsule.GetPosTop();
+	VECTOR capTopMovedPos = _capsule.GetMovedPosTop();
+	VECTOR capDownPos = _capsule.GetPosDown();
+	VECTOR capDownMovedPos = _capsule.GetMovedPosDown();
 
-	// ベクトルを正規化
-	VECTOR cap1to2ENor = VNorm(cap1to2);
+	// 相対運動
+	VECTOR moveVecSphere = VSub(movedPos_, pos_);
+	VECTOR moveVecCapsule = VSub(_capsule.GetColMovedPos(), _capsule.GetColPos()); // カプセル全体の移動量
+	VECTOR vec = VSub(moveVecSphere, moveVecCapsule);  // Sphereだけが動くように見える相対運動
 
-	// カプセル繋ぎの単位ベクトルと、
-	// そのベクトル元から球体へのベクトルの内積を取る
-	float dot = VDot(cap1to2ENor, VSub(GetColPos(), _capsule.GetPosTop()));
+	// 衝突半径
+	float sumRadius = radius_ + _capsule.GetRadius();
 
-	// 内積で求めた射影距離を使って、カプセル繋ぎ上の座標を取る
-	VECTOR capRidePos = VAdd(_capsule.GetPosTop(), VScale(cap1to2ENor, dot));
+	// ----
+	// 時間 t を0〜1の間で二次方程式として解く
+	// 距離^2(t) = rSum^2 になる t を求める
+	// ----
+	float bestT = 1.0f;
+	bool found = false;
 
-	// カプセル繋ぎのベクトルの長さを取る
-	float len = sqrt((cap1to2.x * cap1to2.x) + (cap1to2.y * cap1to2.y) + (cap1to2.z * cap1to2.z));
-
-	// 球体がカプセル繋ぎ上にいるか判別するため、比率を取る
-	float rate = dot / len;
-
-	VECTOR centerPos = { 0.0f,0.0f,0.0f };
-
-	// 球体の位置が３エリアに分割されたカプセル形状のどこにいるか判別
-	if (rate > 0.0f && rate <= 1.0f)
+	// t を細かくサーチして初期解を取る（安定化のため）
+	const int STEPS = 64;
+	for (int i = 0; i <= STEPS; i++)
 	{
-		// ①球体がカプセル繋ぎ上にいる
-		centerPos = VAdd(_capsule.GetPosTop(), VScale(cap1to2ENor, dot));
+		float t = (float)i / STEPS;
+
+		// Capsule positions at time t
+		VECTOR A = {
+			capTopPos.x + (capTopMovedPos.x - capTopPos.x) * t,
+			capTopPos.y + (capTopMovedPos.y - capTopPos.y) * t,
+			capTopPos.z + (capTopMovedPos.z - capTopPos.z) * t
+		};
+		VECTOR B = {
+			capDownPos.x + (capDownMovedPos.x - capDownPos.x) * t,
+			capDownPos.y + (capDownMovedPos.y - capDownPos.y) * t,
+			capDownPos.z + (capDownMovedPos.z - capDownPos.z) * t
+		};
+
+		// Sphere center at time t
+		VECTOR p = {
+			spherePos.x + vec.x * t,
+			spherePos.y + vec.y * t,
+			spherePos.z + vec.z * t
+		};
+
+		// Find closest point on segment AB to p
+		VECTOR AB = VSub(B, A);
+		VECTOR AP = VSub(p, A);
+		float abLenSq = VDot(AB, AB);
+
+		float u = 0.0f;
+		if (abLenSq > 1e-6f)
+			u = VDot(AP, AB) / abLenSq;
+
+		u = std::clamp(u, 0.0f, 1.0f);
+
+		VECTOR closest = {
+			A.x + AB.x * u,
+			A.y + AB.y * u,
+			A.z + AB.z * u
+		};
+
+		VECTOR d = VSub(p, closest);
+		float distSq = VDot(d, d);
+
+		if (distSq <= sumRadius * sumRadius)
+		{
+			bestT = t;
+			found = true;
+			break;
+		}
 	}
-	else if (rate > 1.0f)
-	{
-		// ②球体がカプセルの終点側にいる
-		centerPos = _capsule.GetPosDown();
-	}
-	else if (rate < 0.0f)
-	{
-		// ③球体がカプセルの始点側にいる
-		centerPos = _capsule.GetPosTop();
-	}
+
+	if (!found)
+		return false; // No hit
+
+	// -----------------------------
+	// 確定した衝突時刻 t = bestT での情報を計算する
+	// -----------------------------
+	result.t = bestT;
+
+	// Positions at collision time
+	float t = bestT;
+
+	VECTOR A = {
+		capTopPos.x + (capTopMovedPos.x - capTopPos.x) * t,
+		capTopPos.y + (capTopMovedPos.y - capTopPos.y) * t,
+		capTopPos.z + (capTopMovedPos.z - capTopPos.z) * t
+	};
+	VECTOR B = {
+		capDownPos.x + (capDownMovedPos.x - capDownPos.x) * t,
+		capDownPos.y + (capDownMovedPos.y - capDownPos.y) * t,
+		capDownPos.z + (capDownMovedPos.z - capDownPos.z) * t
+	};
+	VECTOR p = {
+		spherePos.x + vec.x * t,
+		spherePos.y + vec.y * t,
+		spherePos.z + vec.z * t
+	};
+
+	// Closest point again
+	VECTOR AB = VSub(B, A);
+	VECTOR AP = VSub(p, A);
+	float abLenSq = VDot(AB, AB);
+	float u = (abLenSq > 1e-6f) ? VDot(AP, AB) / abLenSq : 0.0f;
+	u = std::clamp(u, 0.0f, 1.0f);
+
+	VECTOR closest = {
+		A.x + AB.x * u,
+		A.y + AB.y * u,
+		A.z + AB.z * u
+	};
+
+	// Normal
+	VECTOR diff = VSub(p, closest);
+	float dist = sqrtf(VDot(diff, diff));
+
+	if (dist > 1e-6f)
+		result.normal = VScale(diff, 1.0f / dist);
 	else
-	{
-		// ここにきてはいけない
-		return false;
-	}
+		result.normal = { 1,0,0 }; // Degenerate fallback
 
-	// お互いの半径の合計
-	float radius = GetRadius() + _capsule.GetRadius();
+	// Depth (penetration amount AFTER collision)
+	result.depth = sumRadius - dist;
 
-	// 座標の差からお互いの距離を取る
-	VECTOR diff = VSub(centerPos, GetColPos());
+	// Contact point (Sphere side)
+	result.point = VSub(p, VScale(result.normal, radius_));
 
-	// 三平方の定理で比較(SqrMagnitudeと同じ)
-	float dis = (diff.x * diff.x) + (diff.y * diff.y) + (diff.z * diff.z);
-	if (dis < (radius * radius))
-	{
-		ret = true;
-	}
+	//結果の保存
+	hitResult_ = result;
 
-	return ret;
+	//相手側も保存
+	result.normal = VScale(result.normal, -1.0f);
+	_capsule.SetHitResult(result);
+
+	return true;
 }
 
 const bool Sphere::IsHit(Line& _line)
 {
-	//線のベクトル
-	VECTOR d = VSub(_line.GetPosPoint2(), _line.GetPosPoint1());
+	HitResult result;
 
-	//線の先端から球体の中心まで
-	VECTOR m = VSub(GetColPos(), _line.GetPosPoint1());
+	//両者の要素
+	VECTOR spherePos = pos_;
+	VECTOR sphereMovedPos = movedPos_;
+	VECTOR linePosPoint1 = _line.GetPosPoint1();
+	VECTOR lineMovedPosPoint1 = _line.GetMovedPosPoint1();
+	VECTOR linePosPoint2 = _line.GetPosPoint2();
+	VECTOR lineMovedPosPoint2 = _line.GetMovedPosPoint2();
 
-	float t = VDot(m, d) / VSquareSize(d);
-	t = std::max<float>(0.0f, std::min<float>(1.0f, t));  // 線分内に制限
+	//--------------------------------
+	// Step 1: 相対運動へ変換
+	//--------------------------------
+	VECTOR sphereMoveVec = VSub(sphereMovedPos, spherePos);   // sphere 移動
+	VECTOR lineMoveVec = VSub(lineMovedPosPoint1, linePosPoint1); // line 移動量（線分全体）
+	VECTOR vec = VSub(sphereMoveVec, lineMoveVec);   // 相対速度
 
-	VECTOR closestPoint = VAdd(_line.GetPosPoint1(), VScale(d, t));
-	VECTOR diff = VSub(closestPoint, GetColPos());
+	//--------------------------------
+	// Step 2: t を 0〜1 で探す
+	// 球中心が線分に近づき r 以下になる瞬間
+	//--------------------------------
+	float bestT = 1.0f;
+	bool found = false;
 
-	return VSquareSize(diff) <= std::pow(GetRadius(), 2.0);
+	const int STEPS = 64; // 安定化用サンプリング
+	for (int i = 0; i <= STEPS; i++)
+	{
+		float t = (float)i / STEPS;
+
+		VECTOR L1 = {
+			linePosPoint1.x + (lineMovedPosPoint1.x - linePosPoint1.x) * t,
+			linePosPoint1.y + (lineMovedPosPoint1.y - linePosPoint1.y) * t,
+			linePosPoint1.z + (lineMovedPosPoint1.z - linePosPoint1.z) * t
+		};
+
+		VECTOR L2 = {
+			linePosPoint2.x + (lineMovedPosPoint2.x - linePosPoint2.x) * t,
+			linePosPoint2.y + (lineMovedPosPoint2.y - linePosPoint2.y) * t,
+			linePosPoint2.z + (lineMovedPosPoint2.z - linePosPoint2.z) * t
+		};
+
+		VECTOR p = {
+			spherePos.x + vec.x * t,
+			spherePos.y + vec.y * t,
+			spherePos.z + vec.z * t
+		};
+
+		VECTOR d = VSub(L2, L1);
+		VECTOR m = VSub(p, L1);
+
+		float dd = VSquareSize(d);
+		float u = (dd > 1e-6f) ? VDot(m, d) / dd : 0.0f;
+		u = std::clamp(u, 0.0f, 1.0f);
+
+		VECTOR closest = VAdd(L1, VScale(d, u));
+		VECTOR diff = VSub(closest, p);
+
+		float distSq = VSquareSize(diff);
+
+		if (distSq <= radius_ * radius_)
+		{
+			bestT = t;
+			found = true;
+			break;
+		}
+	}
+
+	if (!found)
+		return false; // 衝突なし
+
+	//--------------------------------
+	// Step 3: 衝突時点の情報を計算
+	//--------------------------------
+	result.t = bestT;
+
+	float t = bestT;
+
+	// 衝突時の線分位置
+	VECTOR L1 = {
+		linePosPoint1.x + (lineMovedPosPoint1.x - linePosPoint1.x) * t,
+		linePosPoint1.y + (lineMovedPosPoint1.y - linePosPoint1.y) * t,
+		linePosPoint1.z + (lineMovedPosPoint1.z - linePosPoint1.z) * t
+	};
+
+	VECTOR L2 = {
+		linePosPoint2.x + (lineMovedPosPoint2.x - linePosPoint2.x) * t,
+		linePosPoint2.y + (lineMovedPosPoint2.y - linePosPoint2.y) * t,
+		linePosPoint2.z + (lineMovedPosPoint2.z - linePosPoint2.z) * t
+	};
+
+	// 衝突時の球中心（相対）
+	VECTOR p = {
+		spherePos.x + vec.x * t,
+		spherePos.y + vec.y * t,
+		spherePos.z + vec.z * t
+	};
+
+	VECTOR d = VSub(L2, L1);
+	VECTOR m = VSub(p, L1);
+
+	float dd = VSquareSize(d);
+	float u = (dd > 1e-6f) ? VDot(m, d) / dd : 0.0f;
+	u = std::clamp(u, 0.0f, 1.0f);
+
+	VECTOR closest = VAdd(L1, VScale(d, u));
+	VECTOR diff = VSub(closest, p);
+	float dist = sqrtf(VDot(diff, diff));
+
+	// normal
+	if (dist > 1e-6f)
+		result.normal = VScale(diff, 1.0f / dist);
+	else
+		result.normal = VGet(1, 0, 0);
+
+	// 衝突時点の depth は 0（すれ違い）
+	result.depth = radius_ - dist;
+
+	// 線分側の接触点
+	result.point = closest;
+
+	//結果の保存
+	hitResult_ = result;
+
+	//相手側も保存
+	result.normal = VScale(result.normal, -1.0f);
+	_line.SetHitResult(result);
+
+	return true;
 }
 
 void Sphere::HitAfter(void)

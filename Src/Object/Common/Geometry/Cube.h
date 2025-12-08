@@ -19,13 +19,13 @@ public:
 	/// @param _rot 追従する親の回転
 	/// @param _min 親から見た、箱の最小地点
 	/// @param _max 親から見た、箱の最大地点
-	Cube(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max);
+	Cube(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max);
 	
 	/// @brief コンストラクタ
 	/// @param _pos 追従する親の座標
 	/// @param _rot 追従する親の回転
 	/// @param _halfSize 箱の半分サイズ
-	Cube(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _halfSize);
+	Cube(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR _halfSize);
 
 	/// @brief コピーコンストラクタ
 	/// @param _copyBase コピー元
@@ -88,13 +88,16 @@ private:
 
 	// 線分上で、AABBにもっとも近い点を求める（補助関数）
 	VECTOR ClosestPointOnSegmentToAABB(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& aabbMin, const VECTOR& aabbMax);
-	
-	// 本体：線分とAABBの最近接点間の距離二乗
-	float ClosestSegmentAABB(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& aabbMin, const VECTOR& aabbMax);
-	
+		
 	// AABB上の最近接点を返す（線分に対して）
 	VECTOR GetClosestPointOnAABBToSegment(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& aabbMin, const VECTOR& aabbMax);
 	
 	// カプセル線分上の最近接点（射影）を返す
 	VECTOR CapsuleSegmentClosestPoint(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& targetPoint);
+
+	// 線分上で最近接点の t を求める
+	float ClosestPointT(const VECTOR& p, const VECTOR& a, const VECTOR& b);
+	
+	// AABB 最近接点
+	VECTOR ClosestPointAABB(const VECTOR& p, const VECTOR& vMin, const VECTOR& vMax);
 };

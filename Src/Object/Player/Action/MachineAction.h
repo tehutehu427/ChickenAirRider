@@ -69,9 +69,10 @@ private:
 	static constexpr float SPIN_TIME = 0.7f;
 
 	//‘Ì—Í
-	static constexpr int HEALTH_BOX_POS_X_1 = 970;
-	static constexpr int HEALTH_BOX_POS_X_2 = 1000;
-	static constexpr int HEALTH_BOX_POS_Y = 350;
+	static constexpr int HEALTH_BOX_LOCAL_POS_X_1 = -50;
+	static constexpr int HEALTH_BOX_LOCAL_POS_X_2 = -20;
+	static constexpr int HEALTH_BOX_LOCAL_POS_Y_1 = -50;
+	static constexpr int HEALTH_BOX_LOCAL_POS_Y_2 = -500;
 	static constexpr int HEALTH_BOX = 25;
 	static constexpr int HEALTH_LOCAL = 3;
 

@@ -11,8 +11,8 @@
 //箱
 //***************************************************
 
-Cube::Cube(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max)
-	: Geometry(_pos, _rot)
+Cube::Cube(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max)
+	: Geometry(_pos, _movedPos, _rot)
 {
 	obb_.vMin = _min;
 	obb_.vMax = _max;
@@ -21,8 +21,8 @@ Cube::Cube(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _min, const 
 	UpdateObbAxis();
 }
 
-Cube::Cube(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _halfSize)
-	: Geometry(_pos, _rot)
+Cube::Cube(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR _halfSize)
+	: Geometry(_pos, _movedPos, _rot)
 {
 	obb_.vMin = VScale(_halfSize, -1.0f);
 	obb_.vMax = _halfSize;
@@ -32,7 +32,7 @@ Cube::Cube(const VECTOR& _pos, const Quaternion& _rot, const VECTOR _halfSize)
 }
 
 Cube::Cube(const Cube& _copyBase)
-	: Geometry(_copyBase.GetColPos(), _copyBase.GetColRot()),
+	: Geometry(_copyBase.GetColPos(), _copyBase.GetColMovedPos(), _copyBase.GetColRot()),
 	obb_(_copyBase.GetObb())
 {
 	UpdateObbAxis();
@@ -80,6 +80,10 @@ const bool Cube::IsHit(Model& _model)
 
 const bool Cube::IsHit(Cube& _cube)
 {
+	//結果
+	HitResult cubeResultA;
+	HitResult cubeResultB;
+
 	float minOverlap = FLT_MAX;
 	VECTOR bestAxis = { 0, 0, 0 }; // 最小オーバーラップ軸（法線になる）
 	
@@ -187,8 +191,33 @@ const bool Cube::IsHit(Cube& _cube)
 	}
 
 	//法線方向
-	hitResult_.normal = bestAxis;
-	_cube.SetHitNormal(VScale(bestAxis, -1.0f));
+	cubeResultA.normal = bestAxis;
+	cubeResultB.normal = VScale(bestAxis, -1.0f);
+
+	//深度
+	cubeResultA.depth = minOverlap;
+	cubeResultB.depth = minOverlap;
+
+	// CubeA側の衝突点の計算
+	float ra =
+		halfA.x * fabs(VDot(bestAxis, obb_.axis[0])) +
+		halfA.y * fabs(VDot(bestAxis, obb_.axis[1])) +
+		halfA.z * fabs(VDot(bestAxis, obb_.axis[2]));
+
+	// 衝突点 (A の表面)
+	cubeResultA.point = VAdd(centerA, VScale(bestAxis, ra));
+
+	// B側の衝突点
+	float rb =
+		halfB.x * fabs(VDot(bestAxis, _cube.GetObb().axis[0])) +
+		halfB.y * fabs(VDot(bestAxis, _cube.GetObb().axis[1])) +
+		halfB.z * fabs(VDot(bestAxis, _cube.GetObb().axis[2]));
+	VECTOR pointB = VSub(centerB, VScale(bestAxis, rb));
+	cubeResultB.point = pointB;
+
+	//保存
+	hitResult_ = cubeResultA;
+	_cube.SetHitResult(cubeResultB);
 
 	// すべての軸で重なっている → 衝突
 	return true;
@@ -201,24 +230,22 @@ const bool Cube::IsHit(Sphere& _sphere)
 
 const bool Cube::IsHit(Capsule& _capsule)
 {
-	// OBB のローカル中心
-	VECTOR localCenter = VScale(VAdd(obb_.vMin, obb_.vMax), 0.5f);
+	HitResult result;
 
-	// OBB のワールド中心
-	VECTOR worldCenter = VAdd(
-		VAdd(
-			VAdd(
-				VScale(obb_.axis[0], localCenter.x),
-				VScale(obb_.axis[1], localCenter.y)
-			),
-			VScale(obb_.axis[2], localCenter.z)
-		),
-		pos_
+	// --- カプセルのワールド頂点 ---
+	VECTOR topW = _capsule.GetPosTop();   // ワールド座標
+	VECTOR downW = _capsule.GetPosDown();  // ワールド座標
+	float radius = _capsule.GetRadius();
+
+	// --- OBB のワールド中心 ---
+	VECTOR obbCenter = VAdd(
+		pos_,
+		VScale(VAdd(obb_.vMin, obb_.vMax), 0.5f)
 	);
 
-	// カプセル線分をOBBのローカル空間に変換
-	VECTOR rel1 = VSub(_capsule.GetPosTop(), worldCenter);
-	VECTOR rel2 = VSub(_capsule.GetPosDown(), worldCenter);
+	// --- カプセル端点を OBB ローカル空間に ---
+	VECTOR rel1 = VSub(topW, obbCenter);
+	VECTOR rel2 = VSub(downW, obbCenter);
 
 	VECTOR local1 = {
 		VDot(rel1, obb_.axis[0]),
@@ -232,35 +259,70 @@ const bool Cube::IsHit(Capsule& _capsule)
 		VDot(rel2, obb_.axis[2])
 	};
 
-	// スラブ法で最近接点を見つける
-	// AABBとして処理する（OBBローカル空間内で）
+	// --- OBB を AABB として扱い最近接点を求める ---
+	VECTOR segDir = VSub(local1, local2);
 
-	float distSq = ClosestSegmentAABB(local1, local2, obb_.vMin, obb_.vMax);
+	// セグメント → AABB 最近接点（AABB 側）
+	// AABBに最も近い点
+	VECTOR pOnAABB = ClosestPointAABB(local2, obb_.vMin, obb_.vMax);
 
-	//判定
-	bool ret = distSq <= (_capsule.GetRadius() * _capsule.GetRadius());
+	// セグメント側の最近接点の t
+	float t = ClosestPointT(pOnAABB, local2, local1);
+	VECTOR pOnSeg = VAdd(local2, VScale(segDir, t));
 
-	if (ret)
-	{
-		// カプセル線分から最近接点までのベクトル（OBBローカル空間）
-		VECTOR closestPoint = GetClosestPointOnAABBToSegment(local1, local2, obb_.vMin, obb_.vMax);
+	VECTOR diff = VSub(pOnAABB, pOnSeg);
+	float dist2 = VSquareSize(diff);
 
-		VECTOR dir = VSub(closestPoint, CapsuleSegmentClosestPoint(local1, local2,closestPoint)); // ローカル空間で
-		VECTOR normalLocal = VNorm(dir); // 法線（ローカル空間）
+	if (dist2 > radius * radius)
+		return false; // 衝突していない
 
-		// OBBのワールド軸で戻す
-		VECTOR normalWorld = VAdd(
-			VAdd(VScale(obb_.axis[0], normalLocal.x),
-				VScale(obb_.axis[1], normalLocal.y)),
-			VScale(obb_.axis[2], normalLocal.z)
-		);
+	float dist = sqrtf(dist2);
+	float depth = radius - dist;
 
-		// 押し戻しや反射に使える
-		hitResult_.normal = VNorm(normalWorld);
-		_capsule.SetHitNormal(VScale(VNorm(normalWorld), -1.0f));
-
-		return true;
+	// --- ローカル法線 ---
+	VECTOR normalLocal;
+	if (dist < 1e-6f) {
+		// めり込みすぎ → どこかの軸を法線に採用
+		normalLocal = { 1, 0, 0 };
 	}
+	else {
+		normalLocal = VScale(diff, 1.0f / dist);
+	}
+
+	// --- ワールド法線に変換 ---
+	VECTOR normalW = VAdd(
+		VAdd(
+			VScale(obb_.axis[0], normalLocal.x),
+			VScale(obb_.axis[1], normalLocal.y)
+		),
+		VScale(obb_.axis[2], normalLocal.z)
+	);
+	normalW = VNorm(normalW);
+
+	// --- ワールド座標で衝突点を復元 ---
+	VECTOR pointW = VAdd(
+		VAdd(
+			VScale(obb_.axis[0], pOnAABB.x),
+			VScale(obb_.axis[1], pOnAABB.y)
+		),
+		VScale(obb_.axis[2], pOnAABB.z)
+	);
+	pointW = VAdd(pointW, obbCenter);
+
+	// --- 結果 ---
+	result.normal = normalW;
+	result.point = pointW;
+	result.depth = depth;
+	result.t = t;
+
+	//結果の保存
+	hitResult_ = result;
+
+	//相手側も
+	result.normal = VScale(result.normal, -1.0f);
+	_capsule.SetHitResult(result);
+
+	return true;
 }
 
 const bool Cube::IsHit(Line& _line)
@@ -351,21 +413,64 @@ const bool Cube::IsHit(Line& _line)
 	// 法線は2点の差分方向
 	VECTOR normalLocal = VNorm(VSub(closestOnAABB, closestOnSegment));
 
-	// ローカル空間からワールド空間に変換
+	// -------------------------
+	// t：交差した時刻（線分0〜1）
+	// -------------------------
+	float t = tmin;
+
+	// -------------------------
+	// 衝突点（ローカル→ワールド）
+	// -------------------------
+	VECTOR localHitPoint = {
+		local1.x + (local2.x - local1.x) * t,
+		local1.y + (local2.y - local1.y) * t,
+		local1.z + (local2.z - local1.z) * t,
+	};
+
+	// ローカル → ワールド
+	VECTOR worldHitPoint = {
+		worldCenter.x
+			+ obb_.axis[0].x * localHitPoint.x
+			+ obb_.axis[1].x * localHitPoint.y
+			+ obb_.axis[2].x * localHitPoint.z,
+
+		worldCenter.y
+			+ obb_.axis[0].y * localHitPoint.x
+			+ obb_.axis[1].y * localHitPoint.y
+			+ obb_.axis[2].y * localHitPoint.z,
+
+		worldCenter.z
+			+ obb_.axis[0].z * localHitPoint.x
+			+ obb_.axis[1].z * localHitPoint.y
+			+ obb_.axis[2].z * localHitPoint.z,
+	};
+
+	// -------------------------
+	// depth（めり込み量）
+	// diff = (最近接AABB点 - 最近接線分点)
+	// -------------------------
+	VECTOR diff = VSub(closestOnAABB, closestOnSegment);
+	float depth = sqrtf(Utility::SqrMagnitudeF(diff));
+
+	// -------------------------
+	// normal（ワールド）
+	// -------------------------
 	VECTOR normalWorld = {
 		obb_.axis[0].x * normalLocal.x + obb_.axis[1].x * normalLocal.y + obb_.axis[2].x * normalLocal.z,
 		obb_.axis[0].y * normalLocal.x + obb_.axis[1].y * normalLocal.y + obb_.axis[2].y * normalLocal.z,
 		obb_.axis[0].z * normalLocal.x + obb_.axis[1].z * normalLocal.y + obb_.axis[2].z * normalLocal.z,
 	};
 
-	//めり込み深度
-	VECTOR diff = VSub(closestOnAABB, closestOnSegment);
-	float distSq = Utility::SqrMagnitudeF(diff);
-	float dist = sqrtf(distSq);
-
-	//法線ベクトル
+	//保存
 	hitResult_.normal = normalWorld;
-	_line.SetHitNormal(VScale(normalWorld, -1.0f));
+	hitResult_.depth = depth;
+	hitResult_.point = worldHitPoint;
+	hitResult_.t = t;
+
+	//相手側も
+	HitResult lineResult = hitResult_;
+	lineResult.normal = VScale(normalWorld, -1.0f);
+	_line.SetHitResult(lineResult);
 
 	return true;
 }
@@ -452,13 +557,6 @@ VECTOR Cube::ClosestPointOnSegmentToAABB(const VECTOR& segStart, const VECTOR& s
 	return closest;
 }
 
-float Cube::ClosestSegmentAABB(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& aabbMin, const VECTOR& aabbMax) {
-	VECTOR closestPointOnSegment = ClosestPointOnSegmentToAABB(segStart, segEnd, aabbMin, aabbMax);
-	VECTOR closestPointOnAABB = ClosestPointOnAABB(closestPointOnSegment, aabbMin, aabbMax);
-	VECTOR diff = VSub(closestPointOnAABB, closestPointOnSegment);
-	return VDot(diff, diff); // 距離の2乗
-}
-
 // AABB上の最近接点を返す（線分に対して）
 VECTOR Cube::GetClosestPointOnAABBToSegment(const VECTOR& segStart, const VECTOR& segEnd, const VECTOR& aabbMin, const VECTOR& aabbMax) {
 	// 線分上の最近接点をAABB内にクランプ
@@ -502,4 +600,24 @@ VECTOR Cube::CapsuleSegmentClosestPoint(const VECTOR& segStart, const VECTOR& se
 	t = std::clamp(t, 0.0f, 1.0f); // 線分内にクランプ
 
 	return VAdd(segStart, VScale(ab, t));
+}
+
+
+// 線分上で最近接点の t を求める
+float Cube::ClosestPointT(const VECTOR& p, const VECTOR& a, const VECTOR& b)
+{
+	VECTOR ab = VSub(b, a);
+	float ab2 = VSquareSize(ab);
+	if (ab2 < 1e-6f) return 0.0f;
+	return std::clamp(VDot(VSub(p, a), ab) / ab2, 0.0f, 1.0f);
+}
+
+// AABB 最近接点
+VECTOR Cube::ClosestPointAABB(const VECTOR& p, const VECTOR& vMin, const VECTOR& vMax)
+{
+	VECTOR r;
+	r.x = std::clamp(p.x, vMin.x, vMax.x);
+	r.y = std::clamp(p.y, vMin.y, vMax.y);
+	r.z = std::clamp(p.z, vMin.z, vMax.z);
+	return r;
 }

@@ -24,7 +24,7 @@ const bool UserLogic::IsPush(void)
     auto& key = KeyConfig::GetInstance();
 
     //プッシュボタンを押しているか
-    if (key.IsNew(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1))
+    if (key.IsNew(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, padNo_))
     {
         //押された
         return true;
@@ -39,7 +39,7 @@ const bool UserLogic::StartCharge(void)
     auto& key = KeyConfig::GetInstance();
 
     //プッシュボタンを押しているか
-    if (key.IsTrgHold(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1, CHARGE_START_PUSH_TIME))
+    if (key.IsTrgHold(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, padNo_, CHARGE_START_PUSH_TIME))
     {
         //押している
         return true;
@@ -55,8 +55,8 @@ const bool UserLogic::DisCharge(void)
     auto& key = KeyConfig::GetInstance();
 
     //チャージ開始ボタンを離したか
-    if (key.IsTrgUp(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1) &&
-        key.IsTrgHold(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1, CHARGE_START_PUSH_TIME))
+    if (key.IsTrgUp(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, padNo_) &&
+        key.IsTrgHold(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, padNo_, CHARGE_START_PUSH_TIME))
     {
         //離した
         return true;
@@ -81,10 +81,10 @@ const Vector2F UserLogic::TurnValue(void)
     }
     else
     {
-        ret.x -= static_cast<float>(key.PadStickOverSize(KeyConfig::JOYPAD_NO::PAD1, KeyConfig::JOYPAD_STICK::L_STICK_RIGHT)) / TURN_STICK;
-        ret.x += static_cast<float>(key.PadStickOverSize(KeyConfig::JOYPAD_NO::PAD1, KeyConfig::JOYPAD_STICK::L_STICK_LEFT)) / TURN_STICK;
-        ret.y += static_cast<float>(key.PadStickOverSize(KeyConfig::JOYPAD_NO::PAD1, KeyConfig::JOYPAD_STICK::L_STICK_UP)) / TURN_STICK;
-        ret.y -= static_cast<float>(key.PadStickOverSize(KeyConfig::JOYPAD_NO::PAD1, KeyConfig::JOYPAD_STICK::L_STICK_DOWN)) / TURN_STICK;
+        ret.x -= static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_RIGHT)) / TURN_STICK;
+        ret.x += static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_LEFT)) / TURN_STICK;
+        ret.y += static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_UP)) / TURN_STICK;
+        ret.y -= static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_DOWN)) / TURN_STICK;
     }
 
     return ret;
@@ -96,7 +96,7 @@ const bool UserLogic::IsSpecial(void)
     auto& key = KeyConfig::GetInstance();
 
     //スペシャルボタンを押したか
-    if (key.IsTrgUp(KeyConfig::CONTROL_TYPE::SPECIAL_BUTTON, KeyConfig::JOYPAD_NO::PAD1) &&
+    if (key.IsTrgUp(KeyConfig::CONTROL_TYPE::SPECIAL_BUTTON, padNo_) &&
         !IsGetOff())
     {
         //押した
@@ -113,7 +113,7 @@ const bool UserLogic::IsGetOff(void)
     auto& key = KeyConfig::GetInstance();
 
     //スペシャルボタンを一定時間押し続けているか
-    if (key.IsTrgHold(KeyConfig::CONTROL_TYPE::SPECIAL_BUTTON, KeyConfig::JOYPAD_NO::PAD1, GETOFF_PUSH_TIME, true))
+    if (key.IsTrgHold(KeyConfig::CONTROL_TYPE::SPECIAL_BUTTON, padNo_, GETOFF_PUSH_TIME, true))
     {
         //押し続けた
         return true;
@@ -188,23 +188,23 @@ const Vector2F UserLogic::WalkValue(void)
     if (GetJoypadNum() < 1)
     {
         //キーボード又はスティックの移動量
-        if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_LEFT, KeyConfig::JOYPAD_NO::PAD1))
+        if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_LEFT, padNo_))
         {
             //左方向なのでマイナス
             movePow.x = -MOVE_POW;
         }
-        else if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_RIGHT, KeyConfig::JOYPAD_NO::PAD1))
+        else if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_RIGHT, padNo_))
         {
             //右方向なのでプラス
             movePow.x = MOVE_POW;
         }
 
-        if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_FRONT, KeyConfig::JOYPAD_NO::PAD1))
+        if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_FRONT, padNo_))
         {
             //前方向なのでプラス
             movePow.y = MOVE_POW;
         }
-        else if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_BACK, KeyConfig::JOYPAD_NO::PAD1))
+        else if (key.IsNew(KeyConfig::CONTROL_TYPE::CHARACTER_MOVE_BACK, padNo_))
         {
             //後方向なのでマイナス
             movePow.y = -MOVE_POW;
@@ -213,7 +213,7 @@ const Vector2F UserLogic::WalkValue(void)
     else
     {
         //スティック
-        Vector2F stick = key.GetKnockLStickSize(KeyConfig::JOYPAD_NO::PAD1).ToVector2F() / stickPow;
+        Vector2F stick = key.GetKnockLStickSize(padNo_).ToVector2F() / stickPow;
 
         //スティックの傾き
         movePow.x = stick.x;
@@ -229,7 +229,7 @@ const bool UserLogic::IsJump(void)
     auto& key = KeyConfig::GetInstance();
 
     //ジャンプが押されたか
-    if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, KeyConfig::JOYPAD_NO::PAD1))
+    if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::PUSH_BUTTON, padNo_))
     {
         //押された
         return true;

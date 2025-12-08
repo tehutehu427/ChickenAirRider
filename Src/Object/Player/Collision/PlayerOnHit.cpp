@@ -15,7 +15,7 @@ PlayerOnHit::PlayerOnHit(Player& _player, Transform& _trans)
 {
 	//タグごとのヒット処理格納
 	onHit_[Collider::TAG::NORMAL_OBJECT] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
-	onHit_[Collider::TAG::TREE] = [this](const std::weak_ptr<Collider> _hitCol) {TreeOnHit(_hitCol); };
+	onHit_[Collider::TAG::TREE] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
 	onHit_[Collider::TAG::GROUND] = [this](const std::weak_ptr<Collider> _hitCol) {GroundOnHit(_hitCol); };
 	onHit_[Collider::TAG::MACHINE] = [this](const std::weak_ptr<Collider> _hitCol) {/*NormalObjectOnHit(_hitCol); */};
 	onHit_[Collider::TAG::MACHINE_RIDE] = [this](const std::weak_ptr<Collider> _hitCol) {RideMachineOnHit(_hitCol); };
@@ -50,18 +50,21 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	//位置の補正
 	const auto& hit = mainCol->GetGeometry().GetHitResult();
 
-	//移動前から移動後までのベクトル
-	VECTOR v = VSub(player_.GetMovedPos(), player_.GetTrans().pos);
+	//移動量
+	VECTOR movePow = VSub(player_.GetMovedPos(), playerTrans_.pos);
 
-	// 衝突時位置まで移動
-	player_.SetMovedPos(VAdd(player_.GetTrans().pos, VScale(v, hit.t)));
+	//接触地点にまで戻す
+	player_.SetMovedPos(VAdd(player_.GetMovedPos(),VScale(movePow, hit.t)));
 
 	// 少し押し戻す（めり込み回避）
 	player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(hit.normal, 0.007f)));
 
+	//移動量分押し戻す
+	player_.SetMovedPos(VAdd(player_.GetMovedPos(),VScale(movePow, -1.0f)));
+
 	// 残り移動をスライド方向へ
 	float remain = 1.0f - hit.t;
-	VECTOR slide = VSub(v, VScale(hit.normal, VDot(v, hit.normal)));
+	VECTOR slide = VSub(movePow, VScale(hit.normal, VDot(movePow, hit.normal)));
 	player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(slide, remain)));
 
 	//接地しているか
