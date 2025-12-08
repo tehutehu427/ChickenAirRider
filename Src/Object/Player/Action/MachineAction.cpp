@@ -4,6 +4,7 @@
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/Camera.h"
 #include "../Manager/Game/GravityManager.h"
+#include "../Manager/Game/UIManager.h"
 #include "../Logic/LogicBase.h"
 #include "MachineAction.h"
 
@@ -79,21 +80,30 @@ void MachineAction::Update(void)
 void MachineAction::Draw(void)
 {
 	const SceneManager& scnMng = SceneManager::GetInstance();
-	const int screenSizeX = Application::SCREEN_SIZE_X;
-	const int screenSizeY = Application::SCREEN_SIZE_Y;
+	const UIManager& uiMng = UIManager::GetInstance();
+	const int index = player_.GetPlayerIndex();
+	const auto& viewPort = uiMng.GetViewPort(index);
+
+	const int playerIndex = player_.GetPlayerIndex();
 	const Parameter& param = player_.GetAllParam();
 	const float nowHealth = player_.GetNowHealth();
 
+	int posX = viewPort.x;
+	int posY = viewPort.y;
+
 	//速度
-	DrawFormatString(screenSizeX - 320, screenSizeY - 32, 0xffffff, L"Speed = %.2f", speed_);
+	DrawFormatString(posX - 320, posY - 32, 0xffffff, L"Speed = %.2f", speed_);
 	//DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 64, 0xffffff, L"Charge = %.2f", chargeCnt_);
 
 	const int div = 64; // 分割数（多いほど滑らか）
 	const float maxAngle = chargeCnt_ * DX_TWO_PI;
 
-	float cx = screenSizeX - 320;
-	float cy = screenSizeY - 108;
-	float radius = 30.0f;
+
+	int chargePosX = posX + static_cast<int>(CHARGE_POS.x * viewPort.w);
+	int chargePosY = posY + static_cast<int>(CHARGE_POS.y * viewPort.h);
+	float cx = chargePosX;
+	float cy = chargePosY;
+	float radius = 25.0f;
 	float prevX = cx;
 	float prevY = cy - radius; // 角度0（上）から開始したい場合
 
@@ -118,20 +128,23 @@ void MachineAction::Draw(void)
 		if (t >= chargeCnt_) break; // 余計な描画を防ぐ
 	}
 
+	int healthPosX = posX + static_cast<int>(HEALTH_POS.x * viewPort.w);
+	int healthPosY = posY + static_cast<int>(HEALTH_POS.y * viewPort.h);
+
 	//最大体力
-	DrawBox(screenSizeX + HEALTH_BOX_LOCAL_POS_X_1,
-		screenSizeY + HEALTH_BOX_LOCAL_POS_Y_1,
-		screenSizeX + HEALTH_BOX_LOCAL_POS_X_2,
-		screenSizeY + HEALTH_BOX_LOCAL_POS_Y_1 - param.maxHealth_ * HEALTH_BOX,
+	DrawBox(healthPosX - HEALTH_BOX_LOCAL_POS_X,
+		healthPosY + HEALTH_BOX_LOCAL_POS_Y,
+		healthPosX + HEALTH_BOX_LOCAL_POS_X,
+		healthPosY + HEALTH_BOX_LOCAL_POS_Y - param.maxHealth_ * HEALTH_BOX,
 		Utility::BLACK, true);
 	
 	if (nowHealth > 0.0f)
 	{
 		//体力
-		DrawBox(screenSizeX + HEALTH_BOX_LOCAL_POS_X_1 + HEALTH_LOCAL,
-			screenSizeY + HEALTH_BOX_LOCAL_POS_Y_1 - HEALTH_LOCAL,
-			screenSizeX + HEALTH_BOX_LOCAL_POS_X_2 - HEALTH_LOCAL,
-			screenSizeY + HEALTH_BOX_LOCAL_POS_Y_1 - (param.maxHealth_ * HEALTH_BOX) * (nowHealth / param.maxHealth_) + HEALTH_LOCAL,
+		DrawBox(healthPosX - HEALTH_BOX_LOCAL_POS_X + HEALTH_LOCAL,
+			healthPosY + HEALTH_BOX_LOCAL_POS_Y - HEALTH_LOCAL,
+			healthPosX + HEALTH_BOX_LOCAL_POS_X - HEALTH_LOCAL,
+			healthPosY + HEALTH_BOX_LOCAL_POS_Y - (param.maxHealth_ * HEALTH_BOX) * (nowHealth / param.maxHealth_) + HEALTH_LOCAL,
 			Utility::RED, true);
 	}
 }

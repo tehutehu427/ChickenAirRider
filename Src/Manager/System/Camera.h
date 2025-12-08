@@ -1,7 +1,9 @@
 #pragma once
 #include <DxLib.h>
+#include <memory>
 #include "../../Common/Quaternion.h"
 #include "KeyConfig.h"
+
 class Transform;
 
 class Camera

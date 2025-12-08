@@ -41,7 +41,7 @@ public:
 	};
 
 	//コンストラクタ
-	Player(std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo);
+	Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo);
 	//デストラクタ
 	~Player(void);
 
@@ -133,18 +133,21 @@ public:
 	const float GetNowHealth(void)const { return GetAllParam().maxHealth_ - damage_; }
 
 	//カメラの取得
-	std::weak_ptr<Camera> GetCamera(void) { return camera_; }
+	std::weak_ptr<Camera> GetCamera(void)const { return camera_; }
 
 	//基本機能を返す
-	ActionBase& GetAction(void) { return *action_; }
-	LogicBase& GetLogic(void) { return *logic_; }
-	Character& GetChara(void) { return *chara_; }
+	ActionBase& GetAction(void)const { return *action_; }
+	LogicBase& GetLogic(void)const { return *logic_; }
+	Character& GetChara(void)const { return *chara_; }
 
 	//機体に乗る
 	void RideMachine(std::unique_ptr<Machine> _machine);
 
 	//ダメージ処理
 	void Damage(const float _damage);
+
+	//プレイヤー番号の取得
+	const int GetPlayerIndex(void)const { return playerIndex_; }
 
 private:
 
@@ -167,6 +170,9 @@ private:
 	std::unique_ptr<LogicBase> logic_;		//行動操作者
 	std::unique_ptr<ActionBase> action_;	//行動
 	std::unique_ptr<PlayerOnHit> onHit_;	//当たり判定
+
+	//プレイヤー番号
+	const int playerIndex_;
 
 	//カメラ
 	std::weak_ptr<Camera> camera_;

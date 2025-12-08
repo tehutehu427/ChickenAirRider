@@ -1,8 +1,11 @@
 #include"../pch.h"
+#include"../Application.h"
 #include"GameSetting.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
+#include"../Manager/Game/UIManager.h"
 #include"../Object/Player/Player.h"
+#include"../Object/Player/Action/ActionBase.h"
 #include "PlayerManager.h"
 
 //静的インスタンスの初期化
@@ -19,12 +22,15 @@ void PlayerManager::CreateInstance(void)
 void PlayerManager::Init(void)
 {
 	const auto& setting = GameSetting::GetInstance();
+	auto& uiMng = UIManager::GetInstance();
+	const int userNum = setting.GetUserNum();
+	const int plNum = setting.GetPlayerNum();
 
 	//プレイヤーの生成
-	for (int i = 0; i < setting.GetPlayerNum(); i++)
+	for (int i = 0; i < plNum; i++)
 	{
 		//ユーザーを先に生成
-		if (i < setting.GetUserNum())
+		if (i < userNum)
 		{
 			CreateUserPlayer(i);
 		}
@@ -40,6 +46,18 @@ void PlayerManager::Init(void)
 	{
 		player->Load();
 		player->Init();
+	}
+
+	//画面分割
+	uiMng.CreateViewports(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+
+	//UIやカメラの描画
+	for (int i = 0; i < userNum; i++)
+	{
+		const Player& pl = *players_[i];
+
+		uiMng.AddCameraDraw([&](void) {pl.GetCamera().lock()->Draw(); });
+		uiMng.AddUIDraw([&](void) {pl.GetAction().Draw(); });
 	}
 }
 
@@ -84,9 +102,12 @@ void PlayerManager::CreateUserPlayer(const int _playerIndex)
 	//インスタンス
 	auto& scnMng = SceneManager::GetInstance();
 
+	Vector2 screenSize = { Application::SCREEN_SIZE_X,Application::SCREEN_SIZE_Y };
+
 	//プレイヤー
 	std::unique_ptr<Player> player = std::make_unique<Player>
-		(SceneManager::GetInstance().GetCamera(_playerIndex),
+		(_playerIndex,
+			SceneManager::GetInstance().GetCamera(_playerIndex),
 			Player::OPERATION_TYPE::USER,
 			static_cast<KeyConfig::JOYPAD_NO>(_playerIndex + 1 )
 		);
@@ -105,7 +126,8 @@ void PlayerManager::CreateNpcPlayer(const int _playerIndex)
 
 	//プレイヤー
 	std::unique_ptr<Player> player = std::make_unique<Player>
-		(scnMng.GetCamera(0),
+		(_playerIndex,
+			scnMng.GetCamera(0),
 			Player::OPERATION_TYPE::NPC,
 			static_cast<KeyConfig::JOYPAD_NO>(_playerIndex + 1)
 		);

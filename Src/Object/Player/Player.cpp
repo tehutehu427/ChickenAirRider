@@ -17,8 +17,9 @@
 #include "Collision/PlayerOnHit.h"
 #include "Player.h"
 
-Player::Player(std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo)
-	:camera_(_camera)
+Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo)
+	: playerIndex_(_plIndex),
+	camera_(_camera)
 {
 	//èâä˙âª
 	operation_ = _operation;
