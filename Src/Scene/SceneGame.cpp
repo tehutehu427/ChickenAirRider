@@ -12,7 +12,6 @@
 #include"../Manager/Game/AnimationManager.h"
 #include"../Manager/Game/PlayerManager.h"
 #include"../Manager/Game/ItemManager.h"
-#include"../Manager/Game/UIManager.h"
 #include"../Object/SkyDome/SkyDome.h"
 #include"../Object/Player/Player.h"
 #include "SceneGame.h"
@@ -57,21 +56,19 @@ void SceneGame::Init(void)
 	//アイテム管理の生成
 	ItemManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
 
-	//UI管理の生成
-	UIManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
-
 	//インスタンス
 	auto& setMng = GameSetting::GetInstance();
 	auto& grvMng = GravityManager::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
+	auto& setting = GameSetting::GetInstance();
 
 	//重力
 	grvMng.Init();
 
 	//タイマー
-	timer_ = std::make_unique<Timer>(120);
+	timer_ = std::make_unique<Timer>(10);
 	timer_->Init();
 
 	//カウント開始
@@ -154,7 +151,6 @@ void SceneGame::Draw(void)
 	auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
-	auto& uiMng = UIManager::GetInstance();
 
 	//スカイドーム
 	sky_->Draw();
@@ -170,9 +166,6 @@ void SceneGame::Draw(void)
 
 	//プレイヤーの描画
 	plMng.Draw();
-
-	//プレイヤーたちのUI
-	uiMng.Draw();
 
 	//タイマーの描画
 	timer_->Draw();

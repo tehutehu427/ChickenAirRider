@@ -1,9 +1,11 @@
 #include"../pch.h"
+#include "../Application.h"	
 #include "../Utility/Utility.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
 #include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/GravityManager.h"
+#include "../Manager/Game/GameSetting.h"
 #include "../Common/Geometry/Sphere.h"
 #include "../Common/Geometry/Line.h"
 #include "Character/Character.h"
@@ -15,6 +17,7 @@
 #include "Action/CharacterAction.h"
 #include "Action/MachineAction.h"
 #include "Collision/PlayerOnHit.h"
+#include "UI/PlayerUI.h"
 #include "Player.h"
 
 Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo)
@@ -70,6 +73,16 @@ void Player::Init(void)
 	chara_ = std::make_unique<Character>();
 	chara_->Load();
 	chara_->Init();
+
+	//UI
+	const int userNum = GameSetting::GetInstance().GetUserNum();
+	ui_ = std::make_unique<PlayerUI>();
+	ui_->Init();
+	ui_->CreateViewports(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+	const auto& view = ui_->GetViewPort();
+
+	//カメラスクリーンの設定
+	camera_.lock()->SetPostEffectScreenSize(view.w, view.h, playerIndex_);
 
 	//初期機体情報
 	const auto& machineMng = MachineManager::GetInstance();
@@ -281,6 +294,9 @@ void Player::Damage(const float _damage)
 
 void Player::ChangeActionNormal(void)
 {
+	//アクションUIを初期化しておく
+	ui_->SubDraw(PlayerUI::DRAW_TYPE::ACTION);
+
 	//キャラクターの行動に変更
 	action_ = std::make_unique<CharacterAction>(*this, *chara_, *logic_);
 	action_->Init();
@@ -294,6 +310,9 @@ void Player::ChangeActionNormal(void)
 
 void Player::ChangeActionRide(void)
 {
+	//アクションUIを初期化しておく
+	ui_->SubDraw(PlayerUI::DRAW_TYPE::ACTION);
+
 	//機体の行動に変更
 	action_ = std::make_unique<MachineAction>(*this, *machine_, *logic_);
 	action_->Init();
@@ -375,6 +394,9 @@ void Player::DrawRide(void)
 
 	//機体の描画
 	machine_->Draw();
+
+	//機体アクションのUIの描画
+	//action_->Draw();
 }
 
 void Player::SynchronizeChara(void)

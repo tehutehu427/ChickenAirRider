@@ -3,7 +3,9 @@
 #include <functional>
 #include "ActionBase.h"
 #include "../Machine/Machine.h"
-#include "../Manager/Game/UIManager.h"
+
+class PixelMaterial;
+class PixelRenderer;
 
 class MachineAction : public ActionBase
 {
@@ -76,8 +78,11 @@ private:
 	static constexpr int HEALTH_LOCAL = 3;
 
 	//UIの位置(Normalize)
-	static constexpr UIManager::NormalizedPos HEALTH_POS = { 0.95f,0.6f };
-	static constexpr UIManager::NormalizedPos CHARGE_POS = { 0.85f,0.8f };
+	static constexpr Vector2F HEALTH_POS = { 0.95f,0.6f };
+	static constexpr Vector2F CHARGE_POS = { 0.85f,0.8f };
+
+	//ゲージの大きさ
+	static constexpr float GAUGE_SIZE = 0.45f;
 
 	//機体
 	const Machine& machine_;
@@ -106,9 +111,25 @@ private:
 	//スピン時間カウント
 	float spinCnt_;
 
+	//ゲージ画像
+	int gaugeImg_;
+	int gaugeMaskImg_;
+
+	//シェーダー
+	std::unique_ptr<PixelMaterial> material_;
+	std::unique_ptr<PixelRenderer> renderer_;
+	int maskScreen_;
+
+	//ゲージの位置
+	Vector2 chargeGaugePos_;
+
 	//状態ごとの更新
 	void UpdateGround(void)override;
 	void UpdateFlight(void)override;
+
+	//描画関係
+	void DrawGauge(void);
+	void DrawHealth(void);
 
 	//移動
 	void Move(void);

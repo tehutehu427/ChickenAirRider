@@ -39,8 +39,9 @@ private:
 	//タイトルロゴ
 	int logoImg_;
 
-	//std::unique_ptr<PixelMaterial> material_;
-	//std::unique_ptr<PixelRenderer> material_;
+	int postEffectScreen_;
+	std::unique_ptr<PixelMaterial> material_;
+	std::unique_ptr<PixelRenderer> renderer_;
 
 	//デバッグ描画
 	void DebugDraw(void)override;

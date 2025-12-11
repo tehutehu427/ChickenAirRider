@@ -213,7 +213,7 @@
     <ClCompile Include="Src\Manager\Game\GameSetting.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\Game\UIManager.cpp">
+    <ClCompile Include="Src\Object\Player\UI\PlayerUI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -653,7 +653,7 @@
     <ClInclude Include="Src\Manager\Game\GameSetting.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\Game\UIManager.h">
+    <ClInclude Include="Src\Object\Player\UI\PlayerUI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -687,5 +687,8 @@
     <FxCompile Include="Src\Shader\PostEffect\Vignette.hlsl" />
     <FxCompile Include="Src\Shader\Model\BoxCrackPS.hlsl" />
     <FxCompile Include="Src\Shader\Model\BoxCrackVS.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\GaugeMask.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\GodRay.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\Title.hlsl" />
   </ItemGroup>
 </Project>

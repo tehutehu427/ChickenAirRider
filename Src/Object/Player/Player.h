@@ -10,6 +10,7 @@ class Machine;
 class LogicBase;
 class ActionBase;
 class PlayerOnHit;
+class PlayerUI;
 class Camera;
 
 class Player : public ObjectBase
@@ -139,6 +140,7 @@ public:
 	ActionBase& GetAction(void)const { return *action_; }
 	LogicBase& GetLogic(void)const { return *logic_; }
 	Character& GetChara(void)const { return *chara_; }
+	PlayerUI& GetUI(void)const { return *ui_; }
 
 	//機体に乗る
 	void RideMachine(std::unique_ptr<Machine> _machine);
@@ -170,6 +172,7 @@ private:
 	std::unique_ptr<LogicBase> logic_;		//行動操作者
 	std::unique_ptr<ActionBase> action_;	//行動
 	std::unique_ptr<PlayerOnHit> onHit_;	//当たり判定
+	std::unique_ptr<PlayerUI> ui_;			//UI
 
 	//プレイヤー番号
 	const int playerIndex_;

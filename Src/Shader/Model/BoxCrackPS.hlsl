@@ -19,7 +19,7 @@ cbuffer cbParam : register(b4)
 
 float4 main(PS_INPUT PSInput) : SV_TARGET0
 {
-float2 uv = PSInput.uv;
+    float2 uv = PSInput.uv;
 
     float4 baseColor = diffuseMapTexture.Sample(diffuseMapSampler, uv);
     float crackVal = crackTexture.Sample(crackSampler, uv).r;

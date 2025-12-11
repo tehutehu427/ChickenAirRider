@@ -10,6 +10,8 @@
 #include "../Game/CollisionManager.h"
 #include "../Game/GameSetting.h"
 #include"../Application.h"
+#include"../Object/Player/Player.h"
+#include"../Object/Player/UI/PlayerUI.h"
 #include"SceneManager.h"
 
 SceneManager::SceneManager(void)
@@ -527,8 +529,11 @@ void SceneManager::DrawMultiScreen()
 			scene->Draw();
 		}
 
+		//UIは別々で描画
+		PlayerManager::GetInstance().GetPlayer(index).GetUI().Draw();
+
 		// 主にポストエフェクト用
-		cameras_[index]->Draw();
+		cameras_[index]->Draw(index);
 
 		// Effekseerにより再生中のエフェクトを描画する。
 		DrawEffekseer3D();

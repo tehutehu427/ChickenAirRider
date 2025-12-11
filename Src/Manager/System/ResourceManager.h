@@ -48,8 +48,14 @@ public:
 		//スカイドーム
 		SKY_DOME,			//スカイドーム
 
+		//タイトル、セレクト
 		TITLE_BACK,			//タイトル背景
 		TITLE_LOGO,			//タイトルロゴ
+
+		//UI
+		CHARGE_GAUGE,			//チャージゲージ
+		CHARGE_GAUGE_MASK,		//チャージゲージマスク
+		SPEED_GAUGE,			//速度ゲージ
 	};
 
 	// 初期化

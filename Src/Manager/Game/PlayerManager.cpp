@@ -3,9 +3,8 @@
 #include"GameSetting.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
-#include"../Manager/Game/UIManager.h"
 #include"../Object/Player/Player.h"
-#include"../Object/Player/Action/ActionBase.h"
+#include"../Object/Player/UI/PlayerUI.h"
 #include "PlayerManager.h"
 
 //静的インスタンスの初期化
@@ -22,7 +21,6 @@ void PlayerManager::CreateInstance(void)
 void PlayerManager::Init(void)
 {
 	const auto& setting = GameSetting::GetInstance();
-	auto& uiMng = UIManager::GetInstance();
 	const int userNum = setting.GetUserNum();
 	const int plNum = setting.GetPlayerNum();
 
@@ -47,18 +45,6 @@ void PlayerManager::Init(void)
 		player->Load();
 		player->Init();
 	}
-
-	//画面分割
-	uiMng.CreateViewports(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
-
-	//UIやカメラの描画
-	for (int i = 0; i < userNum; i++)
-	{
-		const Player& pl = *players_[i];
-
-		uiMng.AddCameraDraw([&](void) {pl.GetCamera().lock()->Draw(); });
-		uiMng.AddUIDraw([&](void) {pl.GetAction().Draw(); });
-	}
 }
 
 void PlayerManager::Update(void)
@@ -77,9 +63,9 @@ void PlayerManager::Update(void)
 void PlayerManager::Draw(void)
 {
 	//各プレイヤーの描画
-	for (auto& player : players_)
+	for (int i = 0 ; i< players_.size() ; i++)
 	{
-		player->Draw();
+		players_[i]->Draw();
 	}
 }
 
@@ -101,8 +87,6 @@ void PlayerManager::CreateUserPlayer(const int _playerIndex)
 {
 	//インスタンス
 	auto& scnMng = SceneManager::GetInstance();
-
-	Vector2 screenSize = { Application::SCREEN_SIZE_X,Application::SCREEN_SIZE_Y };
 
 	//プレイヤー
 	std::unique_ptr<Player> player = std::make_unique<Player>

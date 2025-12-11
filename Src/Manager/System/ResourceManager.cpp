@@ -21,6 +21,9 @@ void ResourceManager::Init(void)
 	//タイトル画像のパス
 	std::wstring titleImage = PATH_IMG + L"Title/";
 
+	//UI画像のパス
+	std::wstring uiImage = PATH_IMG + L"UI/";
+
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"BoxCrack.png");
 	resourcesMap_.emplace(SRC::BOX_CRACK, std::move(res));
 
@@ -57,10 +60,19 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, titleImage + L"TitleLogo.png");
 	resourcesMap_.emplace(SRC::TITLE_LOGO, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"ChargeGauge.png");
+	resourcesMap_.emplace(SRC::CHARGE_GAUGE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"SpeedGauge.png");
+	resourcesMap_.emplace(SRC::SPEED_GAUGE, std::move(res));
+
 #pragma endregion 
 
 
 #pragma region マスク画像
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"ChargeGaugeMask.png");
+	resourcesMap_.emplace(SRC::CHARGE_GAUGE_MASK, std::move(res));
 
 #pragma endregion 
 

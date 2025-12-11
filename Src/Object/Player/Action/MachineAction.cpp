@@ -3,9 +3,12 @@
 #include "../Utility/Utility.h"
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/Camera.h"
+#include "../Manager/System/ResourceManager.h"
 #include "../Manager/Game/GravityManager.h"
-#include "../Manager/Game/UIManager.h"
+#include "../Renderer/PixelMaterial.h"
+#include "../Renderer/PixelRenderer.h"
 #include "../Logic/LogicBase.h"
+#include "../UI/PlayerUI.h"
 #include "MachineAction.h"
 
 MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase& _logic)
@@ -20,6 +23,10 @@ MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase
 	isFlightNow_ = false;
 	gravPow_ = Utility::VECTOR_ZERO;
 	spinCnt_ = 0.0f;
+	gaugeImg_ = -1;
+	gaugeMaskImg_ = -1;
+	chargeGaugePos_ = {};
+	maskScreen_ = -1;
 
 	update_[true] = [this](void) {UpdateGround(); };
 	update_[false] = [this](void) {UpdateFlight(); };
@@ -27,11 +34,41 @@ MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase
 
 MachineAction::~MachineAction(void)
 {
+	DeleteGraph(maskScreen_);
 }
 
 void MachineAction::Init(void)
 {
-	//最小初速度等は外部から
+	ResourceManager& res = ResourceManager::GetInstance();
+	const SceneManager& scnMng = SceneManager::GetInstance();
+	PlayerUI& ui = player_.GetUI();
+	const auto& viewPort = ui.GetViewPort();
+
+	ui.AddDraw(PlayerUI::DRAW_TYPE::ACTION, [this](void) {Draw(); });
+
+	//マスク処理用
+	maskScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
+
+	//画像
+	gaugeImg_ = res.Load(ResourceManager::SRC::CHARGE_GAUGE).handleId_;
+	gaugeMaskImg_ = res.Load(ResourceManager::SRC::CHARGE_GAUGE_MASK).handleId_;
+
+	material_ = std::make_unique<PixelMaterial>(L"GaugeMask.cso", 2);
+	material_->AddConstBuf({ 0.5f,0.5f,0.0f,0.3f });
+	material_->AddConstBuf({ chargeCnt_,0.0f,0.0f,0.0f });
+	material_->AddTextureBuf(gaugeMaskImg_);
+	renderer_ = std::make_unique<PixelRenderer>(*material_);
+	
+	int posX = viewPort.x;
+	int posY = viewPort.y;
+
+	chargeGaugePos_.x = posX + static_cast<int>(CHARGE_POS.x * viewPort.w);
+	chargeGaugePos_.y = posY + static_cast<int>(CHARGE_POS.y * viewPort.h);
+	Vector2 gaugeSize = Vector2(512.0f * GAUGE_SIZE, 512.0f * GAUGE_SIZE);
+
+	renderer_->SetPos(chargeGaugePos_ - gaugeSize / 2);
+	renderer_->SetSize(gaugeSize);
+	renderer_->MakeSquereVertex();
 }
 
 void MachineAction::Update(void)
@@ -79,74 +116,11 @@ void MachineAction::Update(void)
 
 void MachineAction::Draw(void)
 {
-	const SceneManager& scnMng = SceneManager::GetInstance();
-	const UIManager& uiMng = UIManager::GetInstance();
-	const int index = player_.GetPlayerIndex();
-	const auto& viewPort = uiMng.GetViewPort(index);
+	//ゲージ描画
+	DrawGauge();
 
-	const int playerIndex = player_.GetPlayerIndex();
-	const Parameter& param = player_.GetAllParam();
-	const float nowHealth = player_.GetNowHealth();
-
-	int posX = viewPort.x;
-	int posY = viewPort.y;
-
-	//速度
-	DrawFormatString(posX - 320, posY - 32, 0xffffff, L"Speed = %.2f", speed_);
-	//DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 64, 0xffffff, L"Charge = %.2f", chargeCnt_);
-
-	const int div = 64; // 分割数（多いほど滑らか）
-	const float maxAngle = chargeCnt_ * DX_TWO_PI;
-
-
-	int chargePosX = posX + static_cast<int>(CHARGE_POS.x * viewPort.w);
-	int chargePosY = posY + static_cast<int>(CHARGE_POS.y * viewPort.h);
-	float cx = chargePosX;
-	float cy = chargePosY;
-	float radius = 25.0f;
-	float prevX = cx;
-	float prevY = cy - radius; // 角度0（上）から開始したい場合
-
-	for (int i = 0; i <= div; i++)
-	{
-		float t = (float)i / div;
-		float angle = -DX_PI / 2.0f + maxAngle * t; // 上方向から時計回り
-
-		float x = cx + cosf(angle) * radius;
-		float y = cy + sinf(angle) * radius;
-
-		// 中心 + 直前の点 + 今の点 の三角形を描画
-		DrawTriangle(
-			cx, cy,
-			prevX, prevY,
-			x, y,
-			Utility::BLUE, TRUE
-		);
-
-		prevX = x;
-		prevY = y;
-		if (t >= chargeCnt_) break; // 余計な描画を防ぐ
-	}
-
-	int healthPosX = posX + static_cast<int>(HEALTH_POS.x * viewPort.w);
-	int healthPosY = posY + static_cast<int>(HEALTH_POS.y * viewPort.h);
-
-	//最大体力
-	DrawBox(healthPosX - HEALTH_BOX_LOCAL_POS_X,
-		healthPosY + HEALTH_BOX_LOCAL_POS_Y,
-		healthPosX + HEALTH_BOX_LOCAL_POS_X,
-		healthPosY + HEALTH_BOX_LOCAL_POS_Y - param.maxHealth_ * HEALTH_BOX,
-		Utility::BLACK, true);
-	
-	if (nowHealth > 0.0f)
-	{
-		//体力
-		DrawBox(healthPosX - HEALTH_BOX_LOCAL_POS_X + HEALTH_LOCAL,
-			healthPosY + HEALTH_BOX_LOCAL_POS_Y - HEALTH_LOCAL,
-			healthPosX + HEALTH_BOX_LOCAL_POS_X - HEALTH_LOCAL,
-			healthPosY + HEALTH_BOX_LOCAL_POS_Y - (param.maxHealth_ * HEALTH_BOX) * (nowHealth / param.maxHealth_) + HEALTH_LOCAL,
-			Utility::RED, true);
-	}
+	//体力描画
+	DrawHealth();
 }
 
 void MachineAction::UpdateGround(void)
@@ -188,6 +162,59 @@ void MachineAction::UpdateFlight(void)
 
 	//回転
 	Turn();
+}
+
+void MachineAction::DrawGauge(void)
+{
+	//速度
+	//DrawFormatString(posX - 320, posY - 32, 0xffffff, L"Speed = %.2f", speed_);
+	//DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 64, 0xffffff, L"Charge = %.2f", chargeCnt_);
+
+	//外枠
+	DrawRotaGraph(chargeGaugePos_.x, chargeGaugePos_.y, GAUGE_SIZE, 0.0, gaugeImg_, true);
+
+
+	DrawFormatString(0, 32, 0xff0000, L"%.2f", chargeCnt_);
+	//定数バッファ
+	material_->SetConstBuf(1, { chargeCnt_,0.0f,0.0f,0.0f });
+
+
+	//描画
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	renderer_->Draw();
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+}
+
+void MachineAction::DrawHealth(void)
+{
+	const PlayerUI& ui = player_.GetUI();
+	const auto& viewPort = ui.GetViewPort();
+
+	const float nowHealth = player_.GetNowHealth();
+	const Parameter& param = player_.GetAllParam();
+
+	int posX = viewPort.x;
+	int posY = viewPort.y;
+
+	int healthPosX = posX + static_cast<int>(HEALTH_POS.x * viewPort.w);
+	int healthPosY = posY + static_cast<int>(HEALTH_POS.y * viewPort.h);
+
+	//最大体力
+	DrawBox(healthPosX - HEALTH_BOX_LOCAL_POS_X,
+		healthPosY + HEALTH_BOX_LOCAL_POS_Y,
+		healthPosX + HEALTH_BOX_LOCAL_POS_X,
+		healthPosY + HEALTH_BOX_LOCAL_POS_Y - param.maxHealth_ * HEALTH_BOX,
+		Utility::BLACK, true);
+
+	if (nowHealth > 0.0f)
+	{
+		//体力
+		DrawBox(healthPosX - HEALTH_BOX_LOCAL_POS_X + HEALTH_LOCAL,
+			healthPosY + HEALTH_BOX_LOCAL_POS_Y - HEALTH_LOCAL,
+			healthPosX + HEALTH_BOX_LOCAL_POS_X - HEALTH_LOCAL,
+			healthPosY + HEALTH_BOX_LOCAL_POS_Y - (param.maxHealth_ * HEALTH_BOX) * (nowHealth / param.maxHealth_) + HEALTH_LOCAL,
+			Utility::RED, true);
+	}
 }
 
 void MachineAction::Move(void)

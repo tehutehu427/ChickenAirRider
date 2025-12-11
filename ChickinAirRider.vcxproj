@@ -232,7 +232,7 @@
     <ClCompile Include="Src\Utility\Utility.cpp" />
     <ClCompile Include="Src\Manager\Game\Timer.cpp" />
     <ClCompile Include="Src\Common\Vector2F.cpp" />
-    <ClCompile Include="Src\Manager\Game\UIManager.cpp" />
+    <ClCompile Include="Src\Object\Player\UI\PlayerUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Manager\Game\GameSetting.h" />
@@ -380,7 +380,7 @@
     <ClInclude Include="Src\Utility\UtilityTemplates.h" />
     <ClInclude Include="Src\Manager\Game\Timer.h" />
     <ClInclude Include="Src\Common\Vector2F.h" />
-    <ClInclude Include="Src\Manager\Game\UIManager.h" />
+    <ClInclude Include="Src\Object\Player\UI\PlayerUI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\PixelShader2DHeader.hlsli" />
@@ -439,6 +439,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Src\Shader\Model\WaterWaveModelVS.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\GaugeMask.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\PostEffect\GodRay.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Src\Shader\PostEffect\LensDistortion.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
@@ -449,6 +461,12 @@
     </FxCompile>
     <FxCompile Include="Src\Shader\PostEffect\ScanLine.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\PostEffect\Title.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Src\Shader\PostEffect\Vignette.hlsl">

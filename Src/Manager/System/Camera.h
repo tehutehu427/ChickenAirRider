@@ -5,6 +5,8 @@
 #include "KeyConfig.h"
 
 class Transform;
+class PixelMaterial;
+class PixelRenderer;
 
 class Camera
 {
@@ -94,7 +96,7 @@ public:
 	void SetBeforeDraw(void);
 	
 	//描画
-	void Draw(void);
+	void Draw(const int _index = 0);
 
 	// カメラ位置の取得
 	VECTOR GetPos(void) const;
@@ -138,6 +140,9 @@ public:
 	//回転力設定
 	void SetRotPow(const float _rotPow) { rotPow_ = _rotPow; }
 
+	//カメラのポストエフェクト用スクリーンのサイズを変更
+	void SetPostEffectScreenSize(const int _sizeX, const int _sizeY, const int _index);
+
 private:
 
 	// カメラのローカル座標
@@ -178,6 +183,11 @@ private:
 
 	//カメラ速度
 	VECTOR vel_;
+
+	//シェーダー
+	int postEffectScreen_;
+	std::unique_ptr<PixelMaterial> material_;
+	std::unique_ptr<PixelRenderer> renderer_;
 
 	// カメラを初期位置に戻す
 	void SetDefault(void);

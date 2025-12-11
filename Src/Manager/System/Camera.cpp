@@ -4,6 +4,9 @@
 #include "../../Manager/System/SceneManager.h"
 #include "../../Manager/Game/GravityManager.h"
 #include "../../Application.h"
+#include "../../Manager/Game/GameSetting.h"
+#include "../Renderer/PixelMaterial.h"
+#include "../Renderer/PixelRenderer.h"
 #include "Camera.h"
 
 Camera::Camera(int _userNum)
@@ -19,17 +22,26 @@ Camera::Camera(int _userNum)
 	rotPow_ = 0.0f;
 	leapTargetPos_ = Utility::VECTOR_ZERO;
 	vel_ = Utility::VECTOR_ZERO;
+	postEffectScreen_ = -1;
 }
 
 Camera::~Camera(void)
 {
+	DeleteGraph(postEffectScreen_);
 }
 
 void Camera::Init(void)
 {
-
 	ChangeMode(MODE::FIXED_POINT);
 
+	material_ = std::make_unique<PixelMaterial>(L"GodRay.cso", 1);
+	renderer_ = std::make_unique<PixelRenderer>(*material_);
+
+	material_->AddConstBuf(FLOAT4{ 0.1f, 0.0f,0.95f, 0.7f });
+	material_->AddTextureBuf(SceneManager::GetInstance().GetMainScreen());
+	renderer_->MakeSquereVertex({ 0,0 }, { Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y });
+
+	postEffectScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
 }
 
 void Camera::Update(void)
@@ -91,14 +103,52 @@ void Camera::CameraSetting()
 	);
 }
 
-void Camera::Draw(void)
+void Camera::Draw(const int _index)
 {
-	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x000000, false);
+	// ポストエフェクトの描画
+	SetDrawScreen(postEffectScreen_);
+	ClearDrawScreen();
+
+	//一人やゲームシーン以外ならメインスクリーン
+	if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME || GameSetting::GetInstance().GetUserNum() <= 1)
+		material_->SetTextureBuf(0, SceneManager::GetInstance().GetMainScreen());
+	else
+		material_->SetTextureBuf(0, SceneManager::GetInstance().GetScreen(_index));
+
+	//シェーダー描画
+	renderer_->Draw();
+
+	//一人やゲームシーン以外ならメインスクリーン
+	if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME || GameSetting::GetInstance().GetUserNum() <= 1)
+		SetDrawScreen(SceneManager::GetInstance().GetMainScreen());
+	else
+		SetDrawScreen(SceneManager::GetInstance().GetScreen(_index));
+
+	//スクリーンに描画
+	DrawGraph(0, 0, postEffectScreen_, true);
 }
 
 void Camera::SetFollow(const Transform* follow)
 {
 	followTransform_ = follow;
+}
+
+void Camera::SetPostEffectScreenSize(const int _sizeX, const int _sizeY, const int _index)
+{
+	//一人なら再設定しない
+	if (GameSetting::GetInstance().GetUserNum() <= 1)return;
+
+	material_.reset();
+	renderer_.reset();
+
+	material_ = std::make_unique<PixelMaterial>(L"GodRay.cso", 1);
+	renderer_ = std::make_unique<PixelRenderer>(*material_);
+
+	//初期化
+	material_->AddConstBuf(FLOAT4{ 0.1f, 0.0f,0.95f, 0.7f });
+	material_->AddTextureBuf(SceneManager::GetInstance().GetScreen(_index));
+	renderer_->MakeSquereVertex({ 0,0 }, { _sizeX, _sizeY });
+	postEffectScreen_ = MakeScreen(_sizeX, _sizeY, true);
 }
 
 VECTOR Camera::GetPos(void) const
