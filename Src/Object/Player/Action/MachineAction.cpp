@@ -53,9 +53,8 @@ void MachineAction::Init(void)
 	gaugeImg_ = res.Load(ResourceManager::SRC::CHARGE_GAUGE).handleId_;
 	gaugeMaskImg_ = res.Load(ResourceManager::SRC::CHARGE_GAUGE_MASK).handleId_;
 
-	material_ = std::make_unique<PixelMaterial>(L"GaugeMask.cso", 2);
-	material_->AddConstBuf({ 0.5f,0.5f,0.0f,0.3f });
-	material_->AddConstBuf({ chargeCnt_,0.0f,0.0f,0.0f });
+	material_ = std::make_unique<PixelMaterial>(L"GaugeMask.cso", 1);
+	material_->AddConstBuf({ 0.5f,0.5f,chargeCnt_,0.0f });
 	material_->AddTextureBuf(gaugeMaskImg_);
 	renderer_ = std::make_unique<PixelRenderer>(*material_);
 	
@@ -176,8 +175,7 @@ void MachineAction::DrawGauge(void)
 
 	DrawFormatString(0, 32, 0xff0000, L"%.2f", chargeCnt_);
 	//定数バッファ
-	material_->SetConstBuf(1, { chargeCnt_,0.0f,0.0f,0.0f });
-
+	material_->SetConstBuf(0, { 0.5f,0.5f,chargeCnt_,0.0f });
 
 	//描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);

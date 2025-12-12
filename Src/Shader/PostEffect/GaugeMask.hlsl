@@ -4,37 +4,46 @@
 cbuffer cbParam : register(b4)
 {
     float2 center;       // 中心UV
-    float radiusInner;   // 内側半径UV
-    float radiusOuter;   // 外側半径UV
     float progress;      // 0～1 回転ゲージ
-    float3 dummy;
+    float dummy;
 }
-
-float PI = 3.14159265;
 
 float4 main(PS_INPUT PSInput) : SV_TARGET
 {
-    float2 d = PSInput.uv - center;
-    float dist = length(d);
+    float PI = 3.14159265;
+    float TWO_PI = PI * 2;
 
-    // リングの範囲外は透明
-    if (dist < radiusInner || dist > radiusOuter)
-        discard;
-    
-    // 角度 0～2PI
-    float ang = atan2(d.y * progress, d.x * progress);
-    //if (ang < 0) ang += 2 * PI;
-
-    // マスク画像（白だけ有効）
+    // 画像によるマスク処理（白だけ有効）
     float mask = tex.Sample(texSampler, PSInput.uv).r;
     if (mask < 0.5)
         discard;
 
-    // ゲージ進行度
-    float maxAng = progress * 2 * PI;
-    if (ang < maxAng)
-        discard;
+    float4 color = {1.0, 1.0, 0.4, 1.0};
+    float2 uv = PSInput.uv;
+    float2 dir = uv - center;
 
-    // mainTex を使わず「赤色」で塗る
-    return float4(1.0, 0.2, 0.2, 1.0);   // 赤ゲージ
+    // === 角度計算（-PI～PI）===
+    float angle = atan2(dir.y, dir.x);
+
+    //二つの個所から
+    angle *= 2;
+
+    //右上から開始にする
+    angle += PI * 0.4;
+
+    // === 0～2PI に正規化 ===
+    if (angle < 0) angle += TWO_PI;
+    if (angle > TWO_PI) angle -= TWO_PI;
+
+    // === 0～1 の UV と同じ範囲に正規化 ===
+    float ang01 = angle / TWO_PI * 1.2;
+
+    // === progress判定 ===
+    if (ang01 > progress)
+        return float4(0, 0, 0, 0);
+    
+    if (progress == 1)
+        color = float4(0.7f, 0.7f, 1.0f, 1.0f);
+
+    return color;
 }
