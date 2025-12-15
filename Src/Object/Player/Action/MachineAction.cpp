@@ -4,6 +4,7 @@
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/Camera.h"
 #include "../Manager/System/ResourceManager.h"
+#include "../Manager/System/SoundManager.h"
 #include "../Manager/Game/GravityManager.h"
 #include "../Renderer/PixelMaterial.h"
 #include "../Renderer/PixelRenderer.h"
@@ -17,6 +18,7 @@ MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase
 {
 	driveCnt_ = 0.0f;
 	chargeCnt_ = 0.0f;
+	isChargeMax_ = false;
 	velocity_ = 0.0f;
 	speed_ = 0.0f;
 	flightPow_ = 0.0f;
@@ -27,6 +29,7 @@ MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase
 	gaugeMaskImg_ = -1;
 	chargeGaugePos_ = {};
 	maskScreen_ = -1;
+	gaugeCnt_ = 0.0f;
 
 	update_[true] = [this](void) {UpdateGround(); };
 	update_[false] = [this](void) {UpdateFlight(); };
@@ -53,27 +56,57 @@ void MachineAction::Init(void)
 	gaugeImg_ = res.Load(ResourceManager::SRC::CHARGE_GAUGE).handleId_;
 	gaugeMaskImg_ = res.Load(ResourceManager::SRC::CHARGE_GAUGE_MASK).handleId_;
 
+	//マテリアル
 	material_ = std::make_unique<PixelMaterial>(L"GaugeMask.cso", 1);
-	material_->AddConstBuf({ 0.5f,0.5f,chargeCnt_,0.0f });
+	material_->AddConstBuf({ 0.5f,0.5f,chargeCnt_,gaugeCnt_ });
 	material_->AddTextureBuf(gaugeMaskImg_);
 	renderer_ = std::make_unique<PixelRenderer>(*material_);
 	
+	//座標
 	int posX = viewPort.x;
 	int posY = viewPort.y;
+	chargeGaugePos_.x = posX + static_cast<int>(CHARGE_POS.x * viewPort.w) - GAUGE_LOCAL_POS;
+	chargeGaugePos_.y = posY + static_cast<int>(CHARGE_POS.y * viewPort.h) - GAUGE_LOCAL_POS;
+	Vector2 gaugeSize = Vector2(GAUGE_SIZE / (Application::SCREEN_SIZE_Y / viewPort.h) * GAUGE_SIZE_MULTI
+		, GAUGE_SIZE / (Application::SCREEN_SIZE_Y / viewPort.h) * GAUGE_SIZE_MULTI);
 
-	chargeGaugePos_.x = posX + static_cast<int>(CHARGE_POS.x * viewPort.w);
-	chargeGaugePos_.y = posY + static_cast<int>(CHARGE_POS.y * viewPort.h);
-	Vector2 gaugeSize = Vector2(512.0f * GAUGE_SIZE, 512.0f * GAUGE_SIZE);
-
+	//レンダラー
 	renderer_->SetPos(chargeGaugePos_ - gaugeSize / 2);
 	renderer_->SetSize(gaugeSize);
 	renderer_->MakeSquereVertex();
+
+	//SE
+	auto& snd = SoundManager::GetInstance();
+
+	//エンジン音
+	int id = res.Load(ResourceManager::SRC::ENGINE).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::ENGINE, id, SoundManager::TYPE::SE, 80);
+	
+	//チャージ
+	id = res.Load(ResourceManager::SRC::CHARGE_SE).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::CHARGE, id, SoundManager::TYPE::SE, 80);
+
+	//チャージ完了
+	id = res.Load(ResourceManager::SRC::CHARGE_MAX_SE).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::CHARGE_MAX, id, SoundManager::TYPE::SE, 80);
+
+	//エンジン音
+	snd.Play(SoundManager::SOUND_NAME::ENGINE, SoundManager::PLAYTYPE::LOOP);
 }
 
 void MachineAction::Update(void)
 {
+	//SE
+	auto& snd = SoundManager::GetInstance();
+
+	//パラメーター情報
+	const Parameter& param = player_.GetAllParam();
+
 	//デルタタイム
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//カウンタ
+	gaugeCnt_ += delta;
 
 	//スピン判定
 	if (logic_.IsButtonMeshing() && !player_.IsSpin())
@@ -99,6 +132,9 @@ void MachineAction::Update(void)
 		}
 	}
 
+	if (snd.IsPlay(SoundManager::SOUND_NAME::ENGINE))
+		snd.SetVolume(SoundManager::SOUND_NAME::ENGINE, SoundManager::PERCENT_MAX * (speed_ / param.maxSpeed_ * BASE_MAX_SPEED));
+
 	//回転更新
 	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::Euler(axis_)));
 
@@ -115,6 +151,9 @@ void MachineAction::Update(void)
 
 void MachineAction::Draw(void)
 {
+	//ユーザーのみ描画
+	if (player_.GetOperation() != Player::OPERATION_TYPE::USER)return;
+
 	//ゲージ描画
 	DrawGauge();
 
@@ -124,6 +163,9 @@ void MachineAction::Draw(void)
 
 void MachineAction::UpdateGround(void)
 {
+	//SE
+	auto& snd = SoundManager::GetInstance();
+
 	//飛んだ判定のリセット
 	if (isFlightNow_)
 	{
@@ -133,6 +175,12 @@ void MachineAction::UpdateGround(void)
 	//チャージをするか
 	if (logic_.StartCharge())
 	{
+		//エンジン音を止める
+		if (snd.IsPlay(SoundManager::SOUND_NAME::ENGINE))snd.Stop(SoundManager::SOUND_NAME::ENGINE);
+
+		//チャージ
+		if (!snd.IsPlay(SoundManager::SOUND_NAME::CHARGE))snd.Play(SoundManager::SOUND_NAME::CHARGE,SoundManager::PLAYTYPE::BACK);
+
 		//チャージ
 		Charge();
 	}
@@ -140,6 +188,12 @@ void MachineAction::UpdateGround(void)
 	//チャージを解放したか
 	if (logic_.DisCharge())
 	{
+		//チャージ解放
+		if (snd.IsPlay(SoundManager::SOUND_NAME::CHARGE))snd.Stop(SoundManager::SOUND_NAME::CHARGE);
+
+		//エンジン音
+		if (!snd.IsPlay(SoundManager::SOUND_NAME::ENGINE))snd.Play(SoundManager::SOUND_NAME::ENGINE,SoundManager::PLAYTYPE::LOOP);
+
 		//チャージ解放
 		DisCharge();
 	}
@@ -169,13 +223,13 @@ void MachineAction::DrawGauge(void)
 	//DrawFormatString(posX - 320, posY - 32, 0xffffff, L"Speed = %.2f", speed_);
 	//DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 64, 0xffffff, L"Charge = %.2f", chargeCnt_);
 
+	const auto& view = player_.GetUI().GetViewPort();
+	
 	//外枠
-	DrawRotaGraph(chargeGaugePos_.x, chargeGaugePos_.y, GAUGE_SIZE, 0.0, gaugeImg_, true);
+	DrawRotaGraph(chargeGaugePos_.x, chargeGaugePos_.y, 1.0 / (Application::SCREEN_SIZE_Y / view.h) * GAUGE_SIZE_MULTI, 0.0, gaugeImg_, true);
 
-
-	DrawFormatString(0, 32, 0xff0000, L"%.2f", chargeCnt_);
 	//定数バッファ
-	material_->SetConstBuf(0, { 0.5f,0.5f,chargeCnt_,0.0f });
+	material_->SetConstBuf(0, { 0.5f,0.5f,chargeCnt_,gaugeCnt_ });
 
 	//描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
@@ -259,6 +313,9 @@ void MachineAction::Move(void)
 
 void MachineAction::Charge(void)
 {	
+	//SE
+	auto& snd = SoundManager::GetInstance();
+	
 	//パラメーター
 	const auto& param = player_.GetAllParam();
 	const auto& unitParam = player_.GetUnitParam();
@@ -272,6 +329,11 @@ void MachineAction::Charge(void)
 	//チャージの制限
 	if (chargeCnt_ > 1.0f)
 	{
+		//チャージ完了
+		if (snd.IsPlay(SoundManager::SOUND_NAME::CHARGE))snd.Stop(SoundManager::SOUND_NAME::CHARGE);
+		if (!isChargeMax_)snd.Play(SoundManager::SOUND_NAME::CHARGE_MAX, SoundManager::PLAYTYPE::BACK);
+
+		isChargeMax_ = true;
 		chargeCnt_ = 1.0f;
 	}
 	else
@@ -328,6 +390,9 @@ void MachineAction::DisCharge(void)
 
 	//チャージを初期化
 	chargeCnt_ = 0.0f;
+
+	//チャージ完了判定の初期化
+	isChargeMax_ = false;
 
 	//大きさ初期化
 	player_.SetScale(Utility::VECTOR_ONE);

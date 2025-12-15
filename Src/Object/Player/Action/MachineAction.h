@@ -82,7 +82,11 @@ private:
 	static constexpr Vector2F CHARGE_POS = { 0.85f,0.8f };
 
 	//ゲージの大きさ
-	static constexpr float GAUGE_SIZE = 0.45f;
+	static constexpr float GAUGE_SIZE = 512.0f;
+	static constexpr float GAUGE_SIZE_MULTI = 0.8f;
+
+	//ゲージの位置補正
+	static constexpr int GAUGE_LOCAL_POS = 5;
 
 	//機体
 	const Machine& machine_;
@@ -92,6 +96,9 @@ private:
 
 	//チャージカウンタ
 	float chargeCnt_;
+
+	//チャージの完了
+	bool isChargeMax_;
 
 	//初速度
 	float velocity_;
@@ -119,6 +126,7 @@ private:
 	std::unique_ptr<PixelMaterial> material_;
 	std::unique_ptr<PixelRenderer> renderer_;
 	int maskScreen_;
+	float gaugeCnt_;
 
 	//ゲージの位置
 	Vector2 chargeGaugePos_;

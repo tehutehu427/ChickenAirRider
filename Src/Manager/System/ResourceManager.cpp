@@ -8,8 +8,7 @@ void ResourceManager::Init(void)
 	std::wstring PATH_IMG = Application::PATH_IMAGE;
 	std::wstring PATH_MDL = Application::PATH_MODEL;
 	std::wstring PATH_EFF = Application::PATH_EFFECT;
-	std::wstring PATH_SOUND_BGM = Application::PATH_SOUND_BGM;
-	std::wstring PATH_SOUND_SE = Application::PATH_SOUND_SE;
+	std::wstring PATH_SOUND = Application::PATH_SOUND;
 
 	std::unique_ptr<Resource> res;
 
@@ -66,6 +65,12 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"SpeedGauge.png");
 	resourcesMap_.emplace(SRC::SPEED_GAUGE, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::IMGS, uiImage + L"Number.png", NUMBER_NUM_X, NUMBER_NUM_Y, NUMBER_SIZE, NUMBER_SIZE);
+	resourcesMap_.emplace(SRC::NUMBER, std::move(res));
+	
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"Colon.png");
+	resourcesMap_.emplace(SRC::COLON, std::move(res));
+
 #pragma endregion 
 
 
@@ -121,6 +126,46 @@ void ResourceManager::Init(void)
 
 
 #pragma region エフェクト
+
+#pragma endregion
+
+#pragma region サウンド
+
+	//BGMのパス
+	std::wstring bgmPath = PATH_SOUND + L"BGM/";
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, bgmPath + L"SelectBGM.mp3");
+	resourcesMap_.emplace(SRC::SELECT_BGM, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, bgmPath + L"MainGameBGM.mp3");
+	resourcesMap_.emplace(SRC::MAIN_GAME_BGM, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, bgmPath + L"LastGameBGM.mp3");
+	resourcesMap_.emplace(SRC::LAST_GAME_BGM, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, bgmPath + L"Result.mp3");
+	resourcesMap_.emplace(SRC::RESULT_BGM, std::move(res));
+
+	//SEのパス
+	std::wstring sePath = PATH_SOUND + L"SE/";
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Enter.mp3");
+	resourcesMap_.emplace(SRC::ENTER_SE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"SelectSe.mp3");
+	resourcesMap_.emplace(SRC::SELECT_SE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Cancel.mp3");
+	resourcesMap_.emplace(SRC::CANCEL_SE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Engine.mp3");
+	resourcesMap_.emplace(SRC::ENGINE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Charge.mp3");
+	resourcesMap_.emplace(SRC::CHARGE_SE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"ChargeMax.mp3");
+	resourcesMap_.emplace(SRC::CHARGE_MAX_SE, std::move(res));
 
 #pragma endregion
 

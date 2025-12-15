@@ -2,6 +2,8 @@
 #include"../Application.h"
 #include"../Common/SingletonRegistry.h"
 #include"../Manager/System/SceneManager.h"
+#include"../Manager/System/ResourceManager.h"
+#include"../Manager/System/SoundManager.h"
 #include"../Manager/System/Camera.h"
 #include"../Manager/Game/CollisionManager.h"
 #include"../Manager/Game/GameSetting.h"
@@ -26,11 +28,19 @@ SceneGame::~SceneGame(void)
 	StageManager::GetInstance().Destroy();
 	GravityManager::GetInstance().Destroy();
 	CollisionManager::GetInstance().Destroy();
+	SoundManager::GetInstance().StopAll();
 	SingletonRegistry::GetInstance().Delete(SingletonRegistry::DESTROY_TIMING::GAME_END);
 }
 
 void SceneGame::Load(void)
 {
+	//サウンド
+	auto& snd = SoundManager::GetInstance();
+	auto& res = ResourceManager::GetInstance();
+
+	//追加
+	int id = res.Load(ResourceManager::SRC::MAIN_GAME_BGM).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::MAIN_GAME_BGM, id, SoundManager::TYPE::BGM);
 }
 
 void SceneGame::Init(void)
@@ -68,7 +78,7 @@ void SceneGame::Init(void)
 	grvMng.Init();
 
 	//タイマー
-	timer_ = std::make_unique<Timer>(10);
+	timer_ = std::make_unique<Timer>(setMng.GetTimeLimit());
 	timer_->Init();
 
 	//カウント開始
@@ -85,6 +95,12 @@ void SceneGame::Init(void)
 	sky_ = std::make_unique<SkyDome>(plMng.GetPlayer(0).GetTrans().pos);
 	sky_->Load();
 	sky_->Init();
+
+	//インスタンス
+	auto& snd = SoundManager::GetInstance();
+
+	//BGM再生
+	snd.Play(SoundManager::SOUND_NAME::MAIN_GAME_BGM, SoundManager::PLAYTYPE::LOOP);
 }
 
 void SceneGame::Update(void)

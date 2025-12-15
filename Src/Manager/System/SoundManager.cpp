@@ -17,8 +17,13 @@ SoundManager::~SoundManager()
 
 void SoundManager::Destroy()
 {
-    Release();
-	resourcesMap_.clear();
+    for (auto& p : info_)
+    {
+        DeleteSoundMem(p.second.handleId);
+    }
+
+    info_.clear();
+
     if (instance_ != nullptr)
     {
         delete instance_;
@@ -26,64 +31,82 @@ void SoundManager::Destroy()
     }
 }
 
-void SoundManager::Release()
-{
-    for (auto& p : loadedMap_)
-    {
-        DeleteSoundMem(p.second.handleId);
-    }
-
-    loadedMap_.clear();
-}
-
 void SoundManager::Init()
 {
-    SoundResource res = { -1, TYPE::BGM,L"" };
-	std::wstring path_Bgm = Application::PATH_SOUND_BGM;
-	std::wstring path_Se = Application::PATH_SOUND_SE;
-
-#pragma region BGM
-
-#pragma endregion
-
-#pragma region SE
-	//res.path = path_Se + "Bomb.mp3";
-	//resourcesMap_.emplace(SRC::BOMB_SE, res);
-#pragma endregion
-
 }
 
-const bool SoundManager::LoadResource(const SRC _src)
+const bool SoundManager::Add(const SOUND_NAME _name, const int _id, const TYPE _soundType, const int _volumePercent)
 {
-    return _Load(_src);
+    //IDがない　または　タイプが不適切
+    if (_id == -1 || _soundType == TYPE::MAX)
+    {
+        //追加失敗
+        return false;
+    }
+
+    //既にある場合
+    if (info_.contains(_name))
+    {
+        //そのまま(入っているのでtrue)
+        return true;
+    }
+
+    //保存
+    SoundInfo soundInfo;
+    soundInfo.handleId = _id;
+    soundInfo.type = _soundType;
+    soundInfo.volumePercent = _volumePercent;
+
+    //最大音量
+    constexpr int VOLUME_MAX = 255;  
+    float soundPer = static_cast<float>(soundInfo.volumePercent) / static_cast<float>(PERCENT_MAX);
+    int soundPal = VOLUME_MAX * volume_[static_cast<int>(_soundType)] * soundPer;
+    soundPal /= PERCENT_MAX;
+
+    //音量の設定
+    ChangeVolumeSoundMem(soundPal, soundInfo.handleId);
+
+    //追加
+    info_.emplace(_name, soundInfo);
+
+    return true;
 }
 
-void SoundManager::Play(const SRC _src, const PLAYTYPE _playType)
+void SoundManager::Play(const SOUND_NAME _name, const PLAYTYPE _playType)
 {
 	//音源が読み込まれていない場合はエラー
-	assert(loadedMap_[_src].handleId != -1, "音源が読み込まれてないです");
+	assert(loadedMap_[_src].handleId != -1, "音源が読み込まれていない又は見つかりません");
 
     //音源が再生済みか調べる
-	if (CheckSoundMem(loadedMap_[_src].handleId) == 1 &&
+	if (CheckSoundMem(info_[_name].handleId) == 1 &&
         _playType != PLAYTYPE::BACK)
 	{
-		Stop(_src);  // 再生済みなら停止
+		Stop(_name);  // 再生済みなら停止
 	}
 
     //音源の再生
-    PlaySoundMem(loadedMap_[_src].handleId, GetPlayType(_playType));
+    PlaySoundMem(info_[_name].handleId, GetPlayType(_playType));
 }
 
-void SoundManager::Stop(const SRC _src)
+void SoundManager::Stop(const SOUND_NAME _name)
 {
     //音源の停止
-    StopSoundMem(loadedMap_[_src].handleId);
+    StopSoundMem(info_[_name].handleId);
 }
 
-bool SoundManager::IsPlay(const SRC _src) const
+void SoundManager::StopAll(void)
 {
-    const auto it = loadedMap_.find(_src);
-    if (it == loadedMap_.end())
+    for (auto& info : info_)
+    {
+        //音源の停止
+        StopSoundMem(info.second.handleId);
+    }
+}
+
+bool SoundManager::IsPlay(const SOUND_NAME _name) const
+{
+    const auto it = info_.find(_name);
+    if (it == info_.end())
     {
         return false; // 見つからない場合は未再生とする
     }
@@ -93,46 +116,23 @@ bool SoundManager::IsPlay(const SRC _src) const
 void SoundManager::SetSystemVolume(const int _volumePercent, const int _type)
 {    
     constexpr int VOLUME_MAX = 255;  //最大音量
-    constexpr int DIV = 100;         //音量の割合を計算するための定数
 
     //音量設定
     volume_[_type] = _volumePercent;
    
     //音量調整
-	for (const auto& pair : loadedMap_)
+	for (const auto& pair : info_)
 	{
         //種類が異なるものはスキップ
 		if (pair.second.type != static_cast<TYPE>(_type)) 
         {
 			continue;
 		}
-        ChangeVolumeSoundMem(VOLUME_MAX * volume_[_type] / DIV, pair.second.handleId);
+        float soundPer = static_cast<float>(pair.second.volumePercent) / static_cast<float>(PERCENT_MAX);
+        int soundPal = VOLUME_MAX * volume_[_type] * soundPer;
+
+        ChangeVolumeSoundMem(soundPal / PERCENT_MAX, pair.second.handleId);
 	}
-}
-
-bool SoundManager::_Load(const SRC _src)
-{
-    // ロード済みチェック
-    const auto& lPair = loadedMap_.find(_src);
-    if (lPair != loadedMap_.end())
-    {
-		return false;   // 既にロード済み
-    }
-
-    // リソース登録チェック
-    const auto& rPair = resourcesMap_.find(_src);
-    if (rPair == resourcesMap_.end())
-    {
-        return false;   // 登録されていない
-    }
-
-    // ロード処理
-    rPair->second.handleId = LoadSoundMem(rPair->second.path.c_str());
-
-    // 念のためコピーコンストラクタ
-    loadedMap_.emplace(_src, rPair->second);
-
-    return true;
 }
 
 int SoundManager::GetPlayType(const PLAYTYPE _playType)

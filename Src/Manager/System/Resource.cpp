@@ -83,6 +83,11 @@ void Resource::Load(void)
 		//フォント
 		handleId_ = AddFontResourceEx(path_.c_str(), FR_PRIVATE, NULL);
 		break;
+
+	case Resource::TYPE::SOUND:
+		//音
+		handleId_ = LoadSoundMem(path_.c_str());
+		break;
 	}
 
 	//リソースが読み込めたか確認

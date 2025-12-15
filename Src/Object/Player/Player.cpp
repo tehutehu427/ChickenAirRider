@@ -20,9 +20,10 @@
 #include "UI/PlayerUI.h"
 #include "Player.h"
 
-Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo)
+Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo, Collider::TAG _playerTag)
 	: playerIndex_(_plIndex),
-	camera_(_camera)
+	camera_(_camera),
+	playerTag_(_playerTag)
 {
 	//初期化
 	operation_ = _operation;
@@ -37,6 +38,7 @@ Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE
 	isSpin_ = false;
 	footLine_ = Quaternion();
 	damage_ = 0.0f;
+	invincible_ = 0.0f;
 
 	//操作タイプ
 	createLogic_[OPERATION_TYPE::USER] = [this](void) {	logic_ = std::make_unique<UserLogic>(padNo_); };
@@ -69,6 +71,9 @@ void Player::Load(void)
 
 void Player::Init(void)
 {
+	//座標
+	movedPos_ = VAdd(movedPos_, VScale(LOCAL_POS, static_cast<float>(playerIndex_)));
+
 	//キャラクター
 	chara_ = std::make_unique<Character>();
 	chara_->Load();
@@ -79,10 +84,14 @@ void Player::Init(void)
 	ui_ = std::make_unique<PlayerUI>();
 	ui_->Init();
 	ui_->CreateViewports(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
-	const auto& view = ui_->GetViewPort();
 
-	//カメラスクリーンの設定
-	camera_.lock()->SetPostEffectScreenSize(view.w, view.h, playerIndex_);
+	if (operation_ == OPERATION_TYPE::USER)
+	{
+		const auto& view = ui_->GetViewPort();
+
+		//カメラスクリーンの設定
+		camera_.lock()->SetPostEffectScreenSize(view.w, view.h, playerIndex_);
+	}
 
 	//初期機体情報
 	const auto& machineMng = MachineManager::GetInstance();
@@ -106,11 +115,11 @@ void Player::Init(void)
 
 	//当たり判定生成
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, NORMAL_RADIUS);
-	MakeCollider(Collider::TAG::PLAYER1, std::move(geo), { Collider::TAG::PLAYER1,Collider::TAG::FOOT });
+	MakeCollider(playerTag_, std::move(geo), { playerTag_,Collider::TAG::FOOT });
 
 	//接地判定用の当たり判定
 	geo = std::make_unique<Line>(trans_.pos, movedPos_, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
-	MakeCollider(Collider::TAG::FOOT, std::move(geo), { Collider::TAG::PLAYER1,Collider::TAG::FOOT });
+	MakeCollider(Collider::TAG::FOOT, std::move(geo), { playerTag_,Collider::TAG::FOOT });
 	
 	//体力
 	damage_ = 0.0f;
@@ -150,10 +159,10 @@ void Player::Draw(void)
 	//描画
 	draw_[state_]();
 
-	for (auto& col : collider_)
-	{
-		col->GetGeometry().Draw(0);
-	}
+	//for (auto& col : collider_)
+	//{
+	//	col->GetGeometry().Draw(0);
+	//}
 
 	//DrawFormatString(0, 32, 0xffffff, L"%.2f,%.2f,%.2f", trans_.quaRot.ToEuler().x, trans_.quaRot.ToEuler().y, trans_.quaRot.ToEuler().z);
 	//DrawFormatString(0, 80, 0xffffff, L"%.2f,%.2f,%.2f", trans_.pos.x, trans_.pos.y, trans_.pos.z);
@@ -252,7 +261,7 @@ void Player::SetIsSpin(const bool _isSpin)
 		//スピンコライダを生成
 		std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SPIN_RADIUS);
 		MakeCollider(Collider::TAG::SPIN, std::move(geo), 
-			{ Collider::TAG::PLAYER1,
+			{ playerTag_,
 			Collider::TAG::FOOT,
 			Collider::TAG::NORMAL_OBJECT,
 			Collider::TAG::GROUND,
@@ -394,9 +403,6 @@ void Player::DrawRide(void)
 
 	//機体の描画
 	machine_->Draw();
-
-	//機体アクションのUIの描画
-	//action_->Draw();
 }
 
 void Player::SynchronizeChara(void)

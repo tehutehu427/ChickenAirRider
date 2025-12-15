@@ -3,6 +3,7 @@
 #include"../Manager/System/KeyConfig.h"
 #include"../Manager/System/SceneManager.h"
 #include "../Manager/System/ResourceManager.h"
+#include "../Manager/System/SoundManager.h"
 #include "../Renderer/PixelMaterial.h"
 #include "../Renderer/PixelRenderer.h"
 #include "SceneSelect.h"
@@ -16,24 +17,25 @@ SceneTitle::SceneTitle(void)
 
 SceneTitle::~SceneTitle(void)
 {
+	SoundManager::GetInstance().StopAll();
 	DeleteGraph(postEffectScreen_);
 }
 
 void SceneTitle::Load(void)
 {
+	//リソース
+	auto& res = ResourceManager::GetInstance();
+
+	//サウンド
+	auto& snd = SoundManager::GetInstance();
+
 	//画像の読み込み
-	backImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE_BACK).handleId_;
-	logoImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE_LOGO).handleId_;
+	backImg_ = res.Load(ResourceManager::SRC::TITLE_BACK).handleId_;
+	logoImg_ = res.Load(ResourceManager::SRC::TITLE_LOGO).handleId_;
 
-
-	//material_ = std::make_unique<PixelMaterial>(L"Title.cso", 1);
-	//renderer_ = std::make_unique<PixelRenderer>(*material_);
-
-	//material_->AddConstBuf(FLOAT4{ 0.1f, 0.0f,0.98f, 0.7f });
-	//material_->AddTextureBuf(SceneManager::GetInstance().GetMainScreen());
-	//renderer_->MakeSquereVertex({ 0,0 }, { Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y });
-
-	//postEffectScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
+	//サウンドの追加
+	int id = res.Load(ResourceManager::SRC::ENTER_SE).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::ENTER, id, SoundManager::TYPE::SE, 80);
 }
 
 void SceneTitle::Init(void)
@@ -42,11 +44,16 @@ void SceneTitle::Init(void)
 
 void SceneTitle::Update(void)
 {
+	//インスタンス
+	auto& snd = SoundManager::GetInstance();
 	auto& key = KeyConfig::GetInstance();
 
 	//シーン遷移デバッグ
 	if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::ENTER, KeyConfig::JOYPAD_NO::PAD1))
 	{
+		//決定音
+		snd.Play(SoundManager::SOUND_NAME::ENTER, SoundManager::PLAYTYPE::BACK);
+
 		//シーンの削除
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT,true, true);
 		return;

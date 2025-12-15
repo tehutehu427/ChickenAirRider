@@ -17,6 +17,7 @@ public:
 		MODEL,		//モデル
 		FONT,		//フォント
 		EFFEKSEER,	//エフェクト(エフェクシア)
+		SOUND,		//音関係
 	};
 	// コンストラクタ
 	Resource(void);

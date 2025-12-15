@@ -42,7 +42,7 @@ public:
 	};
 
 	//コンストラクタ
-	Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo);
+	Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo, Collider::TAG _playerTag);
 	//デストラクタ
 	~Player(void);
 
@@ -151,7 +151,13 @@ public:
 	//プレイヤー番号の取得
 	const int GetPlayerIndex(void)const { return playerIndex_; }
 
+	//プレイヤーの操作者
+	const OPERATION_TYPE GetOperation(void) { return operation_; }
+
 private:
+
+	//相対座標
+	static constexpr VECTOR LOCAL_POS = { 100.0f,0.0f,0.0f };
 
 	//当たり判定用
 	static constexpr float NORMAL_RADIUS = 25.0f;							//通常時の球体の半径
@@ -176,6 +182,9 @@ private:
 
 	//プレイヤー番号
 	const int playerIndex_;
+
+	//プレイヤーごとのタグ
+	Collider::TAG playerTag_;
 
 	//カメラ
 	std::weak_ptr<Camera> camera_;
@@ -219,6 +228,9 @@ private:
 
 	//現在ダメージ
 	float damage_;
+
+	//無敵時間
+	float invincible_;
 
 	//関数ポインタ
 	std::map<OPERATION_TYPE, std::function<void(void)>> createLogic_;	//操作

@@ -89,6 +89,7 @@ public:
 	enum class CONTROL_TYPE 	
 	{
 		ENTER,					//決定
+		CANCEL,					//キャンセル
 		SELECT_UP,				//選択肢の上入力
 		SELECT_DOWN,			//選択肢の下入力
 		SELECT_RIGHT,			//選択肢の右入力

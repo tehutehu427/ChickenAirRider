@@ -93,7 +93,8 @@ void PlayerManager::CreateUserPlayer(const int _playerIndex)
 		(_playerIndex,
 			SceneManager::GetInstance().GetCamera(_playerIndex),
 			Player::OPERATION_TYPE::USER,
-			static_cast<KeyConfig::JOYPAD_NO>(_playerIndex + 1 )
+			static_cast<KeyConfig::JOYPAD_NO>(_playerIndex + 1 ),
+			static_cast<Collider::TAG>(_playerIndex)
 		);
 	players_.emplace_back(std::move(player));
 
@@ -113,7 +114,8 @@ void PlayerManager::CreateNpcPlayer(const int _playerIndex)
 		(_playerIndex,
 			scnMng.GetCamera(0),
 			Player::OPERATION_TYPE::NPC,
-			static_cast<KeyConfig::JOYPAD_NO>(_playerIndex + 1)
+			static_cast<KeyConfig::JOYPAD_NO>(_playerIndex + 1),
+			static_cast<Collider::TAG>(_playerIndex)
 		);
 	players_.emplace_back(std::move(player));
 }

@@ -5,7 +5,7 @@ cbuffer cbParam : register(b4)
 {
     float2 center;       // 中心UV
     float progress;      // 0～1 回転ゲージ
-    float dummy;
+    float cnt;           // カウンタ
 }
 
 float4 main(PS_INPUT PSInput) : SV_TARGET
@@ -18,7 +18,9 @@ float4 main(PS_INPUT PSInput) : SV_TARGET
     if (mask < 0.5)
         discard;
 
-    float4 color = {1.0, 1.0, 0.4, 1.0};
+    float4 startColor = { 1.0f, 1.0f, 0.2f, 1.0f };
+    float4 endColor = { 0.6f, 0.6f, 1.0f, 1.0f };
+
     float2 uv = PSInput.uv;
     float2 dir = uv - center;
 
@@ -40,10 +42,25 @@ float4 main(PS_INPUT PSInput) : SV_TARGET
 
     // === progress判定 ===
     if (ang01 > progress)
-        return float4(0, 0, 0, 0);
-    
-    if (progress == 1)
-        color = float4(0.7f, 0.7f, 1.0f, 1.0f);
+        discard;
 
-    return color;
+    //満タンなら光らせる
+    if (progress >= 1.0)
+    {
+        float speed = 5.0;
+
+        // 0～1で明滅（周期はここで調整）
+        float pulse = sin(cnt * TWO_PI * speed) * 0.5 + 0.5;
+
+        // 最低輝度 + パルス
+        float intensity = 1.2 + pulse * 0.8;
+
+        float4 maxColor = { 0.5f,0.5f,1.0f,1.0f };
+
+        return maxColor * intensity;
+    }
+    
+    float4 returnColor = lerp(startColor, endColor, progress);
+
+    return returnColor;
 }

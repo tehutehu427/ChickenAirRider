@@ -82,7 +82,7 @@ void ItemBox::Update(void)
 
 	//デルタタイム
 	const float delta = SceneManager::GetInstance().GetDeltaTime();
-	invincible_ += delta;
+	invincible_ -= delta;
 
 	//重力
 	VECTOR grav = Utility::VECTOR_ZERO;
@@ -125,7 +125,7 @@ void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
 	const auto& hit = _hitCol.lock();
 	const auto& hitTag = hit->GetTag();
 
-	if (hitTag == Collider::TAG::SPIN && invincible_ > INVINCIBLE)
+	if (hitTag == Collider::TAG::SPIN && invincible_ < 0)
 	{
 		//スピンをもつのはプレイヤーのみ
 		const auto& player = dynamic_cast<const Player&>(_hitCol.lock()->GetParent());
@@ -134,7 +134,7 @@ void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
 		health_ -= player.GetAttack();
 
 		//無敵時間リセット
-		invincible_ = 0.0f;
+		invincible_ = INVINCIBLE;
 		
 		//体力がなくなったら
 		if (health_ < 0)

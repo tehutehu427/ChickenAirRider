@@ -12,6 +12,11 @@ class ResourceManager : public Singleton<ResourceManager>
 
 public:
 
+	//数字分割画像用
+	static constexpr int NUMBER_SIZE = 50;	//一画像サイズ
+	static constexpr int NUMBER_NUM_X = 5;	//X分割数
+	static constexpr int NUMBER_NUM_Y = 2;	//Y分割数
+
 	// リソース名
 	enum class SRC
 	{
@@ -56,6 +61,25 @@ public:
 		CHARGE_GAUGE,			//チャージゲージ
 		CHARGE_GAUGE_MASK,		//チャージゲージマスク
 		SPEED_GAUGE,			//速度ゲージ
+		NUMBER,					//数字
+		COLON,					//コロン
+
+		//サウンド
+
+		//BGM
+		SELECT_BGM,		//セレクトBGM
+		MAIN_GAME_BGM,	//メインゲームBGM
+		LAST_GAME_BGM,	//最終ミニゲームBGM
+		RESULT_BGM,		//リザルトBGM
+
+		//SE
+		ENTER_SE,		//決定音
+		SELECT_SE,		//選択音
+		CANCEL_SE,		//キャンセル音
+
+		ENGINE,			//エンジン音
+		CHARGE_SE,		//チャージ音
+		CHARGE_MAX_SE,	//チャージ完了SE
 	};
 
 	// 初期化

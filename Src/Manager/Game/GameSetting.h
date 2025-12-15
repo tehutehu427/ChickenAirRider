@@ -8,6 +8,9 @@ class GameSetting : public Singleton<GameSetting>
 
 public:
 
+	//プレイヤーの最大数
+	static constexpr int PLAYER_MAX_NUM = 4;
+
 	//初期化
 	void Init(void)override;
 
@@ -26,6 +29,12 @@ public:
 	//全体プレイヤーの数の取得
 	const int GetPlayerNum(void)const { return userNum_ + npcNum_; }
 
+	//時間制限の取得
+	const int GetTimeLimit(void)const { return timeLimit_; }
+
+	//時間制限の設定
+	void SetTimeLimit(const int _timeLimit){ timeLimit_ = _timeLimit; }
+
 private:
 
 	//ユーザー数
@@ -33,6 +42,9 @@ private:
 
 	//NPC数
 	int npcNum_;
+
+	//時間制限
+	int timeLimit_;
 
 	//コンストラクタ
 	GameSetting(void);

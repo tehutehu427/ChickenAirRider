@@ -187,6 +187,10 @@ void SceneManager::Draw(void)
 			scene->Draw();
 		}
 
+		//UIは別々で描画
+		if(sceneId_ == SCENE_ID::GAME)
+			PlayerManager::GetInstance().GetPlayer(0).GetUI().Draw();
+
 		// 主にポストエフェクト用
 		if (!cameras_.empty())
 			cameras_.front()->Draw();
@@ -481,7 +485,7 @@ void SceneManager::DrawMultiScreen()
 	const int userNum = GameSetting::GetInstance().GetUserNum();
 
 	//描画位置（分割スクリーンの左上位置）
-	Vector2 screenPos[PlayerManager::PLAYER_MAX_NUM] =
+	Vector2 screenPos[GameSetting::PLAYER_MAX_NUM] =
 	{
 		{ 0, 0 },													// 左上
 		{ 0, Application::SCREEN_HALF_Y},							// 左下
@@ -606,7 +610,7 @@ void SceneManager::FadeOut(void)
 		sceneId_ = waitSceneId_;
 
 		//シーンに合わせて生成数を設定
-		const int createNum = (sceneId_ == SCENE_ID::GAME) ? GameSetting::GetInstance().GetPlayerNum() : 1;
+		const int createNum = (sceneId_ == SCENE_ID::GAME) ? GameSetting::GetInstance().GetUserNum() : 1;
 
 		//カメラ生成
 		CreateCameras(createNum);

@@ -1,4 +1,5 @@
 #pragma once
+#include"../Common/Vector2.h"
 
 class Timer
 {
@@ -31,6 +32,9 @@ public:
 
 	//残り時間の取得
 	const float RemainingTime(void);
+
+	//位置の設定
+	void SetPos(const Vector2 _pos) { pos_ = _pos; }
 			
 private:
 
@@ -45,6 +49,13 @@ private:
 
 	//カウントの状態
 	bool cntValid_;
+
+	//表示場所
+	Vector2 pos_;
+
+	//画像
+	int colonImg_;
+	int* numImgs_;
 
 	//分変換
 	const int Minute(const float _value)const;

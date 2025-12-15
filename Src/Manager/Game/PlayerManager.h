@@ -8,9 +8,6 @@ class PlayerManager
 {
 public:
 
-	//プレイヤーの最大数
-	static constexpr int PLAYER_MAX_NUM = 4;
-
 	//インスタンス生成
 	static void CreateInstance(void);
 

@@ -2,6 +2,7 @@
 #include "../Application.h"
 #include "../Utility/Utility.h"
 #include "../Manager/System/SceneManager.h"
+#include "../Manager/System/ResourceManager.h"
 #include "Timer.h"
 
 Timer::Timer(const float _timeLimit)
@@ -9,6 +10,7 @@ Timer::Timer(const float _timeLimit)
 	cnt_ = 0.0f;
 	timer_ = _timeLimit;
 	cntValid_ = false;
+	pos_ = {};
 }
 
 Timer::~Timer(void)
@@ -17,8 +19,13 @@ Timer::~Timer(void)
 
 void Timer::Init(void)
 {
+	//èâä˙âª
 	cnt_ = 0.0f;
 	cntValid_ = false;
+	pos_ = { Application::SCREEN_HALF_X, 64 };
+
+	//âÊëú
+	numImgs_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::NUMBER).handleIds_;
 }
 
 void Timer::Update(void)
@@ -39,13 +46,14 @@ void Timer::Draw(void)
 	if (IsTimeLimit())
 	{
 		//écÇËéûä‘
-		DrawFormatString(Application::SCREEN_HALF_X, 64, Utility::RED, L"%02d:%02d", Minute(RemainingTime()), Second(RemainingTime()));
+		//DrawFormatString(pos_.x, pos_.y, Utility::RED, L"%02d:%02d", Minute(RemainingTime()), Second(RemainingTime()));
+		DrawRotaGraph(pos_.x, pos_.y, 1.0, 0.0, numImgs_[static_cast<int>(Minute(RemainingTime()))], true);
 	}
 	//éûä‘êßå¿Ç»Çµ
 	else
 	{
 		//åoâﬂéûä‘
-		DrawFormatString(Application::SCREEN_HALF_X, 64, Utility::RED, L"%02d:%02d", Minute(cnt_), Second(cnt_));
+		DrawFormatString(pos_.x, pos_.y, Utility::RED, L"%02d:%02d", Minute(cnt_), Second(cnt_));
 	}
 }
 
