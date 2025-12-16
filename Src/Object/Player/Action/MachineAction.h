@@ -87,6 +87,7 @@ private:
 
 	//ゲージの位置補正
 	static constexpr int GAUGE_LOCAL_POS = 5;
+	static constexpr int NUMBER_LOCAL_POS = 40;
 
 	//機体
 	const Machine& machine_;
@@ -121,6 +122,7 @@ private:
 	//ゲージ画像
 	int gaugeImg_;
 	int gaugeMaskImg_;
+	int* numImgs_;
 
 	//シェーダー
 	std::unique_ptr<PixelMaterial> material_;

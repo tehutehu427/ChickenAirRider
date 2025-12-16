@@ -22,22 +22,22 @@ public:
 	ItemBase(const VECTOR& _pos,const VECTOR& _vec, const Parameter& _param, const int _imageId);
 
 	//デストラクタ
-	~ItemBase(void)override;
+	virtual ~ItemBase(void)override;
 
 	//読み込み
-	void Load(void)override;
+	virtual void Load(void)override;
 
 	//初期化
-	void Init(void)override;
+	virtual void Init(void)override;
 
 	//更新
-	void Update(void)override;
+	virtual void Update(void)override;
 
 	//描画
-	void Draw(void)override;
+	virtual void Draw(void)override;
 
 	//当たり判定
-	void OnHit(std::weak_ptr<Collider> _hitCol)override;
+	virtual void OnHit(std::weak_ptr<Collider> _hitCol)override;
 
 	//死亡判定の取得
 	const bool IsDead(void)const { return state_ == STATE::DEAD; }

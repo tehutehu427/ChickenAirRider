@@ -11,10 +11,14 @@ Timer::Timer(const float _timeLimit)
 	timer_ = _timeLimit;
 	cntValid_ = false;
 	pos_ = {};
+	colonImg_ = -1;
+	frameImg_ = -1;
+	numImgs_ = nullptr;
 }
 
 Timer::~Timer(void)
 {
+	numImgs_ = nullptr;
 }
 
 void Timer::Init(void)
@@ -25,6 +29,8 @@ void Timer::Init(void)
 	pos_ = { Application::SCREEN_HALF_X, 64 };
 
 	//画像
+	frameImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TIMER_FRAME).handleId_;
+	colonImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::COLON).handleId_;
 	numImgs_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::NUMBER).handleIds_;
 }
 
@@ -36,25 +42,38 @@ void Timer::Update(void)
 	//カウントが無効化されているならスキップ
 	if (!cntValid_) return;
 
+	//カウントが終わったらスキップ
+	if (IsTimeOver())return;
+
 	//カウントアップ
 	cnt_ += delta;
 }
 
 void Timer::Draw(void)
 {
+	int minute = 0;
+	int second = 0;
+
 	//時間制限あり
 	if (IsTimeLimit())
 	{
-		//残り時間
-		//DrawFormatString(pos_.x, pos_.y, Utility::RED, L"%02d:%02d", Minute(RemainingTime()), Second(RemainingTime()));
-		DrawRotaGraph(pos_.x, pos_.y, 1.0, 0.0, numImgs_[static_cast<int>(Minute(RemainingTime()))], true);
+		minute = static_cast<int>(Minute(RemainingTime()));
+		second = static_cast<int>(Second(RemainingTime()));
 	}
 	//時間制限なし
 	else
 	{
-		//経過時間
-		DrawFormatString(pos_.x, pos_.y, Utility::RED, L"%02d:%02d", Minute(cnt_), Second(cnt_));
+		minute = static_cast<int>(Minute(cnt_));
+		second = static_cast<int>(Second(cnt_));
 	}
+
+	//描画
+	DrawRotaGraph(pos_.x, pos_.y, FRAME_EXRATE, 0.0, frameImg_, true);
+	DrawRotaGraph(pos_.x, pos_.y, IMAGE_EXRATE, 0.0, colonImg_, true);
+	DrawRotaGraph(pos_.x - IMAGE_WIDTH * 2, pos_.y, IMAGE_EXRATE, 0.0, numImgs_[minute / 10], true);
+	DrawRotaGraph(pos_.x - IMAGE_WIDTH, pos_.y, IMAGE_EXRATE, 0.0, numImgs_[minute % 10], true);
+	DrawRotaGraph(pos_.x + IMAGE_WIDTH, pos_.y, IMAGE_EXRATE, 0.0, numImgs_[second / 10], true);
+	DrawRotaGraph(pos_.x + IMAGE_WIDTH * 2, pos_.y, IMAGE_EXRATE, 0.0, numImgs_[second % 10], true);
 }
 
 const bool Timer::IsTimeOver(void)

@@ -3,6 +3,8 @@
 #include "../Object/Common/Geometry/Line.h"
 #include "../Object/Common/Geometry/Sphere.h"
 #include "../Object/Common/Geometry/Model.h"
+#include "../Manager/System/ResourceManager.h"
+#include "../Manager/System/SoundManager.h"
 #include "../Manager/Game/MachineManager.h"
 #include "../Parameter/Parameter.h"
 #include "../Object/Item/ItemBase.h"
@@ -30,6 +32,21 @@ PlayerOnHit::PlayerOnHit(Player& _player, Transform& _trans)
 
 PlayerOnHit::~PlayerOnHit(void)
 {
+}
+
+void PlayerOnHit::Load(void)
+{
+	//インスタンス
+	auto& res = ResourceManager::GetInstance();
+	auto& snd = SoundManager::GetInstance();
+
+	//アイテムゲット
+	int id = res.Load(ResourceManager::SRC::GET_ITEM).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::GET_ITEM, id, SoundManager::TYPE::SE);
+
+	//ダメージ
+	id = res.Load(ResourceManager::SRC::DAMAGE).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::DAMAGE, id, SoundManager::TYPE::SE);
 }
 
 void PlayerOnHit::OnHit(const std::weak_ptr<Collider> _hitCol)
@@ -270,6 +287,9 @@ void PlayerOnHit::RideMachineOnHit(const std::weak_ptr<Collider> _hitCol)
 
 void PlayerOnHit::PowerUpItemOnHit(const std::weak_ptr<Collider> _hitCol)
 {
+	//SE
+	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::GET_ITEM, SoundManager::PLAYTYPE::BACK);
+
 	//対象パワーアップアイテム
 	const auto& powerUpItem = dynamic_cast<const ItemBase&>(_hitCol.lock()->GetParent());
 
@@ -282,6 +302,9 @@ void PlayerOnHit::PowerUpItemOnHit(const std::weak_ptr<Collider> _hitCol)
 
 void PlayerOnHit::SpinOnHit(const std::weak_ptr<Collider> _hitCol)
 {
+	//SE
+	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::DAMAGE, SoundManager::PLAYTYPE::BACK);
+
 	//スピンの相手
 	const auto& spinParent = dynamic_cast<const Player&>(_hitCol.lock()->GetParent());
 

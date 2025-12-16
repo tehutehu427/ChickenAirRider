@@ -63,6 +63,7 @@ public:
 		SPEED_GAUGE,			//速度ゲージ
 		NUMBER,					//数字
 		COLON,					//コロン
+		TIMER_FRAME,			//タイマーの枠
 
 		//サウンド
 
@@ -73,6 +74,7 @@ public:
 		RESULT_BGM,		//リザルトBGM
 
 		//SE
+		TITLE_SE,		//タイトル
 		ENTER_SE,		//決定音
 		SELECT_SE,		//選択音
 		CANCEL_SE,		//キャンセル音
@@ -80,6 +82,14 @@ public:
 		ENGINE,			//エンジン音
 		CHARGE_SE,		//チャージ音
 		CHARGE_MAX_SE,	//チャージ完了SE
+		BOOST,			//ブースト
+		BEAM,			//ビーム
+		CANNON,			//大砲
+		DAMAGE,			//ダメージ
+		GET_ITEM,		//アイテムゲット
+		HEAL,			//回復
+		JUMP,			//ジャンプ
+		SPIN,			//スピン
 	};
 
 	// 初期化

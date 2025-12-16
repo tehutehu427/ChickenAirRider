@@ -2,6 +2,8 @@
 #include "../Utility/Utility.h"
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/Camera.h"
+#include "../Manager/System/ResourceManager.h"
+#include "../Manager/System/SoundManager.h"
 #include "../Manager/Game/GravityManager.h"
 #include "CharacterAction.h"
 
@@ -24,6 +26,9 @@ CharacterAction::~CharacterAction(void)
 
 void CharacterAction::Init(void)
 {
+	int id = ResourceManager::GetInstance().Load(ResourceManager::SRC::JUMP).handleId_;
+	SoundManager::GetInstance().Add(SoundManager::SOUND_NAME::JUMP, id, SoundManager::TYPE::SE);
+
 	//立ち状態
 	chara_.GetAnim().Play("idle");
 
@@ -93,6 +98,9 @@ void CharacterAction::Walk(void)
 
 void CharacterAction::Jump(void)
 {
+	//ジャンプSE
+	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::JUMP, SoundManager::PLAYTYPE::BACK);
+
 	//初動ジャンプ力
 	jumpPow_.y = JUMP_POW;
 

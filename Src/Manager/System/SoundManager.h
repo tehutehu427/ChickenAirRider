@@ -22,6 +22,7 @@ public:
 		RESULT_BGM,		//リザルトシーン
 
 		//SE
+		TITLE_SE,	//タイトル
 		ENTER,		//決定音
 		SELECT_SE,	//選択音
 		CANCEL,		//キャンセル音
@@ -29,6 +30,14 @@ public:
 		ENGINE,		//エンジン音
 		CHARGE,		//チャージ
 		CHARGE_MAX,	//チャージ完了
+		BOOST,		//ブースト
+		BEAM,		//ビーム
+		CANNON,		//大砲
+		DAMAGE,		//ダメージ
+		GET_ITEM,	//アイテムゲット
+		HEAL,		//回復
+		JUMP,		//ジャンプ
+		SPIN,		//スピン
 	};
 
 	//再生種類

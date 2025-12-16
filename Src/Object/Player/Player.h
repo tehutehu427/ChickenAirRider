@@ -13,7 +13,7 @@ class PlayerOnHit;
 class PlayerUI;
 class Camera;
 
-class Player : public ObjectBase
+class Player : public ObjectBase, public std::enable_shared_from_this<Player>
 {
 public:
 

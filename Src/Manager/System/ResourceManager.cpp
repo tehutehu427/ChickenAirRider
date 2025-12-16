@@ -71,6 +71,9 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"Colon.png");
 	resourcesMap_.emplace(SRC::COLON, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"TimerFrame.png");
+	resourcesMap_.emplace(SRC::TIMER_FRAME, std::move(res));
+
 #pragma endregion 
 
 
@@ -149,6 +152,9 @@ void ResourceManager::Init(void)
 	//SE‚ÌƒpƒX
 	std::wstring sePath = PATH_SOUND + L"SE/";
 
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Title.mp3");
+	resourcesMap_.emplace(SRC::TITLE_SE, std::move(res));
+
 	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Enter.mp3");
 	resourcesMap_.emplace(SRC::ENTER_SE, std::move(res));
 
@@ -166,6 +172,30 @@ void ResourceManager::Init(void)
 
 	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"ChargeMax.mp3");
 	resourcesMap_.emplace(SRC::CHARGE_MAX_SE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Boost.mp3");
+	resourcesMap_.emplace(SRC::BOOST, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Beam.mp3");
+	resourcesMap_.emplace(SRC::BEAM, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Cannon.mp3");
+	resourcesMap_.emplace(SRC::CANNON, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Damage.mp3");
+	resourcesMap_.emplace(SRC::DAMAGE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"GetItem.mp3");
+	resourcesMap_.emplace(SRC::GET_ITEM, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Heal.mp3");
+	resourcesMap_.emplace(SRC::HEAL, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Jump.mp3");
+	resourcesMap_.emplace(SRC::JUMP, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Spin.mp3");
+	resourcesMap_.emplace(SRC::SPIN, std::move(res));
 
 #pragma endregion
 

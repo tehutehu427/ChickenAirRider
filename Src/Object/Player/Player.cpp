@@ -109,6 +109,7 @@ void Player::Init(void)
 
 	//“–‚½‚è”»’èŒãˆ—
 	onHit_ = std::make_unique<PlayerOnHit>(*this, trans_);
+	onHit_->Load();
 
 	//‰Šúó‘Ô
 	ChangeState(STATE::RIDE_MACHINE);

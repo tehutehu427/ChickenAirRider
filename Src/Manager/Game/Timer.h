@@ -41,6 +41,11 @@ private:
 	//•b”‚Ì•ªŠ·Z
 	static constexpr float SECOND_TO_MINUTE = 60.0f;
 
+	//‰æ‘œ•
+	static constexpr int IMAGE_WIDTH = 25;
+	static constexpr float IMAGE_EXRATE = 0.7f;
+	static constexpr float FRAME_EXRATE = 0.5f;
+
 	//ŠÔŒv‘ª
 	float timer_;
 
@@ -54,6 +59,7 @@ private:
 	Vector2 pos_;
 
 	//‰æ‘œ
+	int frameImg_;
 	int colonImg_;
 	int* numImgs_;
 

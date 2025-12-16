@@ -188,6 +188,7 @@ void SceneSelect::UpdateGameStart(void)
 	//インスタンス
 	auto& snd = SoundManager::GetInstance();
 	auto& key = KeyConfig::GetInstance();
+	auto& set = GameSetting::GetInstance();
 
 	//決定
 	if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::ENTER, KeyConfig::JOYPAD_NO::PAD1)
@@ -197,8 +198,11 @@ void SceneSelect::UpdateGameStart(void)
 		snd.Play(SoundManager::SOUND_NAME::ENTER, SoundManager::PLAYTYPE::BACK);
 	
 		//プレイヤーの作成数
-		GameSetting::GetInstance().SetUserNum(playerNum_[PLAYER_NUM_SELECT::USER]);
-		GameSetting::GetInstance().SetNpcNum(playerNum_[PLAYER_NUM_SELECT::NPC]);
+		set.SetUserNum(playerNum_[PLAYER_NUM_SELECT::USER]);
+		set.SetNpcNum(playerNum_[PLAYER_NUM_SELECT::NPC]);
+
+		//制限時間
+		set.SetTimeLimit(30);
 
 		//シーンの削除
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME, true, true);

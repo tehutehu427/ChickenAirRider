@@ -1,11 +1,13 @@
 #include"../pch.h"
 #include"../../Manager/System/ResourceManager.h"
 #include "../Object/Common/Geometry/Sphere.h"
+#include "../Object/Player/Player.h"
 #include "Machine.h"
 
-Machine::Machine(const int _modelId, const float _radius)
+Machine::Machine(const int _modelId, const float _radius, VECTOR _pos)
 {
 	trans_ = Transform();
+	trans_.pos = _pos;
 	trans_.modelId = _modelId;
 	radius_ = _radius;
 	health_ = 0.0f;
@@ -51,6 +53,8 @@ void Machine::Load(void)
 
 void Machine::Init(void)
 {
+	//モデル更新用
+	Update();
 }
 
 void Machine::Update(void)
@@ -62,10 +66,10 @@ void Machine::Draw(void)
 {
 	MV1DrawModel(trans_.modelId);
 
-	for (const auto& col : collider_)
-	{
-		col->GetGeometry().Draw();
-	}
+	//for (const auto& col : collider_)
+	//{
+	//	col->GetGeometry().Draw();
+	//}
 }
 
 void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
@@ -97,4 +101,22 @@ void Machine::SetScale(const VECTOR& _scale)
 	scale.z = scale.z * MODEL_SIZE.z;
 
 	trans_.scl = scale;
+}
+
+void Machine::RidePlayer(const std::weak_ptr<const Player> _player)
+{
+	//設定
+	player_ = _player;
+
+	//パラメーター
+	const Parameter& param = player_.lock()->GetAllParam();
+
+	//体力設定
+	health_ = param.maxHealth_ - damage_;
+}
+
+void Machine::GetOffPlayer(void)
+{
+	//解放
+	player_.reset();
 }

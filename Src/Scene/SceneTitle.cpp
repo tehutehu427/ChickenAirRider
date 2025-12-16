@@ -36,6 +36,10 @@ void SceneTitle::Load(void)
 	//ƒTƒEƒ“ƒh‚Ì’Ç‰Á
 	int id = res.Load(ResourceManager::SRC::ENTER_SE).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::ENTER, id, SoundManager::TYPE::SE, 80);
+
+	//id = res.Load(ResourceManager::SRC::TITLE_SE).handleId_;
+	//snd.Add(SoundManager::SOUND_NAME::TITLE_SE, id, SoundManager::TYPE::SE, 80);
+	//snd.Play(SoundManager::SOUND_NAME::TITLE_SE, SoundManager::PLAYTYPE::LOOP);
 }
 
 void SceneTitle::Init(void)

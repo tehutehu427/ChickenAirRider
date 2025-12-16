@@ -9,7 +9,7 @@
 MachineManager::MachineManager(void)
 {
 	//リソース
-	modelId_["wakaba"] = [this](void)
+	getModelId_["wakaba"] = [this](void)
 	{
 		//インスタンス
 		auto& res = ResourceManager::GetInstance();
@@ -28,6 +28,9 @@ void MachineManager::Init(void)
 {
 	//ステージ情報
 	importData_ = LoaderManager<MachineImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Machine.json"));
+
+	//機体の生成
+	CreateMachine();
 }
 
 void MachineManager::Update(void)
@@ -58,11 +61,12 @@ void MachineManager::Draw(void)
 void MachineManager::CreateMachine(void)
 {
 	//機体の種類
-	int modelId = modelId_[importData_[number_["wakaba"]].name]();
+	int modelId = getModelId_[importData_[number_["wakaba"]].name]();
 	float radius = importData_[number_["wakaba"]].hitRadius;
+	VECTOR pos = { 0.0f,-200.0f,400.0f };
 
 	//機体
-	std::unique_ptr<Machine> machine = std::make_unique<Machine>(modelId, radius);
+	std::unique_ptr<Machine> machine = std::make_unique<Machine>(modelId, radius, pos);
 	machine->Load();
 	machine->Init();
 	machine->CreateCol();
@@ -82,7 +86,7 @@ void MachineManager::SaveGetOffMachine(std::unique_ptr<Machine> _machine)
 
 const int MachineManager::GetModelId(const std::string _machineName)
 {
-	return modelId_[importData_[number_[_machineName]].name]();
+	return getModelId_[importData_[number_[_machineName]].name]();
 }
 
 const float MachineManager::GetRadius(const std::string _machineName)
@@ -92,6 +96,7 @@ const float MachineManager::GetRadius(const std::string _machineName)
 
 std::unique_ptr<Machine> MachineManager::GetMachine(const Machine& _machine)
 {
+	//配列内から同じものを探す
 	for (auto& machine : machines_)
 	{
 		//ポインタを比較

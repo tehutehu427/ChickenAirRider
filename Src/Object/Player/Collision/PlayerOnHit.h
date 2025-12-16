@@ -15,6 +15,9 @@ public:
 	//デストラクタ
 	~PlayerOnHit(void);
 
+	//データのロード
+	void Load(void);
+
 	//ヒット処理
 	void OnHit(const std::weak_ptr<Collider> _hitCol);
 

@@ -39,7 +39,7 @@ private:
 	std::vector<MachineImportData> importData_;
 
 	//–¼‘OŠÇ—
-	std::unordered_map<std::string, std::function<int(void)>> modelId_;
+	std::unordered_map<std::string, std::function<int(void)>> getModelId_;
 	std::unordered_map<std::string, int> number_;
 
 	//‹@‘Ì‚ÌŠi”[

@@ -3,6 +3,8 @@
 #include"../Object/ObjectBase.h"
 #include"../Parameter/UnitParameter.h"
 
+class Player;
+
 class Machine : public ObjectBase
 {
 public:
@@ -21,7 +23,7 @@ public:
 	};
 
 	//コンストラクタ
-	Machine(const int _modelId, const float _radius);
+	Machine(const int _modelId, const float _radius, VECTOR _pos = {});
 
 	//デストラクタ
 	~Machine(void)override;
@@ -59,6 +61,12 @@ public:
 	//パラメーターの取得
 	const UnitParameter& GetUnitParam(void) { return unitParam_; }
 
+	//乗車した
+	void RidePlayer(const std::weak_ptr<const Player> _player);
+
+	//降車した
+	void GetOffPlayer(void);
+
 private:
 
 	//モデルのサイズ
@@ -71,7 +79,13 @@ private:
 	//半径
 	float radius_;
 
+	//ダメージ
+	float damage_;
+
 	//体力
 	float health_;
+
+	//乗車者
+	std::weak_ptr<const Player> player_;
 };
 

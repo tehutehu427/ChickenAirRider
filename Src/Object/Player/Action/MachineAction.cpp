@@ -30,6 +30,7 @@ MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase
 	chargeGaugePos_ = {};
 	maskScreen_ = -1;
 	gaugeCnt_ = 0.0f;
+	numImgs_ = nullptr;
 
 	update_[true] = [this](void) {UpdateGround(); };
 	update_[false] = [this](void) {UpdateFlight(); };
@@ -38,6 +39,7 @@ MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase
 MachineAction::~MachineAction(void)
 {
 	DeleteGraph(maskScreen_);
+	numImgs_ = nullptr;
 }
 
 void MachineAction::Init(void)
@@ -55,6 +57,7 @@ void MachineAction::Init(void)
 	//画像
 	gaugeImg_ = res.Load(ResourceManager::SRC::CHARGE_GAUGE).handleId_;
 	gaugeMaskImg_ = res.Load(ResourceManager::SRC::CHARGE_GAUGE_MASK).handleId_;
+	numImgs_ = res.Load(ResourceManager::SRC::NUMBER).handleIds_;
 
 	//マテリアル
 	material_ = std::make_unique<PixelMaterial>(L"GaugeMask.cso", 1);
@@ -90,6 +93,14 @@ void MachineAction::Init(void)
 	id = res.Load(ResourceManager::SRC::CHARGE_MAX_SE).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::CHARGE_MAX, id, SoundManager::TYPE::SE, 80);
 
+	//ブースト
+	id = res.Load(ResourceManager::SRC::BOOST).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::BOOST, id, SoundManager::TYPE::SE, 80);
+
+	//スピン
+	id = res.Load(ResourceManager::SRC::SPIN).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::SPIN, id, SoundManager::TYPE::SE, 80);
+
 	//エンジン音
 	snd.Play(SoundManager::SOUND_NAME::ENGINE, SoundManager::PLAYTYPE::LOOP);
 }
@@ -111,6 +122,9 @@ void MachineAction::Update(void)
 	//スピン判定
 	if (logic_.IsButtonMeshing() && !player_.IsSpin())
 	{
+		//スピンSE
+		snd.Play(SoundManager::SOUND_NAME::SPIN, SoundManager::PLAYTYPE::BACK);
+
 		//スピン開始
 		player_.SetIsSpin(true);
 	}
@@ -192,7 +206,16 @@ void MachineAction::UpdateGround(void)
 		if (snd.IsPlay(SoundManager::SOUND_NAME::CHARGE))snd.Stop(SoundManager::SOUND_NAME::CHARGE);
 
 		//エンジン音
-		if (!snd.IsPlay(SoundManager::SOUND_NAME::ENGINE))snd.Play(SoundManager::SOUND_NAME::ENGINE,SoundManager::PLAYTYPE::LOOP);
+		if (!snd.IsPlay(SoundManager::SOUND_NAME::ENGINE))
+		{
+			snd.Play(SoundManager::SOUND_NAME::ENGINE, SoundManager::PLAYTYPE::LOOP);
+		}
+
+		//ブースト
+		if (isChargeMax_)
+		{
+			snd.Play(SoundManager::SOUND_NAME::BOOST, SoundManager::PLAYTYPE::BACK);
+		}
 
 		//チャージ解放
 		DisCharge();
@@ -219,14 +242,12 @@ void MachineAction::UpdateFlight(void)
 
 void MachineAction::DrawGauge(void)
 {
-	//速度
-	//DrawFormatString(posX - 320, posY - 32, 0xffffff, L"Speed = %.2f", speed_);
-	//DrawFormatString(Application::SCREEN_SIZE_X - 320, Application::SCREEN_SIZE_Y - 64, 0xffffff, L"Charge = %.2f", chargeCnt_);
-
+	//表示場所
 	const auto& view = player_.GetUI().GetViewPort();
+	float size = 1.0 / (Application::SCREEN_SIZE_Y / view.h) * GAUGE_SIZE_MULTI;
 	
 	//外枠
-	DrawRotaGraph(chargeGaugePos_.x, chargeGaugePos_.y, 1.0 / (Application::SCREEN_SIZE_Y / view.h) * GAUGE_SIZE_MULTI, 0.0, gaugeImg_, true);
+	DrawRotaGraph(chargeGaugePos_.x, chargeGaugePos_.y, size, 0.0, gaugeImg_, true);
 
 	//定数バッファ
 	material_->SetConstBuf(0, { 0.5f,0.5f,chargeCnt_,gaugeCnt_ });
@@ -235,6 +256,14 @@ void MachineAction::DrawGauge(void)
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	renderer_->Draw();
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+	int speed100 = static_cast<int>(speed_) / 100;
+	int speed10 = static_cast<int>(speed_) / 10;
+	int speed1 = static_cast<int>(speed_) % 10;
+	//速度
+	DrawRotaGraph(chargeGaugePos_.x - (NUMBER_LOCAL_POS * size), chargeGaugePos_.y, size, 0.0, numImgs_[speed100], true);
+	DrawRotaGraph(chargeGaugePos_.x, chargeGaugePos_.y, size, 0.0, numImgs_[speed10], true);
+	DrawRotaGraph(chargeGaugePos_.x + (NUMBER_LOCAL_POS * size), chargeGaugePos_.y, size, 0.0, numImgs_[speed1], true);
 }
 
 void MachineAction::DrawHealth(void)
