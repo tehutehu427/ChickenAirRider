@@ -696,5 +696,6 @@
     <FxCompile Include="Src\Shader\PostEffect\GaugeMask.hlsl" />
     <FxCompile Include="Src\Shader\PostEffect\GodRay.hlsl" />
     <FxCompile Include="Src\Shader\PostEffect\Title.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\TitleUi.hlsl" />
   </ItemGroup>
 </Project>

@@ -59,6 +59,9 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, titleImage + L"TitleLogo.png");
 	resourcesMap_.emplace(SRC::TITLE_LOGO, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, titleImage + L"PushAnyButton.png");
+	resourcesMap_.emplace(SRC::PUSH_ANY_BUTTON, std::move(res));
+
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"ChargeGauge.png");
 	resourcesMap_.emplace(SRC::CHARGE_GAUGE, std::move(res));
 

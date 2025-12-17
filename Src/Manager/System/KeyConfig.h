@@ -144,6 +144,9 @@ public:
 	/// @return true:押されている
 	bool IsNew(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no ,TYPE type = TYPE::ALL);
 
+	/// @brief どれかキーが押されているか
+	bool IsTrgDownAny(void);
+
 	/// @brief キーが押されたか(押された瞬間のみ)
 	/// @param cType 操作名
 	/// @param no ゲームコントローラーの番号

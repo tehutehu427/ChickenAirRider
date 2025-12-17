@@ -191,6 +191,32 @@ bool KeyConfig::IsNew(CONTROL_TYPE cType, JOYPAD_NO no,TYPE type)
 	return false;
 }
 
+bool KeyConfig::IsTrgDownAny(void)
+{
+	for (auto& key : keyInput_)
+	{
+		for (auto keyI : key.second)
+		{
+			if (inputManager_->IsTrgDown(keyI))
+			{
+				return true;
+			}
+		}
+	}
+	for (auto& con : conInput_)
+	{
+		for (auto conI : con.second)
+		{
+			if (inputManager_->IsPadBtnTrgDown(JOYPAD_NO::PAD1, conI))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 bool KeyConfig::IsTrgDown(CONTROL_TYPE cType, JOYPAD_NO no ,TYPE type)
 {
 

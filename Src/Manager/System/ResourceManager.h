@@ -56,6 +56,7 @@ public:
 		//タイトル、セレクト
 		TITLE_BACK,			//タイトル背景
 		TITLE_LOGO,			//タイトルロゴ
+		PUSH_ANY_BUTTON,	//何かボタンを押してください
 
 		//UI
 		CHARGE_GAUGE,			//チャージゲージ
