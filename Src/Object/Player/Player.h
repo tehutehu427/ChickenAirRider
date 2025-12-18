@@ -166,12 +166,6 @@ private:
 	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };				//線判定の上相対座標
 	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-40.0f,0.0f };			//線判定の下相対座標
 
-	//パラメーター関係
-	static constexpr float WEIGHT_AFFECT = 0.2f;	//攻防の重さの影響度
-	static constexpr float FLIGHT_AFFECT = 0.1f;	//攻防の飛行の影響度
-	static constexpr float MAX_PARAM = 15;			//上昇最大値
-	static constexpr float DEFENCE_AFFECT = 0.8f;	//防御の影響度
-
 	//基本機能
 	std::unique_ptr<Character> chara_;		//キャラクタ―
 	std::unique_ptr<Machine> machine_;		//機体

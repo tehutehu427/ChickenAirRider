@@ -1,6 +1,5 @@
 #include"../pch.h"
 #include"LoaderManager.h"
-#include"../Object/Player/Parameter/UnitParameter.h"
 #include"../Manager/Game/StageManager.h"
 #include"../Object/Stage/StageImportData.h"
 #include"../Object/Player/AnimationImportData.h"
@@ -10,10 +9,7 @@
 #include"DataRegistry.h"
 
 void DataRegistry::CreateAll(void)
-{
-	//ユニットのパラメーター
-	LoaderManager<UnitParameter>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
-	
+{	
 	//ステージの情報
 	LoaderManager<StageImportData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 

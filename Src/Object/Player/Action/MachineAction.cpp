@@ -353,7 +353,7 @@ void MachineAction::Charge(void)
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
 	//チャージカウンタ
-	chargeCnt_ += BASE_CHARGE * param.charge_ / unitParam.chargeCapacity_;
+	chargeCnt_ += BASE_CHARGE * param.charge_ / unitParam.chargeCapacity;
 
 	//チャージの制限
 	if (chargeCnt_ > 1.0f)
@@ -406,7 +406,7 @@ void MachineAction::DisCharge(void)
 	const auto& unitParam = player_.GetUnitParam();
 
 	//チャージの割合で初速度を決める
-	float velocity = (param.maxSpeed_ * BASE_MAX_SPEED) * (1 + unitParam.boostRate_ * std::pow(chargeCnt_,unitParam.boostPower_)) * std::pow(chargeCnt_,unitParam.chargeDamp_);
+	float velocity = (param.maxSpeed_ * BASE_MAX_SPEED) * (1 + unitParam.boostRate * std::pow(chargeCnt_,unitParam.boostPower)) * std::pow(chargeCnt_,unitParam.chargeDamp);
 
 	//速度
 	if (speed_ < velocity)

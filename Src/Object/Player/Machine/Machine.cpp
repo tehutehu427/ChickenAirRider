@@ -1,16 +1,20 @@
 #include"../pch.h"
-#include"../../Manager/System/ResourceManager.h"
+#include"../../Manager/System/SceneManager.h"
 #include "../Object/Common/Geometry/Sphere.h"
 #include "../Object/Player/Player.h"
 #include "Machine.h"
 
-Machine::Machine(const int _modelId, const float _radius, VECTOR _pos)
+Machine::Machine(const MachineImportData& _importData, const int _modelId, const VECTOR _pos)
 {
 	trans_ = Transform();
 	trans_.pos = _pos;
 	trans_.modelId = _modelId;
-	radius_ = _radius;
-	health_ = 0.0f;
+	trans_.scl = _importData.scale;
+	isAnim_ = _importData.isAnim;
+	radius_ = _importData.hitRadius;
+	unitParam_ = _importData.param;
+	damage_ = 0.0f;
+	invincible_ = 0.0f;
 }
 
 Machine::~Machine(void)
@@ -19,61 +23,62 @@ Machine::~Machine(void)
 
 void Machine::Load(void)
 {
-	//キャラクターのステータスを外部から持ってくる
-	unitParam_.fixedMaxSpeed_ = PARAM_NORMAL;
-	unitParam_.fixedAcceleration_ = PARAM_NORMAL;
-	unitParam_.fixedTurning_ = PARAM_NORMAL;
-	unitParam_.fixedCharge_ = PARAM_NORMAL;
-	unitParam_.fixedFlight_ = PARAM_NORMAL;
-	unitParam_.fixedWeight_ = PARAM_NORMAL;
-	unitParam_.fixedAttack_ = PARAM_NORMAL;
-	unitParam_.fixedDefence_ = PARAM_NORMAL;
-	unitParam_.fixedMaxHealth_ = PARAM_NORMAL;
-
-	unitParam_.affectMaxSpeed_ = 0.5f;
-	unitParam_.affectAcceleration_ = 0.5f;
-	unitParam_.affectTurning_ = 0.5f;
-	unitParam_.affectCharge_ = 0.5f;
-	unitParam_.affectFlight_ = 0.5f;
-	unitParam_.affectWeight_ = 0.5f;
-	unitParam_.affectAttack_ = 0.5f;
-	unitParam_.affectDefence_ = 0.5f;
-	unitParam_.affectMaxHealth_ = 0.5f;
-
-	unitParam_.chargeBraking_ = 0.2f;
-	unitParam_.chargeCapacity_ = 100.0f;
-	unitParam_.chargeDamp_ = 1.0f;
-	unitParam_.boostRate_ = 0.2f;
-	unitParam_.boostPower_ = 6;
-
-	//モデル
-	trans_.scl = MODEL_SIZE;
-	trans_.localPos.y -= 20.0f;
 }
 
 void Machine::Init(void)
 {
+	//初期化
+	invincible_ = INVINCIBLE;
+
+	//モデル
+	trans_.localPos.y -= 20.0f;
+
+	//アニメーション
+	InitAnimation();
+
 	//モデル更新用
 	Update();
 }
 
 void Machine::Update(void)
 {
+	//デルタタイム
+	const float delta = SceneManager::GetInstance().GetDeltaTime();
+	invincible_ -= delta;
+
+	//アニメーション
+	Animation();
+
+	//モデル更新
 	trans_.Update();
 }
 
 void Machine::Draw(void)
 {
 	MV1DrawModel(trans_.modelId);
-
-	//for (const auto& col : collider_)
-	//{
-	//	col->GetGeometry().Draw();
-	//}
 }
 
 void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
+	if (_hitCol.lock()->GetTag() == Collider::TAG::DAMAGE)
+	{
+		//攻撃者から攻撃力を取得
+		const Player& player = dynamic_cast<const Player&>(_hitCol.lock()->GetParent());
+		const float atk = player.GetAttack();
+
+		//ダメージ
+		damage_ += atk - (unitParam_.fixedDefence + (unitParam_.fixedWeight * Parameter::WEIGHT_AFFECT) - (unitParam_.fixedFlight * Parameter::FLIGHT_AFFECT));
+
+		//無敵時間リセット
+		invincible_ = INVINCIBLE;
+
+		//体力が0以下になったら
+		if (IsDead())
+		{
+			//当たり判定削除しておく
+			DeleteAllCollider();
+		}
+	}
 }
 
 void Machine::CreateCol(void)
@@ -103,20 +108,25 @@ void Machine::SetScale(const VECTOR& _scale)
 	trans_.scl = scale;
 }
 
-void Machine::RidePlayer(const std::weak_ptr<const Player> _player)
+const bool Machine::IsDead(void) const
 {
-	//設定
-	player_ = _player;
-
-	//パラメーター
-	const Parameter& param = player_.lock()->GetAllParam();
-
-	//体力設定
-	health_ = param.maxHealth_ - damage_;
+	return damage_ > unitParam_.fixedMaxHealth * Parameter::MAX_HEALTH_VALUE;
 }
 
-void Machine::GetOffPlayer(void)
+void Machine::InitAnimation(void)
 {
-	//解放
-	player_.reset();
+	if (!isAnim_)return;
+
+	//初期化
+	anim_ = std::make_unique<AnimationController>(trans_.modelId);
+	anim_->Add("Run", 0, 60.0f);
+	anim_->Play("Run");
+}
+
+void Machine::Animation(void)
+{
+	if (!isAnim_)return;
+
+	//更新
+	anim_->Update();
 }

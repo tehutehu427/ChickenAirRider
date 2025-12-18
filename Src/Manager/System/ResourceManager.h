@@ -26,7 +26,8 @@ public:
 		CHICKEN,			//チキンモデル
 		
 		//マシンモデル
-		WAKABA,				//若葉モデル
+		WAKABA_STAR,		//ワカバモデル
+		EARTH_STAR,			//アースモデル
 
 		//ステージオブジェクトモデル
 		STAGE,				//ステージモデル

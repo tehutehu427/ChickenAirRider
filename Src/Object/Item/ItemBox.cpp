@@ -125,7 +125,7 @@ void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
 	const auto& hit = _hitCol.lock();
 	const auto& hitTag = hit->GetTag();
 
-	if (hitTag == Collider::TAG::SPIN && invincible_ < 0)
+	if (hitTag == Collider::TAG::DAMAGE && invincible_ < 0)
 	{
 		//スピンをもつのはプレイヤーのみ
 		const auto& player = dynamic_cast<const Player&>(_hitCol.lock()->GetParent());

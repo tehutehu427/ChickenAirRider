@@ -3,6 +3,12 @@
 
 struct Parameter
 {
+	//パラメーター関係
+	static constexpr float WEIGHT_AFFECT = 0.2f;		//攻防の重さの影響度
+	static constexpr float FLIGHT_AFFECT = 0.1f;		//攻防の飛行の影響度
+	static constexpr int MAX_PARAM = 15;				//上昇最大値
+	static constexpr float MAX_HEALTH_VALUE = 10.0f;	//基礎最大体力値
+
 	//上昇するパラメーター関係
 	float maxSpeed_ = 0.0f;		//最高速度
 	float acceleration_ = 0.0f;	//加速度

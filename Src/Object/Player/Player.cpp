@@ -95,12 +95,9 @@ void Player::Init(void)
 
 	//初期機体情報
 	const auto& machineMng = MachineManager::GetInstance();
-	std::string name = "wakaba";
-	int modelId = machineMng.GetInstance().GetModelId(name);
-	float radius = machineMng.GetInstance().GetRadius(name);
 
 	//機体
-	machine_ = std::make_unique<Machine>(modelId, radius);
+	machine_ = std::move(machineMng.GetCreateMachine(MachineManager::MACHINE_TYPE::WAKABA));
 	machine_->Load();
 	machine_->Init();
 
@@ -181,31 +178,31 @@ void Player::SetParam(const Parameter& _param)
 	param_ = _param;
 
 	//上下限値
-	if (param_.maxSpeed_ > MAX_PARAM)param_.maxSpeed_ = MAX_PARAM;
+	if (param_.maxSpeed_ > Parameter::MAX_PARAM)param_.maxSpeed_ = Parameter::MAX_PARAM;
 	else if (param_.maxSpeed_ < 0)param_.maxSpeed_ = 0;
 
-	if (param_.acceleration_ > MAX_PARAM)param_.acceleration_ = MAX_PARAM;
+	if (param_.acceleration_ > Parameter::MAX_PARAM)param_.acceleration_ = Parameter::MAX_PARAM;
 	else if (param_.acceleration_ < 0)param_.acceleration_ = 0;
 
-	if (param_.turning_ > MAX_PARAM)param_.turning_ = MAX_PARAM;
+	if (param_.turning_ > Parameter::MAX_PARAM)param_.turning_ = Parameter::MAX_PARAM;
 	else if (param_.turning_ < 0)param_.turning_ = 0;
 
-	if (param_.charge_ > MAX_PARAM)param_.charge_ = MAX_PARAM;
+	if (param_.charge_ > Parameter::MAX_PARAM)param_.charge_ = Parameter::MAX_PARAM;
 	else if (param_.charge_ < 0)param_.charge_ = 0;
 
-	if (param_.flight_ > MAX_PARAM)param_.flight_ = MAX_PARAM;
+	if (param_.flight_ > Parameter::MAX_PARAM)param_.flight_ = Parameter::MAX_PARAM;
 	else if (param_.flight_ < 0)param_.flight_ = 0;
 
-	if (param_.weight_ > MAX_PARAM)param_.weight_ = MAX_PARAM;
+	if (param_.weight_ > Parameter::MAX_PARAM)param_.weight_ = Parameter::MAX_PARAM;
 	else if (param_.weight_ < 0)param_.weight_ = 0;
 
-	if (param_.attack_ > MAX_PARAM)param_.attack_ = MAX_PARAM;
+	if (param_.attack_ > Parameter::MAX_PARAM)param_.attack_ = Parameter::MAX_PARAM;
 	else if (param_.attack_ < 0)param_.attack_ = 0;
 
-	if (param_.defence_ > MAX_PARAM)param_.defence_ = MAX_PARAM;
+	if (param_.defence_ > Parameter::MAX_PARAM)param_.defence_ = Parameter::MAX_PARAM;
 	else if (param_.defence_ < 0)param_.defence_ = 0;
 
-	if (param_.maxHealth_ > MAX_PARAM)param_.maxHealth_ = MAX_PARAM;
+	if (param_.maxHealth_ > Parameter::MAX_PARAM)param_.maxHealth_ = Parameter::MAX_PARAM;
 	else if (param_.maxHealth_ < 0)param_.maxHealth_ = 0;
 }
 
@@ -220,7 +217,7 @@ const float Player::GetAttack(void) const
 	//パラメータ
 	const Parameter& param = GetAllParam();
 
-	return param.attack_ + (param.weight_ * WEIGHT_AFFECT) - (param.flight_ * FLIGHT_AFFECT);
+	return param.attack_ + (param.weight_ * Parameter::WEIGHT_AFFECT) - (param.flight_ * Parameter::FLIGHT_AFFECT);
 }
 
 const float Player::GetDefence(void) const
@@ -228,7 +225,7 @@ const float Player::GetDefence(void) const
 	//パラメータ
 	const Parameter& param = GetAllParam();
 
-	return (param.defence_ + (param.weight_ * WEIGHT_AFFECT) - (param.flight_ * FLIGHT_AFFECT)) * DEFENCE_AFFECT;
+	return (param.defence_ + (param.weight_ * Parameter::WEIGHT_AFFECT) - (param.flight_ * Parameter::FLIGHT_AFFECT));
 }
 
 UnitParameter Player::GetUnitParam(void) const
@@ -261,7 +258,7 @@ void Player::SetIsSpin(const bool _isSpin)
 	{
 		//スピンコライダを生成
 		std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SPIN_RADIUS);
-		MakeCollider(Collider::TAG::SPIN, std::move(geo), 
+		MakeCollider(Collider::TAG::DAMAGE, std::move(geo), 
 			{ playerTag_,
 			Collider::TAG::FOOT,
 			Collider::TAG::NORMAL_OBJECT,
@@ -271,7 +268,7 @@ void Player::SetIsSpin(const bool _isSpin)
 	else
 	{
 		//スピンコライダを消す
-		DeleteColliderAtTag(Collider::TAG::SPIN);
+		DeleteColliderAtTag(Collider::TAG::DAMAGE);
 	}
 }
 

@@ -2,3 +2,4 @@ Log.txt
 .vs/
 x64/
 *.ipch
+Data/Shader/

@@ -18,28 +18,28 @@ Character::~Character(void)
 void Character::Load(void)
 {
 	//キャラクターのステータスを外部から持ってくる
-	unitParam_.fixedMaxSpeed_ = PARAM_NORMAL;
-	unitParam_.fixedAcceleration_ = PARAM_NORMAL;
-	unitParam_.fixedTurning_ = PARAM_NORMAL;
-	unitParam_.fixedCharge_ = PARAM_NORMAL;
-	unitParam_.fixedFlight_ = PARAM_NORMAL;
-	unitParam_.fixedWeight_ = PARAM_NORMAL;
-	unitParam_.fixedAttack_ = PARAM_NORMAL;
-	unitParam_.fixedDefence_ = PARAM_NORMAL;
-	unitParam_.fixedMaxHealth_ = PARAM_NORMAL;
+	unitParam_.fixedMaxSpeed = PARAM_NORMAL;
+	unitParam_.fixedAcceleration = PARAM_NORMAL;
+	unitParam_.fixedTurning = PARAM_NORMAL;
+	unitParam_.fixedCharge = PARAM_NORMAL;
+	unitParam_.fixedFlight = PARAM_NORMAL;
+	unitParam_.fixedWeight = PARAM_NORMAL;
+	unitParam_.fixedAttack = PARAM_NORMAL;
+	unitParam_.fixedDefence = PARAM_NORMAL;
+	unitParam_.fixedMaxHealth = PARAM_NORMAL;
 
-	unitParam_.affectMaxSpeed_ = 0.5f;
-	unitParam_.affectAcceleration_ = 0.5f;
-	unitParam_.affectTurning_ = 0.5f;
-	unitParam_.affectCharge_ = 0.5f;
-	unitParam_.affectFlight_ = 0.5f;
-	unitParam_.affectWeight_ = 0.5f;
-	unitParam_.affectAttack_ = 0.5f;
-	unitParam_.affectDefence_ = 0.5f;
-	unitParam_.affectMaxHealth_ = 0.5f;
+	unitParam_.affectMaxSpeed = 0.5f;
+	unitParam_.affectAcceleration = 0.5f;
+	unitParam_.affectTurning = 0.5f;
+	unitParam_.affectCharge = 0.5f;
+	unitParam_.affectFlight = 0.5f;
+	unitParam_.affectWeight = 0.5f;
+	unitParam_.affectAttack = 0.5f;
+	unitParam_.affectDefence = 0.5f;
+	unitParam_.affectMaxHealth = 0.5f;
 
-	unitParam_.chargeBraking_ = 0.2f;
-	unitParam_.chargeCapacity_ = 100.0f;
+	unitParam_.chargeBraking = 0.2f;
+	unitParam_.chargeCapacity = 100.0f;
 
 	//モデル
 	trans_.quaRotLocal = Quaternion::AngleAxis(Utility::Deg2RadF(180.0f), Utility::AXIS_Y);

@@ -99,7 +99,10 @@ void ResourceManager::Init(void)
 	std::wstring machinePath = PATH_MDL + L"Machine/";
 
 	res = std::make_unique<Resource>(Resource::TYPE::MODEL, machinePath + L"Wakaba.mv1");
-	resourcesMap_.emplace(SRC::WAKABA, std::move(res));
+	resourcesMap_.emplace(SRC::WAKABA_STAR, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, machinePath + L"Earth.mv1");
+	resourcesMap_.emplace(SRC::EARTH_STAR, std::move(res));
 
 	//ステージオブジェクトのパス
 	std::wstring stagePath = PATH_MDL + L"StageObject/";

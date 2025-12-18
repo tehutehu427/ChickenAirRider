@@ -1,6 +1,7 @@
 #pragma once
 #include<vector>
 #include<memory>
+#include<functional>
 #include"../Object/Player/Machine/Machine.h"
 #include"../Object/Player/Machine/MachineImportData.h"
 #include"../Common/Singleton.h"
@@ -11,6 +12,17 @@ class MachineManager : public Singleton<MachineManager>
 	friend class Singleton<MachineManager>;
 
 public:
+
+	//機体の種類
+	enum class MACHINE_TYPE
+	{
+		NONE = -1,
+
+		WAKABA,		//ワカバスター
+		EARTH,		//アーススター
+
+		MAX
+	};
 
 	//更新
 	void Update(void);
@@ -25,13 +37,16 @@ public:
 	void SaveGetOffMachine(std::unique_ptr<Machine> _machine);
 
 	//機体のモデルIDを取得
-	const int GetModelId(const std::string _machineName);
+	const int GetModelId(const MACHINE_TYPE _machineName);
 
 	//半径取得
-	const float GetRadius(const std::string _machineName);
+	const float GetRadius(const MACHINE_TYPE _machineName);
 
 	//機体の取得
 	std::unique_ptr<Machine> GetMachine(const Machine& _machine);
+
+	//機体を生成して返す
+	std::unique_ptr<Machine> GetCreateMachine(const MACHINE_TYPE _machineName)const;
 
 private:
 
@@ -40,7 +55,7 @@ private:
 
 	//名前管理
 	std::unordered_map<std::string, std::function<int(void)>> getModelId_;
-	std::unordered_map<std::string, int> number_;
+	std::unordered_map<std::string, MACHINE_TYPE> number_;
 
 	//機体の格納
 	std::vector<std::unique_ptr<Machine>> machines_;

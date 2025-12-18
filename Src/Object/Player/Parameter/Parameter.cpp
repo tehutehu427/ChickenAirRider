@@ -37,15 +37,15 @@ Parameter Parameter::CalcUnitParam(const UnitParameter& _unitParam)const
 {
     //上昇パラメーター * ユニットの成長度 + ユニットの固定パラメーター
     Parameter ret;
-    ret.maxSpeed_ = (maxSpeed_ * _unitParam.affectMaxSpeed_) + _unitParam.fixedMaxSpeed_;
-    ret.acceleration_ = (acceleration_ * _unitParam.affectAcceleration_) + _unitParam.fixedAcceleration_;
-    ret.turning_ = (turning_ * _unitParam.affectTurning_) + _unitParam.fixedTurning_;
-    ret.charge_ = (charge_ * _unitParam.affectCharge_) + _unitParam.fixedCharge_;
-    ret.flight_ = (flight_ * _unitParam.affectFlight_) + _unitParam.fixedFlight_;
-    ret.weight_ = (weight_ * _unitParam.affectWeight_) + _unitParam.fixedWeight_;
-    ret.attack_ = (attack_ * _unitParam.affectAttack_) + _unitParam.fixedAttack_;
-    ret.defence_ = (defence_ * _unitParam.affectDefence_) + _unitParam.fixedDefence_;
-    ret.maxHealth_ = (maxHealth_ * _unitParam.affectMaxHealth_) + _unitParam.fixedMaxHealth_;
+    ret.maxSpeed_ = (maxSpeed_ * _unitParam.affectMaxSpeed) + _unitParam.fixedMaxSpeed;
+    ret.acceleration_ = (acceleration_ * _unitParam.affectAcceleration) + _unitParam.fixedAcceleration;
+    ret.turning_ = (turning_ * _unitParam.affectTurning) + _unitParam.fixedTurning;
+    ret.charge_ = (charge_ * _unitParam.affectCharge) + _unitParam.fixedCharge;
+    ret.flight_ = (flight_ * _unitParam.affectFlight) + _unitParam.fixedFlight;
+    ret.weight_ = (weight_ * _unitParam.affectWeight) + _unitParam.fixedWeight;
+    ret.attack_ = (attack_ * _unitParam.affectAttack) + _unitParam.fixedAttack;
+    ret.defence_ = (defence_ * _unitParam.affectDefence) + _unitParam.fixedDefence;
+    ret.maxHealth_ = (maxHealth_ * _unitParam.affectMaxHealth) + _unitParam.fixedMaxHealth;
 
     return ret;
 }

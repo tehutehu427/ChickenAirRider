@@ -1,6 +1,82 @@
 [
-  {
-    "name": "wakaba",
-    "radius" :  60.0
-  }
+    {
+        "name": "wakaba",
+        "isAnim": false,
+        "radius": 60.0,
+        "scale": {
+            "x": 0.33,
+            "y": 0.33,
+            "z": 0.33
+        },
+        "parameter": {
+            "fixedMaxSpeed": 1.0,
+            "fixedAcceleration_": 1.0,
+            "fixedTurning": 1.0,
+            "fixedCharge_": 1.0,
+            "fixedFlight_": 1.0,
+            "fixedWeight_": 1.0,
+            "fixedAttack_": 1.0,
+            "fixedDefence_": 1.0,
+            "fixedMaxHealth_": 1.0,
+
+            "affectMaxSpeed_": 0.5,
+            "affectAcceleration_": 0.5,
+            "affectTurning_": 0.5,
+            "affectCharge_": 0.5,
+            "affectFlight_": 0.5,
+            "affectWeight_": 0.5,
+            "affectAttack_": 0.5,
+            "affectDefence_": 0.5,
+            "affectMaxHealth_": 0.5,
+
+            "chargeBraking": 0.6,
+            "chargeCapacity": 100.0,
+            "chargeDamp": 1.0,
+            "boostRate": 0.2,
+            "boostPower": 6,
+
+            "groundSpeed": 1.0,
+            "flightSpeed": 1.0
+        }
+    },
+    {
+        "name": "earth",
+        "isAnim": true,
+        "radius": 60.0,
+        "scale": {
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+        },
+        "parameter": {
+            "fixedMaxSpeed": 2.0,
+            "fixedAcceleration_": 3.0,
+            "fixedTurning": 2.0,
+            "fixedCharge_": 3.0,
+            "fixedFlight_": 0.2,
+            "fixedWeight_": 2.0,
+            "fixedAttack_": 1.0,
+            "fixedDefence_": 1.0,
+            "fixedMaxHealth_": 3.0,
+
+            "affectMaxSpeed_": 0.5,
+            "affectAcceleration_": 0.5,
+            "affectTurning_": 0.5,
+            "affectCharge_": 0.5,
+            "affectFlight_": 0.5,
+            "affectWeight_": 0.5,
+            "affectAttack_": 0.5,
+            "affectDefence_": 0.5,
+            "affectMaxHealth_": 0.5,
+
+            "chargeBraking": 0.4,
+            "chargeCapacity": 80.0,
+            "chargeDamp": 1.0,
+            "boostRate": 0.4,
+            "boostPower": 8,
+
+            "groundSpeed": 1.5,
+            "flightSpeed": 0.5
+        }
+    }
 ]

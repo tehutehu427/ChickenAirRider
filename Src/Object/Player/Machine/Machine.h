@@ -2,6 +2,8 @@
 #include<memory>
 #include"../Object/ObjectBase.h"
 #include"../Parameter/UnitParameter.h"
+#include"../Object/Common/AnimationController.h"
+#include"MachineImportData.h"
 
 class Player;
 
@@ -12,18 +14,8 @@ public:
 	//パラメーターの基本倍率
 	static constexpr float PARAM_NORMAL = 1.5f;
 
-	//機体の種類
-	enum class MACHINE_TYPE
-	{
-		NONE = -1,
-
-		WAKABA,		//初期機体
-		
-		MAX
-	};
-
 	//コンストラクタ
-	Machine(const int _modelId, const float _radius, VECTOR _pos = {});
+	Machine(const MachineImportData& _importData, const int _modelId, const VECTOR _pos = {});
 
 	//デストラクタ
 	~Machine(void)override;
@@ -59,19 +51,25 @@ public:
 	void SetQuaRot(const Quaternion& _quaRot) { trans_.quaRot = _quaRot; }
 
 	//パラメーターの取得
-	const UnitParameter& GetUnitParam(void) { return unitParam_; }
+	const UnitParameter& GetUnitParam(void)const { return unitParam_; }
 
-	//乗車した
-	void RidePlayer(const std::weak_ptr<const Player> _player);
-
-	//降車した
-	void GetOffPlayer(void);
+	//生存判定
+	const bool IsDead(void)const;
 
 private:
 
 	//モデルのサイズ
 	static constexpr VECTOR MODEL_SIZE = { 0.33f,0.33f,0.33f };
 	static constexpr float RIDE_COL = 250.0f;
+	
+	//ムテキ時間
+	static constexpr float INVINCIBLE = 1.0f;
+
+	//アニメーションの有無
+	bool isAnim_;
+
+	//アニメーション
+	std::unique_ptr<AnimationController> anim_;
 
 	//パラメーター
 	UnitParameter unitParam_;
@@ -82,10 +80,11 @@ private:
 	//ダメージ
 	float damage_;
 
-	//体力
-	float health_;
+	//無敵時間
+	float invincible_;
 
-	//乗車者
-	std::weak_ptr<const Player> player_;
+	//アニメーション
+	void InitAnimation(void);
+	void Animation(void);
 };
 
