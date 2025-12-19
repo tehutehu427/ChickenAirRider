@@ -1,5 +1,5 @@
-#include"../pch.h"
-#include"../Application.h"
+#include "../pch.h"
+#include "../Application.h"
 #include"../Common/SingletonRegistry.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/ResourceManager.h"
@@ -16,56 +16,19 @@
 #include"../Manager/Game/ItemManager.h"
 #include"../Object/SkyDome/SkyDome.h"
 #include"../Object/Player/Player.h"
-#include "SceneGame.h"
+#include "GameMain.h"
 
-SceneGame::SceneGame(void)
+GameMain::GameMain(SceneGame& _parent)
+	: GameBase(_parent)
 {
 }
 
-SceneGame::~SceneGame(void)
+GameMain::~GameMain(void)
 {
-	PlayerManager::GetInstance().Destroy();
-	StageManager::GetInstance().Destroy();
-	GravityManager::GetInstance().Destroy();
-	CollisionManager::GetInstance().Destroy();
-	SoundManager::GetInstance().StopAll();
-	SingletonRegistry::GetInstance().Delete(SingletonRegistry::DESTROY_TIMING::GAME_END);
 }
 
-void SceneGame::Load(void)
+void GameMain::Init(void)
 {
-	//サウンド
-	auto& snd = SoundManager::GetInstance();
-	auto& res = ResourceManager::GetInstance();
-
-	//追加
-	int id = res.Load(ResourceManager::SRC::MAIN_GAME_BGM).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::MAIN_GAME_BGM, id, SoundManager::TYPE::BGM);
-}
-
-void SceneGame::Init(void)
-{
-	//当たり判定管理の生成
-	CollisionManager::CreateInstance();
-
-	//重力制御
-	GravityManager::CreateInstance();
-
-	//ステージ管理の生成
-	StageManager::CreateInstance();
-
-	//機体管理の生成
-	MachineManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
-
-	//キャラクター情報管理の生成
-	AnimationManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
-
-	//プレイヤー管理の生成
-	PlayerManager::CreateInstance();
-
-	//アイテム管理の生成
-	ItemManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
-
 	//インスタンス
 	auto& setMng = GameSetting::GetInstance();
 	auto& grvMng = GravityManager::GetInstance();
@@ -103,13 +66,14 @@ void SceneGame::Init(void)
 	snd.Play(SoundManager::SOUND_NAME::MAIN_GAME_BGM, SoundManager::PLAYTYPE::LOOP);
 }
 
-void SceneGame::Update(void)
+void GameMain::Update(void)
 {
 	//タイムリミットになったならリザルトへ(デバッグ)
 	if (timer_->IsTimeOver())
 	{
 		//シーンの削除
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE,true, true);
+		parent_.SetGameState(SceneGame::GAME_STATE::CHECK);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE, true, true);
 		return;
 	}
 
@@ -145,6 +109,7 @@ void SceneGame::Update(void)
 	//当たり判定の破棄
 	colMng.Sweep();
 
+	//ゲームパッドがないならマウス操作なので
 	if (GetJoypadNum() < 1)
 	{
 		//マウス位置の初期化
@@ -152,7 +117,7 @@ void SceneGame::Update(void)
 	}
 }
 
-void SceneGame::Draw(void)
+void GameMain::Draw(void)
 {
 #ifdef _DEBUG
 
@@ -187,14 +152,14 @@ void SceneGame::Draw(void)
 	timer_->Draw();
 }
 
-void SceneGame::Release(void)
+void GameMain::Release(void)
 {
 }
 
-void SceneGame::DebugDraw(void)
+void GameMain::DebugDraw(void)
 {
 	//シーン名
-	DrawString(0, 0, L"SceneGame", 0xffffff);
+	DrawString(0, 0, L"MainGame", 0xffffff);
 
 	DrawBox(100, 100, 924, 540, 0x0000ff, true);
 }

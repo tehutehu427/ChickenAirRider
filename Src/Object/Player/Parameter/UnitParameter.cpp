@@ -48,5 +48,9 @@ UnitParameter UnitParameter::Calculate(const UnitParameter& _unitParam) const
     ret.boostRate = boostRate + _unitParam.boostRate;
     ret.boostPower = boostPower + _unitParam.boostPower;
 
+    //ˆÚ“®‘¬“x
+    ret.groundSpeed = groundSpeed + _unitParam.groundSpeed;
+    ret.flightSpeed = flightSpeed + _unitParam.flightSpeed;
+
     return ret;
 }

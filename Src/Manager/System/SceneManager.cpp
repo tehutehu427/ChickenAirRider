@@ -6,7 +6,7 @@
 #include "../FpsControl/FpsControl.h"
 #include "../Scene/SceneTitle.h"
 #include "../Scene/SceneSelect.h"
-#include "../Scene/SceneGame.h"
+#include "../Scene/Game/SceneGame.h"
 #include "../Game/CollisionManager.h"
 #include "../Game/GameSetting.h"
 #include"../Application.h"

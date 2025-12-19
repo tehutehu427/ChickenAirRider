@@ -270,8 +270,8 @@ void Camera::SyncFollowLeap(void)
 	rot_ = rotOutX_;
 
 	// --- カメラ方向ベクトル ---
-	VECTOR forward = rot_.PosAxis(VGet(0, 0, 1));
-	VECTOR up = rot_.PosAxis(VGet(0, 1, 0));
+	VECTOR forward = rot_.GetForward();
+	VECTOR up = rot_.GetUp();
 
 	// --- プレイヤーの移動方向成分を前方向に投影 ---
 	float speedFront = VDot(velocity, forward);
@@ -281,7 +281,7 @@ void Camera::SyncFollowLeap(void)
 	VECTOR desiredTargetPos = VAdd(pos, localPos);
 
 	// --- 移動速度に応じて注視点を前に押し出す ---
-	float lookAhead = std::clamp(speedFront * 5.0f, -0.0f, 0.0f);			//※0,0なのはカメラ追従がバグるため後回し
+	float lookAhead = std::clamp(speedFront * 5.0f, 50.0f, 1000.0f);
 	desiredTargetPos = VAdd(desiredTargetPos, VScale(forward, lookAhead));
 
 	// --- カメラ理想位置 ---
@@ -304,7 +304,7 @@ void Camera::SyncFollowLeap(void)
 	VECTOR sideMove = VSub(diff, temp);
 
 	// --- 補間係数 ---
-	const float rateFront = 0.85f;	// 前後：速く追従
+	const float rateFront = 1.0f;	// 前後：速く追従
 	const float rateSide = 0.05f;	// 横：なめらか
 	const float rateUp = 0.9f;		// 縦：速く追従
 
@@ -323,7 +323,7 @@ void Camera::SyncFollowLeap(void)
 	targetPos_.z += (desiredTargetPos.z - targetPos_.z) * targetRate;
 
 	float dist = VSize(VSub(targetPos_, pos_));
-	float adaptiveRate = std::clamp(0.2f + (10000.0f - dist) * 0.002f, 0.1f, 0.3f);
+	float adaptiveRate = std::clamp(0.2f + (400.0f - dist) * 0.002f, 0.1f, 0.3f);
 	targetPos_ = VAdd(targetPos_, VScale(VSub(desiredTargetPos, targetPos_), adaptiveRate));
 
 	// --- 上方向 ---

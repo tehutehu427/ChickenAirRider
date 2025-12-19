@@ -1,26 +1,25 @@
 #pragma once
-#include "SceneBase.h"
+#include "GameBase.h"
 
-class Timer;
-class SkyDome;
-
-class SceneGame : public SceneBase
+class GameCheck : public GameBase
 {
 public:
 
 	//コンストラクタ
-	SceneGame(void);
-	//デストラクタ
-	~SceneGame(void)override;
+	GameCheck(SceneGame& _parent);
 
-	//読み込み
-	void Load(void)override;
+	//デストラクタ
+	~GameCheck(void)override;
+
 	//初期化
 	void Init(void)override;
+
 	//更新
 	void Update(void)override;
+
 	//描画
 	void Draw(void)override;
+
 	//解放
 	void Release(void)override;
 
@@ -29,10 +28,5 @@ private:
 	//デバッグ描画
 	void DebugDraw(void)override;
 
-	//タイマー
-	std::unique_ptr<Timer> timer_;
-
-	//スカイドーム
-	std::unique_ptr<SkyDome> sky_;
 };
 

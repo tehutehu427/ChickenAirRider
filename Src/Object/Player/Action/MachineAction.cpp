@@ -95,7 +95,7 @@ void MachineAction::Init(void)
 
 	//ブースト
 	id = res.Load(ResourceManager::SRC::BOOST).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::BOOST, id, SoundManager::TYPE::SE, 80);
+	snd.Add(SoundManager::SOUND_NAME::BOOST, id, SoundManager::TYPE::SE, 180);
 
 	//スピン
 	id = res.Load(ResourceManager::SRC::SPIN).handleId_;
@@ -305,13 +305,17 @@ void MachineAction::Move(void)
 
 	//パラメーター
 	const auto& param = player_.GetAllParam();
+	const auto& unitParam = player_.GetUnitParam();
+
+	//速度倍率
+	const float speedAffect = player_.IsGrounded() ? unitParam.groundSpeed : unitParam.flightSpeed;
 
 	//加速力を元にだんだん最高速まで速度を増やす
 
 	//チャージ中　かつ　地上にいないなら加速しない
 	if (!logic_.StartCharge() && player_.IsGrounded())
 	{
-		if(speed_ < param.maxSpeed_ * BASE_MAX_SPEED)
+		if(speed_ < param.maxSpeed_ * BASE_MAX_SPEED * speedAffect)
 		{
 			//カウンタ
 			driveCnt_ += delta;
@@ -319,7 +323,7 @@ void MachineAction::Move(void)
 	}
 
 	//最高速の制限　又は　飛行中なら
-	if (speed_ > param.maxSpeed_ * BASE_MAX_SPEED)
+	if (speed_ > param.maxSpeed_ * BASE_MAX_SPEED * speedAffect)
 	{
 		//減速なのでカウンタ減少
 		driveCnt_ -= delta;
@@ -330,8 +334,11 @@ void MachineAction::Move(void)
 		driveCnt_ -= delta / FLIGHT_DECELERATION;
 	}
 
+	//初速度補正
+	float velocity = velocity_ * speedAffect;
+
 	//速度の方程式に当てはめる
-	speed_ = velocity_ + (param.acceleration_ * driveCnt_);
+	speed_ = velocity + (param.acceleration_ * driveCnt_) * speedAffect;
 
 	//速度が負の値にならないようにする
 	if (speed_ < 0.0f)
@@ -456,6 +463,7 @@ void MachineAction::Flight(void)
 {
 	//パラメーター
 	const auto& param = player_.GetAllParam();
+	const auto& unitParam = player_.GetUnitParam();
 
 	//デルタタイム
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
@@ -480,6 +488,9 @@ void MachineAction::Flight(void)
 	//重力制御
 	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);
 
+	//落ちる力
+	float fallPow = (delta * gravPow_.y * (param.weight_ * BASE_WEIGHT)) / (param.flight_ * BASE_FLIGHT);
+
 	//だんだん落ちていく
-	flightPow_ += (delta * gravPow_.y * param.weight_ / BASE_WEIGHT) / param.flight_ * BASE_FLIGHT;
+	flightPow_ += fallPow;
 }

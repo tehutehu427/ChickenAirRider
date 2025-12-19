@@ -16,7 +16,7 @@ float4 main(PS_INPUT PSInput) : SV_TARGET
     if (color.a < 0.5)discard;
 
     //点滅速度
-    float speed = 3.0f;
+    float speed = 1.0f;
 
     //アルファ値
     color.a *= 0.5f + 0.5f * sin(cnt * 6.28318f * speed);

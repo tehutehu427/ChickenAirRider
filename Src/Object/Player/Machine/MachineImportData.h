@@ -31,6 +31,7 @@ inline void FromJson(const nlohmann::json& _j, MachineImportData& _data)
 	if (_j.contains("name"))
 	{
 		_data.name = _j.value("name", "");
+		_data.param.name = _data.name;
 	}
 	else
 	{

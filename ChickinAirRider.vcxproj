@@ -163,6 +163,9 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\Game\GameCheck.cpp" />
+    <ClCompile Include="Src\Scene\Game\GameMain.cpp" />
+    <ClCompile Include="Src\Scene\Game\GameBase.cpp" />
     <ClCompile Include="Src\Object\Item\PowerUpItem.cpp" />
     <ClCompile Include="Src\Manager\Game\GameSetting.cpp" />
     <ClCompile Include="Src\Manager\Game\ItemManager.cpp" />
@@ -192,7 +195,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Src\Scene\SceneSelect.cpp" />
-    <ClCompile Include="Src\Scene\SceneGame.cpp" />
+    <ClCompile Include="Src\Scene\Game\SceneGame.cpp" />
     <ClCompile Include="Src\Scene\SceneTitle.cpp" />
     <ClCompile Include="Src\Scene\SceneBase.cpp" />
     <ClCompile Include="Src\Application.cpp" />
@@ -236,6 +239,9 @@
     <ClCompile Include="Src\Object\Player\UI\PlayerUI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\Game\GameCheck.h" />
+    <ClInclude Include="Src\Scene\Game\GameMain.h" />
+    <ClInclude Include="Src\Scene\Game\GameBase.h" />
     <ClInclude Include="Src\Object\Item\PowerUpItem.h" />
     <ClInclude Include="Src\Manager\Game\GameSetting.h" />
     <ClInclude Include="Src\Manager\Game\ItemManager.h" />
@@ -273,7 +279,7 @@
     <ClInclude Include="Src\Object\Stage\StageObject.h" />
     <ClInclude Include="Src\pch.h" />
     <ClInclude Include="Src\Scene\SceneSelect.h" />
-    <ClInclude Include="Src\Scene\SceneGame.h" />
+    <ClInclude Include="Src\Scene\Game\SceneGame.h" />
     <ClInclude Include="Src\Scene\SceneTitle.h" />
     <ClInclude Include="Src\Scene\SceneBase.h" />
     <ClInclude Include="Src\Application.h" />

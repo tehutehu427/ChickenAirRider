@@ -47,7 +47,7 @@ void SceneTitle::Load(void)
 
 	//UIのシェーディング
 	uiMaterial_ = std::make_unique<PixelMaterial>(L"TitleUi.cso", 1);
-	uiMaterial_->AddConstBuf(FLOAT4(cnt_, 0.0f, 0.0f, 0.0f));
+	uiMaterial_->AddConstBuf({ cnt_, 0.0f, 0.0f, 0.0f });
 	uiMaterial_->AddTextureBuf(pushAnyButtonImg_);
 	uiRenderer_ = std::make_unique<PixelRenderer>(*uiMaterial_);
 	uiRenderer_->SetPos({ PUSH_POS_X - PUSH_SIZE_X / 2, PUSH_POS_Y });
@@ -97,10 +97,11 @@ void SceneTitle::Draw(void)
 	//ロゴ
 	DrawExtendGraph(LOGO_POS_X_1, LOGO_POS_Y_1, LOGO_POS_X_2, LOGO_POS_Y_2, logoImg_, true);
 
-	//DrawRotaGraph(PUSH_POS_X, PUSH_POS_Y, 1.0, 0.0, pushAnyButtonImg_, true);
 	//プッシュボタン
-	uiMaterial_->SetConstBuf(0, FLOAT4(cnt_, 0.0f, 0.0f, 0.0f));
+	uiMaterial_->SetConstBuf(0, { cnt_, 0.0f, 0.0f, 0.0f });
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	uiRenderer_->Draw();
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
 	// ポストエフェクトの描画
 	//SetDrawScreen(postEffectScreen_);
