@@ -7,11 +7,9 @@
 #include "../Scene/SceneTitle.h"
 #include "../Scene/SceneSelect.h"
 #include "../Scene/Game/SceneGame.h"
-#include "../Game/CollisionManager.h"
 #include "../Game/GameSetting.h"
 #include"../Application.h"
-#include"../Object/Player/Player.h"
-#include"../Object/Player/UI/PlayerUI.h"
+#include"../Game/UIManager.h"
 #include"SceneManager.h"
 
 SceneManager::SceneManager(void)
@@ -188,8 +186,8 @@ void SceneManager::Draw(void)
 		}
 
 		//UIは別々で描画
-		if(sceneId_ == SCENE_ID::GAME)
-			PlayerManager::GetInstance().GetPlayer(0).GetUI().Draw();
+		if (sceneId_ == SCENE_ID::GAME)
+			UIManager::GetInstance().Draw();
 
 		// 主にポストエフェクト用
 		if (!cameras_.empty())
@@ -340,7 +338,7 @@ void SceneManager::CreateCameras(const int _playerNum)
 		std::shared_ptr<Camera> camera;
 		camera = std::make_shared<Camera>(i);
 		camera->Init();
-		cameras_.push_back(std::move(camera));
+		cameras_.push_back(camera);
 	}
 
 }
@@ -534,10 +532,10 @@ void SceneManager::DrawMultiScreen()
 		}
 
 		//UIは別々で描画
-		PlayerManager::GetInstance().GetPlayer(index).GetUI().Draw();
+		UIManager::GetInstance().Draw(index);
 
 		// 主にポストエフェクト用
-		cameras_[index]->Draw(index);
+		//cameras_[index]->Draw(index);
 
 		// Effekseerにより再生中のエフェクトを描画する。
 		DrawEffekseer3D();
@@ -609,14 +607,19 @@ void SceneManager::FadeOut(void)
 		//シーンIDの変更
 		sceneId_ = waitSceneId_;
 
-		//シーンに合わせて生成数を設定
-		const int createNum = (sceneId_ == SCENE_ID::GAME) ? GameSetting::GetInstance().GetUserNum() : 1;
+		//ゲームの時のみ分割
+		if (sceneId_ == SCENE_ID::GAME)
+		{
+			//シーンに合わせて生成数を設定
+			const int createNum = GameSetting::GetInstance().GetUserNum();
 
-		//カメラ生成
-		CreateCameras(createNum);
+			//カメラ生成
+			CreateCameras(createNum);
 
-		//分割スクリーン生成
-		CreateSplitScreen(createNum);
+			//分割スクリーン生成
+			CreateSplitScreen(createNum);
+
+		}
 
 		//シーンの遷移
 		changeScene_[changeSceneState_]();

@@ -29,6 +29,12 @@ public:
 	//描画
 	void Draw(void)override;
 
+	//チャージ時間の取得
+	const float GetChargeCnt(void)const { return chargeCnt_; }
+
+	//速度の取得
+	const float GetSpeed(void)const { return speed_; }
+
 private:
 	
 	//最高速の基本倍率
@@ -71,24 +77,6 @@ private:
 	//スピン時間
 	static constexpr float SPIN_TIME = 0.7f;
 
-	//体力
-	static constexpr int HEALTH_BOX_LOCAL_POS_X = 10;
-	static constexpr int HEALTH_BOX_LOCAL_POS_Y = 0;
-	static constexpr int HEALTH_BOX = 20;
-	static constexpr int HEALTH_LOCAL = 3;
-
-	//UIの位置(Normalize)
-	static constexpr Vector2F HEALTH_POS = { 0.95f,0.6f };
-	static constexpr Vector2F CHARGE_POS = { 0.85f,0.8f };
-
-	//ゲージの大きさ
-	static constexpr float GAUGE_SIZE = 512.0f;
-	static constexpr float GAUGE_SIZE_MULTI = 0.8f;
-
-	//ゲージの位置補正
-	static constexpr int GAUGE_LOCAL_POS = 5;
-	static constexpr int NUMBER_LOCAL_POS = 40;
-
 	//機体
 	const Machine& machine_;
 
@@ -119,27 +107,9 @@ private:
 	//スピン時間カウント
 	float spinCnt_;
 
-	//ゲージ画像
-	int gaugeImg_;
-	int gaugeMaskImg_;
-	int* numImgs_;
-
-	//シェーダー
-	std::unique_ptr<PixelMaterial> material_;
-	std::unique_ptr<PixelRenderer> renderer_;
-	int maskScreen_;
-	float gaugeCnt_;
-
-	//ゲージの位置
-	Vector2 chargeGaugePos_;
-
 	//状態ごとの更新
 	void UpdateGround(void)override;
 	void UpdateFlight(void)override;
-
-	//描画関係
-	void DrawGauge(void);
-	void DrawHealth(void);
 
 	//移動
 	void Move(void);

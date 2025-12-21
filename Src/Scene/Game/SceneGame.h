@@ -10,7 +10,6 @@ public:
 	//ƒQ[ƒ€‚Ìó‘Ô
 	enum class GAME_STATE
 	{
-		NONE = -1,
 		MAIN,
 		CHECK,
 		LAST,
@@ -36,7 +35,7 @@ public:
 	const GAME_STATE GetGameState(void)const { return gameState_; }
 
 	//ƒQ[ƒ€‚Ìó‘Ô‚Ìİ’è
-	void SetGameState(const GAME_STATE _gameState) { gameState_ = _gameState; }
+	void ChangeGameState(const GAME_STATE _gameState);
 
 private:
 

@@ -79,20 +79,6 @@ void Player::Init(void)
 	chara_->Load();
 	chara_->Init();
 
-	//UI
-	const int userNum = GameSetting::GetInstance().GetUserNum();
-	ui_ = std::make_unique<PlayerUI>();
-	ui_->Init();
-	ui_->CreateViewports(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
-
-	if (operation_ == OPERATION_TYPE::USER)
-	{
-		const auto& view = ui_->GetViewPort();
-
-		//カメラスクリーンの設定
-		camera_.lock()->SetPostEffectScreenSize(view.w, view.h, playerIndex_);
-	}
-
 	//初期機体情報
 	const auto& machineMng = MachineManager::GetInstance();
 
@@ -164,6 +150,10 @@ void Player::Draw(void)
 
 	//DrawFormatString(0, 32, 0xffffff, L"%.2f,%.2f,%.2f", trans_.quaRot.ToEuler().x, trans_.quaRot.ToEuler().y, trans_.quaRot.ToEuler().z);
 	//DrawFormatString(0, 80, 0xffffff, L"%.2f,%.2f,%.2f", trans_.pos.x, trans_.pos.y, trans_.pos.z);
+}
+
+void Player::DrawGrowthParam(void)
+{
 }
 
 void Player::OnHit(const std::weak_ptr<Collider> _hitCol)
@@ -302,7 +292,7 @@ void Player::Damage(const float _damage)
 void Player::ChangeActionNormal(void)
 {
 	//アクションUIを初期化しておく
-	ui_->SubDraw(PlayerUI::DRAW_TYPE::ACTION);
+	//ui_->SubDraw(PlayerUI::DRAW_TYPE::ACTION);
 
 	//キャラクターの行動に変更
 	action_ = std::make_unique<CharacterAction>(*this, *chara_, *logic_);
@@ -318,7 +308,7 @@ void Player::ChangeActionNormal(void)
 void Player::ChangeActionRide(void)
 {
 	//アクションUIを初期化しておく
-	ui_->SubDraw(PlayerUI::DRAW_TYPE::ACTION);
+	//ui_->SubDraw(PlayerUI::DRAW_TYPE::ACTION);
 
 	//機体の行動に変更
 	action_ = std::make_unique<MachineAction>(*this, *machine_, *logic_);

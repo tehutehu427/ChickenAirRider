@@ -6,6 +6,8 @@
 #include "../Manager/System/SoundManager.h"
 #include "../Renderer/PixelMaterial.h"
 #include "../Renderer/PixelRenderer.h"
+#include"../Manager/Game/UIManager.h"
+#include"../Manager/Game/GameSetting.h"
 #include "SceneSelect.h"
 #include "SceneTitle.h"
 
@@ -31,6 +33,15 @@ void SceneTitle::Load(void)
 
 	//サウンド
 	auto& snd = SoundManager::GetInstance();
+
+	//UIの生成
+	UIManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
+
+	//ユーザー数
+	int userNum = GameSetting::GetInstance().GetUserNum();
+
+	//画面ごとのUI情報
+	UIManager::GetInstance().CreateViewports(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 
 	//画像の読み込み
 	backImg_ = res.Load(ResourceManager::SRC::TITLE_BACK).handleId_;

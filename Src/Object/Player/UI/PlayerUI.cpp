@@ -5,6 +5,8 @@
 
 void PlayerUI::Init(void)
 {
+	//初期化
+	drawType_ = DRAW_TYPE::ACTION;
 }
 
 void PlayerUI::AddDraw(const DRAW_TYPE _type, std::function<void(void)> _draw)
@@ -20,6 +22,9 @@ void PlayerUI::SubDraw(const DRAW_TYPE _type)
 
 void PlayerUI::Draw(void)
 {
+	//描画処理がないならスキップ
+	if (uiDraw_[drawType_] == nullptr)return;
+		
 	//ビューポート
 	const auto& vp = viewPort_;
 
@@ -27,10 +32,7 @@ void PlayerUI::Draw(void)
 	SetDrawArea(vp.x, vp.y, vp.x + vp.w, vp.y + vp.h);
 
 	//描画
-	for (auto& draw : uiDraw_)
-	{
-		draw.second();
-	}
+	uiDraw_[drawType_]();
 
 	//元に戻す
 	SetDrawArea(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);

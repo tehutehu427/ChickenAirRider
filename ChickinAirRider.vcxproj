@@ -163,6 +163,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\Game\LastMiniGame\LastGameBase.cpp" />
     <ClCompile Include="Src\Scene\Game\GameCheck.cpp" />
     <ClCompile Include="Src\Scene\Game\GameMain.cpp" />
     <ClCompile Include="Src\Scene\Game\GameBase.cpp" />
@@ -237,8 +238,10 @@
     <ClCompile Include="Src\Manager\Game\Timer.cpp" />
     <ClCompile Include="Src\Common\Vector2F.cpp" />
     <ClCompile Include="Src\Object\Player\UI\PlayerUI.cpp" />
+    <ClCompile Include="Src\Manager\Game\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\Game\LastMiniGame\LastGameBase.h" />
     <ClInclude Include="Src\Scene\Game\GameCheck.h" />
     <ClInclude Include="Src\Scene\Game\GameMain.h" />
     <ClInclude Include="Src\Scene\Game\GameBase.h" />
@@ -389,6 +392,7 @@
     <ClInclude Include="Src\Manager\Game\Timer.h" />
     <ClInclude Include="Src\Common\Vector2F.h" />
     <ClInclude Include="Src\Object\Player\UI\PlayerUI.h" />
+    <ClInclude Include="Src\Manager\Game\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\PixelShader2DHeader.hlsli" />

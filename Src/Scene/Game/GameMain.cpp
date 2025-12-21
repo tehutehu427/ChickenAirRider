@@ -11,9 +11,9 @@
 #include"../Manager/Game/Timer.h"
 #include"../Manager/Game/StageManager.h"
 #include"../Manager/Game/MachineManager.h"
-#include"../Manager/Game/AnimationManager.h"
 #include"../Manager/Game/PlayerManager.h"
 #include"../Manager/Game/ItemManager.h"
+#include"../Manager/Game/UIManager.h"
 #include"../Object/SkyDome/SkyDome.h"
 #include"../Object/Player/Player.h"
 #include "GameMain.h"
@@ -35,7 +35,9 @@ void GameMain::Init(void)
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
-	auto& setting = GameSetting::GetInstance();
+	auto& res = ResourceManager::GetInstance();
+	auto& snd = SoundManager::GetInstance();
+	auto& ui = UIManager::GetInstance();
 
 	//重力
 	grvMng.Init();
@@ -59,8 +61,13 @@ void GameMain::Init(void)
 	sky_->Load();
 	sky_->Init();
 
-	//インスタンス
-	auto& snd = SoundManager::GetInstance();
+	//UIの挿入
+	ui.AddDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE);
+	ui.AddDraw(UIManager::DRAW_TYPE::HEALTH);
+
+	//BGM読み込み
+	int id = res.Load(ResourceManager::SRC::MAIN_GAME_BGM).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::MAIN_GAME_BGM, id, SoundManager::TYPE::BGM);
 
 	//BGM再生
 	snd.Play(SoundManager::SOUND_NAME::MAIN_GAME_BGM, SoundManager::PLAYTYPE::LOOP);
@@ -72,8 +79,7 @@ void GameMain::Update(void)
 	if (timer_->IsTimeOver())
 	{
 		//シーンの削除
-		parent_.SetGameState(SceneGame::GAME_STATE::CHECK);
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE, true, true);
+		parent_.ChangeGameState(SceneGame::GAME_STATE::CHECK);
 		return;
 	}
 
@@ -154,6 +160,12 @@ void GameMain::Draw(void)
 
 void GameMain::Release(void)
 {
+	//インスタンス
+	auto& ui = UIManager::GetInstance();
+
+	//UIの削除
+	ui.SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE);
+	ui.SubDraw(UIManager::DRAW_TYPE::HEALTH);
 }
 
 void GameMain::DebugDraw(void)

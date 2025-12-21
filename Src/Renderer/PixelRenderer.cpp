@@ -182,3 +182,11 @@ void PixelRenderer::Draw(int x, int y)
 	MakeSquereVertex();
 	Draw();
 }
+
+void PixelRenderer::Draw(Vector2 _pos, Vector2 _size)
+{
+	pos_ = _pos;
+	size_ = _size;
+	MakeSquereVertex();
+	Draw();
+}

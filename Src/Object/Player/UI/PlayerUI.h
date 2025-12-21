@@ -8,7 +8,8 @@ public:
 
 	enum class DRAW_TYPE
 	{
-		ACTION,
+		ACTION,			//アクション
+		CHECK_PARAM,	//最終チェック
 	};
 
 	//ビューポート
@@ -37,8 +38,10 @@ public:
 	void AddDraw(const DRAW_TYPE _type, std::function<void(void)> _draw);
 	void SubDraw(const DRAW_TYPE _type);
 
-	/// @brief 描画
-	/// @param _index プレイヤー番号
+	//描画処理変更
+	void ChangeDraw(const DRAW_TYPE _type) { drawType_ = _type; }
+
+	//描画
 	void Draw(void);
 
 	//ビューポートの生成
@@ -51,6 +54,9 @@ private:
 
 	//ビューポート
 	Viewport viewPort_;
+
+	//描画状態
+	DRAW_TYPE drawType_;
 
 	//描画用関数ポインタ
 	std::unordered_map<DRAW_TYPE, std::function<void(void)>> uiDraw_;

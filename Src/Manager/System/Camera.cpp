@@ -1,10 +1,11 @@
 #include"../pch.h"
+#include "../../Application.h"
 #include "../../Utility/Utility.h"
 #include "../../Object/Common/Transform.h"
 #include "../../Manager/System/SceneManager.h"
 #include "../../Manager/Game/GravityManager.h"
-#include "../../Application.h"
 #include "../../Manager/Game/GameSetting.h"
+#include "../../Manager/Game/UIManager.h"
 #include "../Renderer/PixelMaterial.h"
 #include "../Renderer/PixelRenderer.h"
 #include "Camera.h"
@@ -34,12 +35,15 @@ void Camera::Init(void)
 {
 	ChangeMode(MODE::FIXED_POINT);
 
+	auto& ui = UIManager::GetInstance();
+	auto& view = ui.GetViewport(static_cast<int>(padNo_) - 1);
+
 	material_ = std::make_unique<PixelMaterial>(L"GodRay.cso", 1);
 	renderer_ = std::make_unique<PixelRenderer>(*material_);
 
 	material_->AddConstBuf(FLOAT4{ 0.1f, 0.0f,0.95f, 0.7f });
 	material_->AddTextureBuf(SceneManager::GetInstance().GetMainScreen());
-	renderer_->MakeSquereVertex({ 0,0 }, { Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y });
+	renderer_->MakeSquereVertex({ view.x,view.y }, { view.w, view.h });
 
 	postEffectScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
 }
@@ -281,7 +285,7 @@ void Camera::SyncFollowLeap(void)
 	VECTOR desiredTargetPos = VAdd(pos, localPos);
 
 	// --- 移動速度に応じて注視点を前に押し出す ---
-	float lookAhead = std::clamp(speedFront * 5.0f, 50.0f, 1000.0f);
+	float lookAhead = std::clamp(speedFront * 5.0f, 0.0f, 0.0f);
 	desiredTargetPos = VAdd(desiredTargetPos, VScale(forward, lookAhead));
 
 	// --- カメラ理想位置 ---

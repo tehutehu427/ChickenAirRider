@@ -39,6 +39,7 @@ public:
 	// •`‰æ
 	void Draw(void);
 	void Draw(int x, int y);
+	void Draw(Vector2 _pos, Vector2 _size);
 
 private:
 

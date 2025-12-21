@@ -16,10 +16,10 @@ PlayerOnHit::PlayerOnHit(Player& _player, Transform& _trans)
 	playerTrans_(_trans)
 {
 	//É^ÉOÇ≤Ç∆ÇÃÉqÉbÉgèàóùäiî[
-	onHit_[Collider::TAG::PLAYER1] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
-	onHit_[Collider::TAG::PLAYER2] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
-	onHit_[Collider::TAG::PLAYER3] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
-	onHit_[Collider::TAG::PLAYER4] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
+	onHit_[Collider::TAG::PLAYER1] = [this](const std::weak_ptr<Collider> _hitCol) {};
+	onHit_[Collider::TAG::PLAYER2] = [this](const std::weak_ptr<Collider> _hitCol) {};
+	onHit_[Collider::TAG::PLAYER3] = [this](const std::weak_ptr<Collider> _hitCol) {};
+	onHit_[Collider::TAG::PLAYER4] = [this](const std::weak_ptr<Collider> _hitCol) {};
 	onHit_[Collider::TAG::NORMAL_OBJECT] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
 	onHit_[Collider::TAG::TREE] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
 	onHit_[Collider::TAG::GROUND] = [this](const std::weak_ptr<Collider> _hitCol) {GroundOnHit(_hitCol); };
