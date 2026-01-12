@@ -139,7 +139,7 @@ public:
 	std::weak_ptr<Camera> GetCamera(void)const { return camera_; }
 
 	//基本機能を返す
-	ActionBase& GetAction(void)const { return *action_; }
+	std::weak_ptr<ActionBase> GetAction(void)const { return action_; }
 	LogicBase& GetLogic(void)const { return *logic_; }
 	Character& GetChara(void)const { return *chara_; }
 	//PlayerUI& GetUI(void)const { return *ui_; }
@@ -172,7 +172,7 @@ private:
 	std::unique_ptr<Character> chara_;		//キャラクタ―
 	std::unique_ptr<Machine> machine_;		//機体
 	std::unique_ptr<LogicBase> logic_;		//行動操作者
-	std::unique_ptr<ActionBase> action_;	//行動
+	std::shared_ptr<ActionBase> action_;	//行動
 	std::unique_ptr<PlayerOnHit> onHit_;	//当たり判定
 	//std::unique_ptr<PlayerUI> ui_;			//UI
 

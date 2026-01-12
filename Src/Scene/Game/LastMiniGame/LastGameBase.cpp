@@ -1,6 +1,7 @@
 #include "../pch.h"
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/KeyConfig.h"
+#include "../Manager/Game/GameSetting.h"
 #include "LastGameBase.h"
 
 LastGameBase::LastGameBase(SceneGame& _parent)
@@ -36,6 +37,8 @@ void LastGameBase::Draw(void)
 
 void LastGameBase::Release(void)
 {
+	//プレイヤーの数リセット
+	GameSetting::GetInstance().ResetPlayerNum();
 }
 
 void LastGameBase::DebugDraw(void)

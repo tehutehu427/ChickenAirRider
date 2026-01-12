@@ -30,6 +30,10 @@ SceneGame::~SceneGame(void)
 	CollisionManager::GetInstance().Destroy();
 	SoundManager::GetInstance().StopAll();
 	SingletonRegistry::GetInstance().Delete(SingletonRegistry::DESTROY_TIMING::GAME_END);
+
+	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE);
+	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::HEALTH);
+	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHECK_PARAM);
 }
 
 void SceneGame::Load(void)
@@ -63,11 +67,11 @@ void SceneGame::Init(void)
 	//アイテム管理の生成
 	ItemManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
 
-	//ユーザー数
-	int userNum = GameSetting::GetInstance().GetUserNum();
+	////ユーザー数
+	//int userNum = GameSetting::GetInstance().GetUserNum();
 
-	//画面ごとのUI情報
-	UIManager::GetInstance().CreateViewports(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+	////画面ごとのUI情報
+	//UIManager::GetInstance().CreateViewports(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 
 	//ゲームの状態変更
 	ChangeGameState(GAME_STATE::MAIN);

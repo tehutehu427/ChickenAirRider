@@ -4,7 +4,6 @@
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
 #include"../Object/Player/Player.h"
-#include"../Object/Player/UI/PlayerUI.h"
 #include "PlayerManager.h"
 
 //静的インスタンスの初期化

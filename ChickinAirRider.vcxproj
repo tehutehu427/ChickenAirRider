@@ -163,6 +163,8 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Item\PowerUpItemBase.cpp" />
+    <ClCompile Include="Src\Object\Item\BattleItemBase.cpp" />
     <ClCompile Include="Src\Scene\Game\LastMiniGame\LastGameBase.cpp" />
     <ClCompile Include="Src\Scene\Game\GameCheck.cpp" />
     <ClCompile Include="Src\Scene\Game\GameMain.cpp" />
@@ -237,10 +239,11 @@
     <ClCompile Include="Src\Utility\Utility.cpp" />
     <ClCompile Include="Src\Manager\Game\Timer.cpp" />
     <ClCompile Include="Src\Common\Vector2F.cpp" />
-    <ClCompile Include="Src\Object\Player\UI\PlayerUI.cpp" />
     <ClCompile Include="Src\Manager\Game\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Item\PowerUpItemBase.h" />
+    <ClInclude Include="Src\Object\Item\BattleItemBase.h" />
     <ClInclude Include="Src\Scene\Game\LastMiniGame\LastGameBase.h" />
     <ClInclude Include="Src\Scene\Game\GameCheck.h" />
     <ClInclude Include="Src\Scene\Game\GameMain.h" />
@@ -391,7 +394,6 @@
     <ClInclude Include="Src\Utility\UtilityTemplates.h" />
     <ClInclude Include="Src\Manager\Game\Timer.h" />
     <ClInclude Include="Src\Common\Vector2F.h" />
-    <ClInclude Include="Src\Object\Player\UI\PlayerUI.h" />
     <ClInclude Include="Src\Manager\Game\UIManager.h" />
   </ItemGroup>
   <ItemGroup>

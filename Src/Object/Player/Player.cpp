@@ -6,6 +6,7 @@
 #include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/GravityManager.h"
 #include "../Manager/Game/GameSetting.h"
+#include "../Manager/Game/UIManager.h"
 #include "../Common/Geometry/Sphere.h"
 #include "../Common/Geometry/Line.h"
 #include "Character/Character.h"
@@ -17,7 +18,6 @@
 #include "Action/CharacterAction.h"
 #include "Action/MachineAction.h"
 #include "Collision/PlayerOnHit.h"
-#include "UI/PlayerUI.h"
 #include "Player.h"
 
 Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo, Collider::TAG _playerTag)
@@ -292,10 +292,11 @@ void Player::Damage(const float _damage)
 void Player::ChangeActionNormal(void)
 {
 	//アクションUIを初期化しておく
-	//ui_->SubDraw(PlayerUI::DRAW_TYPE::ACTION);
+	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE);
+	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::HEALTH);
 
 	//キャラクターの行動に変更
-	action_ = std::make_unique<CharacterAction>(*this, *chara_, *logic_);
+	action_ = std::make_shared<CharacterAction>(*this, *chara_, *logic_);
 	action_->Init();
 
 	//カメラ状態の変更
@@ -308,10 +309,11 @@ void Player::ChangeActionNormal(void)
 void Player::ChangeActionRide(void)
 {
 	//アクションUIを初期化しておく
-	//ui_->SubDraw(PlayerUI::DRAW_TYPE::ACTION);
+	UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE);
+	UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::HEALTH);
 
 	//機体の行動に変更
-	action_ = std::make_unique<MachineAction>(*this, *machine_, *logic_);
+	action_ = std::make_shared<MachineAction>(*this, *machine_, *logic_);
 	action_->Init();
 
 	//カメラ状態の変更

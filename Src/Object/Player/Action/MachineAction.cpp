@@ -9,7 +9,6 @@
 #include "../Renderer/PixelMaterial.h"
 #include "../Renderer/PixelRenderer.h"
 #include "../Logic/LogicBase.h"
-#include "../UI/PlayerUI.h"
 #include "MachineAction.h"
 
 MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase& _logic)

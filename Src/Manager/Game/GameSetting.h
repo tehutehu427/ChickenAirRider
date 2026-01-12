@@ -29,6 +29,9 @@ public:
 	//全体プレイヤーの数の取得
 	const int GetPlayerNum(void)const { return userNum_ + npcNum_; }
 
+	//プレイヤー数のリセット
+	void ResetPlayerNum(void);
+
 	//時間制限の取得
 	const int GetTimeLimit(void)const { return timeLimit_; }
 

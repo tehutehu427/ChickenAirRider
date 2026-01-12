@@ -89,9 +89,9 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(slide, remain)));
 
 	//接地しているか
-	if (groundPreCol->IsHit() && player_.GetAction().IsHit())
+	if (groundPreCol->IsHit() && player_.GetAction().lock()->IsHit())
 	{
-		player_.GetAction().ResetAxisX();
+		player_.GetAction().lock()->ResetAxisX();
 		player_.SetIsGrounded(true);
 	}
 }
@@ -154,7 +154,7 @@ void PlayerOnHit::TreeOnHit(const std::weak_ptr<Collider> _hitCol)
 				groundedThisFrame = true;
 
 				// 回転を元に戻す
-				player_.GetAction().ResetAxisX();
+				player_.GetAction().lock()->ResetAxisX();
 			}
 
 			// 押し戻し
@@ -245,7 +245,7 @@ void PlayerOnHit::GroundOnHit(const std::weak_ptr<Collider> _hitCol)
 			groundedThisFrame = true;
 
 			// 回転を元に戻す
-			player_.GetAction().ResetAxisX();
+			player_.GetAction().lock()->ResetAxisX();
 		}
 	}
 
@@ -287,6 +287,12 @@ void PlayerOnHit::RideMachineOnHit(const std::weak_ptr<Collider> _hitCol)
 
 void PlayerOnHit::PowerUpItemOnHit(const std::weak_ptr<Collider> _hitCol)
 {
+	//身体が当たっていないならスキップ
+	if (!player_.GetColliders()[static_cast<int>(Player::COL_VALUE::MAIN)]->IsHit())return;
+
+	//消失済みならスキップ
+	if (_hitCol.lock()->IsDead())return;
+
 	//SE
 	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::GET_ITEM, SoundManager::PLAYTYPE::BACK);
 

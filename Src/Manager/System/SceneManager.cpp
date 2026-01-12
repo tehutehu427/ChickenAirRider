@@ -67,8 +67,7 @@ void SceneManager::Init(void)
 	fader_->Init();
 
 	// 初期のカメラは1つなので人数を初期化しておく
-	setting.SetUserNum(1);
-	setting.SetNpcNum(0);
+	setting.ResetPlayerNum();
 
 	//シーンチェンジ中か
 	isSceneChanging_ = true;
@@ -331,6 +330,9 @@ void SceneManager::CreateCameras(const int _playerNum)
 		//カメラの中身を削除
 		cameras_.clear();
 	}
+
+	//UIの分割
+	UIManager::GetInstance().CreateViewports(_playerNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 
 	//カメラ生成
 	for (int i = 0; i < _playerNum; i++)
@@ -607,19 +609,19 @@ void SceneManager::FadeOut(void)
 		//シーンIDの変更
 		sceneId_ = waitSceneId_;
 
+		//シーンに合わせて生成数を設定
+		const int createNum = GameSetting::GetInstance().GetUserNum();
+
 		//ゲームの時のみ分割
 		if (sceneId_ == SCENE_ID::GAME)
 		{
-			//シーンに合わせて生成数を設定
-			const int createNum = GameSetting::GetInstance().GetUserNum();
-
 			//カメラ生成
 			CreateCameras(createNum);
 
-			//分割スクリーン生成
-			CreateSplitScreen(createNum);
-
 		}
+
+		//分割スクリーン生成
+		CreateSplitScreen(createNum);
 
 		//シーンの遷移
 		changeScene_[changeSceneState_]();

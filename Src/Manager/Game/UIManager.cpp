@@ -22,6 +22,17 @@ void UIManager::Init(void)
 	gaugeMaskImg_ = res.Load(ResourceManager::SRC::CHARGE_GAUGE_MASK).handleId_;
 	numImgs_ = res.Load(ResourceManager::SRC::NUMBER).handleIds_;
 
+	//パワーアップ画像
+	maxSpeedImg_ = res.Load(ResourceManager::SRC::MAX_SPEED).handleId_;
+	acceleImg_ = res.Load(ResourceManager::SRC::ACCELERATION).handleId_;
+	turnImg_ = res.Load(ResourceManager::SRC::TURNING).handleId_;
+	chargeImg_ = res.Load(ResourceManager::SRC::CHARGE).handleId_;
+	flightImg_ = res.Load(ResourceManager::SRC::FLIGHT).handleId_;
+	weightImg_ = res.Load(ResourceManager::SRC::WEIGHT).handleId_;
+	attackImg_ = res.Load(ResourceManager::SRC::ATTACK).handleId_;
+	defenceImg_ = res.Load(ResourceManager::SRC::DEFENCE).handleId_;
+	maxHealthImg_ = res.Load(ResourceManager::SRC::MAX_HEALTH).handleId_;
+
 	//マテリアル
 	material_ = std::make_unique<PixelMaterial>(L"GaugeMask.cso", 1);
 	material_->AddConstBuf({ 0.5f,0.5f,0.0f,gaugeCnt_ });
@@ -124,8 +135,11 @@ void UIManager::DrawChargeGauge(const int _playerIndex)
 	//プレイヤー
 	const auto& player = PlayerManager::GetInstance().GetPlayer(_playerIndex);
 
+	//アクションがないならスキップ
+	if (player.GetAction().lock() == nullptr)return;
+
 	//プレイヤーのアクション
-	const auto& mAction = dynamic_cast<const MachineAction&>(player.GetAction());
+	const MachineAction& mAction = dynamic_cast<const MachineAction&>(*player.GetAction().lock());
 
 	//チャージカウンタ
 	const float chargeCnt = mAction.GetChargeCnt();
@@ -213,9 +227,13 @@ void UIManager::DrawParam(const int _playerIndex)
 
 	//間隔
 	int interval = PARAM_BOX_INTERVAL / magnification;
+	int powerUpInterval = POWER_UP_INTERVAL / magnification;
 
 	//サイズ
 	int size = PARAM_BOX_SIZE / magnification;
+
+	//パワーアップ画像
+	int powerUpSize = size / 2;
 
 	//座標
 	Vector2 pos = {};
@@ -223,38 +241,47 @@ void UIManager::DrawParam(const int _playerIndex)
 	pos.y = PARAM_BOX_START_POS.y * view.h;
 
 	//最高速
+	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, maxSpeedImg_, true);
 	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.maxSpeed_)), pos.y + size, Utility::CYAN, true);
-	pos.y + interval + size;
+	pos.y += interval + size;
 
 	//加速
+	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, acceleImg_, true);
 	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.acceleration_)), pos.y + size, Utility::PURPLE, true);
-	pos.y + interval + size;
+	pos.y += interval + size;
 
 	//旋回
+	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, turnImg_, true);
 	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.turning_)), pos.y + size, Utility::GREEN, true);
-	pos.y + interval + size;
+	pos.y += interval + size;
 
 	//チャージ
+	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, chargeImg_, true);
 	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.charge_)), pos.y + size, Utility::YELLOW, true);
-	pos.y + interval + size;
+	pos.y += interval + size;
 
 	//飛行
+	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, flightImg_, true);
 	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.flight_)), pos.y + size, Utility::WHITE, true);
-	pos.y + interval + size;
+	pos.y += interval + size;
 
 	//重さ
+	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, weightImg_, true);
 	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.weight_)), pos.y + size, Utility::BROWN, true);
-	pos.y + interval + size;
+	pos.y += interval + size;
 
 	//攻撃
+	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, attackImg_, true);
 	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.attack_)), pos.y + size, Utility::ORANGE, true);
-	pos.y + interval + size;
+	pos.y += interval + size;
 
 	//防御
+	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, defenceImg_, true);
 	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.defence_)), pos.y + size, Utility::BLUE, true);
-	pos.y + interval + size;
+	pos.y += interval + size;
 
 	//最大体力
+	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, maxHealthImg_, true);
 	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.maxHealth_)), pos.y + size, Utility::PINK, true);
-	pos.y + interval + size;
+	pos.y += interval + size;
 }

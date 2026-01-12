@@ -1,6 +1,6 @@
 #pragma once
+#include<memory>
 #include "../ObjectBase.h"
-#include "../Object/Player/Parameter/Parameter.h"
 
 class ItemBase : public ObjectBase
 {
@@ -19,7 +19,7 @@ public:
 	/// @param _vec 移動方向
 	/// @param _param パラメーター情報
 	/// @param _imageId 画像ID
-	ItemBase(const VECTOR& _pos,const VECTOR& _vec, const Parameter& _param, const int _imageId);
+	ItemBase(const VECTOR& _pos,const VECTOR& _vec, const int _imageId);
 
 	//デストラクタ
 	virtual ~ItemBase(void)override;
@@ -42,10 +42,7 @@ public:
 	//死亡判定の取得
 	const bool IsDead(void)const { return state_ == STATE::DEAD; }
 
-	//パラメーターの取得
-	const Parameter& GetParam(void)const { return param_; }
-
-private:
+protected:
 
 	//コライダ番号
 	enum class COL_VALUE
@@ -59,9 +56,6 @@ private:
 
 	//半径
 	static constexpr float RADIUS = 150.0f;
-
-	//取得後表示時間
-	static constexpr float GOT_DISPLAY_TIME = 1.0f;
 
 	//取得後表示相対座標
 	static constexpr float LOCAL_HITER_POS_Y = 100.0f;
@@ -100,8 +94,5 @@ private:
 
 	//取得者
 	std::weak_ptr<Collider>hiter_;
-
-	//パラメーター
-	Parameter param_;
 };
 

@@ -57,9 +57,10 @@ public:
 private:
 
 	//パラメーター
-	static constexpr int PARAM_BOX_SIZE = 20;						//箱サイズ
+	static constexpr int PARAM_BOX_SIZE = 40;						//箱サイズ
 	static constexpr int PARAM_BOX_INTERVAL = 20;					//箱の間隔
-	static constexpr Vector2F PARAM_BOX_START_POS = { 0.1f,0.1f };	//箱のUV座標
+	static constexpr int POWER_UP_INTERVAL = 150;					//パワーアップ画像の間隔
+	static constexpr Vector2F PARAM_BOX_START_POS = { 0.2f,0.1f };	//箱のUV座標
 
 	//体力
 	static constexpr int HEALTH_BOX_LOCAL_POS_X = 10;
@@ -90,6 +91,17 @@ private:
 	int gaugeImg_;
 	int gaugeMaskImg_;
 	int* numImgs_;
+
+	//パワーアップ画像
+	int maxSpeedImg_;
+	int acceleImg_;
+	int turnImg_;
+	int chargeImg_;
+	int flightImg_;
+	int weightImg_;
+	int attackImg_;
+	int defenceImg_;
+	int maxHealthImg_;
 
 	//シェーダー
 	std::unique_ptr<PixelMaterial> material_;

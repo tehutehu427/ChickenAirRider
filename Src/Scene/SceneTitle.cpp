@@ -35,7 +35,7 @@ void SceneTitle::Load(void)
 	auto& snd = SoundManager::GetInstance();
 
 	//UIÇÃê∂ê¨
-	UIManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
+	UIManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//ÉÜÅ[ÉUÅ[êî
 	int userNum = GameSetting::GetInstance().GetUserNum();

@@ -35,6 +35,7 @@ public :
 
 		ITEM_BOX,		//アイテムボックス
 		POWER_UP,		//パワーアップアイテム
+		BATTLE_ITEM,	//バトルアイテム
 	};
 
 	/// @brief コンストラクタ
