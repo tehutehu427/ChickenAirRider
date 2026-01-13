@@ -8,6 +8,7 @@
 #include "../Manager/Game/MachineManager.h"
 #include "../Parameter/Parameter.h"
 #include "../Object/Item/ItemBase.h"
+#include "../Object/Item/PowerUpItemBase.h"
 #include "../Action/ActionBase.h"
 #include "PlayerOnHit.h"
 
@@ -297,7 +298,7 @@ void PlayerOnHit::PowerUpItemOnHit(const std::weak_ptr<Collider> _hitCol)
 	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::GET_ITEM, SoundManager::PLAYTYPE::BACK);
 
 	//対象パワーアップアイテム
-	const auto& powerUpItem = dynamic_cast<const ItemBase&>(_hitCol.lock()->GetParent());
+	const auto& powerUpItem = dynamic_cast<const PowerUpItemBase&>(_hitCol.lock()->GetParent());
 
 	//パラメーター
 	Parameter param = powerUpItem.GetParam();

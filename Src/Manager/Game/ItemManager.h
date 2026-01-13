@@ -25,7 +25,7 @@ public:
 
 	/// @brief アイテム生成
 	/// @param _pos	生成位置
-	void CreateItem(VECTOR _pos);
+	void CreatePowerUpItem(VECTOR _pos);
 	
 private:
 

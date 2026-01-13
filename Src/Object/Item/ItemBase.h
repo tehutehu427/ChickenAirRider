@@ -17,9 +17,7 @@ public:
 	/// @brief コンストラクタ
 	/// @param _pos 生成座標
 	/// @param _vec 移動方向
-	/// @param _param パラメーター情報
-	/// @param _imageId 画像ID
-	ItemBase(const VECTOR& _pos,const VECTOR& _vec, const int _imageId);
+	ItemBase(const VECTOR& _pos,const VECTOR& _vec);
 
 	//デストラクタ
 	virtual ~ItemBase(void)override;

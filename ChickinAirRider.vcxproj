@@ -169,7 +169,6 @@
     <ClCompile Include="Src\Scene\Game\GameCheck.cpp" />
     <ClCompile Include="Src\Scene\Game\GameMain.cpp" />
     <ClCompile Include="Src\Scene\Game\GameBase.cpp" />
-    <ClCompile Include="Src\Object\Item\PowerUpItem.cpp" />
     <ClCompile Include="Src\Manager\Game\GameSetting.cpp" />
     <ClCompile Include="Src\Manager\Game\ItemManager.cpp" />
     <ClCompile Include="Src\Object\Item\ItemBox.cpp" />
@@ -248,7 +247,6 @@
     <ClInclude Include="Src\Scene\Game\GameCheck.h" />
     <ClInclude Include="Src\Scene\Game\GameMain.h" />
     <ClInclude Include="Src\Scene\Game\GameBase.h" />
-    <ClInclude Include="Src\Object\Item\PowerUpItem.h" />
     <ClInclude Include="Src\Manager\Game\GameSetting.h" />
     <ClInclude Include="Src\Manager\Game\ItemManager.h" />
     <ClInclude Include="Src\Object\Item\BoxCreatePositionData.h" />

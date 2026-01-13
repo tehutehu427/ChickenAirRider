@@ -3,11 +3,10 @@
 #include "../Object/Common/Geometry/Sphere.h"
 #include "ItemBase.h"
 
-ItemBase::ItemBase(const VECTOR& _pos, const VECTOR& _vec, const int _imageId)
+ItemBase::ItemBase(const VECTOR& _pos, const VECTOR& _vec)
 {
 	trans_.pos = Utility::VECTOR_ZERO;
 	vec_ = _vec;
-	trans_.modelId = _imageId;
 	displayCnt_ = 0.0f;
 	state_ = STATE::ALIVE;
 	moveCnt_ = 0.0f;

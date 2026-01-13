@@ -6,8 +6,9 @@
 #include "BattleItemBase.h"
 
 BattleItemBase::BattleItemBase(const VECTOR& _pos, const VECTOR& _vec, const int _imageId, const int _modelId, const BATTLE_ITEM_TYPE _battleItemType)
-	: ItemBase(_pos,_vec,imgId_)
+	: ItemBase(_pos,_vec)
 {
+	imgId_ = _imageId;
 	trans_.modelId = _modelId;
 	battleItemType_ = _battleItemType;
 }

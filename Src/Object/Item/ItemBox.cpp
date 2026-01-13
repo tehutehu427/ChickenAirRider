@@ -146,7 +146,7 @@ void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
 			isDead_ = true;
 
 			//ƒAƒCƒeƒ€¶¬
-			ItemManager::GetInstance().CreateItem(trans_.pos);
+			ItemManager::GetInstance().CreatePowerUpItem(trans_.pos);
 		}
 	}
 	else if (hitTag == Collider::TAG::GROUND

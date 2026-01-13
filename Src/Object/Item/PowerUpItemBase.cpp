@@ -6,10 +6,11 @@
 #include "../Object/Common/Geometry/Sphere.h"
 #include "PowerUpItemBase.h"
 
-PowerUpItemBase::PowerUpItemBase(const VECTOR& _pos, const VECTOR& _vec, const Parameter& _param, const int _imageId)
-	: ItemBase(_pos,_vec,_imageId)
+PowerUpItemBase::PowerUpItemBase(const VECTOR& _pos, const VECTOR& _vec, const int _imageId, const Parameter& _param)
+	: ItemBase(_pos,_vec)
 {
 	param_ = _param;
+	trans_.modelId = _imageId;
 }
 
 PowerUpItemBase::~PowerUpItemBase(void)
@@ -75,8 +76,10 @@ void PowerUpItemBase::Update(void)
 
 void PowerUpItemBase::Draw(void)
 {
+	ItemBase::Draw();
 }
 
 void PowerUpItemBase::OnHit(std::weak_ptr<Collider> _hitCol)
 {
+	ItemBase::OnHit(_hitCol);
 }

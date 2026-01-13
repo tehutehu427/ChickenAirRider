@@ -6,6 +6,8 @@
 #include"../Manager/System/SceneManager.h"
 #include"../Object/Item/ItemBox.h"
 #include"../Object/Item/ItemBase.h"
+#include"../Object/Item/PowerUpItemBase.h"
+#include"../Object/Item/BattleItemBase.h"
 #include "ItemManager.h"
 
 void ItemManager::Init(void)
@@ -146,7 +148,7 @@ void ItemManager::CreateItemBox(void)
 	itemBoxes_.push_back(std::move(itemBox));
 }
 
-void ItemManager::CreateItem(VECTOR _pos)
+void ItemManager::CreatePowerUpItem(VECTOR _pos)
 {
 	//ÉTÉCÉY
 	int importSize = static_cast<int>(itemData_.size());
@@ -171,7 +173,7 @@ void ItemManager::CreateItem(VECTOR _pos)
 		rand =  Utility::GetRandomValue(0, importSize - 1);
 
 		//ê∂ê¨
-		std::unique_ptr<ItemBase> item = std::make_unique<ItemBase>(_pos, moveVec, itemData_[rand].param, getImageId_[itemData_[rand].name]());
+		std::unique_ptr<ItemBase> item = std::make_unique<PowerUpItemBase>(_pos, moveVec, getImageId_[itemData_[rand].name](), itemData_[rand].param);
 		item->Load();
 		item->Init();
 

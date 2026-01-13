@@ -7,7 +7,7 @@ class PowerUpItemBase : public ItemBase
 public:
 
 	//コンストラクタ
-	PowerUpItemBase(const VECTOR& _pos, const VECTOR& _vec, const Parameter& _param, const int _imageId);
+	PowerUpItemBase(const VECTOR& _pos, const VECTOR& _vec, const int _imageId, const Parameter& _param);
 
 	//デストラクタ
 	~PowerUpItemBase(void)override;
