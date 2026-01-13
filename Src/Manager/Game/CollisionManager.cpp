@@ -126,6 +126,8 @@ CollisionManager::CollisionManager(void)
 	hitRange_[Collider::TAG::GROUND] = HIT_RANGE_GROUND;
 	hitRange_[Collider::TAG::ITEM_BOX] = HIT_RANGE_OBJECT;
 	hitRange_[Collider::TAG::POWER_UP] = HIT_RANGE_NORMAL;
+	hitRange_[Collider::TAG::BATTLE_ITEM] = HIT_RANGE_NORMAL;
+	hitRange_[Collider::TAG::CANNON_SHOT] = HIT_RANGE_NORMAL;
 }
 
 CollisionManager::~CollisionManager(void)

@@ -36,6 +36,8 @@ private:
 	void GroundOnHit(const std::weak_ptr<Collider> _hitCol);
 	void RideMachineOnHit(const std::weak_ptr<Collider> _hitCol);
 	void PowerUpItemOnHit(const std::weak_ptr<Collider> _hitCol);
+	void BattleItemOnHit(const std::weak_ptr<Collider> _hitCol);
 	void SpinOnHit(const std::weak_ptr<Collider> _hitCol);
+	void CannonShotOnHit(const std::weak_ptr<Collider> _hitCol);
 };
 

@@ -51,6 +51,13 @@ public:
 		DEFENCE,			//防御
 		MAX_HEALTH,			//最大体力
 
+		//バトルアイテム画像
+		CANNON_IMAGE,		//大砲画像
+
+		//バトルアイテムモデル
+		CANNON_MODEL,		//大砲モデル
+		CANNON_SHOT_MODEL,	//大砲弾モデル
+
 		//スカイドーム
 		SKY_DOME,			//スカイドーム
 
@@ -86,7 +93,7 @@ public:
 		CHARGE_MAX_SE,	//チャージ完了SE
 		BOOST,			//ブースト
 		BEAM,			//ビーム
-		CANNON,			//大砲
+		CANNON_SE,		//大砲音
 		DAMAGE,			//ダメージ
 		GET_ITEM,		//アイテムゲット
 		HEAL,			//回復

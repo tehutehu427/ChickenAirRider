@@ -1,5 +1,6 @@
 #include "../pch.h"
 #include "../Manager/System/KeyConfig.h"
+#include "../Manager/System/SceneManager.h"
 #include "../Manager/Game/UIManager.h"
 #include "../Manager/Game/Timer.h"
 #include "GameCheck.h"
@@ -64,6 +65,9 @@ void GameCheck::UpdatePlayerParam(void)
 	//決定
 	if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::ENTER, KeyConfig::JOYPAD_NO::PAD1))
 	{
+		//分割なし
+		SceneManager::GetInstance().SetIsSplitMode(false);
+
 		//最終ゲーム確認へ
 		state_ = CHECK_STATE::LAST_GAME;
 

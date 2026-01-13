@@ -7,13 +7,15 @@
 #include"../Object/Item/ItemBox.h"
 #include"../Object/Item/ItemBase.h"
 #include"../Object/Item/PowerUpItemBase.h"
-#include"../Object/Item/BattleItemBase.h"
+#include"../Object/Item/BattleItem/BattleItemBase.h"
+#include"../Object/Item/BattleItem/Cannon.h"
 #include "ItemManager.h"
 
 void ItemManager::Init(void)
 {
 	//インポートデータ
-	itemData_ = LoaderManager<ItemImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Item.json"));
+	powerUpItemData_ = LoaderManager<PowerUpItemImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"PowerUpItem.json"));
+	battleItemData_ = LoaderManager<BattleItemImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"BattleItem.json"));
 	boxPosData_ = LoaderManager<BoxCreatePositionData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"BoxCreatePositionData.json"));
 }
 
@@ -77,6 +79,8 @@ void ItemManager::Draw(void)
 ItemManager::ItemManager(void)
 {
 	//画像ID
+
+	//パワーアップ
 	getImageId_["maxSpeed"] = [](void)
 	{
 		return ResourceManager::GetInstance().Load(ResourceManager::SRC::MAX_SPEED).handleId_;
@@ -114,6 +118,11 @@ ItemManager::ItemManager(void)
 		return ResourceManager::GetInstance().Load(ResourceManager::SRC::MAX_HEALTH).handleId_;
 	};
 
+	createBattleItem_[BattleItemBase::BATTLE_ITEM_TYPE::CANNON] = [this](const VECTOR& _pos, const VECTOR& _vec)
+	{
+		return CreateCannon(_pos, _vec);
+	};
+
 	//初期化
 	boxCreateCnt_ = 0.0f;
 }
@@ -131,6 +140,7 @@ void ItemManager::CreateItemBox(void)
 
 	//ランダム生成
 	int rand = Utility::GetRandomValue(0, static_cast<int>(boxPosData_.size()) - 1);
+	ItemBox::ITEM_TYPE randType = static_cast<ItemBox::ITEM_TYPE>(Utility::GetRandomValue(0, static_cast<int>(ItemBox::ITEM_TYPE::MAX) - 1));
 
 	//生成済みか
 	for (const auto& itemBox : itemBoxes_)
@@ -140,7 +150,7 @@ void ItemManager::CreateItemBox(void)
 	}
 
 	//アイテムボックス
-	std::unique_ptr<ItemBox> itemBox = std::make_unique<ItemBox>(boxPosData_[rand].pos);
+	std::unique_ptr<ItemBox> itemBox = std::make_unique<ItemBox>(boxPosData_[rand].pos,randType);
 	itemBox->Load();
 	itemBox->Init();
 
@@ -148,10 +158,15 @@ void ItemManager::CreateItemBox(void)
 	itemBoxes_.push_back(std::move(itemBox));
 }
 
+std::unique_ptr<BattleItemBase> ItemManager::CreateCannon(const VECTOR& _pos, const VECTOR& _vec)
+{
+	return std::make_unique<Cannon>(_pos, _vec);
+}
+
 void ItemManager::CreatePowerUpItem(VECTOR _pos)
 {
 	//サイズ
-	int importSize = static_cast<int>(itemData_.size());
+	int importSize = static_cast<int>(powerUpItemData_.size());
 
 	//生成位置
 	VECTOR moveVec = CREATE_MOVE_VEC;
@@ -173,7 +188,41 @@ void ItemManager::CreatePowerUpItem(VECTOR _pos)
 		rand =  Utility::GetRandomValue(0, importSize - 1);
 
 		//生成
-		std::unique_ptr<ItemBase> item = std::make_unique<PowerUpItemBase>(_pos, moveVec, getImageId_[itemData_[rand].name](), itemData_[rand].param);
+		std::unique_ptr<ItemBase> item = std::make_unique<PowerUpItemBase>(_pos, moveVec, getImageId_[powerUpItemData_[rand].name](), powerUpItemData_[rand].param);
+		item->Load();
+		item->Init();
+
+		//配列格納
+		items_.push_back(std::move(item));
+	}
+}
+
+void ItemManager::CreateBattleItem(VECTOR _pos)
+{
+	//サイズ
+	int importSize = static_cast<int>(battleItemData_.size());
+
+	//生成位置
+	VECTOR moveVec = CREATE_MOVE_VEC;
+
+	//生成数
+	int createNum = Utility::GetRandomValue(CREATE_MIN, CREATE_MAX);
+
+	//データの値
+	int rand = 0;
+
+	//ランダムで決めた生成数分アイテムを生成する
+	for (int i = 0; i < createNum; i++)
+	{
+		//位置の反転
+		if (i % 2 == 0)moveVec.x = -moveVec.x;
+		else if (i % 2 == 1)moveVec.z = -moveVec.z;
+
+		//ランダムでアイテムの種類決め
+		rand = Utility::GetRandomValue(0, importSize - 1);
+
+		//生成
+		std::unique_ptr<ItemBase> item = createBattleItem_[battleItemData_[rand].type](_pos, moveVec);
 		item->Load();
 		item->Init();
 

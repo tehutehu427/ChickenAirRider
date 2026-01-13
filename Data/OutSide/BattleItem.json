@@ -1,0 +1,8 @@
+[
+  {
+    "name": "cannon",
+    "geometry": "sphere",
+    "tag": "battle",
+    "radius": 30.0
+  }
+]

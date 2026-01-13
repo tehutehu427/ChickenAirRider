@@ -68,6 +68,13 @@ void SceneTitle::Load(void)
 
 void SceneTitle::Init(void)
 {
+	//分割なし
+	SceneManager::GetInstance().SetIsSplitMode(false);
+
+	//プレイヤー人数リセット
+	GameSetting::GetInstance().ResetPlayerNum();
+
+	//カウンタ
 	cnt_ = 0.0f;
 }
 

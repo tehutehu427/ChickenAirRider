@@ -5,8 +5,9 @@
 #include<iostream>
 #include"../Lib/nlohmann/json.hpp"
 #include"../Player/Parameter/Parameter.h"
+#include"../Item/BattleItem/BattleItemBase.h"
 
-struct ItemImportData
+struct PowerUpItemImportData
 {
 	//名前
 	std::string name;
@@ -20,8 +21,22 @@ struct ItemImportData
 	float radius;					//半径
 };
 
+struct BattleItemImportData
+{
+	//名前
+	std::string name;
+
+	//パラメーター
+	BattleItemBase::BATTLE_ITEM_TYPE type;
+
+	//当たり判定情報(必要なもののみ格納)
+	std::string geometry;			//形状名
+	std::string tag;				//タグ
+	float radius;					//半径
+};
+
 //Json呼び出し
-inline void FromJson(const nlohmann::json& _j, ItemImportData& _data)
+inline void FromJson(const nlohmann::json& _j, PowerUpItemImportData& _data)
 {
 	//名前
 	if (_j.contains("name"))
@@ -101,7 +116,50 @@ inline void FromJson(const nlohmann::json& _j, ItemImportData& _data)
 	}
 }
 
-inline void FromCsv(std::stringstream& _ss, ItemImportData& _s)
+inline void FromJson(const nlohmann::json& _j, BattleItemImportData& _data)
+{
+	//タイプ
+	std::unordered_map<std::string, BattleItemBase::BATTLE_ITEM_TYPE> type;
+	type.emplace("cannon", BattleItemBase::BATTLE_ITEM_TYPE::CANNON);
+
+	//名前
+	if (_j.contains("name"))
+	{
+		_data.name = _j.value("name", "");
+
+		//タイプ
+		_data.type = type[_data.name];
+	}
+	else
+	{
+		std::cerr << "ItemのJsonファイルにnameが存在しません" << "\n";
+		return;
+	}
+
+	//形状名
+	if (_j.contains("geometry"))
+	{
+		_data.geometry = _j.value("geometry", "");
+
+		if (_j.contains("tag"))
+		{
+			_data.tag = _j.value("tag", "");
+		}
+		else
+		{
+			std::cerr << "ItemのJsonファイルにtagが存在しません" << "\n";
+			return;
+		}
+
+		//半径
+		if (_j.contains("radius"))
+		{
+			_data.radius = _j.value("radius", 1.0f);
+		}
+	}
+}
+
+inline void FromCsv(std::stringstream& _ss, PowerUpItemImportData& _s)
 {
 	////格納内容
 	//std::string token;
@@ -126,4 +184,8 @@ inline void FromCsv(std::stringstream& _ss, ItemImportData& _s)
 	//std::getline(_ss, token, ',');	_data.quaternion.x = std::stof(token);
 	//std::getline(_ss, token, ',');	_data.quaternion.y = std::stof(token);
 	//std::getline(_ss, token, ',');	_data.quaternion.z = std::stof(token);
+}
+
+inline void FromCsv(std::stringstream& _ss, BattleItemImportData& _s)
+{
 }

@@ -25,6 +25,7 @@ public :
 		FOOT,			//足元
 
 		DAMAGE,			//ダメージ
+		CANNON_SHOT,	//大砲の弾
 
 		MACHINE,		//機体
 		MACHINE_RIDE,	//機体の乗り判定

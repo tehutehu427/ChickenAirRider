@@ -20,7 +20,10 @@ void DataRegistry::CreateAll(void)
 	LoaderManager<MachineImportData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//アイテム情報
-	LoaderManager<ItemImportData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
+	LoaderManager<PowerUpItemImportData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
+
+	//アイテム情報
+	LoaderManager<BattleItemImportData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//アイテム情報
 	LoaderManager<BoxCreatePositionData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);

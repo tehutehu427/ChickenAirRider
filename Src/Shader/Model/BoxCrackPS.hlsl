@@ -13,8 +13,8 @@ Texture2D    crackTexture                 : register(t11);	    	// ‚Ğ‚ÑƒeƒNƒXƒ`ƒ
 // ’è”ƒoƒbƒtƒ@FƒXƒƒbƒg4”Ô–Ú(b4‚Æ‘‚­)
 cbuffer cbParam : register(b4)
 {
-    float crackProgress;   // 0.0 ¨ 1.0 ‚Ìis“x
-    float3 dummy;
+    float crackProgress;    // 0.0 ¨ 1.0 ‚Ìis“x
+    float3 color;           //F‚ÌŠ„‡
 }
 
 float4 main(PS_INPUT PSInput) : SV_TARGET0
@@ -22,6 +22,7 @@ float4 main(PS_INPUT PSInput) : SV_TARGET0
     float2 uv = PSInput.uv;
 
     float4 baseColor = diffuseMapTexture.Sample(diffuseMapSampler, uv);
+    baseColor = float4(baseColor.rgb * color, baseColor.a);
     float crackVal = crackTexture.Sample(crackSampler, uv).r;
 
     // crackProgress = 0 ¨ ‘S•”‚Ğ‚Ñ•\¦

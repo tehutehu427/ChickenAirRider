@@ -11,15 +11,24 @@
 #include "../Renderer/ModelMaterial.h"
 #include "ItemBox.h"
 
-ItemBox::ItemBox(VECTOR _pos)
+ItemBox::ItemBox(const VECTOR& _pos, const ITEM_TYPE _type)
 {
 	trans_.pos = _pos;
 	createPos_ = _pos;
 	crackImg_ = -1;
+	type_ = _type;
 	isDead_ = false;
 	footLine_ = Quaternion();
 	health_ = 0.0f;
 	invincible_ = 0.0f;
+
+	//色
+	color_.emplace(ITEM_TYPE::POWER_UP, POWER_UP_COLOR);
+	color_.emplace(ITEM_TYPE::BATTLE, BATTLE_COLOR);
+
+	//アイテムの生成
+	createItem_.emplace(ITEM_TYPE::POWER_UP, [this](void) {CreatePowerUpItem(); });
+	createItem_.emplace(ITEM_TYPE::BATTLE, [this](void) {CreateBattleItem(); });
 }
 
 ItemBox::~ItemBox(void)
@@ -47,8 +56,10 @@ void ItemBox::Load(void)
 		healthRatio	= health_ / HEALTH_MAX;
 	}
 
+	COLOR_F color = color_[type_];
+
 	//体力
-	material_->AddConstBufPS({ healthRatio,0.0f,0.0f,0.0 });
+	material_->AddConstBufPS({ healthRatio,color.r,color.g,color.b });
 
 	//ひび画像
 	material_->SetTextureBuf(CRACK_IMG_BUFF, crackImg_);
@@ -110,7 +121,8 @@ void ItemBox::Draw(void)
 		healthRatio = health_ / HEALTH_MAX;
 	}
 
-	material_->SetConstBufPS(0, { healthRatio,0.0f,0.0f,0.0f });
+	COLOR_F color = color_[type_];
+	material_->SetConstBufPS(0, { healthRatio,color.r,color.g,color.b });
 
 	//モデル描画
 	//MV1DrawModel(trans_.modelId);
@@ -146,7 +158,7 @@ void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
 			isDead_ = true;
 
 			//アイテム生成
-			ItemManager::GetInstance().CreatePowerUpItem(trans_.pos);
+			createItem_[type_]();
 		}
 	}
 	else if (hitTag == Collider::TAG::GROUND
@@ -168,4 +180,14 @@ void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
 
 	//モデル更新
 	trans_.Update();
+}
+
+void ItemBox::CreatePowerUpItem(void)
+{
+	ItemManager::GetInstance().CreatePowerUpItem(trans_.pos);
+}
+
+void ItemBox::CreateBattleItem(void)
+{
+	ItemManager::GetInstance().CreateBattleItem(trans_.pos);
 }

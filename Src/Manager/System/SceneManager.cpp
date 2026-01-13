@@ -189,8 +189,8 @@ void SceneManager::Draw(void)
 			UIManager::GetInstance().Draw();
 
 		// 主にポストエフェクト用
-		if (!cameras_.empty())
-			cameras_.front()->Draw();
+		//if (!cameras_.empty())
+		//	cameras_.front()->Draw();
 
 		// Effekseerにより再生中のエフェクトを描画する。
 		DrawEffekseer3D();

@@ -9,6 +9,7 @@
 #include "../Parameter/Parameter.h"
 #include "../Object/Item/ItemBase.h"
 #include "../Object/Item/PowerUpItemBase.h"
+#include "../Object/Item/BattleItem/CannonShot.h"
 #include "../Action/ActionBase.h"
 #include "PlayerOnHit.h"
 
@@ -28,7 +29,9 @@ PlayerOnHit::PlayerOnHit(Player& _player, Transform& _trans)
 	onHit_[Collider::TAG::MACHINE_RIDE] = [this](const std::weak_ptr<Collider> _hitCol) {RideMachineOnHit(_hitCol); };
 	onHit_[Collider::TAG::ITEM_BOX] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
 	onHit_[Collider::TAG::POWER_UP] = [this](const std::weak_ptr<Collider> _hitCol) {PowerUpItemOnHit(_hitCol); };
+	onHit_[Collider::TAG::BATTLE_ITEM] = [this](const std::weak_ptr<Collider> _hitCol) {BattleItemOnHit(_hitCol); };
 	onHit_[Collider::TAG::DAMAGE] = [this](const std::weak_ptr<Collider> _hitCol) { SpinOnHit(_hitCol); };
+	onHit_[Collider::TAG::CANNON_SHOT] = [this](const std::weak_ptr<Collider> _hitCol) { CannonShotOnHit(_hitCol); };
 }
 
 PlayerOnHit::~PlayerOnHit(void)
@@ -307,6 +310,10 @@ void PlayerOnHit::PowerUpItemOnHit(const std::weak_ptr<Collider> _hitCol)
 	player_.SetParam(player_.GetParam() + param);
 }
 
+void PlayerOnHit::BattleItemOnHit(const std::weak_ptr<Collider> _hitCol)
+{
+}
+
 void PlayerOnHit::SpinOnHit(const std::weak_ptr<Collider> _hitCol)
 {
 	//SE
@@ -317,6 +324,21 @@ void PlayerOnHit::SpinOnHit(const std::weak_ptr<Collider> _hitCol)
 
 	//çUåÇóÕ
 	float attack = spinParent.GetAttack();
+
+	//É_ÉÅÅ[ÉWèàóù
+	player_.Damage(attack);
+}
+
+void PlayerOnHit::CannonShotOnHit(const std::weak_ptr<Collider> _hitCol)
+{
+	//SE
+	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::DAMAGE, SoundManager::PLAYTYPE::BACK);
+
+	//ëÂñCÇÃíe
+	const auto& shot = dynamic_cast<const CannonShot&>(_hitCol.lock()->GetParent());
+
+	//çUåÇóÕ
+	float attack = shot.GetAttack();
 
 	//É_ÉÅÅ[ÉWèàóù
 	player_.Damage(attack);

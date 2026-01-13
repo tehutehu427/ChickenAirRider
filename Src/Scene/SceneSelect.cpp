@@ -202,7 +202,7 @@ void SceneSelect::UpdateGameStart(void)
 		set.SetNpcNum(playerNum_[PLAYER_NUM_SELECT::NPC]);
 
 		//§ŒÀŠÔ
-		set.SetTimeLimit(60);
+		set.SetTimeLimit(100);
 
 		//ƒV[ƒ“‚Ìíœ
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME, true, true);

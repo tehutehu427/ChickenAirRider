@@ -23,9 +23,13 @@ public:
 	//描画
 	void Draw(void);
 
-	/// @brief アイテム生成
+	/// @brief パワーアップアイテム生成
 	/// @param _pos	生成位置
 	void CreatePowerUpItem(VECTOR _pos);
+
+	/// @brief バトルアイテム生成
+	/// @param _pos	生成位置
+	void CreateBattleItem(VECTOR _pos);
 	
 private:
 
@@ -43,7 +47,8 @@ private:
 	static constexpr int BOX_CREATE_MAX = 7;
 
 	//インポートデータ
-	std::vector<ItemImportData> itemData_;
+	std::vector<PowerUpItemImportData> powerUpItemData_;
+	std::vector<BattleItemImportData> battleItemData_;
 	std::vector<BoxCreatePositionData> boxPosData_;
 
 	//モデルID取得
@@ -54,6 +59,9 @@ private:
 	
 	//アイテム
 	std::vector<std::unique_ptr<ItemBase>> items_;
+
+	//バトルアイテムの生成
+	std::unordered_map<BattleItemBase::BATTLE_ITEM_TYPE, std::function<std::unique_ptr<BattleItemBase>(const VECTOR&, const VECTOR&)>> createBattleItem_;
 
 	//生成カウンタ
 	float boxCreateCnt_;
@@ -66,5 +74,8 @@ private:
 
 	//アイテムボックス生成
 	void CreateItemBox(void);
+
+	//バトルアイテム生成
+	std::unique_ptr<BattleItemBase> CreateCannon(const VECTOR& _pos, const VECTOR& _vec);
 };
 

@@ -23,6 +23,7 @@ void ResourceManager::Init(void)
 	//UI画像のパス
 	std::wstring uiImage = PATH_IMG + L"UI/";
 
+	//パワーアップ
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"BoxCrack.png");
 	resourcesMap_.emplace(SRC::BOX_CRACK, std::move(res));
 
@@ -52,7 +53,12 @@ void ResourceManager::Init(void)
 
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"MaxHealth.png");
 	resourcesMap_.emplace(SRC::MAX_HEALTH, std::move(res));
+
+	//バトルアイテム
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"Cannon.png");
+	resourcesMap_.emplace(SRC::CANNON_IMAGE, std::move(res));
 	
+	//UI
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, titleImage + L"Title.png");
 	resourcesMap_.emplace(SRC::TITLE_BACK, std::move(res));
 
@@ -125,6 +131,12 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::MODEL, itemPath + L"ItemBox.mv1");
 	resourcesMap_.emplace(SRC::ITEM_BOX, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, itemPath + L"CannonBarrel.mv1");
+	resourcesMap_.emplace(SRC::CANNON_MODEL, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, itemPath + L"CannonShot.mv1");
+	resourcesMap_.emplace(SRC::CANNON_SHOT_MODEL, std::move(res));
+
 	//スカイドームのパス
 	std::wstring skyDomePath = PATH_MDL + L"SkyDome/";
 
@@ -186,7 +198,7 @@ void ResourceManager::Init(void)
 	resourcesMap_.emplace(SRC::BEAM, std::move(res));
 
 	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Cannon.mp3");
-	resourcesMap_.emplace(SRC::CANNON, std::move(res));
+	resourcesMap_.emplace(SRC::CANNON_SE, std::move(res));
 
 	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Damage.mp3");
 	resourcesMap_.emplace(SRC::DAMAGE, std::move(res));

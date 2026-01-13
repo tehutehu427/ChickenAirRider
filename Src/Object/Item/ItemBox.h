@@ -8,8 +8,16 @@ class ItemBox : public ObjectBase
 {
 public:
 
+	//アイテムのタイプ
+	enum class ITEM_TYPE
+	{
+		POWER_UP,	//パワーアップアイテム
+		BATTLE,		//バトルアイテム
+		MAX
+	};
+
 	//コンストラクタ
-	ItemBox(VECTOR _pos);
+	ItemBox(const VECTOR& _pos, const ITEM_TYPE _type);
 
 	//デストラクタ
 	~ItemBox(void)override;
@@ -62,6 +70,10 @@ private:
 	//テクスチャバッファ
 	static constexpr int CRACK_IMG_BUFF = 11;
 
+	//色
+	static constexpr COLOR_F POWER_UP_COLOR = { 1.0f,1.0f,1.0f,1.0f };
+	static constexpr COLOR_F BATTLE_COLOR = { 1.0f,0.4f,0.4f,1.0f };
+
 	//ひび画像
 	int crackImg_;
 
@@ -70,6 +82,9 @@ private:
 
 	//レンダラー
 	std::unique_ptr<ModelRenderer>renderer_;
+
+	//アイテムタイプ
+	ITEM_TYPE type_;
 
 	//死亡判定
 	bool isDead_;
@@ -85,4 +100,15 @@ private:
 
 	//無敵時間
 	float invincible_;
+
+	//色
+	std::unordered_map<ITEM_TYPE, COLOR_F> color_;
+
+	//アイテムの生成
+	std::unordered_map<ITEM_TYPE, std::function<void(void)>> createItem_;
+
+	//パワーアップアイテムの生成
+	void CreatePowerUpItem(void);
+	//バトルアイテムの生成
+	void CreateBattleItem(void);
 };

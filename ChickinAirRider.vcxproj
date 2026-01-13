@@ -163,8 +163,10 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Item\BattleItem\CannonShot.cpp" />
+    <ClCompile Include="Src\Object\Item\BattleItem\Cannon.cpp" />
     <ClCompile Include="Src\Object\Item\PowerUpItemBase.cpp" />
-    <ClCompile Include="Src\Object\Item\BattleItemBase.cpp" />
+    <ClCompile Include="Src\Object\Item\BattleItem\BattleItemBase.cpp" />
     <ClCompile Include="Src\Scene\Game\LastMiniGame\LastGameBase.cpp" />
     <ClCompile Include="Src\Scene\Game\GameCheck.cpp" />
     <ClCompile Include="Src\Scene\Game\GameMain.cpp" />
@@ -241,8 +243,10 @@
     <ClCompile Include="Src\Manager\Game\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Item\BattleItem\CannonShot.h" />
+    <ClInclude Include="Src\Object\Item\BattleItem\Cannon.h" />
     <ClInclude Include="Src\Object\Item\PowerUpItemBase.h" />
-    <ClInclude Include="Src\Object\Item\BattleItemBase.h" />
+    <ClInclude Include="Src\Object\Item\BattleItem\BattleItemBase.h" />
     <ClInclude Include="Src\Scene\Game\LastMiniGame\LastGameBase.h" />
     <ClInclude Include="Src\Scene\Game\GameCheck.h" />
     <ClInclude Include="Src\Scene\Game\GameMain.h" />
