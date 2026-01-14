@@ -7,6 +7,7 @@
 #include "../Object/Common/Geometry/Cube.h"
 #include "../Object/Common/Geometry/Line.h"
 #include "../Object/Player/Player.h"
+#include "../Object/Item/BattleItem/CannonShot.h"
 #include "../Renderer/ModelRenderer.h"
 #include "../Renderer/ModelMaterial.h"
 #include "ItemBox.h"
@@ -80,7 +81,7 @@ void ItemBox::Init(void)
 
 	//変数
 	health_ = HEALTH_MAX;
-	invincible_ = INVINCIBLE;
+	invincible_ = INVINCIBLE_SPIN;
 
 	//更新
 	trans_.Update();
@@ -137,29 +138,27 @@ void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
 	const auto& hit = _hitCol.lock();
 	const auto& hitTag = hit->GetTag();
 
-	if (hitTag == Collider::TAG::DAMAGE && invincible_ < 0)
+	if (hitTag == Collider::TAG::SPIN && invincible_ < 0)
 	{
 		//スピンをもつのはプレイヤーのみ
 		const auto& player = dynamic_cast<const Player&>(_hitCol.lock()->GetParent());
 
 		//攻撃力分ダメージ
-		health_ -= player.GetAttack();
+		health_ -= player.GetAttack() * SPIN_DAMAGE_DEF;
 
 		//無敵時間リセット
-		invincible_ = INVINCIBLE;
-		
-		//体力がなくなったら
-		if (health_ < 0)
-		{
-			//コライダ削除
-			collider_[0]->Kill();
+		invincible_ = INVINCIBLE_SPIN;
+	}
+	else if (hitTag == Collider::TAG::CANNON_SHOT && invincible_ < 0)
+	{
+		//ショット
+		const auto& shot = dynamic_cast<const CannonShot&>(_hitCol.lock()->GetParent());
 
-			//死亡判定
-			isDead_ = true;
+		//ダメージ
+		health_ -= shot.GetAttack();
 
-			//アイテム生成
-			createItem_[type_]();
-		}
+		//無敵時間リセット
+		invincible_ = CannonShot::INVINCIBLE;
 	}
 	else if (hitTag == Collider::TAG::GROUND
 		|| hitTag == Collider::TAG::NORMAL_OBJECT)
@@ -176,6 +175,19 @@ void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
 			//回転リセット
 			trans_.quaRot = Quaternion();
 		}
+	}
+
+	//体力がなくなったら
+	if (health_ < 0)
+	{
+		//コライダ削除
+		collider_[0]->Kill();
+
+		//死亡判定
+		isDead_ = true;
+
+		//アイテム生成
+		createItem_[type_]();
 	}
 
 	//モデル更新

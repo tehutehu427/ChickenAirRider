@@ -39,6 +39,7 @@ Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE
 	footLine_ = Quaternion();
 	damage_ = 0.0f;
 	invincible_ = 0.0f;
+	canGetOff_ = false;
 
 	//操作タイプ
 	createLogic_[OPERATION_TYPE::USER] = [this](void) {	logic_ = std::make_unique<UserLogic>(padNo_); };
@@ -107,6 +108,7 @@ void Player::Init(void)
 	
 	//体力
 	damage_ = 0.0f;
+	canGetOff_ = true;
 
 	//初期更新
 	Update();
@@ -116,6 +118,12 @@ void Player::Update(void)
 {
 	//インスタンス
 	auto& grvMng = GravityManager::GetInstance();
+
+	//デルタタイム
+	const float delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//無敵時間
+	invincible_ -= delta;
 
 	//移動更新
 	prePos_ = trans_.pos;
@@ -150,10 +158,6 @@ void Player::Draw(void)
 
 	//DrawFormatString(0, 32, 0xffffff, L"%.2f,%.2f,%.2f", trans_.quaRot.ToEuler().x, trans_.quaRot.ToEuler().y, trans_.quaRot.ToEuler().z);
 	//DrawFormatString(0, 80, 0xffffff, L"%.2f,%.2f,%.2f", trans_.pos.x, trans_.pos.y, trans_.pos.z);
-}
-
-void Player::DrawGrowthParam(void)
-{
 }
 
 void Player::OnHit(const std::weak_ptr<Collider> _hitCol)
@@ -202,6 +206,14 @@ const Parameter Player::GetAllParam(void)const
 	return param_.CalcUnitParam(GetUnitParam());
 }
 
+const float Player::GetHealthValue(void)const
+{
+	//パラメータ
+	const Parameter& param = GetAllParam();
+
+	return param.GetHealthValue();
+}
+
 const float Player::GetAttack(void) const
 {
 	//パラメータ
@@ -215,7 +227,7 @@ const float Player::GetDefence(void) const
 	//パラメータ
 	const Parameter& param = GetAllParam();
 
-	return (param.defence_ + (param.weight_ * Parameter::WEIGHT_AFFECT) - (param.flight_ * Parameter::FLIGHT_AFFECT));
+	return (param.defence_ + (param.weight_ * Parameter::WEIGHT_AFFECT) - (param.flight_ * Parameter::FLIGHT_AFFECT)) * Parameter::DEFENCE_AFFECT;
 }
 
 UnitParameter Player::GetUnitParam(void) const
@@ -248,7 +260,7 @@ void Player::SetIsSpin(const bool _isSpin)
 	{
 		//スピンコライダを生成
 		std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SPIN_RADIUS);
-		MakeCollider(Collider::TAG::DAMAGE, std::move(geo), 
+		MakeCollider(Collider::TAG::SPIN, std::move(geo), 
 			{ playerTag_,
 			Collider::TAG::FOOT,
 			Collider::TAG::NORMAL_OBJECT,
@@ -258,7 +270,7 @@ void Player::SetIsSpin(const bool _isSpin)
 	else
 	{
 		//スピンコライダを消す
-		DeleteColliderAtTag(Collider::TAG::DAMAGE);
+		DeleteColliderAtTag(Collider::TAG::SPIN);
 	}
 }
 
@@ -287,13 +299,32 @@ void Player::Damage(const float _damage)
 
 	//ダメージ
 	damage_ += resultDamage;
+
+	//現在HP
+	float nowHealth = GetNowHealth();
+
+	//体力がなくなったら
+	if (nowHealth < 0)
+	{
+		//機体の破棄
+		machine_.reset();
+
+		//大きさを初期化
+		trans_.scl = Utility::VECTOR_ONE;
+
+		//キャラクターに遷移
+		ChangeState(STATE::NORMAL);
+
+		//処理終了
+		return;
+	}
 }
 
 void Player::ChangeActionNormal(void)
 {
 	//アクションUIを初期化しておく
-	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE);
-	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::HEALTH);
+	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE,playerIndex_);
+	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::HEALTH, playerIndex_);
 
 	//キャラクターの行動に変更
 	action_ = std::make_shared<CharacterAction>(*this, *chara_, *logic_);
@@ -309,8 +340,8 @@ void Player::ChangeActionNormal(void)
 void Player::ChangeActionRide(void)
 {
 	//アクションUIを初期化しておく
-	UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE);
-	UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::HEALTH);
+	UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE, playerIndex_);
+	UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::HEALTH, playerIndex_);
 
 	//機体の行動に変更
 	action_ = std::make_shared<MachineAction>(*this, *machine_, *logic_);
@@ -360,7 +391,7 @@ void Player::UpdateRide(void)
 	}
 
 	//降りたなら
-	if (state_ == STATE::RIDE_MACHINE && logic_->IsGetOff())
+	if (state_ == STATE::RIDE_MACHINE && logic_->IsGetOff() && canGetOff_)
 	{
 		//降りた機体を保存
 		MachineManager::GetInstance().SaveGetOffMachine(std::move(machine_));

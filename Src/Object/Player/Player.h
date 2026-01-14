@@ -30,6 +30,7 @@ public:
 
 		NORMAL,			//生身
 		RIDE_MACHINE,	//機体乗車中
+		DEAD,			//死亡
 	};
 
 	//当たり判定添え字
@@ -74,6 +75,9 @@ public:
 
 	//総合パラメーター
 	const Parameter GetAllParam(void)const;
+
+	//HPの値
+	const float GetHealthValue(void)const;
 
 	//攻撃パラメーター
 	const float GetAttack(void)const;
@@ -133,7 +137,13 @@ public:
 	void SetFootLine(const Quaternion _foot) { footLine_ = _foot; }
 
 	//現在体力を返す
-	const float GetNowHealth(void)const { return GetAllParam().maxHealth_ - damage_; }
+	const float GetNowHealth(void)const { return GetHealthValue() - damage_; }
+
+	//無敵時間が終わったかを返す
+	const float IsEndInvincible(void)const { return invincible_ < 0; }
+
+	//無敵時間の設定
+	void SetInvincible(const float _time) { invincible_ = _time; }
 
 	//カメラの取得
 	std::weak_ptr<Camera> GetCamera(void)const { return camera_; }
@@ -142,7 +152,6 @@ public:
 	std::weak_ptr<ActionBase> GetAction(void)const { return action_; }
 	LogicBase& GetLogic(void)const { return *logic_; }
 	Character& GetChara(void)const { return *chara_; }
-	//PlayerUI& GetUI(void)const { return *ui_; }
 
 	//機体に乗る
 	void RideMachine(std::unique_ptr<Machine> _machine);
@@ -155,6 +164,9 @@ public:
 
 	//プレイヤーの操作者
 	const OPERATION_TYPE GetOperation(void) { return operation_; }
+
+	//降りれるかどうかの設定
+	void SetCanGetOff(const bool _getOff) { canGetOff_ = _getOff; }
 
 private:
 
@@ -174,7 +186,6 @@ private:
 	std::unique_ptr<LogicBase> logic_;		//行動操作者
 	std::shared_ptr<ActionBase> action_;	//行動
 	std::unique_ptr<PlayerOnHit> onHit_;	//当たり判定
-	//std::unique_ptr<PlayerUI> ui_;			//UI
 
 	//プレイヤー番号
 	const int playerIndex_;
@@ -227,6 +238,9 @@ private:
 
 	//無敵時間
 	float invincible_;
+
+	//降りれるかどうか
+	bool canGetOff_;
 
 	//関数ポインタ
 	std::map<OPERATION_TYPE, std::function<void(void)>> createLogic_;	//操作

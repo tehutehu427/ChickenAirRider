@@ -7,12 +7,14 @@
 #include "../../Player/Player.h"
 #include "CannonShot.h"
 
-CannonShot::CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR& _scl, std::weak_ptr<Collider> _holder)
+CannonShot::CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR& _scl, std::weak_ptr<Collider> _holder, const float _speed)
 {
+	movedPos_ = _pos;
 	trans_.pos = _pos;
 	trans_.quaRot = _rot;
-	trans_.scl = VScale(_scl,0.5f);
+	trans_.scl = VScale(_scl,0.3f);
 	holder_ = _holder;
+	speed_ = _speed + SPEED;
 	gravPow_ = Utility::VECTOR_ZERO;
 	movePow_ = Utility::VECTOR_ZERO;
 	cnt_ = 0.0f;
@@ -47,12 +49,14 @@ void CannonShot::Init(void)
 	movePow_ = Utility::VECTOR_ZERO;
 
 	//攻撃力
-	attack_ = dynamic_cast<const Player&>(holder_.lock()->GetParent()).GetAttack();
+	attack_ = dynamic_cast<const Player&>(holder_.lock()->GetParent()).GetAttack() * ATTACK_MULTI;
 
 	//コライダ
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, RADIUS);
-	MakeCollider(Collider::TAG::CANNON_SHOT, std::move(geo), { holder_.lock()->GetTag()});
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, RADIUS);
+	MakeCollider(Collider::TAG::CANNON_SHOT, std::move(geo), { holder_.lock()->GetTag(),Collider::TAG::FOOT,Collider::TAG::SPIN});
 	trans_.Update();
+
+	Update();
 }
 
 void CannonShot::Update(void)
@@ -88,6 +92,8 @@ void CannonShot::UpdateAlive(void)
 	//デルタタイム
 	const float delta = SceneManager::GetInstance().GetDeltaTime();
 
+	trans_.pos = movedPos_;
+
 	//カウンタ
 	cnt_ += delta;
 
@@ -99,10 +105,13 @@ void CannonShot::UpdateAlive(void)
 
 	//移動力
 	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);
-	movePow_ = trans_.quaRot.PosAxis(VGet(0.0f, gravPow_.y, SPEED));
+	movePow_ = trans_.quaRot.PosAxis(VGet(0.0f, gravPow_.y, speed_));
 
 	//移動
-	trans_.pos = VAdd(trans_.pos, movePow_);
+	movedPos_ = VAdd(movedPos_, movePow_);
+
+	//方向
+	trans_.quaRot = Quaternion::LookRotation(Utility::GetMoveVec(trans_.pos, VAdd(movedPos_, movePow_)));
 
 	//モデル更新
 	trans_.Update();

@@ -31,9 +31,6 @@ private:
 	//デバッグ描画
 	void DebugDraw(void)override;
 
-	//タイマー
-	std::unique_ptr<Timer> timer_;
-
 	//スカイドーム
 	std::unique_ptr<SkyDome> sky_;
 };

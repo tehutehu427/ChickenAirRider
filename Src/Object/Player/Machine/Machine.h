@@ -63,7 +63,7 @@ private:
 	static constexpr float RIDE_COL = 250.0f;
 	
 	//ムテキ時間
-	static constexpr float INVINCIBLE = 1.0f;
+	static constexpr float INVINCIBLE_SPIN = 0.2f;
 
 	//アニメーションの有無
 	bool isAnim_;

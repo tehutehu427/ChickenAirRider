@@ -163,6 +163,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\Game\LastMiniGame\DeathMatch.cpp" />
     <ClCompile Include="Src\Object\Item\BattleItem\CannonShot.cpp" />
     <ClCompile Include="Src\Object\Item\BattleItem\Cannon.cpp" />
     <ClCompile Include="Src\Object\Item\PowerUpItemBase.cpp" />
@@ -243,6 +244,7 @@
     <ClCompile Include="Src\Manager\Game\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\Game\LastMiniGame\DeathMatch.h" />
     <ClInclude Include="Src\Object\Item\BattleItem\CannonShot.h" />
     <ClInclude Include="Src\Object\Item\BattleItem\Cannon.h" />
     <ClInclude Include="Src\Object\Item\PowerUpItemBase.h" />

@@ -8,6 +8,7 @@
 #include "../Scene/SceneSelect.h"
 #include "../Scene/Game/SceneGame.h"
 #include "../Game/GameSetting.h"
+#include "../Game/Timer.h"
 #include"../Application.h"
 #include"../Game/UIManager.h"
 #include"SceneManager.h"
@@ -65,6 +66,14 @@ void SceneManager::Init(void)
 	//フェーダー
 	fader_ = std::make_unique<Fader>();
 	fader_->Init();
+	
+	//タイマー
+	timer_ = std::make_unique<Timer>(setting.GetTimeLimit());
+	timer_->Init();
+
+	//カウント開始
+	timer_->SetCountValid(false);
+	timer_->SetCountView(false);
 
 	// 初期のカメラは1つなので人数を初期化しておく
 	setting.ResetPlayerNum();
@@ -152,6 +161,9 @@ void SceneManager::Update(void)
 	{
 		c->Update();
 	}
+
+	//タイマーの更新
+	timer_->Update();
 }
 
 void SceneManager::Draw(void)
@@ -188,6 +200,9 @@ void SceneManager::Draw(void)
 		if (sceneId_ == SCENE_ID::GAME)
 			UIManager::GetInstance().Draw();
 
+		//タイマーの描画
+		timer_->Draw();
+
 		// 主にポストエフェクト用
 		//if (!cameras_.empty())
 		//	cameras_.front()->Draw();
@@ -213,7 +228,6 @@ void SceneManager::Draw(void)
 
 	//メインスクリーンを描画
 	DrawGraph(0, 0, mainScreen_, false);
-
 }
 
 void SceneManager::ChangeScene(const SCENE_ID _sceneId, const bool _isReset, const bool _isFade)
@@ -347,6 +361,16 @@ void SceneManager::CreateCameras(const int _playerNum)
 
 void SceneManager::CreateSplitScreen(const int _playerNum)
 {
+	//プレイヤー人数ごとのタイマー位置
+	Vector2 timerPos[GameSetting::PLAYER_MAX_NUM] = {
+		{ Application::SCREEN_HALF_X, 64 },									//1人
+		{ 100, Application::SCREEN_HALF_Y },								//2人
+		{ Application::SCREEN_HALF_X + Application::SCREEN_HALF_X / 2
+		, Application::SCREEN_HALF_Y + Application::SCREEN_HALF_Y / 2},		//3人
+		{ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y }			//4人
+	};
+	timer_->SetPos(timerPos[_playerNum - 1]);
+
 	//引数が１以下
 	// 最大人数を超える場合,
 	// または引数と現在のスクリーン数が同じとき
@@ -555,6 +579,10 @@ void SceneManager::DrawMultiScreen()
 		//分割したスクリーンを描画
 		DrawGraph(screenPos[i].x, screenPos[i].y, splitScreens_[i], true);
 	}
+
+	//タイマーの描画
+	timer_->Draw();
+
 }
 
 std::unique_ptr<SceneBase> SceneManager::CreateSceneTitle(void)

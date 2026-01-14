@@ -24,7 +24,7 @@ public :
 
 		FOOT,			//足元
 
-		DAMAGE,			//ダメージ
+		SPIN,			//スピンアタック
 		CANNON_SHOT,	//大砲の弾
 
 		MACHINE,		//機体

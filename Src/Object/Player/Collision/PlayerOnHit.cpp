@@ -30,7 +30,7 @@ PlayerOnHit::PlayerOnHit(Player& _player, Transform& _trans)
 	onHit_[Collider::TAG::ITEM_BOX] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
 	onHit_[Collider::TAG::POWER_UP] = [this](const std::weak_ptr<Collider> _hitCol) {PowerUpItemOnHit(_hitCol); };
 	onHit_[Collider::TAG::BATTLE_ITEM] = [this](const std::weak_ptr<Collider> _hitCol) {BattleItemOnHit(_hitCol); };
-	onHit_[Collider::TAG::DAMAGE] = [this](const std::weak_ptr<Collider> _hitCol) { SpinOnHit(_hitCol); };
+	onHit_[Collider::TAG::SPIN] = [this](const std::weak_ptr<Collider> _hitCol) { SpinOnHit(_hitCol); };
 	onHit_[Collider::TAG::CANNON_SHOT] = [this](const std::weak_ptr<Collider> _hitCol) { CannonShotOnHit(_hitCol); };
 }
 
@@ -316,6 +316,9 @@ void PlayerOnHit::BattleItemOnHit(const std::weak_ptr<Collider> _hitCol)
 
 void PlayerOnHit::SpinOnHit(const std::weak_ptr<Collider> _hitCol)
 {
+	//無敵中なら処理しない
+	if (!player_.IsEndInvincible() || player_.GetState() != Player::STATE::RIDE_MACHINE)return;
+
 	//SE
 	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::DAMAGE, SoundManager::PLAYTYPE::BACK);
 
@@ -327,10 +330,16 @@ void PlayerOnHit::SpinOnHit(const std::weak_ptr<Collider> _hitCol)
 
 	//ダメージ処理
 	player_.Damage(attack);
+
+	//無敵時間リセット
+	player_.SetInvincible(INVINCIBLE_SPIN);
 }
 
 void PlayerOnHit::CannonShotOnHit(const std::weak_ptr<Collider> _hitCol)
 {
+	//無敵中なら処理しない
+	if (!player_.IsEndInvincible() || player_.GetState() != Player::STATE::RIDE_MACHINE)return;
+
 	//SE
 	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::DAMAGE, SoundManager::PLAYTYPE::BACK);
 
@@ -342,4 +351,7 @@ void PlayerOnHit::CannonShotOnHit(const std::weak_ptr<Collider> _hitCol)
 
 	//ダメージ処理
 	player_.Damage(attack);
+
+	//無敵時間リセット
+	player_.SetInvincible(CannonShot::INVINCIBLE);
 }

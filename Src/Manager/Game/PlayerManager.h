@@ -27,7 +27,10 @@ public:
 	void Destroy(void);
 
 	//プレイヤーの取得
-	const Player& GetPlayer(int _playerIndex) { return *players_[_playerIndex]; }
+	const Player& GetPlayer(const int _playerIndex) { return *players_[_playerIndex]; }
+
+	//プレイヤーの降車判定
+	void PlayerCanGetOff(const bool _getOff);
 
 private:
 

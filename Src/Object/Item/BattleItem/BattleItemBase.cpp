@@ -41,7 +41,7 @@ void BattleItemBase::Update(void)
 		if (moveCnt_ > NO_HIT_TIME && collider_.empty())
 		{
 			//コライダ生成
-			std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, RADIUS);
+			std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, RADIUS);
 			MakeCollider(Collider::TAG::BATTLE_ITEM, std::move(geo));
 		}
 
@@ -72,9 +72,9 @@ void BattleItemBase::Update(void)
 		}
 
 		//モデル更新
-		trans_.pos = VAdd(hiter_.lock()->GetParent().GetTrans().pos, VGet(0.0f, 30.0f, 0.0f));
+		trans_.pos = VAdd(hiter_.lock()->GetParent().GetTrans().pos, VGet(0.0f, LOCAL_POS_Y, 0.0f));
 		trans_.quaRot = hiter_.lock()->GetParent().GetTrans().quaRot;
-		trans_.scl = VScale(modelScl_, hiter_.lock()->GetParent().GetTrans().scl.x);
+		trans_.scl = modelScl_;//VScale(modelScl_, hiter_.lock()->GetParent().GetTrans().scl.x);
 		trans_.Update();
 	}
 }

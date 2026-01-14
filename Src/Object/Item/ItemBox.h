@@ -56,10 +56,10 @@ private:
 	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-110.0f,0.0f };		//線判定の下相対座標
 
 	//体力の最大値
-	static constexpr float HEALTH_MAX = 150.0f;
+	static constexpr float HEALTH_MAX = 50.0f;
 
 	//無敵時間
-	static constexpr float INVINCIBLE = 0.05f;
+	static constexpr float INVINCIBLE_SPIN = 0.05f;
 
 	//落下時の回転量
 	static constexpr float FALL_ROT = 12.0f;
@@ -73,6 +73,9 @@ private:
 	//色
 	static constexpr COLOR_F POWER_UP_COLOR = { 1.0f,1.0f,1.0f,1.0f };
 	static constexpr COLOR_F BATTLE_COLOR = { 1.0f,0.4f,0.4f,1.0f };
+
+	//ダメージ補正
+	static constexpr float SPIN_DAMAGE_DEF = 0.3f;
 
 	//ひび画像
 	int crackImg_;

@@ -23,6 +23,9 @@ public:
 
 private:
 
+	//–³“GŠÔ
+	static constexpr float INVINCIBLE_SPIN = 0.2f;
+
 	//e
 	Player& player_;
 	Transform& playerTrans_;

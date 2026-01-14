@@ -52,25 +52,28 @@ void UIManager::Update(void)
 void UIManager::Draw(const int _playerIndex)
 {
 	//描画
-	for (const auto draw : drawView_)
+	for (const auto playerDraw : drawView_)
 	{
-		//中身がないならスキップ
-		if (draw.second == nullptr)continue;
+		for (const auto draw : playerDraw.second)
+		{
+			//中身がないならスキップ
+			if (draw.second == nullptr)continue;
 
-		draw.second(_playerIndex);
+			draw.second(_playerIndex);
+		}
 	}
 }
 
-void UIManager::AddDraw(const DRAW_TYPE _type)
+void UIManager::AddDraw(const DRAW_TYPE _type, const int _playerIndex)
 {
 	//描画するUIに追加
-	drawView_.emplace(_type, drawList_[_type]);
+	drawView_[_playerIndex].emplace(_type, drawList_[_type]);
 }
 
-void UIManager::SubDraw(const DRAW_TYPE _type)
+void UIManager::SubDraw(const DRAW_TYPE _type, const int _playerIndex)
 {
 	//描画するUIから削除
-	drawView_.erase(_type);
+	drawView_[_playerIndex].erase(_type);
 }
 
 void UIManager::CreateViewports(const int _playerCnt, const int _screenW, const int _screenH)
@@ -136,16 +139,15 @@ void UIManager::DrawChargeGauge(const int _playerIndex)
 	const auto& player = PlayerManager::GetInstance().GetPlayer(_playerIndex);
 
 	//アクションがないならスキップ
-	if (player.GetAction().lock() == nullptr)return;
-
-	//プレイヤーのアクション
-	const MachineAction& mAction = dynamic_cast<const MachineAction&>(*player.GetAction().lock());
+	auto action = player.GetAction().lock();
+	const MachineAction* mAction = dynamic_cast<const MachineAction*>(action.get());
+	if (mAction == nullptr)return;
 
 	//チャージカウンタ
-	const float chargeCnt = mAction.GetChargeCnt();
+	const float chargeCnt = mAction->GetChargeCnt();
 
 	//速度
-	const float speed = mAction.GetSpeed();
+	const float speed = mAction->GetSpeed();
 
 	//座標
 	int posX = viewPort_[_playerIndex].x;
@@ -184,8 +186,14 @@ void UIManager::DrawHealth(const int _playerIndex)
 	//プレイヤー
 	const auto& player = PlayerManager::GetInstance().GetPlayer(_playerIndex);
 
+	//アクションがないならスキップ
+	auto action = player.GetAction().lock();
+	const MachineAction* mAction = dynamic_cast<const MachineAction*>(action.get());
+	if (mAction == nullptr)return;
+
 	const float nowHealth = player.GetNowHealth();
 	const Parameter& param = player.GetAllParam();
+	const float maxHealth = param.GetHealthValue();
 
 	int posX = viewPort_[_playerIndex].x;
 	int posY = viewPort_[_playerIndex].y;
@@ -197,7 +205,7 @@ void UIManager::DrawHealth(const int _playerIndex)
 	DrawBox(healthPosX - HEALTH_BOX_LOCAL_POS_X,
 		healthPosY + HEALTH_BOX_LOCAL_POS_Y,
 		healthPosX + HEALTH_BOX_LOCAL_POS_X,
-		healthPosY + HEALTH_BOX_LOCAL_POS_Y - param.maxHealth_ * HEALTH_BOX,
+		healthPosY + HEALTH_BOX_LOCAL_POS_Y - maxHealth * HEALTH_BOX,
 		Utility::BLACK, true);
 
 	if (nowHealth > 0.0f)
@@ -206,7 +214,7 @@ void UIManager::DrawHealth(const int _playerIndex)
 		DrawBox(healthPosX - HEALTH_BOX_LOCAL_POS_X + HEALTH_LOCAL,
 			healthPosY + HEALTH_BOX_LOCAL_POS_Y - HEALTH_LOCAL,
 			healthPosX + HEALTH_BOX_LOCAL_POS_X - HEALTH_LOCAL,
-			healthPosY + HEALTH_BOX_LOCAL_POS_Y - (param.maxHealth_ * HEALTH_BOX) * (nowHealth / param.maxHealth_) + HEALTH_LOCAL,
+			healthPosY + HEALTH_BOX_LOCAL_POS_Y - (maxHealth * HEALTH_BOX) * (nowHealth / maxHealth) + HEALTH_LOCAL,
 			Utility::RED, true);
 	}
 }

@@ -10,6 +10,7 @@ Timer::Timer(const float _timeLimit)
 	cnt_ = 0.0f;
 	timer_ = _timeLimit;
 	cntValid_ = false;
+	isView_ = false;
 	pos_ = {};
 	colonImg_ = -1;
 	frameImg_ = -1;
@@ -25,8 +26,8 @@ void Timer::Init(void)
 {
 	//èâä˙âª
 	cnt_ = 0.0f;
-	cntValid_ = false;
-	pos_ = { Application::SCREEN_HALF_X, 64 };
+	cntValid_ = true;
+	isView_ = true;
 
 	//âÊëú
 	frameImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TIMER_FRAME).handleId_;
@@ -51,6 +52,9 @@ void Timer::Update(void)
 
 void Timer::Draw(void)
 {
+	//ï\é¶ÇÃóLñ≥
+	if (!isView_)return;
+
 	int minute = 0;
 	int second = 0;
 
@@ -76,7 +80,7 @@ void Timer::Draw(void)
 	DrawRotaGraph(pos_.x + IMAGE_WIDTH * 2, pos_.y, IMAGE_EXRATE, 0.0, numImgs_[second % 10], true);
 }
 
-const bool Timer::IsTimeOver(void)
+const bool Timer::IsTimeOver(void)const
 {
 	//éûä‘êßå¿Ç†ÇË
 	if (IsTimeLimit())
@@ -92,7 +96,7 @@ const bool Timer::IsTimeOver(void)
 	}
 }
 
-const float Timer::RemainingTime(void)
+const float Timer::RemainingTime(void)const
 {
 	//ï‘Ç∑íl
 	float ret;

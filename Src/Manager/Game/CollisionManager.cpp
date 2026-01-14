@@ -118,7 +118,7 @@ CollisionManager::CollisionManager(void)
 	hitRange_[Collider::TAG::PLAYER3] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::PLAYER4] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::FOOT] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::DAMAGE] = HIT_RANGE_NORMAL;
+	hitRange_[Collider::TAG::SPIN] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::MACHINE] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::MACHINE_RIDE] = HIT_RANGE_NORMAL;
 	hitRange_[Collider::TAG::NORMAL_OBJECT] = HIT_RANGE_OBJECT;

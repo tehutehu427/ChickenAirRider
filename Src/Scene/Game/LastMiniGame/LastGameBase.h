@@ -23,7 +23,22 @@ public:
 	//解放
 	virtual void Release(void)override;
 
-private:
+	//プレイヤーの順位取得
+	const int GetRank(const int _playerIndex) { return ranks_[_playerIndex]; }
+
+	//順位決定
+	void ConfirmRank(const int _playerIndex);
+
+	//順位が決まったかどうか
+	const bool IsComfirmRanks(void) { return nowRank_ < 2; };
+
+protected:
+
+	//プレイヤーの順位
+	std::unordered_map<int, int> ranks_;
+
+	//現在順位
+	int nowRank_;
 
 	//デバッグ描画
 	virtual void DebugDraw(void)override;

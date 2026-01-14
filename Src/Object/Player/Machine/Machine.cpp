@@ -2,6 +2,7 @@
 #include"../../Manager/System/SceneManager.h"
 #include "../Object/Common/Geometry/Sphere.h"
 #include "../Object/Player/Player.h"
+#include "../Object/Item/BattleItem/CannonShot.h"
 #include "Machine.h"
 
 Machine::Machine(const MachineImportData& _importData, const int _modelId, const VECTOR _pos)
@@ -28,7 +29,7 @@ void Machine::Load(void)
 void Machine::Init(void)
 {
 	//初期化
-	invincible_ = INVINCIBLE;
+	invincible_ = 0;
 
 	//モデル
 	trans_.localPos.y -= 20.0f;
@@ -60,7 +61,7 @@ void Machine::Draw(void)
 
 void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
-	if (_hitCol.lock()->GetTag() == Collider::TAG::DAMAGE)
+	if (_hitCol.lock()->GetTag() == Collider::TAG::SPIN)
 	{
 		//攻撃者から攻撃力を取得
 		const Player& player = dynamic_cast<const Player&>(_hitCol.lock()->GetParent());
@@ -70,14 +71,26 @@ void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
 		damage_ += atk - (unitParam_.fixedDefence + (unitParam_.fixedWeight * Parameter::WEIGHT_AFFECT) - (unitParam_.fixedFlight * Parameter::FLIGHT_AFFECT));
 
 		//無敵時間リセット
-		invincible_ = INVINCIBLE;
+		invincible_ = INVINCIBLE_SPIN;
+	}
+	else if(_hitCol.lock()->GetTag() == Collider::TAG::CANNON_SHOT)
+	{
+		//攻撃者から攻撃力を取得
+		const CannonShot& shot = dynamic_cast<const CannonShot&>(_hitCol.lock()->GetParent());
+		const float atk = shot.GetAttack();
 
-		//体力が0以下になったら
-		if (IsDead())
-		{
-			//当たり判定削除しておく
-			DeleteAllCollider();
-		}
+		//ダメージ
+		damage_ += atk - (unitParam_.fixedDefence + (unitParam_.fixedWeight * Parameter::WEIGHT_AFFECT) - (unitParam_.fixedFlight * Parameter::FLIGHT_AFFECT));
+
+		//無敵時間リセット
+		invincible_ = CannonShot::INVINCIBLE;
+	}
+
+	//体力が0以下になったら
+	if (IsDead())
+	{
+		//当たり判定削除しておく
+		DeleteAllCollider();
 	}
 }
 

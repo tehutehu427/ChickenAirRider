@@ -9,8 +9,11 @@ class CannonShot : public ObjectBase
 {
 public:
 
+	//無敵時間
+	static constexpr float INVINCIBLE = 1.0f;
+
 	//コンストラクタ
-	CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR& _scl, std::weak_ptr<Collider> _holder);
+	CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR& _scl, std::weak_ptr<Collider> _holder, const float _speed);
 
 	//デストラクタ
 	~CannonShot(void)override;
@@ -50,15 +53,21 @@ private:
 	static constexpr float SPEED = 50.0f;
 
 	//半径
-	static constexpr float RADIUS = 30.0f;
+	static constexpr float RADIUS = 60.0f;
 
 	//生存時間
 	static constexpr float ALIVE_TIME = 10.0f;
 	static constexpr float BLAST_TIME = 3.0f;
 
+	//攻撃力補正
+	static constexpr float ATTACK_MULTI = 2.0f;
+
 	//所有者タグ
 	std::weak_ptr<Collider> holder_;
 
+	//移動後座標
+	VECTOR movedPos_;
+	
 	//重力
 	VECTOR gravPow_;
 
@@ -73,6 +82,9 @@ private:
 
 	//攻撃力
 	float attack_;
+
+	//速度
+	float speed_;
 
 	//更新
 	std::unordered_map<STATE, std::function<void(void)>> update_;

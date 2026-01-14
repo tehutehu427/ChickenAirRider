@@ -31,9 +31,12 @@ SceneGame::~SceneGame(void)
 	SoundManager::GetInstance().StopAll();
 	SingletonRegistry::GetInstance().Delete(SingletonRegistry::DESTROY_TIMING::GAME_END);
 
-	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE);
-	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::HEALTH);
-	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHECK_PARAM);
+	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
+	{
+		UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE,i);
+		UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::HEALTH,i);
+		UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHECK_PARAM,i);
+	}
 }
 
 void SceneGame::Load(void)

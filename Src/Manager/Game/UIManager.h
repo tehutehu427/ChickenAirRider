@@ -43,10 +43,10 @@ public:
 	void Draw(const int _playerIndex = 0);
 
 	//描画するUIの追加
-	void AddDraw(const DRAW_TYPE _type);
+	void AddDraw(const DRAW_TYPE _type, const int _playerIndex);
 
 	//描画するUIの削除
-	void SubDraw(const DRAW_TYPE _type);
+	void SubDraw(const DRAW_TYPE _type, const int _playerIndex);
 
 	//ビューポートの生成
 	void CreateViewports(const int _playerCnt, const int _screenW, const int _screenH);
@@ -65,7 +65,7 @@ private:
 	//体力
 	static constexpr int HEALTH_BOX_LOCAL_POS_X = 10;
 	static constexpr int HEALTH_BOX_LOCAL_POS_Y = 0;
-	static constexpr int HEALTH_BOX = 20;
+	static constexpr int HEALTH_BOX = 1;
 	static constexpr int HEALTH_LOCAL = 3;
 
 	//UIの位置(Normalize)
@@ -85,7 +85,7 @@ private:
 
 	//描画
 	std::unordered_map<DRAW_TYPE, std::function<void(int)>> drawList_;
-	std::unordered_map<DRAW_TYPE, std::function<void(int)>> drawView_;
+	std::map<int, std::unordered_map<DRAW_TYPE, std::function<void(int)>>> drawView_;
 
 	//ゲージ画像
 	int gaugeImg_;

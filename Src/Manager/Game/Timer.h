@@ -24,14 +24,20 @@ public:
 	//時間制限の有無
 	const bool IsTimeLimit(void)const { return timer_ > 0.0f; }
 
+	//時間制限の設定
+	void SetTimeLimit(const float _timeLimit) { timer_ = _timeLimit; }
+
 	//カウントの有無の設定
 	void SetCountValid(const bool _cntValid) { cntValid_ = _cntValid; }
 
+	//カウントの表示の有無
+	void SetCountView(const bool _isView) { isView_ = _isView; }
+
 	//時間制限が終わったか
-	const bool IsTimeOver(void);
+	const bool IsTimeOver(void)const;
 
 	//残り時間の取得
-	const float RemainingTime(void);
+	const float RemainingTime(void)const;
 
 	//位置の設定
 	void SetPos(const Vector2 _pos) { pos_ = _pos; }
@@ -42,9 +48,9 @@ private:
 	static constexpr float SECOND_TO_MINUTE = 60.0f;
 
 	//画像幅
-	static constexpr int IMAGE_WIDTH = 25;
-	static constexpr float IMAGE_EXRATE = 0.7f;
-	static constexpr float FRAME_EXRATE = 0.5f;
+	static constexpr int IMAGE_WIDTH = 20;
+	static constexpr float IMAGE_EXRATE = 0.6f;
+	static constexpr float FRAME_EXRATE = 0.4f;
 
 	//時間計測
 	float timer_;
@@ -54,6 +60,9 @@ private:
 
 	//カウントの状態
 	bool cntValid_;
+
+	//カウントの表示
+	bool isView_;
 
 	//表示場所
 	Vector2 pos_;

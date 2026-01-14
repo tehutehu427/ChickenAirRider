@@ -30,6 +30,7 @@ GameMain::~GameMain(void)
 void GameMain::Init(void)
 {
 	//インスタンス
+	auto& scnMng = SceneManager::GetInstance();
 	auto& setMng = GameSetting::GetInstance();
 	auto& grvMng = GravityManager::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
@@ -39,15 +40,13 @@ void GameMain::Init(void)
 	auto& snd = SoundManager::GetInstance();
 	auto& ui = UIManager::GetInstance();
 
+	//タイマーの開始
+	scnMng.GetTimer().SetCountValid(true);
+	scnMng.GetTimer().SetCountView(true);
+	scnMng.GetTimer().SetTimeLimit(setMng.GetTimeLimit());
+
 	//重力
 	grvMng.Init();
-
-	//タイマー
-	timer_ = std::make_unique<Timer>(setMng.GetTimeLimit());
-	timer_->Init();
-
-	//カウント開始
-	timer_->SetCountValid(true);
 
 	//ステージ管理
 	stgMng.Load();
@@ -62,8 +61,8 @@ void GameMain::Init(void)
 	sky_->Init();
 
 	//UIの挿入
-	ui.AddDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE);
-	ui.AddDraw(UIManager::DRAW_TYPE::HEALTH);
+	//ui.AddDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE, playerIndex_);
+	//ui.AddDraw(UIManager::DRAW_TYPE::HEALTH, playerIndex_);
 
 	//BGM読み込み
 	int id = res.Load(ResourceManager::SRC::MAIN_GAME_BGM).handleId_;
@@ -76,7 +75,7 @@ void GameMain::Init(void)
 void GameMain::Update(void)
 {
 	//タイムリミットになったならリザルトへ(デバッグ)
-	if (timer_->IsTimeOver())
+	if (SceneManager::GetInstance().GetTimer().IsTimeOver())
 	{
 		//シーンの削除
 		parent_.ChangeGameState(SceneGame::GAME_STATE::CHECK);
@@ -90,9 +89,6 @@ void GameMain::Update(void)
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
 	auto& key = KeyConfig::GetInstance();
-
-	//タイマーの更新
-	timer_->Update();
 
 	//スカイドームの更新
 	sky_->Update();
@@ -153,19 +149,26 @@ void GameMain::Draw(void)
 
 	//プレイヤーの描画
 	plMng.Draw();
-
-	//タイマーの描画
-	timer_->Draw();
 }
 
 void GameMain::Release(void)
 {
 	//インスタンス
+	auto& scnMng = SceneManager::GetInstance();
 	auto& ui = UIManager::GetInstance();
+	auto& setMng = GameSetting::GetInstance();
 
 	//UIの削除
-	ui.SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE);
-	ui.SubDraw(UIManager::DRAW_TYPE::HEALTH);
+	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
+	{
+		ui.SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE,i);
+		ui.SubDraw(UIManager::DRAW_TYPE::HEALTH,i);
+	}
+
+	//タイマーの開始
+	scnMng.GetTimer().SetCountValid(false);
+	scnMng.GetTimer().SetCountView(false);
+	scnMng.GetTimer().SetTimeLimit(setMng.GetTimeLimit());
 }
 
 void GameMain::DebugDraw(void)

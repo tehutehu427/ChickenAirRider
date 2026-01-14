@@ -19,6 +19,7 @@ void PlayerManager::CreateInstance(void)
 
 void PlayerManager::Init(void)
 {
+	//インスタンス
 	const auto& setting = GameSetting::GetInstance();
 	const int userNum = setting.GetUserNum();
 	const int plNum = setting.GetPlayerNum();
@@ -74,8 +75,12 @@ void PlayerManager::Destroy(void)
 	players_.clear();
 }
 
-PlayerManager::PlayerManager(void)
+void PlayerManager::PlayerCanGetOff(const bool _getOff)
 {
+	for (auto& player : players_)
+	{
+		player->SetCanGetOff(_getOff);
+	}
 }
 
 PlayerManager::~PlayerManager(void)

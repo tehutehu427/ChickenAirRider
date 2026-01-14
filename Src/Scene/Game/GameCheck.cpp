@@ -3,6 +3,7 @@
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/Game/UIManager.h"
 #include "../Manager/Game/Timer.h"
+#include "../Manager/Game/GameSetting.h"
 #include "GameCheck.h"
 
 GameCheck::GameCheck(SceneGame& _parent)
@@ -31,7 +32,10 @@ void GameCheck::Init(void)
 	state_ = CHECK_STATE::PLAYER_PARAM;
 
 	//パラメーター確認
-	UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::CHECK_PARAM);
+	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
+	{
+		UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::CHECK_PARAM,i);
+	}
 }
 
 void GameCheck::Update(void)
@@ -72,7 +76,10 @@ void GameCheck::UpdatePlayerParam(void)
 		state_ = CHECK_STATE::LAST_GAME;
 
 		//パラメーター確認
-		UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHECK_PARAM);
+		for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
+		{
+			UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHECK_PARAM, i);
+		}
 	}
 }
 

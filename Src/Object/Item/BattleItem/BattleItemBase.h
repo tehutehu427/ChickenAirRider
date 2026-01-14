@@ -38,6 +38,9 @@ protected:
 	//Œø‰ÊŠÔ
 	static constexpr float ACTIVE_TIME = 10.0f;
 
+	//‘Š‘ÎÀ•W
+	static constexpr float LOCAL_POS_Y = 30.0f;
+
 	//‰æ‘œID
 	int imgId_;
 

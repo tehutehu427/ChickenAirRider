@@ -31,7 +31,10 @@ private:
 	static constexpr float SCALE = 0.4f;
 
 	//ê∂ê¨ä‘äu
-	static constexpr float CREATE_TIME = 2.0f;
+	static constexpr float CREATE_TIME = 1.0f;
+
+	//ëÂñCÇÃäpìx
+	static constexpr float ANGLE_X = -30.0f;
 
 	//íe
 	std::vector<std::unique_ptr<CannonShot>> shots_;
