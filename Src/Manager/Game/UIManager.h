@@ -34,6 +34,9 @@ public:
 	};
 
 	//‰Šú‰»
+	void LoadOutSide(void)override;
+
+	//‰Šú‰»
 	void Init(void)override;
 
 	//XV

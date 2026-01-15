@@ -11,6 +11,10 @@
 #include "../Object/Player/Action/MachineAction.h"
 #include "UIManager.h"
 
+void UIManager::LoadOutSide(void)
+{
+}
+
 void UIManager::Init(void)
 {
 	//インスタンス

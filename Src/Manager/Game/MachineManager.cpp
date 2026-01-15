@@ -33,10 +33,16 @@ MachineManager::~MachineManager(void)
 	machines_.clear();
 }
 
-void MachineManager::Init(void)
+void MachineManager::LoadOutSide(void)
 {
 	//ステージ情報
 	importData_ = LoaderManager<MachineImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Machine.json"));
+}
+
+void MachineManager::Init(void)
+{
+	//機体の初期化
+	machines_.clear();
 
 	//機体の生成
 	CreateMachine();

@@ -56,13 +56,18 @@ void GameMain::Init(void)
 	plMng.Init();
 
 	//スカイドーム
-	sky_ = std::make_unique<SkyDome>(plMng.GetPlayer(0).GetTrans().pos);
+	sky_ = std::make_unique<SkyDome>();
 	sky_->Load();
 	sky_->Init();
 
-	//UIの挿入
-	//ui.AddDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE, playerIndex_);
-	//ui.AddDraw(UIManager::DRAW_TYPE::HEALTH, playerIndex_);
+	//プレイヤー人数
+	const int plNum = GameSetting::GetInstance().GetUserNum();
+
+	//スカイドームの設定
+	for (int i = 0; i < plNum; i++)
+	{
+		plMng.GetPlayer(i).GetCamera().lock()->SetSkyDome(sky_);
+	}
 
 	//BGM読み込み
 	int id = res.Load(ResourceManager::SRC::MAIN_GAME_BGM).handleId_;
@@ -74,7 +79,7 @@ void GameMain::Init(void)
 
 void GameMain::Update(void)
 {
-	//タイムリミットになったならリザルトへ(デバッグ)
+	//タイムリミットになったならパラメーターの確認へ
 	if (SceneManager::GetInstance().GetTimer().IsTimeOver())
 	{
 		//シーンの削除
@@ -134,9 +139,6 @@ void GameMain::Draw(void)
 	auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
-
-	//スカイドーム
-	sky_->Draw();
 
 	//ステージの描画
 	stgMng.Draw();

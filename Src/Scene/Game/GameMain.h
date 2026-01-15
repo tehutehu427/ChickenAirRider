@@ -30,8 +30,5 @@ private:
 
 	//デバッグ描画
 	void DebugDraw(void)override;
-
-	//スカイドーム
-	std::unique_ptr<SkyDome> sky_;
 };
 

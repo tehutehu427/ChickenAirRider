@@ -9,7 +9,7 @@ class AnimationManager : public Singleton<AnimationManager>
 public:
 
 	//“Ç‚İ‚İ
-	void Init(void);
+	void Init(void)override;
 
 	//‰ğ•ú
 	void Destroy(void);

@@ -68,17 +68,9 @@ Player::~Player(void)
 
 void Player::Load(void)
 {
-}
-
-void Player::Init(void)
-{
-	//座標
-	movedPos_ = VAdd(movedPos_, VScale(LOCAL_POS, static_cast<float>(playerIndex_)));
-
 	//キャラクター
 	chara_ = std::make_unique<Character>();
 	chara_->Load();
-	chara_->Init();
 
 	//初期機体情報
 	const auto& machineMng = MachineManager::GetInstance();
@@ -86,17 +78,6 @@ void Player::Init(void)
 	//機体
 	machine_ = std::move(machineMng.GetCreateMachine(MachineManager::MACHINE_TYPE::WAKABA));
 	machine_->Load();
-	machine_->Init();
-
-	//行動基準
-	createLogic_[operation_]();
-
-	//当たり判定後処理
-	onHit_ = std::make_unique<PlayerOnHit>(*this, trans_);
-	onHit_->Load();
-
-	//初期状態
-	ChangeState(STATE::RIDE_MACHINE);
 
 	//当たり判定生成
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, NORMAL_RADIUS);
@@ -105,17 +86,47 @@ void Player::Init(void)
 	//接地判定用の当たり判定
 	geo = std::make_unique<Line>(trans_.pos, movedPos_, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	MakeCollider(Collider::TAG::FOOT, std::move(geo), { playerTag_,Collider::TAG::FOOT });
+
+	//行動基準
+	createLogic_[operation_]();
+
+	//当たり判定後処理
+	onHit_ = std::make_unique<PlayerOnHit>(*this, trans_);
+	onHit_->Load();
+
+	canGetOff_ = true;
+}
+
+void Player::Init(void)
+{
+	//座標
+	movedPos_ = VAdd(Utility::VECTOR_ZERO, VScale(LOCAL_POS, static_cast<float>(playerIndex_)));
+	trans_.pos = movedPos_;
+
+	//初期化
+	chara_->Init();
+	machine_->Init();
 	
 	//体力
 	damage_ = 0.0f;
-	canGetOff_ = true;
 
 	//初期更新
 	Update();
+
+	//初期状態
+	ChangeState(STATE::RIDE_MACHINE);
 }
 
 void Player::Update(void)
 {
+	//落ちたら位置を初期化
+	if (movedPos_.y < -500.0f)
+	{
+		//座標
+		movedPos_ = VAdd(Utility::VECTOR_ZERO, VScale(LOCAL_POS, static_cast<float>(playerIndex_)));
+		trans_.pos = movedPos_;
+	}
+
 	//インスタンス
 	auto& grvMng = GravityManager::GetInstance();
 

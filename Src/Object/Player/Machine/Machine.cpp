@@ -24,6 +24,8 @@ Machine::~Machine(void)
 
 void Machine::Load(void)
 {
+	//モデル
+	trans_.localPos.y -= 20.0f;
 }
 
 void Machine::Init(void)
@@ -31,8 +33,8 @@ void Machine::Init(void)
 	//初期化
 	invincible_ = 0;
 
-	//モデル
-	trans_.localPos.y -= 20.0f;
+	//ダメージの初期化
+	damage_ = 0.0f;
 
 	//アニメーション
 	InitAnimation();

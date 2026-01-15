@@ -24,6 +24,9 @@ public:
 		MAX
 	};
 
+	//初期化
+	void Init(void)override;
+
 	//更新
 	void Update(void);
 
@@ -66,7 +69,7 @@ private:
 	//デストラクタ
 	~MachineManager(void)override;
 
-	//初期化
-	void Init(void)override;
+	//読み込み
+	void LoadOutSide(void)override;
 };
 

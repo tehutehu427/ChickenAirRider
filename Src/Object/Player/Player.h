@@ -30,7 +30,6 @@ public:
 
 		NORMAL,			//生身
 		RIDE_MACHINE,	//機体乗車中
-		DEAD,			//死亡
 	};
 
 	//当たり判定添え字
@@ -57,9 +56,6 @@ public:
 	
 	//描画
 	void Draw(void)override;
-
-	//成長パラメーターの描画
-	void DrawGrowthParam(void);
 
 	//当たり判定処理
 	void OnHit(const std::weak_ptr<Collider> _hitCol)override;
@@ -89,7 +85,7 @@ public:
 	UnitParameter GetUnitParam(void)const;
 
 	//状態
-	const STATE GetState(void) { return state_; }
+	const STATE GetState(void)const { return state_; }
 
 	//回転の設定
 	void SetQuaRot(const Quaternion& _quaRot) { trans_.quaRot = _quaRot; }
@@ -107,7 +103,7 @@ public:
 	void ChangeState(const STATE& _state);
 	
 	//接地判定
-	const bool IsGrounded(void) { return isGrounded_; }
+	const bool IsGrounded(void)const { return isGrounded_; }
 
 	//接地判定の切り替え
 	void SetIsGrounded(const bool _isGrounded) { isGrounded_ = _isGrounded; }
@@ -119,19 +115,19 @@ public:
 	void SetIsSpin(const bool _isSpin);
 
 	//移動前座標の取得
-	const VECTOR& GetPrePos(void) { return prePos_; }
+	const VECTOR& GetPrePos(void)const { return prePos_; }
 
 	//移動前座標の設定
 	void SetPrePos(const VECTOR _pos) { prePos_ = _pos; }
 
 	//移動後座標の取得
-	const VECTOR& GetMovedPos(void) { return movedPos_; }
+	const VECTOR& GetMovedPos(void)const { return movedPos_; }
 
 	//移動後座標の設定
 	void SetMovedPos(const VECTOR _pos) { movedPos_ = _pos; }
 
 	//足元方向の取得
-	const Quaternion& GetFoot(void) { return footLine_; }
+	const Quaternion& GetFoot(void)const { return footLine_; }
 
 	//足元方向の設定
 	void SetFootLine(const Quaternion _foot) { footLine_ = _foot; }
@@ -163,7 +159,7 @@ public:
 	const int GetPlayerIndex(void)const { return playerIndex_; }
 
 	//プレイヤーの操作者
-	const OPERATION_TYPE GetOperation(void) { return operation_; }
+	const OPERATION_TYPE GetOperation(void)const { return operation_; }
 
 	//降りれるかどうかの設定
 	void SetCanGetOff(const bool _getOff) { canGetOff_ = _getOff; }

@@ -29,6 +29,9 @@ public:
 	//プレイヤーの取得
 	const Player& GetPlayer(const int _playerIndex) { return *players_[_playerIndex]; }
 
+	//プレイヤーの状態の初期化
+	void ResetPlayer(void);
+
 	//プレイヤーの降車判定
 	void PlayerCanGetOff(const bool _getOff);
 

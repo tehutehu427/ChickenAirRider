@@ -5,10 +5,10 @@
 #include "../Manager/System/ResourceManager.h"
 #include "Timer.h"
 
-Timer::Timer(const float _timeLimit)
+Timer::Timer(void)
 {
 	cnt_ = 0.0f;
-	timer_ = _timeLimit;
+	timer_ = 0.0f;
 	cntValid_ = false;
 	isView_ = false;
 	pos_ = {};
@@ -22,12 +22,13 @@ Timer::~Timer(void)
 	numImgs_ = nullptr;
 }
 
-void Timer::Init(void)
+void Timer::Init(const float _timeLimit)
 {
 	//‰Šú‰»
 	cnt_ = 0.0f;
-	cntValid_ = true;
-	isView_ = true;
+	cntValid_ = false;
+	isView_ = false;
+	timer_ = _timeLimit;
 
 	//‰æ‘œ
 	frameImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TIMER_FRAME).handleId_;

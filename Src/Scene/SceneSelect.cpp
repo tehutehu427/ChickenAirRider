@@ -6,6 +6,7 @@
 #include"../Manager/System/SoundManager.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/Game/GameSetting.h"
+#include"../Manager/Game/Timer.h"
 #include "SceneSelect.h"
 
 SceneSelect::SceneSelect(void)
@@ -186,6 +187,7 @@ void SceneSelect::UpdateHome(void)
 void SceneSelect::UpdateGameStart(void)
 {
 	//インスタンス
+	auto& scnMng = SceneManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
 	auto& key = KeyConfig::GetInstance();
 	auto& set = GameSetting::GetInstance();
@@ -202,10 +204,13 @@ void SceneSelect::UpdateGameStart(void)
 		set.SetNpcNum(playerNum_[PLAYER_NUM_SELECT::NPC]);
 
 		//制限時間
-		set.SetTimeLimit(100);
+		set.SetTimeLimit(10);
+		
+		//タイマーの初期化
+		scnMng.GetTimer().Init(set.GetTimeLimit());
 
 		//シーンの削除
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME, true, true);
+		scnMng.ChangeScene(SceneManager::SCENE_ID::GAME, true, true);
 		return;
 	}
 

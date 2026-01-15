@@ -68,8 +68,8 @@ void SceneManager::Init(void)
 	fader_->Init();
 	
 	//タイマー
-	timer_ = std::make_unique<Timer>(setting.GetTimeLimit());
-	timer_->Init();
+	timer_ = std::make_unique<Timer>();
+	timer_->Init(setting.GetTimeLimit());
 
 	//カウント開始
 	timer_->SetCountValid(false);
@@ -120,7 +120,7 @@ void SceneManager::Init3D(void)
 	ChangeLightTypeDir({ 0.3f, -0.7f, 0.8f });
 
 	// フォグ設定
-	SetFogEnable(true);
+	SetFogEnable(false);
 	SetFogColor(5, 5, 5);
 	SetFogStartEnd(10000.0f, 20000.0f);
 
@@ -196,16 +196,20 @@ void SceneManager::Draw(void)
 			scene->Draw();
 		}
 
+		//スカイドームの描画
+		if (!cameras_.empty())
+			cameras_.front()->DrawSkyDome();
+
 		//UIは別々で描画
 		if (sceneId_ == SCENE_ID::GAME)
 			UIManager::GetInstance().Draw();
 
+		// 主にポストエフェクト用
+		if (!cameras_.empty())
+			cameras_.front()->Draw();
+
 		//タイマーの描画
 		timer_->Draw();
-
-		// 主にポストエフェクト用
-		//if (!cameras_.empty())
-		//	cameras_.front()->Draw();
 
 		// Effekseerにより再生中のエフェクトを描画する。
 		DrawEffekseer3D();
@@ -557,11 +561,15 @@ void SceneManager::DrawMultiScreen()
 			scene->Draw();
 		}
 
+		//スカイドームの描画
+		if (!cameras_.empty())
+			cameras_[index]->DrawSkyDome();
+
 		//UIは別々で描画
 		UIManager::GetInstance().Draw(index);
 
 		// 主にポストエフェクト用
-		//cameras_[index]->Draw(index);
+		cameras_[index]->Draw(index);
 
 		// Effekseerにより再生中のエフェクトを描画する。
 		DrawEffekseer3D();

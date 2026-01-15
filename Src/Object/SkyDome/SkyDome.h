@@ -6,7 +6,7 @@ class SkyDome
 public:
 
 	//コンストラクタ
-	SkyDome(const VECTOR& _follow);
+	SkyDome(void);
 	
 	//デストラクタ
 	~SkyDome(void);
@@ -21,14 +21,15 @@ public:
 	void Update(void);
 
 	//描画
-	void Draw(void);
+	void Draw(const VECTOR& _pos);
 
 private:
 
-	static constexpr VECTOR LOCAL_POS = { 0.0f,-2000.0f,0.0f };
+	//大きさ
+	static constexpr float SCALE = 100.0f;
 
-	//追従座標
-	const VECTOR& follow_;
+	//相対座標
+	static constexpr VECTOR LOCAL_POS = { 0.0f,-0.0f,0.0f };
 
 	//モデル
 	int modelId_;

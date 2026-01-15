@@ -7,13 +7,13 @@ public:
 
 	/// @brief コンストラクタ
 	/// @param _timeLimit 時間制限(0.0だと無制限)
-	Timer(const float _timeLimit = 0.0f);
+	Timer(void);
 	
 	//デストラクタ
 	~Timer(void);
 
 	//初期化
-	void Init(void);
+	void Init(const float _timeLimit = 0.0f);
 
 	//更新
 	void Update(void);

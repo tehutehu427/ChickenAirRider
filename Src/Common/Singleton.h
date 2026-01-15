@@ -21,7 +21,8 @@ public:
 		//¶¬
 		instance_ = new T();
 
-		//‰Šú‰»
+		//“Ç‚İ‚İ‚Æ‰Šú‰»
+		instance_->LoadOutSide();
 		instance_->Init();
 
 		//ƒŒƒWƒXƒ^‚ÉŠi”[
@@ -38,6 +39,9 @@ public:
 
 		return *instance_;
 	}
+
+	//“Ç‚İ‚İ
+	virtual void LoadOutSide(void) {}
 
 	//‰Šú‰»
 	virtual void Init(void) {}

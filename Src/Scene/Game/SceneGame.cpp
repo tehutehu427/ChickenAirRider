@@ -1,6 +1,7 @@
 #include"../pch.h"
 #include"../Application.h"
 #include"../Common/SingletonRegistry.h"
+#include"../Utility/Utility.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/SoundManager.h"
 #include"../Manager/Game/GameSetting.h"
@@ -15,11 +16,14 @@
 #include"../Scene/Game/GameMain.h"
 #include"../Scene/Game/GameCheck.h"
 #include"../Scene/Game/LastMiniGame/LastGameBase.h"
+#include"../Scene/Game/LastMiniGame/DeathMatch.h"
 #include "SceneGame.h"
 
 SceneGame::SceneGame(void)
 {
 	gameState_ = GAME_STATE::MAIN;
+
+	createLastGame_.emplace(LAST_GAME_TYPE::DEATH_MATCH, [this](void) {return std::make_unique<DeathMatch>(*this); });
 }
 
 SceneGame::~SceneGame(void)
@@ -42,9 +46,9 @@ SceneGame::~SceneGame(void)
 void SceneGame::Load(void)
 {
 	//メイン
-	game_.emplace(GAME_STATE::MAIN, std::make_unique<GameMain>(*this));
-	game_.emplace(GAME_STATE::CHECK, std::make_unique<GameCheck>(*this));
-	game_.emplace(GAME_STATE::LAST, std::make_unique<LastGameBase>(*this));
+	createGame_.emplace(GAME_STATE::MAIN, [this](void) {return std::make_unique<GameMain>(*this); });
+	createGame_.emplace(GAME_STATE::CHECK, [this](void) {return std::make_unique<GameCheck>(*this); });
+	ResetLastGame();
 }
 
 void SceneGame::Init(void)
@@ -83,7 +87,7 @@ void SceneGame::Init(void)
 void SceneGame::Update(void)
 {
 	//基本更新
-	game_[gameState_]->Update();
+	game_->Update();
 
 	//UI状態の更新
 	UIManager::GetInstance().Update();
@@ -92,13 +96,15 @@ void SceneGame::Update(void)
 void SceneGame::Draw(void)
 {
 	//描画
-	game_[gameState_]->Draw();
+	game_->Draw();
 }
 
 void SceneGame::Release(void)
 {
+	if (game_ == nullptr)return;
+
 	//解放
-	game_[gameState_]->Release();
+	game_->Release();
 }
 
 void SceneGame::ChangeGameState(const GAME_STATE _gameState)
@@ -107,8 +113,17 @@ void SceneGame::ChangeGameState(const GAME_STATE _gameState)
 	Release();
 
 	//状態変更
-	gameState_ = _gameState;
+	game_ = std::move(createGame_[_gameState]());
 	
 	//初期化
-	game_[gameState_]->Init();
+	game_->Init();
+}
+
+void SceneGame::ResetLastGame(void)
+{
+	//ランダム
+	LAST_GAME_TYPE rand = static_cast<LAST_GAME_TYPE>(Utility::GetRandomValue(0, static_cast<int>(LAST_GAME_TYPE::MAX) - 1));
+
+	//最終ゲーム生成
+	createGame_.emplace(GAME_STATE::LAST, [this, rand](void) {return std::move(createLastGame_[rand]()); });
 }

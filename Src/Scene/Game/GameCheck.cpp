@@ -25,8 +25,10 @@ GameCheck::~GameCheck(void)
 void GameCheck::Init(void)
 {
 	//タイマー設定
-	timer_ = std::make_unique<Timer>(LAST_GAME_CHECK_TIME);
+	timer_ = std::make_unique<Timer>();
+	timer_->Init(LAST_GAME_CHECK_TIME);
 	timer_->SetCountValid(true);
+	timer_->SetCountView(false);
 
 	//初期化
 	state_ = CHECK_STATE::PLAYER_PARAM;

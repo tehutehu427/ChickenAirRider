@@ -1,6 +1,8 @@
 #pragma once
 #include "../GameBase.h"
 
+class SkyDome;
+
 class LastGameBase : public GameBase
 {
 public:

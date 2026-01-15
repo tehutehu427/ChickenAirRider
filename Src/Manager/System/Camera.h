@@ -7,6 +7,7 @@
 class Transform;
 class PixelMaterial;
 class PixelRenderer;
+class SkyDome;
 
 class Camera
 {
@@ -98,6 +99,9 @@ public:
 	//描画
 	void Draw(const int _index = 0);
 
+	//スカイドームの描画
+	void DrawSkyDome(void);
+
 	// カメラ位置の取得
 	VECTOR GetPos(void) const;
 
@@ -142,6 +146,9 @@ public:
 
 	//カメラのポストエフェクト用スクリーンのサイズを変更
 	void SetPostEffectScreenSize(const int _sizeX, const int _sizeY, const int _index);
+
+	//スカイドームの設定
+	void SetSkyDome(const std::weak_ptr<SkyDome> _sky) { sky_ = _sky; }
 
 private:
 
@@ -188,6 +195,7 @@ private:
 	int postEffectScreen_;
 	std::unique_ptr<PixelMaterial> material_;
 	std::unique_ptr<PixelRenderer> renderer_;
+	std::weak_ptr<SkyDome> sky_;
 
 	// カメラを初期位置に戻す
 	void SetDefault(void);

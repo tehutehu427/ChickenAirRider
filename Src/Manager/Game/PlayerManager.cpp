@@ -75,12 +75,25 @@ void PlayerManager::Destroy(void)
 	players_.clear();
 }
 
+void PlayerManager::ResetPlayer(void)
+{
+	//‰Šú‰»
+	for (auto& player : players_)
+	{
+		player->Init();
+	}
+}
+
 void PlayerManager::PlayerCanGetOff(const bool _getOff)
 {
 	for (auto& player : players_)
 	{
 		player->SetCanGetOff(_getOff);
 	}
+}
+
+PlayerManager::PlayerManager(void)
+{
 }
 
 PlayerManager::~PlayerManager(void)

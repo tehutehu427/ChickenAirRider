@@ -8,6 +8,7 @@
 #include "../../Manager/Game/UIManager.h"
 #include "../Renderer/PixelMaterial.h"
 #include "../Renderer/PixelRenderer.h"
+#include "../../Object/SkyDome/SkyDome.h"
 #include "Camera.h"
 
 Camera::Camera(int _userNum)
@@ -110,26 +111,34 @@ void Camera::CameraSetting()
 void Camera::Draw(const int _index)
 {
 	// ポストエフェクトの描画
-	SetDrawScreen(postEffectScreen_);
-	ClearDrawScreen();
+	//SetDrawScreen(postEffectScreen_);
+	//ClearDrawScreen();
 
-	//一人やゲームシーン以外ならメインスクリーン
-	if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME || GameSetting::GetInstance().GetUserNum() <= 1)
-		material_->SetTextureBuf(0, SceneManager::GetInstance().GetMainScreen());
-	else
-		material_->SetTextureBuf(0, SceneManager::GetInstance().GetScreen(_index));
+	////一人やゲームシーン以外ならメインスクリーン
+	//if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME || GameSetting::GetInstance().GetUserNum() <= 1)
+	//	material_->SetTextureBuf(0, SceneManager::GetInstance().GetMainScreen());
+	//else
+	//	material_->SetTextureBuf(0, SceneManager::GetInstance().GetScreen(_index));
 
-	//シェーダー描画
-	renderer_->Draw();
+	////シェーダー描画
+	//renderer_->Draw();
 
-	//一人やゲームシーン以外ならメインスクリーン
-	if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME || GameSetting::GetInstance().GetUserNum() <= 1)
-		SetDrawScreen(SceneManager::GetInstance().GetMainScreen());
-	else
-		SetDrawScreen(SceneManager::GetInstance().GetScreen(_index));
+	////一人やゲームシーン以外ならメインスクリーン
+	//if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME || GameSetting::GetInstance().GetUserNum() <= 1)
+	//	SetDrawScreen(SceneManager::GetInstance().GetMainScreen());
+	//else
+	//	SetDrawScreen(SceneManager::GetInstance().GetScreen(_index));
 
 	//スクリーンに描画
-	DrawGraph(0, 0, postEffectScreen_, true);
+	//DrawGraph(0, 0, postEffectScreen_, true);
+}
+
+void Camera::DrawSkyDome(void)
+{
+	//スカイドーム
+	if (sky_.lock() == nullptr)return;
+	
+	sky_.lock()->Draw(followTransform_->pos);
 }
 
 void Camera::SetFollow(const Transform* follow)

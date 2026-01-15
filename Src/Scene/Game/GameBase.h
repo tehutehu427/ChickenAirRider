@@ -1,6 +1,8 @@
 #pragma once
 #include"SceneGame.h"
 
+class SkyDome;
+
 class GameBase
 {
 public:
@@ -30,5 +32,8 @@ protected:
 
 	//ゲームシーン
 	SceneGame& parent_;
+
+	//スカイドーム
+	std::shared_ptr<SkyDome> sky_;
 };
 

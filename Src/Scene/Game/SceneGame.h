@@ -15,6 +15,13 @@ public:
 		LAST,
 	};
 
+	//最終ゲームの種類
+	enum class LAST_GAME_TYPE
+	{
+		DEATH_MATCH,	//デスマッチ
+		MAX
+	};
+
 	//コンストラクタ
 	SceneGame(void);
 	//デストラクタ
@@ -41,6 +48,15 @@ private:
 
 	//状態ごとのシーン
 	GAME_STATE gameState_;
-	std::unordered_map<GAME_STATE, std::unique_ptr<GameBase>> game_;
+	std::unique_ptr<GameBase> game_;
+
+	//ゲーム生成
+	std::unordered_map<GAME_STATE, std::function<std::unique_ptr<GameBase>(void)>> createGame_;
+
+	//最終ゲーム生成
+	std::unordered_map<LAST_GAME_TYPE, std::function<std::unique_ptr<GameBase>(void)>> createLastGame_;
+
+	//最後のミニゲームを再構築
+	void ResetLastGame(void);
 };
 

@@ -20,11 +20,8 @@ void StageManager::CreateInstance(void)
 void StageManager::Load(void)
 {
 	//ステージ情報
-	importData_ = LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Stage.json"));
-}
+	importData_ = LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"MainStage.json"));
 
-void StageManager::Init(void)
-{
 	//ステージの作成
 	for (const auto& data : importData_)
 	{
@@ -34,7 +31,10 @@ void StageManager::Init(void)
 		//ステージの生成
 		stages_.emplace_back(std::make_unique<StageObject>(data, modelId, tag_[data.tag]));
 	}
+}
 
+void StageManager::Init(void)
+{
 	//初期化
 	for (const auto& stage : stages_)
 	{

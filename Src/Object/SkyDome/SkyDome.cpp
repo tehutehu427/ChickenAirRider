@@ -3,8 +3,7 @@
 #include "../Manager/System/ResourceManager.h"
 #include "SkyDome.h"
 
-SkyDome::SkyDome(const VECTOR& _follow)
-	: follow_(_follow)
+SkyDome::SkyDome(void)
 {
 	modelId_ = -1;
 	rot_ = Utility::VECTOR_ZERO;
@@ -27,7 +26,7 @@ void SkyDome::Load(void)
 void SkyDome::Init(void)
 {
 	//大きさ
-	scale_ = Utility::VECTOR_ONE;
+	scale_ = VGet(SCALE, SCALE, SCALE);
 
 	//モデル更新
 	Update();
@@ -36,13 +35,15 @@ void SkyDome::Init(void)
 void SkyDome::Update(void)
 {
 	//モデル制御
-	MV1SetPosition(modelId_, LOCAL_POS/*VAdd(follow_, LOCAL_POS)*/);
 	MV1SetScale(modelId_, scale_);
 	MV1SetRotationXYZ(modelId_, rot_);
 }
 
-void SkyDome::Draw(void)
+void SkyDome::Draw(const VECTOR& _pos)
 {
+	//位置
+	MV1SetPosition(modelId_, _pos);
+
 	//描画
 	MV1DrawModel(modelId_);
 }
