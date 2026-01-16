@@ -42,7 +42,7 @@ public:
 	const bool GetScreenSize(void)const { return screenSize_; }
 
 	//フルスクリーンかどうかの設定(false:フルスクリーン)
-	void SetScreenSize(const bool _screenSize) { screenSize_ = _screenSize; }
+	void SetScreenSize(const bool _screenSize);
 
 private:
 

@@ -106,7 +106,7 @@ void SceneOption::Draw(void)
 	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y * 3, L"END", type_ == OPTION_TYPE::END ? Utility::RED : Utility::WHITE);
 	
 	DrawFormatString(SELECT_POS_X + SELECT_LOCAL_POS_X, SELECT_POS_Y, type_ == OPTION_TYPE::TIME ? Utility::RED : Utility::WHITE, L"%.2d:%.2d",modiTimeLimit_ / TIME_MIN_MULTI, modiTimeLimit_ % TIME_MIN_MULTI);
-	DrawString(SELECT_POS_X + SELECT_LOCAL_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y, modiScreenSize_ == true ? L"オフ" : L"オン", type_ == OPTION_TYPE::SCREEN ? Utility::RED : Utility::WHITE);
+	DrawString(SELECT_POS_X + SELECT_LOCAL_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y, modiScreenSize_ == true ? L"OFF" : L"ON", type_ == OPTION_TYPE::SCREEN ? Utility::RED : Utility::WHITE);
 	DrawFormatString(SELECT_POS_X + SELECT_LOCAL_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y * 2, type_ == OPTION_TYPE::KEY_TYPE ? Utility::RED : Utility::WHITE, L"KEY_TYPE");
 }
 
@@ -231,10 +231,17 @@ void SceneOption::UpdateTime(void)
 
 void SceneOption::UpdateScreen(void)
 {
+	//スクリーン変更
+	modiScreenSize_ = modiScreenSize_ == true ? false : true;
+
+	//ホームに戻る
+	nowType_ = OPTION_TYPE::HOME;
 }
 
 void SceneOption::UpdateKeyType(void)
 {
+	//ホームに戻る
+	nowType_ = OPTION_TYPE::HOME;
 }
 
 void SceneOption::UpdateEnd(void)
