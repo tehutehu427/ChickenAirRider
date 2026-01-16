@@ -33,6 +33,7 @@ void DeathMatch::Init(void)
 	stgMng.Init();
 	machineMng.Init();
 	itemMng.Init();
+	itemMng.SetSpawnType(ItemManager::SPAWN_TYPE::DEATH_MATCH);
 
 	//‹¤’Ê‰Šú‰»
 	LastGameBase::Init();

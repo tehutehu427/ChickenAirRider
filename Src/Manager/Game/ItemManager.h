@@ -14,6 +14,13 @@ class ItemManager : public Singleton<ItemManager>
 
 public:
 
+	//生成の種類
+	enum class SPAWN_TYPE
+	{
+		MAIN,			//基本
+		DEATH_MATCH,	//デスマッチ
+	};
+
 	//初期化
 	void LoadOutSide(void)override;
 
@@ -28,11 +35,16 @@ public:
 
 	/// @brief パワーアップアイテム生成
 	/// @param _pos	生成位置
-	void CreatePowerUpItem(VECTOR _pos);
+	/// @param _num 生成数(指定なしならランダム)
+	void CreatePowerUpItem(const VECTOR _pos, const int _num = -1);
 
 	/// @brief バトルアイテム生成
 	/// @param _pos	生成位置
-	void CreateBattleItem(VECTOR _pos);
+	/// @param _num 生成数(指定なしならランダム)
+	void CreateBattleItem(const VECTOR _pos, const int _num = -1);
+
+	//生成タイプの設定
+	void SetSpawnType(const SPAWN_TYPE _type) { type_ = _type; }
 	
 private:
 
@@ -66,6 +78,12 @@ private:
 	//バトルアイテムの生成
 	std::unordered_map<BattleItemBase::BATTLE_ITEM_TYPE, std::function<std::unique_ptr<BattleItemBase>(const VECTOR&, const VECTOR&)>> createBattleItem_;
 
+	//生成タイプ
+	SPAWN_TYPE type_;
+
+	//ゲームごとの生成
+	std::unordered_map<SPAWN_TYPE, std::function<void(void)>> create_;
+
 	//生成カウンタ
 	float boxCreateCnt_;
 
@@ -74,6 +92,10 @@ private:
 	
 	//デストラクタ
 	~ItemManager(void)override;
+
+	//生成
+	void CreateMain(void);
+	void CreateDeathMatch(void);
 
 	//アイテムボックス生成
 	void CreateItemBox(void);

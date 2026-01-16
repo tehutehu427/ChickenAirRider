@@ -202,9 +202,6 @@ void SceneSelect::UpdateGameStart(void)
 		//プレイヤーの作成数
 		set.SetUserNum(playerNum_[PLAYER_NUM_SELECT::USER]);
 		set.SetNpcNum(playerNum_[PLAYER_NUM_SELECT::NPC]);
-
-		//制限時間
-		set.SetTimeLimit(10);
 		
 		//タイマーの初期化
 		scnMng.GetTimer().Init(set.GetTimeLimit());
@@ -264,6 +261,9 @@ void SceneSelect::UpdateGameStart(void)
 
 void SceneSelect::UpdateOption(void)
 {
+	//オプションシーンに遷移
+	SceneManager::GetInstance().PushScene(SceneManager::SCENE_ID::OPTION);
+
 	//ホームに戻る
 	nowSelectType_ = SELECT_TYPE::HOME;
 }

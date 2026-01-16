@@ -1,6 +1,6 @@
 #pragma once
 #include <functional>
-#include "SceneBase.h"
+#include "../SceneBase.h"
 
 class SceneSelect : public SceneBase
 {

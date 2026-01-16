@@ -26,6 +26,7 @@ public:
 		NONE = -1,
 		TITLE,		//タイトル
 		SELECT,		//セレクト
+		OPTION,		//オプション
 		GAME,		//ゲーム
 		RESULT,		//リザルト
 		MAX
@@ -164,6 +165,7 @@ private:
 	//シーン生成
 	std::unique_ptr<SceneBase> CreateSceneTitle(void);
 	std::unique_ptr<SceneBase> CreateSceneSelect(void);
+	std::unique_ptr<SceneBase> CreateSceneOption(void);
 	std::unique_ptr<SceneBase> CreateSceneGame(void);
 	//std::unique_ptr<SceneBase> CreateSceneResult(void);
 
@@ -173,6 +175,7 @@ private:
 	void ChangeSceneChangeBack(void);
 
 	//フェード
+	void FadeNone(void);
 	void FadeOut(void);
 	void FadeIn(void);
 

@@ -11,7 +11,7 @@
 //ê¸
 //***************************************************
 
-Line::Line(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR _localPosPoint1, const VECTOR _localPosPoint2)
+Line::Line(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR& _localPosPoint1, const VECTOR& _localPosPoint2)
 	: Geometry(_pos, _movedPos, _rot),
 	localPosPoint1_(_localPosPoint1),
 	localPosPoint2_(_localPosPoint2)

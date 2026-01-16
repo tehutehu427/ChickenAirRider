@@ -93,6 +93,11 @@ StageManager::StageManager(void)
 		auto& res = ResourceManager::GetInstance();
 		return res.LoadModelDuplicate(ResourceManager::SRC::TREE);
 	};
+	modelId_["WorldBorder"] = [this](void)
+	{
+		//ワールドボーダーなのでモデルなし
+		return -1;
+	};
 
 	//タグ
 	tag_["normalObject"] = Collider::TAG::NORMAL_OBJECT;

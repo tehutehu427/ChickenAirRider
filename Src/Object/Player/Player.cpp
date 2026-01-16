@@ -105,6 +105,17 @@ void Player::Init(void)
 
 	//‰Šú‰»
 	chara_->Init();
+
+	//‰Šú‹@‘Ìî•ñ
+	const auto& machineMng = MachineManager::GetInstance();
+
+	//‹@‘Ì
+	if (machine_ == nullptr)
+	{
+		machine_ = std::move(machineMng.GetCreateMachine(MachineManager::MACHINE_TYPE::WAKABA));
+		machine_->Load();
+	}
+
 	machine_->Init();
 	
 	//‘Ì—Í

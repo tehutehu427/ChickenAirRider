@@ -3,6 +3,7 @@
 
 void GameSetting::Init(void)
 {
+	timeLimit_ = INIT_TIME_LIMIT;
 }
 
 void GameSetting::ResetPlayerNum(void)
@@ -15,6 +16,7 @@ GameSetting::GameSetting(void)
 {
 	userNum_ = 0;
 	npcNum_ = 0;
+	timeLimit_ = 0;
 }
 
 GameSetting::~GameSetting(void)

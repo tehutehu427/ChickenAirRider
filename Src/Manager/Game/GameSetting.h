@@ -38,7 +38,16 @@ public:
 	//時間制限の設定
 	void SetTimeLimit(const int _timeLimit){ timeLimit_ = _timeLimit; }
 
+	//フルスクリーンかどうかの取得(false:フルスクリーン)
+	const bool GetScreenSize(void)const { return screenSize_; }
+
+	//フルスクリーンかどうかの設定(false:フルスクリーン)
+	void SetScreenSize(const bool _screenSize) { screenSize_ = _screenSize; }
+
 private:
+
+	//初期時間制限
+	static constexpr int INIT_TIME_LIMIT = 120;
 
 	//ユーザー数
 	int userNum_;
@@ -48,6 +57,9 @@ private:
 
 	//時間制限
 	int timeLimit_;
+
+	//スクリーンの設定
+	bool screenSize_;
 
 	//コンストラクタ
 	GameSetting(void);

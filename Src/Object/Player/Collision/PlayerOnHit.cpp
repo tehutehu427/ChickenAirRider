@@ -196,28 +196,6 @@ void PlayerOnHit::GroundOnHit(const std::weak_ptr<Collider> _hitCol)
 	Sphere& mainSphere = dynamic_cast<Sphere&>(mainCol->GetGeometry());
 	float radius = mainSphere.GetRadius();
 
-	//for (int i = 0; i < hitNum; i++)
-	//{
-	//	auto hit = model.GetHitInfo().Dim[i];
-
-	//	for (int tryCnt = 0; tryCnt < 10; tryCnt++)
-	//	{
-	//		int pHit = HitCheck_Sphere_Triangle(
-	//			mainSphere.GetColPos(), radius,
-	//			hit.Position[0], hit.Position[1], hit.Position[2]
-	//		);
-
-	//		if (pHit)
-	//		{
-	//			player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(hit.Normal, 3.0f)));
-
-	//			playerTrans_.pos = player_.GetMovedPos();
-	//			continue;
-	//		}
-	//		break;
-	//	}
-	//}
-
 	//ˆÚ“®ŒãÀ•W
 	VECTOR pos = player_.GetMovedPos();
 	VECTOR totalNormal = VGet(0, 0, 0);

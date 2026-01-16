@@ -8,7 +8,7 @@
 #include "../Renderer/PixelRenderer.h"
 #include"../Manager/Game/UIManager.h"
 #include"../Manager/Game/GameSetting.h"
-#include "SceneSelect.h"
+#include "Select/SceneSelect.h"
 #include "SceneTitle.h"
 
 SceneTitle::SceneTitle(void)

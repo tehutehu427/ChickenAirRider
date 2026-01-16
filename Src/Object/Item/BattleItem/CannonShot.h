@@ -10,7 +10,7 @@ class CannonShot : public ObjectBase
 public:
 
 	//無敵時間
-	static constexpr float INVINCIBLE = 1.0f;
+	static constexpr float INVINCIBLE = 0.5f;
 
 	//コンストラクタ
 	CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR& _scl, std::weak_ptr<Collider> _holder, const float _speed);
@@ -53,11 +53,12 @@ private:
 	static constexpr float SPEED = 50.0f;
 
 	//半径
-	static constexpr float RADIUS = 60.0f;
+	static constexpr float SHOT_RADIUS = 30.0f;
+	static constexpr float BLAST_RADIUS = 100.0f;
 
 	//生存時間
 	static constexpr float ALIVE_TIME = 10.0f;
-	static constexpr float BLAST_TIME = 3.0f;
+	static constexpr float BLAST_TIME = 0.3f;
 
 	//攻撃力補正
 	static constexpr float ATTACK_MULTI = 2.0f;
@@ -75,7 +76,8 @@ private:
 	VECTOR movePow_;
 
 	//カウンタ
-	float cnt_;
+	float aliveCnt_;
+	float blastCnt_;
 
 	//状態
 	STATE state_;

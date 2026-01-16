@@ -45,7 +45,8 @@ protected:
 	//コライダ番号
 	enum class COL_VALUE
 	{
-		MAIN,	//本体
+		OBJECT,	//オブジェクト
+		PLAYER,	//本体
 	};
 
 	//画像の大きさ
@@ -53,7 +54,8 @@ protected:
 	static constexpr float ALIVE_IMG_SIZE = GOT_IMG_SIZE * 3.0f;
 
 	//半径
-	static constexpr float RADIUS = 150.0f;
+	static constexpr float OBJECT_HIT_RADIUS = 70.0f;
+	static constexpr float PLAYER_HIT_RADIUS = 150.0f;
 
 	//取得後表示相対座標
 	static constexpr float LOCAL_HITER_POS_Y = 100.0f;
@@ -63,11 +65,8 @@ protected:
 	static constexpr int MOVE_POW_MAX = 10;
 	static constexpr float MOVE_POW_Y = 30.0f;
 
-	//移動時間制限
-	static constexpr float MOVE_TIME = 1.0f;
-
 	//コライダ生成時間
-	static constexpr float NO_HIT_TIME = 0.5f;
+	static constexpr float CREATE_COL_TIME = 0.5f;
 
 	//取得後表示カウンタ
 	float displayCnt_;
@@ -76,7 +75,7 @@ protected:
 	STATE state_;
 
 	//移動時間カウンタ
-	float moveCnt_;
+	float createColCnt_;
 
 	//移動方向
 	VECTOR vec_;
@@ -89,6 +88,9 @@ protected:
 
 	//移動後座標
 	VECTOR movedPos_;
+
+	//コライダの生成フラグ
+	bool isCreateCol_;
 
 	//取得者
 	std::weak_ptr<Collider>hiter_;

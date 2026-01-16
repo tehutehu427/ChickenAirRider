@@ -17,7 +17,7 @@ CannonShot::CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR&
 	speed_ = _speed + SPEED;
 	gravPow_ = Utility::VECTOR_ZERO;
 	movePow_ = Utility::VECTOR_ZERO;
-	cnt_ = 0.0f;
+	aliveCnt_ = 0.0f;
 	state_ = STATE::ALIVE;
 	attack_ = 0.0f;
 
@@ -43,7 +43,8 @@ void CannonShot::Load(void)
 void CannonShot::Init(void)
 {
 	//初期化
-	cnt_ = 0.0f;
+	aliveCnt_ = 0.0f;
+	blastCnt_ = 0.0f;
 	state_ = STATE::ALIVE;
 	gravPow_ = Utility::VECTOR_ZERO;
 	movePow_ = Utility::VECTOR_ZERO;
@@ -52,7 +53,7 @@ void CannonShot::Init(void)
 	attack_ = dynamic_cast<const Player&>(holder_.lock()->GetParent()).GetAttack() * ATTACK_MULTI;
 
 	//コライダ
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, RADIUS);
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SHOT_RADIUS);
 	MakeCollider(Collider::TAG::CANNON_SHOT, std::move(geo), { holder_.lock()->GetTag(),Collider::TAG::FOOT,Collider::TAG::SPIN});
 	trans_.Update();
 
@@ -74,6 +75,7 @@ void CannonShot::Draw(void)
 void CannonShot::OnHit(std::weak_ptr<Collider> _hitCol)
 {
 	if (_hitCol.lock()->GetTag() == Collider::TAG::NORMAL_OBJECT
+		|| _hitCol.lock()->GetTag() == Collider::TAG::GROUND
 		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER1
 		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER2
 		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER3
@@ -83,7 +85,11 @@ void CannonShot::OnHit(std::weak_ptr<Collider> _hitCol)
 		state_ = STATE::BLAST;
 
 		//カウンタ
-		cnt_ = 0.0f;
+		aliveCnt_ = 0.0f;
+
+		//当たり判定増大
+		auto& sphere = dynamic_cast<Sphere&>(collider_[0]->GetGeometry());
+		sphere.SetRadius(BLAST_RADIUS);
 	}
 }
 
@@ -95,12 +101,22 @@ void CannonShot::UpdateAlive(void)
 	trans_.pos = movedPos_;
 
 	//カウンタ
-	cnt_ += delta;
+	aliveCnt_ += delta;
 
 	//生存時間制限
-	if (cnt_ > ALIVE_TIME)
+	if (aliveCnt_ > ALIVE_TIME)
 	{
+		//爆発
 		state_ = STATE::BLAST;
+
+		//カウンタ初期化
+		aliveCnt_ = 0.0f;
+
+		//当たり判定増大
+		auto& sphere = dynamic_cast<Sphere&>(collider_[0]->GetGeometry());
+		sphere.SetRadius(BLAST_RADIUS);
+
+		return;
 	}
 
 	//移動力
@@ -119,7 +135,19 @@ void CannonShot::UpdateAlive(void)
 
 void CannonShot::UpdateBlast(void)
 {
-	state_ = STATE::DEAD;
+	//デルタタイム
+	const float delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//カウンタ
+	blastCnt_ += delta;
+
+	if (blastCnt_ > BLAST_TIME)
+	{
+		//死亡
+		state_ = STATE::DEAD;
+
+		return;
+	}
 }
 
 void CannonShot::UpdateDead(void)
@@ -130,10 +158,19 @@ void CannonShot::DrawAlive(void)
 {
 	//モデル描画
 	MV1DrawModel(trans_.modelId);
+
+	for (auto& col : collider_)
+	{
+		col->GetGeometry().Draw();
+	}
 }
 
 void CannonShot::DrawBlast(void)
 {
+	for (auto& col : collider_)
+	{
+		col->GetGeometry().Draw();
+	}
 }
 
 void CannonShot::DrawDead(void)

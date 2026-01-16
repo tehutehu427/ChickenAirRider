@@ -5,7 +5,8 @@
 #include "../Game/PlayerManager.h"
 #include "../FpsControl/FpsControl.h"
 #include "../Scene/SceneTitle.h"
-#include "../Scene/SceneSelect.h"
+#include "../Scene/Select/SceneSelect.h"
+#include "../Scene/Select/SceneOption.h"
 #include "../Scene/Game/SceneGame.h"
 #include "../Game/GameSetting.h"
 #include "../Game/Timer.h"
@@ -37,6 +38,7 @@ SceneManager::SceneManager(void)
 	//シーン生成用関数ポインタ
 	createScene_[SCENE_ID::TITLE] = [this](void) {return CreateSceneTitle(); };
 	createScene_[SCENE_ID::SELECT] = [this](void) {return CreateSceneSelect(); };
+	createScene_[SCENE_ID::OPTION] = [this](void) {return CreateSceneOption(); };
 	createScene_[SCENE_ID::GAME] = [this](void) {return CreateSceneGame(); };
 
 	//シーン変更
@@ -45,7 +47,7 @@ SceneManager::SceneManager(void)
 	changeScene_[CHANGE_SCENE_STATE::CHANGE_BACK] = [this](void) {ChangeSceneChangeBack(); };
 
 	//フェード用関数ポインタ
-	fadeState_[Fader::STATE::NONE] = [this](void) {};
+	fadeState_[Fader::STATE::NONE] = [this](void) {FadeNone(); };
 	fadeState_[Fader::STATE::FADE_IN] = [this](void) {FadeIn(); };
 	fadeState_[Fader::STATE::FADE_OUT] = [this](void) {FadeOut(); };
 }
@@ -61,7 +63,8 @@ void SceneManager::Init(void)
 
 	//初期シーン
 	sceneId_ = SCENE_ID::TITLE;
-	waitSceneId_ = SCENE_ID::NONE;
+	waitSceneId_ = SCENE_ID::TITLE;
+	changeSceneState_ = CHANGE_SCENE_STATE::PUSH_BACK;
 
 	//フェーダー
 	fader_ = std::make_unique<Fader>();
@@ -79,7 +82,7 @@ void SceneManager::Init(void)
 	setting.ResetPlayerNum();
 
 	//シーンチェンジ中か
-	isSceneChanging_ = true;
+	isSceneChanging_ = false;
 
 	// デルタタイム
 	preTime_ = std::chrono::system_clock::now();
@@ -151,9 +154,9 @@ void SceneManager::Update(void)
 
 	if (fader_->GetState() == Fader::STATE::NONE)
 	{
-		if(scene_.front() != nullptr)
+		if(scene_.back() != nullptr)
 		//先頭シーンの更新
-		scene_.front()->Update();
+		scene_.back()->Update();
 	}
 
 	//カメラの更新
@@ -273,6 +276,9 @@ void SceneManager::ChangeAllScene(const SCENE_ID _sceneId)
 
 	//シーン変更状態の変更
 	changeSceneState_ = CHANGE_SCENE_STATE::PUSH_BACK;
+
+	//シーン遷移中
+	isSceneChanging_ = true;
 }
 
 void SceneManager::PushScene(const SCENE_ID _sceneId, const bool _isFade)
@@ -285,6 +291,9 @@ void SceneManager::PushScene(const SCENE_ID _sceneId, const bool _isFade)
 
 	//シーン変更状態の変更
 	changeSceneState_ = CHANGE_SCENE_STATE::PUSH_BACK;
+
+	//シーン遷移中
+	isSceneChanging_ = true;
 }
 
 void SceneManager::PopScene(void)
@@ -298,6 +307,9 @@ void SceneManager::PopScene(void)
 		//取り出す
 		changeSceneState_ = CHANGE_SCENE_STATE::POP_BACK;
 	}
+
+	//シーン遷移中
+	isSceneChanging_ = true;
 }
 
 void SceneManager::ResetScene(void)
@@ -326,7 +338,7 @@ void SceneManager::StartFadeIn(void)
 	fader_->SetFade(Fader::STATE::FADE_IN);
 
 	//シーンチェンジ
-	isSceneChanging_ = false;
+	isSceneChanging_ = true;
 }
 
 std::weak_ptr<Camera> SceneManager::GetCamera(const int _playerIndex) const
@@ -605,6 +617,12 @@ std::unique_ptr<SceneBase> SceneManager::CreateSceneSelect(void)
 	return std::move(std::make_unique<SceneSelect>());
 }
 
+std::unique_ptr<SceneBase> SceneManager::CreateSceneOption(void)
+{
+	//オプションシーン生成
+	return std::move(std::make_unique<SceneOption>());
+}
+
 std::unique_ptr<SceneBase> SceneManager::CreateSceneGame(void)
 {
 	//ゲームシーン生成
@@ -630,11 +648,27 @@ void SceneManager::ChangeScenePopBack(void)
 void SceneManager::ChangeSceneChangeBack(void)
 {
 	//シーンの先頭変更
-	scene_.back() = std::move(createScene_[sceneId_]());
+	scene_.pop_back();
+	scene_.push_back(std::move(createScene_[sceneId_]()));
 
 	//初期化
 	scene_.back()->Load();
 	scene_.back()->Init();
+}
+
+void SceneManager::FadeNone(void)
+{
+	//シーンIDの変更
+	sceneId_ = waitSceneId_;
+
+	//シーン遷移
+	changeScene_[changeSceneState_]();
+
+	//待機シーンIDの初期化
+	waitSceneId_ = SCENE_ID::NONE;
+
+	//シーン遷移終了
+	isSceneChanging_ = false;
 }
 
 void SceneManager::FadeOut(void)
@@ -677,5 +711,8 @@ void SceneManager::FadeIn(void)
 	{
 		// 明転が終了したら、フェード処理終了
 		fader_->SetFade(Fader::STATE::NONE);
+
+		//シーン遷移終了
+		isSceneChanging_ = false;
 	}
 }

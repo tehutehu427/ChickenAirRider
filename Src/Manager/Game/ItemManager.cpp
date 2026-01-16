@@ -23,6 +23,7 @@ void ItemManager::Init(void)
 {
 	items_.clear();
 	itemBoxes_.clear();
+	type_ = SPAWN_TYPE::MAIN;
 }
 
 void ItemManager::Update(void)
@@ -60,7 +61,7 @@ void ItemManager::Update(void)
 	if (boxCreateCnt_ > BOX_CREATE_TIME)
 	{
 		//生成
-		CreateItemBox();
+		create_[type_]();
 
 		//初期化
 		boxCreateCnt_ = 0.0f;
@@ -129,14 +130,44 @@ ItemManager::ItemManager(void)
 		return CreateCannon(_pos, _vec);
 	};
 
+	//生成
+	create_[SPAWN_TYPE::MAIN] = [this](void)
+	{
+		CreateMain();
+	};
+	create_[SPAWN_TYPE::DEATH_MATCH] = [this](void)
+	{
+		CreateDeathMatch();
+	};
+
 	//初期化
 	boxCreateCnt_ = 0.0f;
+	type_ = SPAWN_TYPE::MAIN;
 }
 
 ItemManager::~ItemManager(void)
 {
 	itemBoxes_.clear();
 	items_.clear();
+}
+
+void ItemManager::CreateMain(void)
+{
+	//箱を生成
+	CreateItemBox();
+}
+
+void ItemManager::CreateDeathMatch(void)
+{
+	//生成上限ならスキップ
+	if (static_cast<int>(itemBoxes_.size()) > BOX_CREATE_MAX - 1)return;
+
+	//ランダム生成
+	int rand = Utility::GetRandomValue(0, static_cast<int>(boxPosData_.size()) - 1);
+	ItemBox::ITEM_TYPE randType = static_cast<ItemBox::ITEM_TYPE>(Utility::GetRandomValue(0, static_cast<int>(ItemBox::ITEM_TYPE::MAX) - 1));
+
+	//生成
+	CreateBattleItem(boxPosData_[rand].pos, 1);
 }
 
 void ItemManager::CreateItemBox(void)
@@ -169,7 +200,7 @@ std::unique_ptr<BattleItemBase> ItemManager::CreateCannon(const VECTOR& _pos, co
 	return std::make_unique<Cannon>(_pos, _vec);
 }
 
-void ItemManager::CreatePowerUpItem(VECTOR _pos)
+void ItemManager::CreatePowerUpItem(const VECTOR _pos, const int _num)
 {
 	//サイズ
 	int importSize = static_cast<int>(powerUpItemData_.size());
@@ -178,7 +209,7 @@ void ItemManager::CreatePowerUpItem(VECTOR _pos)
 	VECTOR moveVec = CREATE_MOVE_VEC;
 
 	//生成数
-	int createNum = Utility::GetRandomValue(CREATE_MIN, CREATE_MAX);
+	int createNum = _num == -1 ? Utility::GetRandomValue(CREATE_MIN, CREATE_MAX) : _num;
 
 	//データの値
 	int rand = 0;
@@ -189,6 +220,9 @@ void ItemManager::CreatePowerUpItem(VECTOR _pos)
 		//位置の反転
 		if (i % 2 == 0)moveVec.x = -moveVec.x;
 		else if (i % 2 == 1)moveVec.z = -moveVec.z;
+
+		//一つだけなら中央に
+		if (createNum == 1)moveVec = { 0.0f,0.0f,0.0f };
 
 		//ランダムでアイテムの種類決め
 		rand =  Utility::GetRandomValue(0, importSize - 1);
@@ -203,7 +237,7 @@ void ItemManager::CreatePowerUpItem(VECTOR _pos)
 	}
 }
 
-void ItemManager::CreateBattleItem(VECTOR _pos)
+void ItemManager::CreateBattleItem(const VECTOR _pos, const int _num)
 {
 	//サイズ
 	int importSize = static_cast<int>(battleItemData_.size());
@@ -212,7 +246,7 @@ void ItemManager::CreateBattleItem(VECTOR _pos)
 	VECTOR moveVec = CREATE_MOVE_VEC;
 
 	//生成数
-	int createNum = Utility::GetRandomValue(CREATE_MIN, CREATE_MAX);
+	int createNum = _num == -1 ? Utility::GetRandomValue(CREATE_MIN, CREATE_MAX) : _num;
 
 	//データの値
 	int rand = 0;
@@ -223,6 +257,9 @@ void ItemManager::CreateBattleItem(VECTOR _pos)
 		//位置の反転
 		if (i % 2 == 0)moveVec.x = -moveVec.x;
 		else if (i % 2 == 1)moveVec.z = -moveVec.z;
+
+		//一つだけなら中央に
+		if (createNum == 1)moveVec = { 0.0f,0.0f,0.0f };
 
 		//ランダムでアイテムの種類決め
 		rand = Utility::GetRandomValue(0, importSize - 1);

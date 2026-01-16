@@ -254,5 +254,133 @@
       "y": 50.0,
       "z": 25000.0
     }
+  },
+  {
+    "name": "WorldBorder",
+    "position": {
+      "x": 25000.0,
+      "y": 0.0,
+      "z": -25000.0
+    },
+    "scale": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0
+    },
+    "quaternion": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+    },
+    "geometry": "cube",
+    "tag": "worldBorder",
+    "radius": 0.0,
+    "localPos1": {
+      "x": -25000.0,
+      "y": -25000.0,
+      "z": -10.0
+    },
+    "localPos2": {
+      "x": 25000.0,
+      "y": 25000.0,
+      "z": 10.0
+    }
+  },
+  {
+    "name": "WorldBorder",
+    "position": {
+      "x": 25000.0,
+      "y": 0.0,
+      "z": -25000.0
+    },
+    "scale": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0
+    },
+    "quaternion": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+    },
+    "geometry": "cube",
+    "tag": "worldBorder",
+    "radius": 0.0,
+    "localPos1": {
+      "x": -10.0,
+      "y": -25000.0,
+      "z": -25000.0
+    },
+    "localPos2": {
+      "x": 10.0,
+      "y": 25000.0,
+      "z": 25000.0
+    }
+  },
+  {
+    "name": "WorldBorder",
+    "position": {
+      "x": -25000.0,
+      "y": 0.0,
+      "z": 25000.0
+    },
+    "scale": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0
+    },
+    "quaternion": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+    },
+    "geometry": "cube",
+    "tag": "worldBorder",
+    "radius": 0.0,
+    "localPos1": {
+      "x": -25000.0,
+      "y": -25000.0,
+      "z": -10.0
+    },
+    "localPos2": {
+      "x": 25000.0,
+      "y": 25000.0,
+      "z": 10.0
+    }
+  },
+  {
+    "name": "WorldBorder",
+    "position": {
+      "x": -25000.0,
+      "y": 0.0,
+      "z": 25000.0
+    },
+    "scale": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0
+    },
+    "quaternion": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+    },
+    "geometry": "cube",
+    "tag": "worldBorder",
+    "radius": 0.0,
+    "localPos1": {
+      "x": -10.0,
+      "y": -25000.0,
+      "z": -25000.0
+    },
+    "localPos2": {
+      "x": 10.0,
+      "y": 25000.0,
+      "z": 25000.0
+    }
   }
 ]

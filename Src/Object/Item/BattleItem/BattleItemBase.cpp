@@ -22,6 +22,17 @@ void BattleItemBase::Load(void)
 
 void BattleItemBase::Init(void)
 {
+	//コライダ生成
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, OBJECT_HIT_RADIUS);
+	MakeCollider(Collider::TAG::BATTLE_ITEM, std::move(geo),
+		{ Collider::TAG::POWER_UP
+		,Collider::TAG::PLAYER1
+		,Collider::TAG::PLAYER2
+		,Collider::TAG::PLAYER3
+		,Collider::TAG::PLAYER4
+		,Collider::TAG::SPIN
+		});
+
 	ItemBase::Init();
 }
 
@@ -38,21 +49,20 @@ void BattleItemBase::Update(void)
 	if (state_ == STATE::ALIVE)
 	{
 		//生成から少し置いてコライダ生成
-		if (moveCnt_ > NO_HIT_TIME && collider_.empty())
+		if (createColCnt_ > CREATE_COL_TIME && !isCreateCol_)
 		{
 			//コライダ生成
-			std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, RADIUS);
-			MakeCollider(Collider::TAG::BATTLE_ITEM, std::move(geo));
+			std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, PLAYER_HIT_RADIUS);
+			MakeCollider(Collider::TAG::BATTLE_ITEM, std::move(geo), { Collider::TAG::BATTLE_ITEM,Collider::TAG::NORMAL_OBJECT,Collider::TAG::GROUND });
+		
+			isCreateCol_ = true;
 		}
 
 		//重力
 		GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);
 
-		//移動時間を超えたならスキップ
-		if (moveCnt_ > MOVE_TIME)return;
-
 		//カウンタ
-		moveCnt_ += delta;
+		createColCnt_ += delta;
 
 		//移動
 		movedPos_ = VAdd(movedPos_, movePow_);
@@ -102,41 +112,5 @@ void BattleItemBase::Draw(void)
 
 void BattleItemBase::OnHit(std::weak_ptr<Collider> _hitCol)
 {
-	if (_hitCol.lock()->GetTag() == Collider::TAG::PLAYER1
-		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER2
-		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER3
-		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER4
-		)
-	{
-		//コライダ削除
-		collider_[0]->Kill();
-
-		//死亡判定
-		state_ = STATE::GOT;
-
-		//取得者
-		hiter_ = _hitCol;
-	}
-	else if (_hitCol.lock()->GetTag() == Collider::TAG::NORMAL_OBJECT)
-	{
-		//コライダ
-		auto& mainCol = collider_[static_cast<int>(COL_VALUE::MAIN)];
-
-		//位置の補正
-		const auto& hit = mainCol->GetGeometry().GetHitResult();
-
-		//移動前から移動後までのベクトル
-		VECTOR v = VSub(movedPos_, trans_.pos);
-
-		// 衝突時位置まで移動
-		movedPos_ = VAdd(trans_.pos, VScale(v, hit.t));
-
-		// 少し押し戻す（めり込み回避）
-		movedPos_ = VAdd(trans_.pos, VScale(hit.normal, 0.007f));
-
-		// 残り移動をスライド方向へ
-		float remain = 1.0f - hit.t;
-		VECTOR slide = VSub(v, VScale(hit.normal, VDot(v, hit.normal)));
-		movedPos_ = VAdd(movedPos_, VScale(slide, remain));
-	}
+	ItemBase::OnHit(_hitCol);
 }

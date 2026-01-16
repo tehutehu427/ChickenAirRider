@@ -1,6 +1,7 @@
 #include "../pch.h"
 #include "../Utility/Utility.h"
 #include "../Object/Common/Geometry/Sphere.h"
+#include "../Object/Common/Geometry/Model.h"
 #include "ItemBase.h"
 
 ItemBase::ItemBase(const VECTOR& _pos, const VECTOR& _vec)
@@ -9,10 +10,11 @@ ItemBase::ItemBase(const VECTOR& _pos, const VECTOR& _vec)
 	vec_ = _vec;
 	displayCnt_ = 0.0f;
 	state_ = STATE::ALIVE;
-	moveCnt_ = 0.0f;
+	createColCnt_ = 0.0f;
 	movePow_ = Utility::VECTOR_ZERO;
 	gravPow_ = Utility::VECTOR_ZERO;
 	movedPos_ = _pos;
+	isCreateCol_ = false;
 }
 
 ItemBase::~ItemBase(void)
@@ -30,6 +32,10 @@ void ItemBase::Init(void)
 	movePow_.x = vec_.x * static_cast<float>(Utility::GetRandomValue(MOVE_POW_MIN, MOVE_POW_MAX));
 	gravPow_.y = MOVE_POW_Y;
 	movePow_.z = vec_.z * static_cast<float>(Utility::GetRandomValue(MOVE_POW_MIN, MOVE_POW_MAX));
+
+	isCreateCol_ = false;
+
+	Update();
 }
 
 void ItemBase::Update(void)
@@ -63,13 +69,16 @@ void ItemBase::Draw(void)
 void ItemBase::OnHit(std::weak_ptr<Collider> _hitCol)
 {
 	if (_hitCol.lock()->GetTag() == Collider::TAG::PLAYER1
-	 || _hitCol.lock()->GetTag() == Collider::TAG::PLAYER2
-	 || _hitCol.lock()->GetTag() == Collider::TAG::PLAYER3
-	 || _hitCol.lock()->GetTag() == Collider::TAG::PLAYER4
+		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER2
+		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER3
+		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER4
 		)
 	{
 		//コライダ削除
-		collider_[0]->Kill();
+		for (auto& col : collider_)
+		{
+			col->Kill();
+		}
 
 		//死亡判定
 		state_ = STATE::GOT;
@@ -80,7 +89,7 @@ void ItemBase::OnHit(std::weak_ptr<Collider> _hitCol)
 	else if (_hitCol.lock()->GetTag() == Collider::TAG::NORMAL_OBJECT)
 	{
 		//コライダ
-		auto& mainCol = collider_[static_cast<int>(COL_VALUE::MAIN)];
+		auto& mainCol = collider_[static_cast<int>(COL_VALUE::OBJECT)];
 
 		//位置の補正
 		const auto& hit = mainCol->GetGeometry().GetHitResult();
@@ -98,5 +107,59 @@ void ItemBase::OnHit(std::weak_ptr<Collider> _hitCol)
 		float remain = 1.0f - hit.t;
 		VECTOR slide = VSub(v, VScale(hit.normal, VDot(v, hit.normal)));
 		movedPos_ = VAdd(movedPos_, VScale(slide, remain));
+
+		//移動しなくなる
+		movePow_ = Utility::VECTOR_ZERO;
+	}
+	else if (_hitCol.lock()->GetTag() == Collider::TAG::GROUND)
+	{
+		//コライダ
+		auto& mainCol = collider_[static_cast<int>(COL_VALUE::OBJECT)];
+
+		//相手モデル
+		Model& model = dynamic_cast<Model&>(_hitCol.lock()->GetGeometry());
+		const int hitNum = model.GetHitInfo().HitNum;
+
+		//自身の球
+		Sphere& mainSphere = dynamic_cast<Sphere&>(mainCol->GetGeometry());
+		float radius = mainSphere.GetRadius();
+
+		//移動後座標
+		VECTOR pos = movedPos_;
+		VECTOR totalNormal = VGet(0, 0, 0);
+		float maxDepth = 0.0f;
+
+		for (int i = 0; i < hitNum; i++)
+		{
+			//当たった座標
+			VECTOR hitPos = mainSphere.GetHitInfo().Dim[i].HitPosition;
+
+			//法線
+			VECTOR normal = VNorm(mainSphere.GetHitInfo().Dim[i].Normal);
+
+			//深度
+			float depth = radius - VDot(normal, VSub(pos, hitPos));
+
+			//めり込んでるなら
+			if (depth > 0.0f)
+			{
+				//保存
+				totalNormal = VAdd(totalNormal, normal);
+				maxDepth = std::max(maxDepth, depth);
+			}
+		}
+
+		// 押し戻し
+		if (maxDepth > 0.0f)
+		{
+			VECTOR N = VNorm(totalNormal);
+			pos = VAdd(pos, VScale(N, maxDepth));
+		}
+
+		//適用する
+		movedPos_ = pos;
+
+		//移動しなくなる
+		movePow_ = Utility::VECTOR_ZERO;
 	}
 }

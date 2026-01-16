@@ -23,6 +23,17 @@ void PowerUpItemBase::Load(void)
 
 void PowerUpItemBase::Init(void)
 {
+	//コライダ生成
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, OBJECT_HIT_RADIUS);
+	MakeCollider(Collider::TAG::POWER_UP, std::move(geo),
+		{ Collider::TAG::POWER_UP
+		,Collider::TAG::PLAYER1
+		,Collider::TAG::PLAYER2
+		,Collider::TAG::PLAYER3
+		,Collider::TAG::PLAYER4
+		,Collider::TAG::SPIN
+		});
+
 	ItemBase::Init();
 }
 
@@ -39,21 +50,20 @@ void PowerUpItemBase::Update(void)
 	if (state_ == STATE::ALIVE)
 	{
 		//生成から少し置いてコライダ生成
-		if (moveCnt_ > NO_HIT_TIME && collider_.empty())
+		if (createColCnt_ > CREATE_COL_TIME && !isCreateCol_)
 		{
 			//コライダ生成
-			std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, RADIUS);
-			MakeCollider(Collider::TAG::POWER_UP, std::move(geo));
+			std::unique_ptr<Geometry>geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, PLAYER_HIT_RADIUS);
+			MakeCollider(Collider::TAG::POWER_UP, std::move(geo), { Collider::TAG::POWER_UP,Collider::TAG::NORMAL_OBJECT,Collider::TAG::GROUND });
+
+			isCreateCol_ = true;
 		}
 
 		//重力
 		GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);
 
-		//移動時間を超えたならスキップ
-		if (moveCnt_ > MOVE_TIME)return;
-
 		//カウンタ
-		moveCnt_ += delta;
+		createColCnt_ += delta;
 
 		//移動
 		movedPos_ = VAdd(movedPos_, movePow_);
