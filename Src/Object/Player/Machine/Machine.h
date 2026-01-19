@@ -15,7 +15,7 @@ public:
 	static constexpr float PARAM_NORMAL = 1.5f;
 
 	//コンストラクタ
-	Machine(const MachineImportData& _importData, const int _modelId, const VECTOR _pos = {});
+	Machine(const MachineImportData& _importData, const int _modelId, const VECTOR _localPos = {}, const VECTOR _pos = {});
 
 	//デストラクタ
 	~Machine(void)override;
@@ -50,6 +50,12 @@ public:
 	//回転の設定
 	void SetQuaRot(const Quaternion& _quaRot) { trans_.quaRot = _quaRot; }
 
+	//半径の取得
+	const float GetHitRadius(void)const { return radius_; }
+
+	//乗車者の相対座標の取得
+	const VECTOR& GetRiderLocalPos(void)const { return riderLocalPos_; }
+
 	//パラメーターの取得
 	const UnitParameter& GetUnitParam(void)const { return unitParam_; }
 
@@ -58,9 +64,8 @@ public:
 
 private:
 
-	//モデルのサイズ
-	static constexpr VECTOR MODEL_SIZE = { 0.33f,0.33f,0.33f };
-	static constexpr float RIDE_COL = 250.0f;
+	//乗車判定半径
+	static constexpr float RIDE_COL_RADIUS = 250.0f;
 	
 	//ムテキ時間
 	static constexpr float INVINCIBLE_SPIN = 0.2f;
@@ -76,6 +81,12 @@ private:
 
 	//半径
 	float radius_;
+
+	//乗車者の相対座標
+	VECTOR riderLocalPos_;
+
+	//モデルサイズ
+	VECTOR modelScl_;
 
 	//ダメージ
 	float damage_;

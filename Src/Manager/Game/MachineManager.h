@@ -20,6 +20,8 @@ public:
 
 		WAKABA,		//ワカバスター
 		EARTH,		//アーススター
+		BATTLE,		//バトルスター
+		BOTTLE,		//ボトルスター
 
 		MAX
 	};

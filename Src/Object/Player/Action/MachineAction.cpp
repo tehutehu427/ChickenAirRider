@@ -217,7 +217,7 @@ void MachineAction::Move(void)
 	if (speed_ > param.maxSpeed_ * BASE_MAX_SPEED * speedAffect)
 	{
 		//å∏ë¨Ç»ÇÃÇ≈ÉJÉEÉìÉ^å∏è≠
-		driveCnt_ -= delta;
+		driveCnt_ -= delta * unitParam.rateOfConvergence;
 	}
 	else if (!player_.IsGrounded())
 	{

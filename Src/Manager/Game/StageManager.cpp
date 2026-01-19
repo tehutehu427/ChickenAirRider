@@ -102,6 +102,7 @@ StageManager::StageManager(void)
 	//É^ÉO
 	tag_["normalObject"] = Collider::TAG::NORMAL_OBJECT;
 	tag_["building"] = Collider::TAG::NORMAL_OBJECT;
+	tag_["worldBorder"] = Collider::TAG::NORMAL_OBJECT;
 	tag_["tree"] = Collider::TAG::TREE;
 	tag_["glass"] = Collider::TAG::GROUND;
 	tag_["ground"] = Collider::TAG::GROUND;

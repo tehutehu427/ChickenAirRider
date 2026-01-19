@@ -28,6 +28,8 @@ public:
 		//マシンモデル
 		WAKABA_STAR,		//ワカバモデル
 		EARTH_STAR,			//アースモデル
+		BATTLE_STAR,		//バトルモデル
+		BOTTLE_STAR,		//ボトルモデル
 
 		//ステージオブジェクトモデル
 		STAGE,				//ステージモデル

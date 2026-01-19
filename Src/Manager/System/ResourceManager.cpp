@@ -110,6 +110,12 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::MODEL, machinePath + L"Earth.mv1");
 	resourcesMap_.emplace(SRC::EARTH_STAR, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, machinePath + L"Battle.mv1");
+	resourcesMap_.emplace(SRC::BATTLE_STAR, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, machinePath + L"Bottle.mv1");
+	resourcesMap_.emplace(SRC::BOTTLE_STAR, std::move(res));
+
 	//ステージオブジェクトのパス
 	std::wstring stagePath = PATH_MDL + L"StageObject/";
 

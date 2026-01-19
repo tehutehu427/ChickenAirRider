@@ -35,6 +35,7 @@ struct UnitParameter
 	float chargeDamp = 0.0f;		//チャージの影響度(1.0だとチャージそのまま)
 	float boostRate = 0.0f;			//チャージ満タン時の最高速度超過率(%換算,0.0だと最高速度そのまま)
 	int boostPower = 0;				//ブーストカーブの急さ(値が大きいとチャージしきった時の影響が大きい)
+	float rateOfConvergence = 0.0f;	//速度収束率
 
 	//地上と飛行の速度倍率
 	float groundSpeed = 0.0f;

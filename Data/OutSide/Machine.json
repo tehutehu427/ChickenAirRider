@@ -1,82 +1,186 @@
 [
-    {
-        "name": "wakaba",
-        "isAnim": false,
-        "radius": 60.0,
-        "scale": {
-            "x": 0.33,
-            "y": 0.33,
-            "z": 0.33
-        },
-        "parameter": {
-            "fixedMaxSpeed": 1.0,
-            "fixedAcceleration": 1.0,
-            "fixedTurning": 1.0,
-            "fixedCharge": 1.0,
-            "fixedFlight": 1.0,
-            "fixedWeight": 1.0,
-            "fixedAttack": 1.0,
-            "fixedDefence": 1.0,
-            "fixedMaxHealth": 1.0,
-
-            "affectMaxSpeed": 0.5,
-            "affectAcceleration": 0.5,
-            "affectTurning": 0.5,
-            "affectCharge": 0.5,
-            "affectFlight": 0.5,
-            "affectWeight": 0.5,
-            "affectAttack": 0.5,
-            "affectDefence": 0.5,
-            "affectMaxHealth": 0.5,
-
-            "chargeBraking": 0.6,
-            "chargeCapacity": 100.0,
-            "chargeDamp": 1.0,
-            "boostRate": 0.2,
-            "boostPower": 6,
-
-            "groundSpeed": 1.0,
-            "flightSpeed": 1.0
-        }
+  {
+    "name": "wakaba",
+    "isAnim": false,
+    "radius": 60.0,
+    "localPos": {
+      "x": 0.0,
+      "y": 20.0,
+      "z": 0.0
     },
-    {
-        "name": "earth",
-        "isAnim": true,
-        "radius": 60.0,
-        "scale": {
-            "x": 0.2,
-            "y": 0.2,
-            "z": 0.2
-        },
-        "parameter": {
-            "fixedMaxSpeed": 1.0,
-            "fixedAcceleration": 3.0,
-            "fixedTurning": 2.0,
-            "fixedCharge": 2.0,
-            "fixedFlight": 0.2,
-            "fixedWeight": 2.0,
-            "fixedAttack": 1.0,
-            "fixedDefence": 1.0,
-            "fixedMaxHealth": 3.0,
+    "scale": {
+      "x": 0.33,
+      "y": 0.33,
+      "z": 0.33
+    },
+    "parameter": {
+      "fixedMaxSpeed": 1.0,
+      "fixedAcceleration": 1.0,
+      "fixedTurning": 1.0,
+      "fixedCharge": 1.0,
+      "fixedFlight": 1.0,
+      "fixedWeight": 1.0,
+      "fixedAttack": 1.0,
+      "fixedDefence": 1.0,
+      "fixedMaxHealth": 1.0,
 
-            "affectMaxSpeed": 0.5,
-            "affectAcceleration": 0.9,
-            "affectTurning": 0.5,
-            "affectCharge": 0.6,
-            "affectFlight": 0.05,
-            "affectWeight": 1.0,
-            "affectAttack": 0.5,
-            "affectDefence": 0.5,
-            "affectMaxHealth": 0.7,
+      "affectMaxSpeed": 0.5,
+      "affectAcceleration": 0.8,
+      "affectTurning": 0.8,
+      "affectCharge": 0.8,
+      "affectFlight": 0.6,
+      "affectWeight": 0.5,
+      "affectAttack": 0.3,
+      "affectDefence": 0.4,
+      "affectMaxHealth": 0.5,
 
-            "chargeBraking": 0.4,
-            "chargeCapacity": 90.0,
-            "chargeDamp": 1.0,
-            "boostRate": 0.4,
-            "boostPower": 8,
+      "chargeBraking": 0.6,
+      "chargeCapacity": 80.0,
+      "chargeDamp": 1.0,
+      "boostRate": 0.2,
+      "boostPower": 6,
+      "rateOfConvergence": 1.0,
 
-            "groundSpeed": 1.2,
-            "flightSpeed": 0.6
-        }
+      "groundSpeed": 1.0,
+      "flightSpeed": 1.0
     }
+  },
+  {
+    "name": "earth",
+    "isAnim": true,
+    "radius": 60.0,
+    "localPos": {
+      "x": 0.0,
+      "y": 50.0,
+      "z": 0.0
+    },
+    "scale": {
+      "x": 0.2,
+      "y": 0.2,
+      "z": 0.2
+    },
+    "parameter": {
+      "fixedMaxSpeed": 1.0,
+      "fixedAcceleration": 2.0,
+      "fixedTurning": 2.0,
+      "fixedCharge": 1.0,
+      "fixedFlight": 0.0,
+      "fixedWeight": 2.0,
+      "fixedAttack": 1.0,
+      "fixedDefence": 0.0,
+      "fixedMaxHealth": 2.0,
+
+      "affectMaxSpeed": 0.5,
+      "affectAcceleration": 0.9,
+      "affectTurning": 0.5,
+      "affectCharge": 0.6,
+      "affectFlight": 0.05,
+      "affectWeight": 1.0,
+      "affectAttack": 0.5,
+      "affectDefence": 0.5,
+      "affectMaxHealth": 0.7,
+
+      "chargeBraking": 0.4,
+      "chargeCapacity": 90.0,
+      "chargeDamp": 1.0,
+      "boostRate": 0.4,
+      "boostPower": 8,
+      "rateOfConvergence": 1.2,
+
+      "groundSpeed": 1.2,
+      "flightSpeed": 0.6
+    }
+  },
+  {
+    "name": "battle",
+    "isAnim": false,
+    "radius": 60.0,
+    "localPos": {
+      "x": 0.0,
+      "y": 55.0,
+      "z": 0.0
+    },
+    "scale": {
+      "x": 0.35,
+      "y": 0.35,
+      "z": 0.35
+    },
+    "parameter": {
+      "fixedMaxSpeed": 1.0,
+      "fixedAcceleration": 1.0,
+      "fixedTurning": 0.0,
+      "fixedCharge": 0.0,
+      "fixedFlight": 0.4,
+      "fixedWeight": 2.0,
+      "fixedAttack": 2.0,
+      "fixedDefence": 1.5,
+      "fixedMaxHealth": 2.0,
+
+      "affectMaxSpeed": 0.7,
+      "affectAcceleration": 0.2,
+      "affectTurning": 0.3,
+      "affectCharge": 0.4,
+      "affectFlight": 0.05,
+      "affectWeight": 1.2,
+      "affectAttack": 1.2,
+      "affectDefence": 0.8,
+      "affectMaxHealth": 0.8,
+
+      "chargeBraking": 0.2,
+      "chargeCapacity": 120.0,
+      "chargeDamp": 0.8,
+      "boostRate": 0.3,
+      "boostPower": 8,
+      "rateOfConvergence": 1.2,
+
+      "groundSpeed": 1.0,
+      "flightSpeed": 0.6
+    }
+  },
+  {
+    "name": "bottle",
+    "isAnim": false,
+    "radius": 60.0,
+    "localPos": {
+      "x": 0.0,
+      "y": 40.0,
+      "z": 0.0
+    },
+    "scale": {
+      "x": 0.35,
+      "y": 0.35,
+      "z": 0.35
+    },
+    "parameter": {
+      "fixedMaxSpeed": 0.0,
+      "fixedAcceleration": 0.0,
+      "fixedTurning": 1.0,
+      "fixedCharge": 0.0,
+      "fixedFlight": 1.0,
+      "fixedWeight": 0.0,
+      "fixedAttack": 0.0,
+      "fixedDefence": 0.0,
+      "fixedMaxHealth": 1.0,
+
+      "affectMaxSpeed": 0.1,
+      "affectAcceleration": 0.05,
+      "affectTurning": 0.4,
+      "affectCharge": 0.3,
+      "affectFlight": 0.5,
+      "affectWeight": 0.4,
+      "affectAttack": 0.3,
+      "affectDefence": 0.4,
+      "affectMaxHealth": 0.5,
+
+      "chargeBraking": 0.5,
+      "chargeCapacity": 200.0,
+      "chargeDamp": 1.0,
+      "boostRate": 5.0,
+      "boostPower": 15,
+      "rateOfConvergence": 5.0,
+
+      "groundSpeed": 1.0,
+      "flightSpeed": 1.0
+    }
+  }
 ]

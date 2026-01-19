@@ -17,6 +17,9 @@ struct MachineImportData
 	//当たり判定半径
 	float hitRadius;
 
+	//乗車者の相対座標
+	VECTOR riderLocalPos;
+
 	//モデルの大きさ
 	VECTOR scale;
 
@@ -49,6 +52,14 @@ inline void FromJson(const nlohmann::json& _j, MachineImportData& _data)
 	if (_j.contains("radius"))
 	{
 		_data.hitRadius = _j.value("radius", 0.0f);
+	}
+
+	//乗車者の相対座標
+	if (_j.contains("localPos"))
+	{
+		_data.riderLocalPos.x = _j["localPos"].value("x", 0.0f);
+		_data.riderLocalPos.y = _j["localPos"].value("y", 0.0f);
+		_data.riderLocalPos.z = _j["localPos"].value("z", 0.0f);
 	}
 
 	//モデルの大きさ
@@ -90,6 +101,7 @@ inline void FromJson(const nlohmann::json& _j, MachineImportData& _data)
 		_data.param.chargeDamp = _j["parameter"].value("chargeDamp",0.0f);
 		_data.param.boostRate = _j["parameter"].value("boostRate",0.0f);
 		_data.param.boostPower = _j["parameter"].value("boostPower",0.0f);
+		_data.param.rateOfConvergence = _j["parameter"].value("rateOfConvergence",0.0f);
 
 		//速度
 		_data.param.groundSpeed = _j["parameter"].value("groundSpeed",0.0f);

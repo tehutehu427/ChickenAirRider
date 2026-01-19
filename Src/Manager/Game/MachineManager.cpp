@@ -15,16 +15,29 @@ MachineManager::MachineManager(void)
 		auto& res = ResourceManager::GetInstance();
 		return res.LoadModelDuplicate(ResourceManager::SRC::WAKABA_STAR);
 	};
-	//リソース
 	getModelId_["earth"] = [this](void)
 	{
 		//インスタンス
 		auto& res = ResourceManager::GetInstance();
 		return res.LoadModelDuplicate(ResourceManager::SRC::EARTH_STAR);
 	};
+	getModelId_["battle"] = [this](void)
+	{
+		//インスタンス
+		auto& res = ResourceManager::GetInstance();
+		return res.LoadModelDuplicate(ResourceManager::SRC::BATTLE_STAR);
+	};
+	getModelId_["bottle"] = [this](void)
+	{
+		//インスタンス
+		auto& res = ResourceManager::GetInstance();
+		return res.LoadModelDuplicate(ResourceManager::SRC::BOTTLE_STAR);
+	};
 
 	number_["wakaba"] = MACHINE_TYPE::WAKABA;
 	number_["earth"] = MACHINE_TYPE::EARTH;
+	number_["battle"] = MACHINE_TYPE::BATTLE;
+	number_["bottle"] = MACHINE_TYPE::BOTTLE;
 }
 
 MachineManager::~MachineManager(void)
@@ -80,19 +93,22 @@ void MachineManager::Draw(void)
 
 void MachineManager::CreateMachine(void)
 {
-	//機体の個数
+	//機体の種類数
 	int size = importData_.size();
 	
 	//ランダム
 	int rand = Utility::GetRandomValue(0, size - 1);
-	rand = 1;
+	rand = 2;
 
 	//機体の種類
 	int modelId = getModelId_.at(importData_[rand].name)();
 	VECTOR pos = { 0.0f,-200.0f,400.0f };
 
+	//相対座標
+	VECTOR localPos = importData_[rand].riderLocalPos;
+
 	//機体
-	std::unique_ptr<Machine> machine = std::make_unique<Machine>(importData_[rand], modelId, pos);
+	std::unique_ptr<Machine> machine = std::make_unique<Machine>(importData_[rand], modelId, localPos, pos);
 	machine->Load();
 	machine->Init();
 	machine->CreateCol();
@@ -143,8 +159,11 @@ std::unique_ptr<Machine> MachineManager::GetCreateMachine(const MACHINE_TYPE _ma
 	//機体の種類
 	int modelId = getModelId_.at(name)();
 
+	//相対座標
+	VECTOR localPos = importData_[num].riderLocalPos;
+
 	//機体
-	std::unique_ptr<Machine> machine = std::make_unique<Machine>(importData_[num], modelId);
+	std::unique_ptr<Machine> machine = std::make_unique<Machine>(importData_[num], modelId, localPos);
 
 	//返す
 	return std::move(machine);

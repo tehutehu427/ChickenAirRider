@@ -60,9 +60,10 @@ void ItemBase::Draw(void)
 
 		//éÊìæé“ÇÃç¿ïW
 		VECTOR hiterPos = hiter_.lock()->GetParent().GetTrans().pos;
-
+		Sphere& sphere = dynamic_cast<Sphere&>(hiter_.lock()->GetGeometry());
+		
 		//è¨Ç≥ÇﬂÇ…ï`âÊ
-		DrawBillboard3D(VGet(hiterPos.x, hiterPos.y + LOCAL_HITER_POS_Y, hiterPos.z), 0.5f, 0.5f, GOT_IMG_SIZE, 0.0f, trans_.modelId, true);
+		DrawBillboard3D(VGet(hiterPos.x, hiterPos.y + sphere.GetRadius() + LOCAL_HITER_POS_Y, hiterPos.z), 0.5f, 0.5f, GOT_IMG_SIZE, 0.0f, trans_.modelId, true);
 	}
 }
 

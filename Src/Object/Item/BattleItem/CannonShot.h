@@ -49,12 +49,19 @@ private:
 		DEAD,	//死亡
 	};
 
+	enum class COL
+	{
+		MAIN,	//メイン
+		SEARCH,	//索敵
+	};
+
 	//速度
 	static constexpr float SPEED = 50.0f;
 
 	//半径
-	static constexpr float SHOT_RADIUS = 30.0f;
-	static constexpr float BLAST_RADIUS = 100.0f;
+	static constexpr float SHOT_RADIUS = 50.0f;
+	static constexpr float BLAST_RADIUS = 150.0f;
+	static constexpr float SEARCH_RADIUS = 600.0f;
 
 	//生存時間
 	static constexpr float ALIVE_TIME = 10.0f;
@@ -62,6 +69,9 @@ private:
 
 	//攻撃力補正
 	static constexpr float ATTACK_MULTI = 2.0f;
+
+	//索敵補正値
+	static constexpr float SEARCH_MOVE_POW_MULTI = 1.0f;
 
 	//所有者タグ
 	std::weak_ptr<Collider> holder_;
@@ -74,6 +84,7 @@ private:
 
 	//移動力
 	VECTOR movePow_;
+	VECTOR movePowToTarget_;
 
 	//カウンタ
 	float aliveCnt_;

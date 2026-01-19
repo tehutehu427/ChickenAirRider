@@ -47,6 +47,9 @@ UnitParameter UnitParameter::Calculate(const UnitParameter& _unitParam) const
     ret.chargeDamp = chargeDamp + _unitParam.chargeDamp;
     ret.boostRate = boostRate + _unitParam.boostRate;
     ret.boostPower = boostPower + _unitParam.boostPower;
+    
+    //‘¬“xŽû‘©—¦
+    ret.rateOfConvergence = rateOfConvergence + _unitParam.rateOfConvergence;
 
     //ˆÚ“®‘¬“x
     ret.groundSpeed = groundSpeed + _unitParam.groundSpeed;

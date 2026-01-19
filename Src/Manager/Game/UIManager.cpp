@@ -177,7 +177,7 @@ void UIManager::DrawChargeGauge(const int _playerIndex)
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
 	int speed100 = static_cast<int>(speed) / 100;
-	int speed10 = static_cast<int>(speed) / 10;
+	int speed10 = (static_cast<int>(speed) / 10) % 10;
 	int speed1 = static_cast<int>(speed) % 10;
 	//‘¬“x
 	DrawRotaGraph(chargeGaugePos.x - (NUMBER_LOCAL_POS * size), chargeGaugePos.y, size, 0.0, numImgs_[speed100], true);

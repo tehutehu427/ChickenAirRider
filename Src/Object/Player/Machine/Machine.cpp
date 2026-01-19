@@ -5,14 +5,16 @@
 #include "../Object/Item/BattleItem/CannonShot.h"
 #include "Machine.h"
 
-Machine::Machine(const MachineImportData& _importData, const int _modelId, const VECTOR _pos)
+Machine::Machine(const MachineImportData& _importData, const int _modelId, const VECTOR _localPos, const VECTOR _pos)
 {
 	trans_ = Transform();
 	trans_.pos = _pos;
 	trans_.modelId = _modelId;
-	trans_.scl = _importData.scale;
+	modelScl_ = _importData.scale;
+	trans_.scl = modelScl_;
 	isAnim_ = _importData.isAnim;
 	radius_ = _importData.hitRadius;
+	riderLocalPos_ = _localPos;
 	unitParam_ = _importData.param;
 	damage_ = 0.0f;
 	invincible_ = 0.0f;
@@ -24,8 +26,6 @@ Machine::~Machine(void)
 
 void Machine::Load(void)
 {
-	//モデル
-	trans_.localPos.y -= 20.0f;
 }
 
 void Machine::Init(void)
@@ -59,6 +59,11 @@ void Machine::Update(void)
 void Machine::Draw(void)
 {
 	MV1DrawModel(trans_.modelId);
+
+	//for (auto& col : collider_)
+	//{
+	//	col->GetGeometry().Draw();
+	//}
 }
 
 void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
@@ -103,7 +108,7 @@ void Machine::CreateCol(void)
 	MakeCollider(Collider::TAG::MACHINE, std::move(geo), { Collider::TAG::MACHINE_RIDE });
 
 	//乗り判定コライダ
-	geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, RIDE_COL);
+	geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, RIDE_COL_RADIUS);
 	MakeCollider(Collider::TAG::MACHINE_RIDE, std::move(geo), { Collider::TAG::MACHINE,Collider::TAG::MACHINE_RIDE });
 }
 
@@ -116,9 +121,9 @@ void Machine::DeleteCol(void)
 void Machine::SetScale(const VECTOR& _scale)
 {
 	VECTOR scale = _scale;
-	scale.x = scale.x * MODEL_SIZE.x;
-	scale.y = scale.y * MODEL_SIZE.y;
-	scale.z = scale.z * MODEL_SIZE.z;
+	scale.x = scale.x * modelScl_.x;
+	scale.y = scale.y * modelScl_.y;
+	scale.z = scale.z * modelScl_.z;
 
 	trans_.scl = scale;
 }

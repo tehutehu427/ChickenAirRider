@@ -35,9 +35,8 @@ public:
 	//当たり判定添え字
 	enum class COL_VALUE
 	{
-		MAIN,			//本体
-		GROUNDED_PRE,	//前接地
-		GROUNDED_OLD,	//後接地
+		MAIN,		//本体
+		GROUNDED,	//接地
 	};
 
 	//コンストラクタ
@@ -91,7 +90,10 @@ public:
 	void SetQuaRot(const Quaternion& _quaRot) { trans_.quaRot = _quaRot; }
 
 	//大きさの設定
-	void SetScale(const VECTOR _scale) { trans_.scl = _scale; }
+	void SetScale(const VECTOR& _scale) { trans_.scl = _scale; }
+
+	//相対座標の設定
+	void SetLocalPos(const VECTOR& _localPos) { trans_.localPos = _localPos; }
 
 	//移動力取得
 	const VECTOR& GetMovePow(void)const { return movePow_; }
@@ -170,11 +172,12 @@ private:
 	static constexpr VECTOR LOCAL_POS = { 100.0f,0.0f,0.0f };
 
 	//当たり判定用
-	static constexpr float NORMAL_RADIUS = 25.0f;							//通常時の球体の半径
-	static constexpr float SPIN_RADIUS = 90.0f;								//スピンの球体の半径
-	static constexpr float SPIN_SPEED = 40.0f;								//スピンの速度
-	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };				//線判定の上相対座標
-	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-40.0f,0.0f };			//線判定の下相対座標
+	static constexpr float NORMAL_RADIUS = 25.0f;												//通常時の球体の半径
+	static constexpr float SPIN_RADIUS = 90.0f;													//スピンの球体の半径
+	static constexpr float SPIN_SPEED = 40.0f;													//スピンの速度
+	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };									//線判定の上相対座標
+	static constexpr float LOCAL_LINE_DOWN_Y = -15.0f;											//線判定の下相対座標
+	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,LOCAL_LINE_DOWN_Y - NORMAL_RADIUS,0.0f };	//線判定の下相対座標
 
 	//基本機能
 	std::unique_ptr<Character> chara_;		//キャラクタ―

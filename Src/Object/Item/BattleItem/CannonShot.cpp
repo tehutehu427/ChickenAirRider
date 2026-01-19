@@ -55,6 +55,10 @@ void CannonShot::Init(void)
 	//コライダ
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SHOT_RADIUS);
 	MakeCollider(Collider::TAG::CANNON_SHOT, std::move(geo), { holder_.lock()->GetTag(),Collider::TAG::FOOT,Collider::TAG::SPIN});
+
+	geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SEARCH_RADIUS);
+	MakeCollider(Collider::TAG::SEARCH, std::move(geo), { holder_.lock()->GetTag(),Collider::TAG::FOOT,Collider::TAG::SPIN,Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT});
+	
 	trans_.Update();
 
 	Update();
@@ -74,12 +78,39 @@ void CannonShot::Draw(void)
 
 void CannonShot::OnHit(std::weak_ptr<Collider> _hitCol)
 {
-	if (_hitCol.lock()->GetTag() == Collider::TAG::NORMAL_OBJECT
-		|| _hitCol.lock()->GetTag() == Collider::TAG::GROUND
-		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER1
+	if (_hitCol.lock()->GetTag() == Collider::TAG::PLAYER1
 		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER2
 		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER3
-		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER4)
+		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER4
+		|| _hitCol.lock()->GetTag() == Collider::TAG::MACHINE
+		)
+	{
+		if (collider_[static_cast<int>(COL::SEARCH)]->IsHit())
+		{
+			//標的に対する移動ベクトル
+			VECTOR moveVecToTarget = Utility::GetMoveVec(movedPos_, _hitCol.lock()->GetParent().GetTrans().pos);
+			
+			//下方向には補正しない
+			//moveVecToTarget.y = 0.0f;
+
+			//標的に少し傾ける
+			movePowToTarget_ = VAdd(movePow_,VScale(moveVecToTarget,speed_* SEARCH_MOVE_POW_MULTI));
+		}
+		else
+		{
+			//爆発
+			state_ = STATE::BLAST;
+
+			//カウンタ
+			aliveCnt_ = 0.0f;
+
+			//当たり判定増大
+			auto& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL::MAIN)]->GetGeometry());
+			sphere.SetRadius(BLAST_RADIUS);
+		}
+	}
+	else if (_hitCol.lock()->GetTag() == Collider::TAG::NORMAL_OBJECT
+		|| _hitCol.lock()->GetTag() == Collider::TAG::GROUND)
 	{
 		//爆発
 		state_ = STATE::BLAST;
@@ -88,7 +119,7 @@ void CannonShot::OnHit(std::weak_ptr<Collider> _hitCol)
 		aliveCnt_ = 0.0f;
 
 		//当たり判定増大
-		auto& sphere = dynamic_cast<Sphere&>(collider_[0]->GetGeometry());
+		auto& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL::MAIN)]->GetGeometry());
 		sphere.SetRadius(BLAST_RADIUS);
 	}
 }
@@ -113,18 +144,19 @@ void CannonShot::UpdateAlive(void)
 		aliveCnt_ = 0.0f;
 
 		//当たり判定増大
-		auto& sphere = dynamic_cast<Sphere&>(collider_[0]->GetGeometry());
+		auto& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL::MAIN)]->GetGeometry());
 		sphere.SetRadius(BLAST_RADIUS);
 
 		return;
 	}
 
 	//移動力
-	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);
+	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_,200.0f);
 	movePow_ = trans_.quaRot.PosAxis(VGet(0.0f, gravPow_.y, speed_));
 
 	//移動
 	movedPos_ = VAdd(movedPos_, movePow_);
+	movedPos_ = VAdd(movedPos_, movePowToTarget_);
 
 	//方向
 	trans_.quaRot = Quaternion::LookRotation(Utility::GetMoveVec(trans_.pos, VAdd(movedPos_, movePow_)));

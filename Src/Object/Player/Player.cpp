@@ -173,10 +173,10 @@ void Player::Draw(void)
 	//描画
 	draw_[state_]();
 
-	//for (auto& col : collider_)
-	//{
-	//	col->GetGeometry().Draw(0);
-	//}
+	for (auto& col : collider_)
+	{
+		col->GetGeometry().Draw(0);
+	}
 
 	//DrawFormatString(0, 32, 0xffffff, L"%.2f,%.2f,%.2f", trans_.quaRot.ToEuler().x, trans_.quaRot.ToEuler().y, trans_.quaRot.ToEuler().z);
 	//DrawFormatString(0, 80, 0xffffff, L"%.2f,%.2f,%.2f", trans_.pos.x, trans_.pos.y, trans_.pos.z);
@@ -281,7 +281,7 @@ void Player::SetIsSpin(const bool _isSpin)
 	if (_isSpin)
 	{
 		//スピンコライダを生成
-		std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SPIN_RADIUS);
+		std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, machine_->GetHitRadius() + SPIN_RADIUS);
 		MakeCollider(Collider::TAG::SPIN, std::move(geo), 
 			{ playerTag_,
 			Collider::TAG::FOOT,
@@ -352,6 +352,15 @@ void Player::ChangeActionNormal(void)
 	action_ = std::make_shared<CharacterAction>(*this, *chara_, *logic_);
 	action_->Init();
 
+	//相対座標の初期化
+	chara_->SetLocalPos(Utility::VECTOR_ZERO);
+
+	//コライダ範囲の初期化
+	Sphere& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL_VALUE::MAIN)]->GetGeometry());
+	sphere.SetRadius(NORMAL_RADIUS);
+	Line& line = dynamic_cast<Line&>(collider_[static_cast<int>(COL_VALUE::GROUNDED)]->GetGeometry());
+	line.SetLocalPosPoint2(VGet(0.0f,LOCAL_LINE_DOWN.y,0.0f));
+
 	//カメラ状態の変更
 	camera_.lock()->ChangeMode(Camera::MODE::FOLLOW);
 
@@ -368,6 +377,15 @@ void Player::ChangeActionRide(void)
 	//機体の行動に変更
 	action_ = std::make_shared<MachineAction>(*this, *machine_, *logic_);
 	action_->Init();
+
+	//相対座標の反映
+	chara_->SetLocalPos(machine_->GetRiderLocalPos());
+
+	//当たり判定半径の設定
+	Sphere& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL_VALUE::MAIN)]->GetGeometry());
+	sphere.SetRadius(machine_->GetHitRadius());
+	Line& line = dynamic_cast<Line&>(collider_[static_cast<int>(COL_VALUE::GROUNDED)]->GetGeometry());
+	line.SetLocalPosPoint2(VGet(0.0f, -sphere.GetRadius() + LOCAL_LINE_DOWN_Y, 0.0f));
 
 	//カメラ状態の変更
 	camera_.lock()->ChangeMode(Camera::MODE::FOLLOW_LEAP);

@@ -47,6 +47,9 @@ public:
 	//回転の設定
 	void SetQuaRot(const Quaternion& _quaRot) { trans_.quaRot = _quaRot; }
 
+	//相対座標の設定
+	void SetLocalPos(const VECTOR& _localPos) { trans_.localPos = _localPos; }
+
 	//アニメーションの取得
 	AnimationController& GetAnim(void)const { return *anim_; }
 

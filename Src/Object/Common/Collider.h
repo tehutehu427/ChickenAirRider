@@ -26,6 +26,7 @@ public :
 
 		SPIN,			//スピンアタック
 		CANNON_SHOT,	//大砲の弾
+		SEARCH,			//索敵判定
 
 		MACHINE,		//機体
 		MACHINE_RIDE,	//機体の乗り判定
@@ -37,6 +38,10 @@ public :
 		ITEM_BOX,		//アイテムボックス
 		POWER_UP,		//パワーアップアイテム
 		BATTLE_ITEM,	//バトルアイテム
+
+		WORLD_BORDER,	//ワールドボーダー
+
+		MAX				//タグの数管理用	※タグに使わないでください
 	};
 
 	/// @brief コンストラクタ
