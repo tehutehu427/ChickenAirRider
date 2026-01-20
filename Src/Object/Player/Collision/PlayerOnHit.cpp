@@ -137,6 +137,9 @@ void PlayerOnHit::GroundOnHit(const std::weak_ptr<Collider> _hitCol)
 		//ñ@ê¸
 		VECTOR normal = VNorm(line.GetHitInfo().Normal);
 		
+		//ë´å≥ÇÃí∑Ç≥
+		//float footLength = fabsf(line.GetLocalPosPoint2().y - line.GetLocalPosPoint1().y) - FOOT_COMP;
+
 		//ê[ìx
 		float depth = radius - VDot(normal, VSub(pos, hitPos));
 

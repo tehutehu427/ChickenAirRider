@@ -1,0 +1,130 @@
+[
+  {
+    "name": "glideStage",
+    "position": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 2000.0
+    },
+    "scale": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0
+    },
+    "quaternion": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+    },
+    "geometry": "model",
+    "tag": "worldBorder",
+    "radius": 0.0,
+    "localPos1": {
+      "x": -1000.0,
+      "y": -10.0,
+      "z": -1000.0
+    },
+    "localPos2": {
+      "x": 1000.0,
+      "y": 10.0,
+      "z": 1000.0
+    }
+  },
+  {
+    "name": "worldBorder",
+    "position": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 2000.0
+    },
+    "scale": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0
+    },
+    "quaternion": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+    },
+    "geometry": "cube",
+    "tag": "worldBorder",
+    "radius": 0.0,
+    "localPos1": {
+      "x": -1000.0,
+      "y": 50020.0,
+      "z": -1000.0
+    },
+    "localPos2": {
+      "x": 1000.0,
+      "y": 50000.0,
+      "z": 1000.0
+    }
+  },
+  {
+    "name": "worldBorder",
+    "position": {
+      "x": 1000.0,
+      "y": 0.0,
+      "z": 2000.0
+    },
+    "scale": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0
+    },
+    "quaternion": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+    },
+    "geometry": "cube",
+    "tag": "worldBorder",
+    "radius": 0.0,
+    "localPos1": {
+      "x": -1000.0,
+      "y": -10.0,
+      "z": -1000.0
+    },
+    "localPos2": {
+      "x": -1020.0,
+      "y": 50000.0,
+      "z": 1000.0
+    }
+  }, 
+  {
+    "name": "worldBorder",
+    "position": {
+      "x": -1000.0,
+      "y": 0.0,
+      "z": 2000.0
+    },
+    "scale": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0
+    },
+    "quaternion": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+    },
+    "geometry": "cube",
+    "tag": "worldBorder",
+    "radius": 0.0,
+    "localPos1": {
+      "x": 1000.0,
+      "y": -10.0,
+      "z": -1000.0
+    },
+    "localPos2": {
+      "x": 1020.0,
+      "y": 50000.0,
+      "z": 1000.0
+    }
+  }
+]

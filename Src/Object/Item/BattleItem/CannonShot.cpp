@@ -112,6 +112,8 @@ void CannonShot::OnHit(std::weak_ptr<Collider> _hitCol)
 	else if (_hitCol.lock()->GetTag() == Collider::TAG::NORMAL_OBJECT
 		|| _hitCol.lock()->GetTag() == Collider::TAG::GROUND)
 	{
+		if (!collider_[static_cast<int>(COL::MAIN)]->IsHit())return;
+
 		//”š”­
 		state_ = STATE::BLAST;
 

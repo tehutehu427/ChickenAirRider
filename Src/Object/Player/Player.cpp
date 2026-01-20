@@ -385,7 +385,8 @@ void Player::ChangeActionRide(void)
 	Sphere& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL_VALUE::MAIN)]->GetGeometry());
 	sphere.SetRadius(machine_->GetHitRadius());
 	Line& line = dynamic_cast<Line&>(collider_[static_cast<int>(COL_VALUE::GROUNDED)]->GetGeometry());
-	line.SetLocalPosPoint2(VGet(0.0f, -sphere.GetRadius() + LOCAL_LINE_DOWN_Y, 0.0f));
+	//line.SetLocalPosPoint2(VGet(0.0f, -sphere.GetRadius() + LOCAL_LINE_DOWN_Y, 0.0f));
+	line.SetLocalPosPoint2(machine_->GetFootPos());
 
 	//ƒJƒƒ‰ó‘Ô‚Ì•ÏX
 	camera_.lock()->ChangeMode(Camera::MODE::FOLLOW_LEAP);

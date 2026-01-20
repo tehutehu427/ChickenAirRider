@@ -23,6 +23,9 @@ struct MachineImportData
 	//モデルの大きさ
 	VECTOR scale;
 
+	//足元座標
+	VECTOR footPos;
+
 	//固定パラメーター
 	UnitParameter param;
 };
@@ -70,6 +73,14 @@ inline void FromJson(const nlohmann::json& _j, MachineImportData& _data)
 		_data.scale.z = _j["scale"].value("z", 1.0f);
 	}
 
+	//足元座標
+	if (_j.contains("footPos"))
+	{
+		_data.footPos.x = _j["footPos"].value("x", 0.0f);
+		_data.footPos.y = _j["footPos"].value("y", 0.0f);
+		_data.footPos.z = _j["footPos"].value("z", 0.0f);
+	}
+
 	//パラメーター
 	if (_j.contains("parameter"))
 	{
@@ -111,27 +122,4 @@ inline void FromJson(const nlohmann::json& _j, MachineImportData& _data)
 
 inline void FromCsv(std::stringstream& _ss, MachineImportData& _s)
 {
-	////格納内容
-	//std::string token;
-
-	////インポート
-
-	////名前
-	//std::getline(_ss, _data.name, ',');
-
-	////座標
-	//std::getline(_ss, token, ',');	_data.position.x = std::stof(token);
-	//std::getline(_ss, token, ',');	_data.position.y = std::stof(token);
-	//std::getline(_ss, token, ',');	_data.position.z = std::stof(token);
-
-	////大きさ
-	//std::getline(_ss, token, ',');	_data.scale.x = std::stof(token);
-	//std::getline(_ss, token, ',');	_data.scale.y = std::stof(token);
-	//std::getline(_ss, token, ',');	_data.scale.z = std::stof(token);
-
-	////回転
-	//std::getline(_ss, token, ',');	_data.quaternion.w = std::stof(token);
-	//std::getline(_ss, token, ',');	_data.quaternion.x = std::stof(token);
-	//std::getline(_ss, token, ',');	_data.quaternion.y = std::stof(token);
-	//std::getline(_ss, token, ',');	_data.quaternion.z = std::stof(token);
 }

@@ -5,16 +5,17 @@
 #include "../Object/Item/BattleItem/CannonShot.h"
 #include "Machine.h"
 
-Machine::Machine(const MachineImportData& _importData, const int _modelId, const VECTOR _localPos, const VECTOR _pos)
+Machine::Machine(const MachineImportData& _importData, const int _modelId, const VECTOR _pos)
 {
 	trans_ = Transform();
 	trans_.pos = _pos;
 	trans_.modelId = _modelId;
+	footPos_ = _importData.footPos;
 	modelScl_ = _importData.scale;
 	trans_.scl = modelScl_;
 	isAnim_ = _importData.isAnim;
 	radius_ = _importData.hitRadius;
-	riderLocalPos_ = _localPos;
+	riderLocalPos_ = _importData.riderLocalPos;
 	unitParam_ = _importData.param;
 	damage_ = 0.0f;
 	invincible_ = 0.0f;

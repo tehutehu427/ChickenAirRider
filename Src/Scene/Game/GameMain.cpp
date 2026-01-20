@@ -50,7 +50,7 @@ void GameMain::Init(void)
 
 	//ステージ管理
 	stgMng.Load();
-	stgMng.Init();
+	stgMng.Init(StageManager::MODE::MAIN);
 
 	//プレイヤーの初期化
 	plMng.Init();

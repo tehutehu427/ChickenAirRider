@@ -104,11 +104,8 @@ void MachineManager::CreateMachine(void)
 	int modelId = getModelId_.at(importData_[rand].name)();
 	VECTOR pos = { 0.0f,-200.0f,400.0f };
 
-	//相対座標
-	VECTOR localPos = importData_[rand].riderLocalPos;
-
 	//機体
-	std::unique_ptr<Machine> machine = std::make_unique<Machine>(importData_[rand], modelId, localPos, pos);
+	std::unique_ptr<Machine> machine = std::make_unique<Machine>(importData_[rand], modelId, pos);
 	machine->Load();
 	machine->Init();
 	machine->CreateCol();
@@ -159,11 +156,8 @@ std::unique_ptr<Machine> MachineManager::GetCreateMachine(const MACHINE_TYPE _ma
 	//機体の種類
 	int modelId = getModelId_.at(name)();
 
-	//相対座標
-	VECTOR localPos = importData_[num].riderLocalPos;
-
 	//機体
-	std::unique_ptr<Machine> machine = std::make_unique<Machine>(importData_[num], modelId, localPos);
+	std::unique_ptr<Machine> machine = std::make_unique<Machine>(importData_[num], modelId);
 
 	//返す
 	return std::move(machine);

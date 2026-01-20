@@ -22,6 +22,15 @@ public:
 		MAX,
 	};
 
+	//ゲームモードごとのステージ
+	enum class MODE
+	{
+		MAIN,			//基本
+		BATTLE,			//バトル
+		AIR_GLIDER,		//エアグライダー
+		MAX
+	};
+
 	//インスタンス生成
 	static void CreateInstance(void);
 
@@ -32,7 +41,7 @@ public:
 	void Load(void);
 
 	//初期化
-	void Init(void);
+	void Init(const MODE _mode);
 
 	//更新
 	void Update(void);
@@ -43,10 +52,16 @@ public:
 	//解放
 	void Destroy(void);
 
+	//モードの設定
+	void SetMode(const MODE _mode) { mode_ = _mode; }
+
 private:
 
+	//現在のモード
+	MODE mode_;
+
 	//インポートデータ
-	std::vector<StageImportData> importData_;
+	std::unordered_map<MODE,std::vector<StageImportData>> importData_;
 
 	//名前管理
 	std::unordered_map<std::string, std::function<int(void)>> modelId_;

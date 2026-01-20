@@ -212,14 +212,22 @@ void UIManager::DrawHealth(const int _playerIndex)
 		healthPosY + HEALTH_BOX_LOCAL_POS_Y - maxHealth * HEALTH_BOX,
 		Utility::BLACK, true);
 
+	//Š„‡
+	float healthRate = nowHealth / maxHealth;
+	healthRate = std::clamp(healthRate, 0.0f, 1.0f);
+
+	float barMaxHeight = HEALTH_BOX * maxHealth; // ƒo[‘S‘Ì‚Ì‚‚³
+	float barHeight = barMaxHeight * healthRate;
+
 	if (nowHealth > 0.0f)
 	{
-		//‘Ì—Í
-		DrawBox(healthPosX - HEALTH_BOX_LOCAL_POS_X + HEALTH_LOCAL,
-			healthPosY + HEALTH_BOX_LOCAL_POS_Y - HEALTH_LOCAL,
-			healthPosX + HEALTH_BOX_LOCAL_POS_X - HEALTH_LOCAL,
-			healthPosY + HEALTH_BOX_LOCAL_POS_Y - (maxHealth * HEALTH_BOX) * (nowHealth / maxHealth) + HEALTH_LOCAL,
-			Utility::RED, true);
+		int left = healthPosX - HEALTH_BOX_LOCAL_POS_X + HEALTH_LOCAL;
+		int right = healthPosX + HEALTH_BOX_LOCAL_POS_X - HEALTH_LOCAL;
+
+		int bottom = healthPosY + HEALTH_BOX_LOCAL_POS_Y + HEALTH_LOCAL;
+		int top = bottom - barHeight;
+
+		DrawBox(left, top, right, bottom, Utility::RED, true);
 	}
 }
 

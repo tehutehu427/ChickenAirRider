@@ -15,7 +15,7 @@ public:
 	static constexpr float PARAM_NORMAL = 1.5f;
 
 	//コンストラクタ
-	Machine(const MachineImportData& _importData, const int _modelId, const VECTOR _localPos = {}, const VECTOR _pos = {});
+	Machine(const MachineImportData& _importData, const int _modelId, const VECTOR _pos = {});
 
 	//デストラクタ
 	~Machine(void)override;
@@ -56,6 +56,9 @@ public:
 	//乗車者の相対座標の取得
 	const VECTOR& GetRiderLocalPos(void)const { return riderLocalPos_; }
 
+	//足元座標
+	const VECTOR& GetFootPos(void)const { return footPos_; }
+
 	//パラメーターの取得
 	const UnitParameter& GetUnitParam(void)const { return unitParam_; }
 
@@ -84,6 +87,9 @@ private:
 
 	//乗車者の相対座標
 	VECTOR riderLocalPos_;
+
+	//機体の足元座標
+	VECTOR footPos_;
 
 	//モデルサイズ
 	VECTOR modelScl_;

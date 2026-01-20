@@ -20,10 +20,21 @@ void StageManager::CreateInstance(void)
 void StageManager::Load(void)
 {
 	//ステージ情報
-	importData_ = LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"MainStage.json"));
+	importData_.emplace(MODE::MAIN, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"MainStage.json")));
+	importData_.emplace(MODE::BATTLE, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"BattleStage.json")));
+	importData_.emplace(MODE::AIR_GLIDER, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"AirGliderStage.json")));
+}
+
+void StageManager::Init(const MODE _mode)
+{
+	//初期化
+	stages_.clear();
+
+	//モード設定
+	mode_ = _mode;
 
 	//ステージの作成
-	for (const auto& data : importData_)
+	for (const auto& data : importData_[mode_])
 	{
 		//モデルの作成
 		int modelId = modelId_[data.name]();
@@ -31,10 +42,7 @@ void StageManager::Load(void)
 		//ステージの生成
 		stages_.emplace_back(std::make_unique<StageObject>(data, modelId, tag_[data.tag]));
 	}
-}
 
-void StageManager::Init(void)
-{
 	//初期化
 	for (const auto& stage : stages_)
 	{
@@ -102,7 +110,7 @@ StageManager::StageManager(void)
 	//タグ
 	tag_["normalObject"] = Collider::TAG::NORMAL_OBJECT;
 	tag_["building"] = Collider::TAG::NORMAL_OBJECT;
-	tag_["worldBorder"] = Collider::TAG::NORMAL_OBJECT;
+	tag_["worldBorder"] = Collider::TAG::WORLD_BORDER;
 	tag_["tree"] = Collider::TAG::TREE;
 	tag_["glass"] = Collider::TAG::GROUND;
 	tag_["ground"] = Collider::TAG::GROUND;

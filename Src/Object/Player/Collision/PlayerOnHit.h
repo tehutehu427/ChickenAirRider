@@ -23,6 +23,9 @@ public:
 
 private:
 
+	//‰Ÿ‚µ–ß‚µ‚Ì•â³’l
+	static constexpr float FOOT_COMP = 5.0f;
+
 	//–³“GŠÔ
 	static constexpr float INVINCIBLE_SPIN = 0.2f;
 

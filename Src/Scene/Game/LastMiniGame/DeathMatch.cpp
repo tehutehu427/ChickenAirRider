@@ -24,14 +24,14 @@ void DeathMatch::Init(void)
 	//インスタンス
 	auto& setting = GameSetting::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
-	auto& machineMng = MachineManager::GetInstance();
+	//auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
 
 	//各初期化
 	plMng.ResetPlayer();
-	stgMng.Init();
-	machineMng.Init();
+	stgMng.Init(StageManager::MODE::BATTLE);
+	//machineMng.Init();
 	itemMng.Init();
 	itemMng.SetSpawnType(ItemManager::SPAWN_TYPE::DEATH_MATCH);
 
@@ -45,7 +45,7 @@ void DeathMatch::Update(void)
 	auto& setting = GameSetting::GetInstance();
 	auto& colMng = CollisionManager::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
-	auto& machineMng = MachineManager::GetInstance();
+	//auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
 	auto& key = KeyConfig::GetInstance();
@@ -54,7 +54,7 @@ void DeathMatch::Update(void)
 	stgMng.Update();
 
 	//機体更新
-	machineMng.Update();
+	//machineMng.Update();
 
 	//プレイヤーの更新
 	plMng.Update();
@@ -101,7 +101,7 @@ void DeathMatch::Draw(void)
 	//インスタンス
 	auto& setting = GameSetting::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
-	auto& machineMng = MachineManager::GetInstance();
+	//auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
 
@@ -109,7 +109,7 @@ void DeathMatch::Draw(void)
 	stgMng.Draw();
 
 	//機体の描画
-	machineMng.Draw();
+	//machineMng.Draw();
 
 	//アイテムの描画
 	itemMng.Draw();
