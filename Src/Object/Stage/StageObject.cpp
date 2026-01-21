@@ -6,10 +6,10 @@
 #include "../Common/Geometry/Model.h"
 #include "StageObject.h"
 
-StageObject::StageObject(const StageImportData& _data,const int _modelId, const Collider::TAG _tag)
+StageObject::StageObject(const StageImportData& _data,const int _modelId, const Collider::TAG _tag, const VECTOR _pos)
 {
 	trans_.modelId = _modelId;
-	trans_.pos = _data.position;
+	trans_.pos = _pos;
 	trans_.scl = _data.scale;
 	trans_.quaRot = _data.quaternion;
 

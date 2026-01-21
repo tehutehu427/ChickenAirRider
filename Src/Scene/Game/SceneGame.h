@@ -19,6 +19,7 @@ public:
 	enum class LAST_GAME_TYPE
 	{
 		DEATH_MATCH,	//デスマッチ
+		AIR_GLIDER,		//エアグライダー
 		MAX
 	};
 

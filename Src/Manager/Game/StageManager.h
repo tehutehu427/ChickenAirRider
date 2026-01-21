@@ -41,7 +41,7 @@ public:
 	void Load(void);
 
 	//初期化
-	void Init(const MODE _mode);
+	void Init(const MODE _mode, int _createNum = 1);
 
 	//更新
 	void Update(void);
@@ -72,6 +72,9 @@ private:
 
 	//ステージ
     std::vector<std::unique_ptr<StageObject>> stages_;
+
+	//ステージの生成数
+	int createNum_;
 
 	//コンストラクタ
 	StageManager(void);

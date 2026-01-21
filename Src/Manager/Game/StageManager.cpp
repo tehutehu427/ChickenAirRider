@@ -25,7 +25,7 @@ void StageManager::Load(void)
 	importData_.emplace(MODE::AIR_GLIDER, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"AirGliderStage.json")));
 }
 
-void StageManager::Init(const MODE _mode)
+void StageManager::Init(const MODE _mode, int _createNum)
 {
 	//初期化
 	stages_.clear();
@@ -33,14 +33,22 @@ void StageManager::Init(const MODE _mode)
 	//モード設定
 	mode_ = _mode;
 
-	//ステージの作成
-	for (const auto& data : importData_[mode_])
+	//生成数分作成
+	for (int i = 0; i < _createNum; i++)
 	{
-		//モデルの作成
-		int modelId = modelId_[data.name]();
+		//ステージの作成
+		for (const auto& data : importData_[mode_])
+		{
+			//モデルの作成
+			int modelId = modelId_[data.name]();
 
-		//ステージの生成
-		stages_.emplace_back(std::make_unique<StageObject>(data, modelId, tag_[data.tag]));
+			//座標
+			VECTOR pos = data.position;
+			pos.z *= (i + 1);
+
+			//ステージの生成
+			stages_.emplace_back(std::make_unique<StageObject>(data, modelId, tag_[data.tag], pos));
+		}
 	}
 
 	//初期化
@@ -81,7 +89,7 @@ StageManager::StageManager(void)
 	{
 		//インスタンス
 		auto& res = ResourceManager::GetInstance();
-		return res.LoadModelDuplicate(ResourceManager::SRC::STAGE);
+		return res.LoadModelDuplicate(ResourceManager::SRC::MAIN_STAGE);
 	};
 	modelId_["Glass"] = [this](void)
 	{
@@ -101,6 +109,12 @@ StageManager::StageManager(void)
 		auto& res = ResourceManager::GetInstance();
 		return res.LoadModelDuplicate(ResourceManager::SRC::TREE);
 	};
+	modelId_["GlideStage"] = [this](void)
+	{
+		//インスタンス
+		auto& res = ResourceManager::GetInstance();
+		return res.LoadModelDuplicate(ResourceManager::SRC::GLIDE_STAGE);
+	};
 	modelId_["WorldBorder"] = [this](void)
 	{
 		//ワールドボーダーなのでモデルなし
@@ -114,6 +128,8 @@ StageManager::StageManager(void)
 	tag_["tree"] = Collider::TAG::TREE;
 	tag_["glass"] = Collider::TAG::GROUND;
 	tag_["ground"] = Collider::TAG::GROUND;
+
+	mode_ = MODE::MAIN;
 }
 
 StageManager::~StageManager(void)

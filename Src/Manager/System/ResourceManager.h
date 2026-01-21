@@ -32,7 +32,8 @@ public:
 		BOTTLE_STAR,		//ボトルモデル
 
 		//ステージオブジェクトモデル
-		STAGE,				//ステージモデル
+		MAIN_STAGE,			//ステージモデル
+		GLIDE_STAGE,		//エアグライダーステージモデル
 
 		GLASS,				//草地モデル
 		BUILDING,			//ビルモデル

@@ -17,6 +17,7 @@
 #include"../Scene/Game/GameCheck.h"
 #include"../Scene/Game/LastMiniGame/LastGameBase.h"
 #include"../Scene/Game/LastMiniGame/DeathMatch.h"
+#include"../Scene/Game/LastMiniGame/AirGlider.h"
 #include "SceneGame.h"
 
 SceneGame::SceneGame(void)
@@ -24,6 +25,7 @@ SceneGame::SceneGame(void)
 	gameState_ = GAME_STATE::MAIN;
 
 	createLastGame_.emplace(LAST_GAME_TYPE::DEATH_MATCH, [this](void) {return std::make_unique<DeathMatch>(*this); });
+	createLastGame_.emplace(LAST_GAME_TYPE::AIR_GLIDER, [this](void) {return std::make_unique<AirGlider>(*this); });
 }
 
 SceneGame::~SceneGame(void)
@@ -123,6 +125,7 @@ void SceneGame::ResetLastGame(void)
 {
 	//ÉâÉìÉ_ÉÄ
 	LAST_GAME_TYPE rand = static_cast<LAST_GAME_TYPE>(Utility::GetRandomValue(0, static_cast<int>(LAST_GAME_TYPE::MAX) - 1));
+	rand = LAST_GAME_TYPE::AIR_GLIDER;
 
 	//ç≈èIÉQÅ[ÉÄê∂ê¨
 	createGame_.emplace(GAME_STATE::LAST, [this, rand](void) {return std::move(createLastGame_[rand]()); });
