@@ -34,12 +34,14 @@ public :
 		NORMAL_OBJECT,	//通常オブジェ
 		GROUND,			//地面
 		TREE,			//木
+		GLIDE_STAGE,	//エアグライダーの着地判定
 
 		ITEM_BOX,		//アイテムボックス
 		POWER_UP,		//パワーアップアイテム
 		BATTLE_ITEM,	//バトルアイテム
 
 		WORLD_BORDER,	//ワールドボーダー
+		GLIDER_BORDER,	//グライダー用のワールドボーダー
 
 		MAX				//タグの数管理用	※タグに使わないでください
 	};
@@ -49,7 +51,7 @@ public :
 	/// @param _tags 自身の衝突用タグ
 	/// @param _geometry 当たり判定の形状
 	/// @param _notHitTags 衝突させないタグ
-	Collider(ObjectBase& _parent, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags);
+	Collider(ObjectBase* _parent, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags);
 
 	// デストラクタ
 	~Collider(void);
@@ -63,8 +65,8 @@ public :
 	//衝突させないタグの取得
 	inline const std::set<TAG>& GetNotHitTags(void)const { return notHitTags_; }
 
-	//親を取得
-	inline const ObjectBase& GetParent(void)const { return parent_; }
+	//所持者を取得
+	inline const ObjectBase* GetOwner(void)const { return owner_; }
 
 	//当たったかの判定の取得
 	inline const bool IsHit(void)const { return isHit_; }
@@ -77,12 +79,12 @@ public :
 
 	/// @brief 当たった時の処理
 	/// @param _collider 相手のコライダ
-	void OnHit(const std::weak_ptr<Collider> _collider);
+	void OnHit(const Collider& _collider);
 
 private:
 
-	//親
-	ObjectBase& parent_;
+	//所持者
+	ObjectBase* owner_;
 
 	// 自身の衝突用タグ
 	TAG myTag_;

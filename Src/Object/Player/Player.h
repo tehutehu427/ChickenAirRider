@@ -57,7 +57,7 @@ public:
 	void Draw(void)override;
 
 	//当たり判定処理
-	void OnHit(const std::weak_ptr<Collider> _hitCol)override;
+	void OnHit(const Collider& _hitCol)override;
 
 	//パッド番号の取得
 	const KeyConfig::JOYPAD_NO GetPadNo(void)const { return padNo_; }
@@ -166,6 +166,12 @@ public:
 	//降りれるかどうかの設定
 	void SetCanGetOff(const bool _getOff) { canGetOff_ = _getOff; }
 
+	//移動できるかどうかの取得
+	const bool GetCanMove(void)const { return canMove_; }
+
+	//移動できるかどうかの設定
+	void SetCanMove(const bool _canMove) { canMove_ = _canMove; }
+
 private:
 
 	//相対座標
@@ -174,6 +180,7 @@ private:
 	//当たり判定用
 	static constexpr float NORMAL_RADIUS = 25.0f;												//通常時の球体の半径
 	static constexpr float SPIN_RADIUS = 90.0f;													//スピンの球体の半径
+	static constexpr float BROUD_RADIUS = 95.0f;													//前判定の半径
 	static constexpr float SPIN_SPEED = 40.0f;													//スピンの速度
 	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };									//線判定の上相対座標
 	static constexpr float LOCAL_LINE_DOWN_Y = -15.0f;											//線判定の下相対座標
@@ -240,6 +247,9 @@ private:
 
 	//降りれるかどうか
 	bool canGetOff_;
+
+	//移動可能かどうか
+	bool canMove_;
 
 	//関数ポインタ
 	std::map<OPERATION_TYPE, std::function<void(void)>> createLogic_;	//操作

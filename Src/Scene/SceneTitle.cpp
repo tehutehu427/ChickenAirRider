@@ -1,5 +1,6 @@
 #include"../pch.h"
 #include"../Application.h"
+#include"../Utility/Utility.h"
 #include"../Manager/System/KeyConfig.h"
 #include"../Manager/System/SceneManager.h"
 #include "../Manager/System/ResourceManager.h"
@@ -100,7 +101,7 @@ void SceneTitle::Update(void)
 	cnt_ += scn.GetDeltaTime();
 }
 
-void SceneTitle::Draw(void)
+void SceneTitle::Draw(const Camera& _camera)
 {
 #ifdef _DEBUG
 

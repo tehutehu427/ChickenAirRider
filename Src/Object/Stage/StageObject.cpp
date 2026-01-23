@@ -44,6 +44,9 @@ void StageObject::Load(void)
 
 void StageObject::Init(void)
 {
+	//“–‚½‚è”»’è‘O
+	broudRadius_ = data_.broudRadius;
+
 	//‰ŠúXV
 	Update();
 }
@@ -55,14 +58,14 @@ void StageObject::Update(void)
 
 void StageObject::Draw(void)
 {
-	collider_[0]->GetGeometry().Draw(color_);
+	//collider_[0]->GetGeometry().Draw(color_);
 
 	MV1DrawModel(trans_.modelId);
 
 	color_ = 0;
 }
 
-void StageObject::OnHit(const std::weak_ptr<Collider> _hitCol)
+void StageObject::OnHit(const Collider& _hitCol)
 {
 	color_ = 0xff0000;
 }

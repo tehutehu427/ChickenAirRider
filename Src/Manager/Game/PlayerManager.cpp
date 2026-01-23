@@ -75,12 +75,16 @@ void PlayerManager::Destroy(void)
 	players_.clear();
 }
 
-void PlayerManager::ResetPlayer(void)
+void PlayerManager::ResetPlayer(const VECTOR _pos)
 {
+	VECTOR pos = _pos;
+
 	//‰Šú‰»
 	for (auto& player : players_)
 	{
 		player->Init();
+		pos.x += 100.0f;
+		player->SetMovedPos(_pos);
 	}
 }
 

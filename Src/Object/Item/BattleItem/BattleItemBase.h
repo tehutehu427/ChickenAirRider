@@ -31,7 +31,7 @@ public:
 	virtual void Draw(void)override;
 
 	//“–‚½‚è”»’è
-	virtual void OnHit(std::weak_ptr<Collider> _hitCol)override;
+	virtual void OnHit(const Collider& _hitCol)override;
 
 protected:
 

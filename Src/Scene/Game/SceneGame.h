@@ -35,7 +35,7 @@ public:
 	//XV
 	void Update(void)override;
 	//•`‰æ
-	void Draw(void)override;
+	void Draw(const Camera& _camera)override;
 	//‰ğ•ú
 	void Release(void)override;
 

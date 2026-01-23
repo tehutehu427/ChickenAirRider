@@ -124,7 +124,7 @@ void GameMain::Update(void)
 	}
 }
 
-void GameMain::Draw(void)
+void GameMain::Draw(const Camera& _camera)
 {
 #ifdef _DEBUG
 
@@ -141,7 +141,7 @@ void GameMain::Draw(void)
 	auto& itemMng = ItemManager::GetInstance();
 
 	//ステージの描画
-	stgMng.Draw();
+	stgMng.Draw(_camera);
 
 	//機体の描画
 	machineMng.Draw();

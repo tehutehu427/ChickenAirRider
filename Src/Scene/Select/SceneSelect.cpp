@@ -117,7 +117,7 @@ void SceneSelect::Update(void)
 	update_[nowSelectType_]();
 }
 
-void SceneSelect::Draw(void)
+void SceneSelect::Draw(const Camera& _camera)
 {
 #ifdef _DEBUG
 

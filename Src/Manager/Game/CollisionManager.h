@@ -5,6 +5,7 @@
 #include<map>
 #include<functional>
 #include"../../Object/Common/Collider.h"
+#include"../../Object/ObjectBase.h"
 
 class Geometry;
 
@@ -14,7 +15,7 @@ public:
 
 	//当たり判定をする範囲
 	static constexpr float HIT_RANGE_NORMAL = 1000.0f;	//通常の当たり判定距離
-	static constexpr float HIT_RANGE_OBJECT = 2000.0f;	//通常の当たり判定距離
+	static constexpr float HIT_RANGE_OBJECT = 2000.0f;	//オブジェクトの当たり判定距離
 	static constexpr float HIT_RANGE_GROUND = 35000.0f;	//床の当たり判定距離
 
 	//更新用
@@ -27,7 +28,7 @@ public:
 	static CollisionManager& GetInstance(void) { return *instance_; }
 
 	//コライダの追加
-	void AddCollider(const std::shared_ptr<Collider> _collider);
+	void AddCollider(Collider* _collider);
 
 	//必要なくなったコライダの削除(更新の最後に置く)
 	void Sweep(void);
@@ -44,7 +45,7 @@ private:
 	static CollisionManager* instance_;
 
 	//当たり判定格納
-	std::vector<std::shared_ptr<Collider>>colliders_;
+	std::vector<Collider*>colliders_;
 
 	//当たり判定距離の二乗
 	std::map<Collider::TAG, float> hitRange_;
@@ -62,11 +63,23 @@ private:
 	//デストラクタ
 	~CollisionManager(void);
 
+	/// @brief オブジェクトの距離による当たり判定前の判定
+	/// @param _obj1 オブジェクト1
+	/// @param _obj2 オブジェクト2
+	/// @return true:当たり判定をする
+	const bool IsBroudCollision(const ObjectBase& _obj1, const ObjectBase& _obj2);
+
+	/// @brief 当たり判定をするタグか
+	/// @param _col1 1つ目のコライダ
+	/// @param _col2 2つ目のコライダ
+	/// @return true:当たり判定するタグだった
+	const bool IsCollisionTag(const Collider& _col1, const Collider& _col2)const;
+
 	/// @brief 当たり判定距離内にいるか
 	/// @param _col1 1つ目のコライダ
 	/// @param _col2 2つ目のコライダ
 	/// @return true:範囲内
-	const bool IsWithInHitRange(const std::weak_ptr<Collider> _col1, const std::weak_ptr<Collider> _col2)const;
+	const bool IsWithInHitRange(const Collider& _col1, const Collider& _col2)const;
 
 	/// @brief 当たり判定をするか
 	/// @param _col1Num 1つ目のコライダ番号
@@ -78,6 +91,6 @@ private:
 	/// @param _col1 1つ目のコライダ
 	/// @param _col2 2つ目のコライダ
 	/// @return true:当たった
-	const bool IsCollision(const std::weak_ptr<Collider> _col1, const std::weak_ptr<Collider> _col2)const;
+	const bool IsCollision(const Collider& _col1, const Collider& _col2)const;
 };
 

@@ -91,7 +91,7 @@ void SceneOption::Update(void)
 	update_[nowType_]();
 }
 
-void SceneOption::Draw(void)
+void SceneOption::Draw(const Camera& _camera)
 {
 	//•`‰æ
 	draw_[nowType_]();

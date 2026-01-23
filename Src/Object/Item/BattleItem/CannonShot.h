@@ -13,7 +13,7 @@ public:
 	static constexpr float INVINCIBLE = 0.5f;
 
 	//コンストラクタ
-	CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR& _scl, std::weak_ptr<Collider> _holder, const float _speed);
+	CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR& _scl, const Collider& _holder, const float _speed);
 
 	//デストラクタ
 	~CannonShot(void)override;
@@ -31,7 +31,7 @@ public:
 	void Draw(void)override;
 
 	//当たり判定
-	void OnHit(std::weak_ptr<Collider> _hitCol)override;
+	void OnHit(const Collider& _hitCol)override;
 
 	//攻撃力を返す
 	const float GetAttack(void)const { return attack_; }
@@ -62,6 +62,7 @@ private:
 	static constexpr float SHOT_RADIUS = 50.0f;
 	static constexpr float BLAST_RADIUS = 150.0f;
 	static constexpr float SEARCH_RADIUS = 600.0f;
+	static constexpr float BROUD_RADIUS = 650.0f;
 
 	//生存時間
 	static constexpr float ALIVE_TIME = 10.0f;
@@ -74,7 +75,7 @@ private:
 	static constexpr float SEARCH_MOVE_POW_MULTI = 1.0f;
 
 	//所有者タグ
-	std::weak_ptr<Collider> holder_;
+	const Collider* holder_;
 
 	//移動後座標
 	VECTOR movedPos_;

@@ -125,6 +125,9 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::MODEL, stagePath + L"GlideStage.mv1");
 	resourcesMap_.emplace(SRC::GLIDE_STAGE, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::MODEL, stagePath + L"GlideStartStage.mv1");
+	resourcesMap_.emplace(SRC::GLIDE_START_STAGE, std::move(res));
+
 	res = std::make_unique<Resource>(Resource::TYPE::MODEL, stagePath + L"Glass.mv1");
 	resourcesMap_.emplace(SRC::GLASS, std::move(res));
 

@@ -7,13 +7,13 @@
 #include "../../Player/Player.h"
 #include "CannonShot.h"
 
-CannonShot::CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR& _scl, std::weak_ptr<Collider> _holder, const float _speed)
+CannonShot::CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR& _scl, const Collider& _holder, const float _speed)
 {
 	movedPos_ = _pos;
 	trans_.pos = _pos;
 	trans_.quaRot = _rot;
 	trans_.scl = VScale(_scl,0.3f);
-	holder_ = _holder;
+	holder_ = &_holder;
 	speed_ = _speed + SPEED;
 	gravPow_ = Utility::VECTOR_ZERO;
 	movePow_ = Utility::VECTOR_ZERO;
@@ -43,6 +43,7 @@ void CannonShot::Load(void)
 void CannonShot::Init(void)
 {
 	//初期化
+	broudRadius_ = BROUD_RADIUS;
 	aliveCnt_ = 0.0f;
 	blastCnt_ = 0.0f;
 	state_ = STATE::ALIVE;
@@ -50,14 +51,14 @@ void CannonShot::Init(void)
 	movePow_ = Utility::VECTOR_ZERO;
 
 	//攻撃力
-	attack_ = dynamic_cast<const Player&>(holder_.lock()->GetParent()).GetAttack() * ATTACK_MULTI;
+	attack_ = dynamic_cast<const Player&>(*holder_->GetOwner()).GetAttack() * ATTACK_MULTI;
 
 	//コライダ
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SHOT_RADIUS);
-	MakeCollider(Collider::TAG::CANNON_SHOT, std::move(geo), { holder_.lock()->GetTag(),Collider::TAG::FOOT,Collider::TAG::SPIN});
+	MakeCollider(Collider::TAG::CANNON_SHOT, std::move(geo), { holder_->GetTag(),Collider::TAG::FOOT,Collider::TAG::SPIN});
 
 	geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SEARCH_RADIUS);
-	MakeCollider(Collider::TAG::SEARCH, std::move(geo), { holder_.lock()->GetTag(),Collider::TAG::FOOT,Collider::TAG::SPIN,Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT});
+	MakeCollider(Collider::TAG::SEARCH, std::move(geo), { holder_->GetTag(),Collider::TAG::FOOT,Collider::TAG::SPIN,Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT});
 	
 	trans_.Update();
 
@@ -76,19 +77,19 @@ void CannonShot::Draw(void)
 	draw_[state_]();
 }
 
-void CannonShot::OnHit(std::weak_ptr<Collider> _hitCol)
+void CannonShot::OnHit(const Collider& _hitCol)
 {
-	if (_hitCol.lock()->GetTag() == Collider::TAG::PLAYER1
-		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER2
-		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER3
-		|| _hitCol.lock()->GetTag() == Collider::TAG::PLAYER4
-		|| _hitCol.lock()->GetTag() == Collider::TAG::MACHINE
+	if (_hitCol.GetTag() == Collider::TAG::PLAYER1
+		|| _hitCol.GetTag() == Collider::TAG::PLAYER2
+		|| _hitCol.GetTag() == Collider::TAG::PLAYER3
+		|| _hitCol.GetTag() == Collider::TAG::PLAYER4
+		|| _hitCol.GetTag() == Collider::TAG::MACHINE
 		)
 	{
 		if (collider_[static_cast<int>(COL::SEARCH)]->IsHit())
 		{
 			//標的に対する移動ベクトル
-			VECTOR moveVecToTarget = Utility::GetMoveVec(movedPos_, _hitCol.lock()->GetParent().GetTrans().pos);
+			VECTOR moveVecToTarget = Utility::GetMoveVec(movedPos_, _hitCol.GetOwner()->GetTrans().pos);
 			
 			//下方向には補正しない
 			//moveVecToTarget.y = 0.0f;
@@ -109,8 +110,8 @@ void CannonShot::OnHit(std::weak_ptr<Collider> _hitCol)
 			sphere.SetRadius(BLAST_RADIUS);
 		}
 	}
-	else if (_hitCol.lock()->GetTag() == Collider::TAG::NORMAL_OBJECT
-		|| _hitCol.lock()->GetTag() == Collider::TAG::GROUND)
+	else if (_hitCol.GetTag() == Collider::TAG::NORMAL_OBJECT
+		|| _hitCol.GetTag() == Collider::TAG::GROUND)
 	{
 		if (!collider_[static_cast<int>(COL::MAIN)]->IsHit())return;
 
@@ -193,18 +194,18 @@ void CannonShot::DrawAlive(void)
 	//モデル描画
 	MV1DrawModel(trans_.modelId);
 
-	for (auto& col : collider_)
-	{
-		col->GetGeometry().Draw();
-	}
+	//for (auto& col : collider_)
+	//{
+	//	col->GetGeometry().Draw();
+	//}
 }
 
 void CannonShot::DrawBlast(void)
 {
-	for (auto& col : collider_)
-	{
-		col->GetGeometry().Draw();
-	}
+	//for (auto& col : collider_)
+	//{
+	//	col->GetGeometry().Draw();
+	//}
 }
 
 void CannonShot::DrawDead(void)

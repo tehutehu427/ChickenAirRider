@@ -95,10 +95,10 @@ void SceneGame::Update(void)
 	UIManager::GetInstance().Update();
 }
 
-void SceneGame::Draw(void)
+void SceneGame::Draw(const Camera& _camera)
 {
 	//•`‰æ
-	game_->Draw();
+	game_->Draw(_camera);
 }
 
 void SceneGame::Release(void)

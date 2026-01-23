@@ -11,28 +11,20 @@
         "number": 1
       },
       {
-        "animName": "fall",
-        "number": 3
-      },
-      {
-        "animName": "win",
-        "number": 4
-      },
-      {
-        "animName": "lose",
-        "number": 6
+        "animName": "run",
+        "number": 2
       },
       {
         "animName": "jump",
-        "number": 12
+        "number": 3
       },
       {
         "animName": "landing",
-        "number": 13
+        "number": 4
       },
       {
         "animName": "ride",
-        "number": 14
+        "number": 5
       }
     ]
   }

@@ -46,7 +46,7 @@ void GameCheck::Update(void)
 	update_[state_]();
 }
 
-void GameCheck::Draw(void)
+void GameCheck::Draw(const Camera& _camera)
 {
 	DebugDraw();
 

@@ -18,7 +18,7 @@ public:
 	void Update(void)override;
 
 	//‰Šú‰»
-	void Draw(void)override;
+	void Draw(const Camera& _camera)override;
 
 	//‰Šú‰»
 	void Release(void)override;

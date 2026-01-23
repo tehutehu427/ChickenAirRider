@@ -17,6 +17,7 @@ struct StageImportData
 	//当たり判定情報(必要なもののみ格納)
 	std::string geometry;			//形状名
 	std::string tag;				//タグ
+	float broudRadius;				//当たり判定前半径
 	float radius;					//半径
 	VECTOR localPos1;				//相対座標１
 	VECTOR localPos2;				//相対座標２
@@ -83,6 +84,12 @@ inline void FromJson(const nlohmann::json& _j, StageImportData& _data)
 		{
 			std::cerr << "StageObjectのJsonファイルにtagが存在しません" << "\n";
 			return;
+		}
+
+		//当たり判定前
+		if (_j.contains("broudRadius"))
+		{
+			_data.broudRadius = _j.value("broudRadius", 1.0f);
 		}
 
 		//半径

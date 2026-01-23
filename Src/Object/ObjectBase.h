@@ -35,13 +35,16 @@ public:
 
 	/// @brief それぞれの当たり判定後の処理
 	/// @param _hitCol 相手側の当たり判定タグ
-	virtual void OnHit(const std::weak_ptr<Collider> _hitCol) = 0;
+	virtual void OnHit(const Collider& _hitCol) = 0;
 
 	//モデル情報の取得
 	const Transform& GetTrans(void) const { return trans_; }
 
+	//当たり判定前半径の取得
+	const float GetBroudRadius(void) const { return broudRadius_; }
+
 	//コライダの取得
-	const std::vector<std::shared_ptr<Collider>>& GetColliders(void) { return collider_; };
+	const std::vector<std::unique_ptr<Collider>>& GetColliders(void) { return collider_; };
 
 	//モデルの色を変える
 	virtual void ChangeModelColor(const COLOR_F _colorScale);
@@ -56,10 +59,13 @@ protected:
 	Transform trans_;
 
 	//当たり判定関係
-	std::vector<std::shared_ptr<Collider>> collider_;	//全体の当たり判定情報
+	std::vector<std::unique_ptr<Collider>> collider_;	//全体の当たり判定情報
 
 	//エフェクト
 	std::unique_ptr<EffectController> effect_;
+
+	//当たり判定前用半径
+	float broudRadius_;
 
 	/// @brief 当たり判定作成(形状情報作成後)
 	/// @param _tag 自身の当たり判定タグ

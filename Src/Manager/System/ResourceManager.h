@@ -34,6 +34,7 @@ public:
 		//ステージオブジェクトモデル
 		MAIN_STAGE,			//ステージモデル
 		GLIDE_STAGE,		//エアグライダーステージモデル
+		GLIDE_START_STAGE,	//エアグライダースタートモデル
 
 		GLASS,				//草地モデル
 		BUILDING,			//ビルモデル

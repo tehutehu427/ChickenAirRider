@@ -1,10 +1,10 @@
 [
   {
-    "name": "GlideStage",
+    "name": "GlideStartStage",
     "position": {
       "x": 0.0,
-      "y": -50.0,
-      "z": 2000.0
+      "y": 500.0,
+      "z": 0.0
     },
     "scale": {
       "x": 1.0,
@@ -18,8 +18,8 @@
       "w": 1.0
     },
     "geometry": "cube",
-    "tag": "glideStage",
-    "broudRadius": 2500.0,
+    "tag": "gliderBorder",
+    "broudRadius": 1500.0,
     "radius": 0.0,
     "localPos1": {
       "x": -1000.0,
@@ -36,8 +36,8 @@
     "name": "WorldBorder",
     "position": {
       "x": 0.0,
-      "y": 0.0,
-      "z": 2000.0
+      "y": 100.0,
+      "z": 0.0
     },
     "scale": {
       "x": 1.0,
@@ -69,8 +69,8 @@
     "name": "WorldBorder",
     "position": {
       "x": 1000.0,
-      "y": 0.0,
-      "z": 2000.0
+      "y": 100.0,
+      "z": 0.0
     },
     "scale": {
       "x": 1.0,
@@ -102,8 +102,8 @@
     "name": "WorldBorder",
     "position": {
       "x": -1000.0,
-      "y": 0.0,
-      "z": 2000.0
+      "y": 100.0,
+      "z": 0.0
     },
     "scale": {
       "x": 1.0,
@@ -129,6 +129,39 @@
       "x": 10.0,
       "y": 10000.0,
       "z": 1000.0
+    }
+  },
+  {
+    "name": "WorldBorder",
+    "position": {
+      "x": 0.0,
+      "y": 100.0,
+      "z": -1000.0
+    },
+    "scale": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0
+    },
+    "quaternion": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+    },
+    "geometry": "cube",
+    "tag": "gliderBorder",
+    "broudRadius": 5500.0,
+    "radius": 0.0,
+    "localPos1": {
+      "x": -1000.0,
+      "y": -10.0,
+      "z": -10.0
+    },
+    "localPos2": {
+      "x": 1000.0,
+      "y": 10000.0,
+      "z": 10.0
     }
   }
 ]

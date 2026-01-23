@@ -20,7 +20,7 @@ public:
 	virtual void Update(void) = 0;
 
 	//•`‰æ
-	virtual void Draw(void) = 0;
+	virtual void Draw(const Camera& _camera) = 0;
 
 	//‰ð•ú
 	virtual void Release(void) = 0;

@@ -63,6 +63,8 @@ public:
 	static constexpr float FPS_LIMIT_X_UP_RAD = -80.0f * (DX_PI_F / 180.0f);
 	static constexpr float FPS_LIMIT_X_DW_RAD = 70.0f * (DX_PI_F / 180.0f);
 
+	//カメラの描画制限
+	static constexpr float VIEW_RANGE = 24000.0f;
 	
 	// カメラモード
 	enum class MODE

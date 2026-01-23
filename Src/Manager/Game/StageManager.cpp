@@ -23,6 +23,7 @@ void StageManager::Load(void)
 	importData_.emplace(MODE::MAIN, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"MainStage.json")));
 	importData_.emplace(MODE::BATTLE, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"BattleStage.json")));
 	importData_.emplace(MODE::AIR_GLIDER, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"AirGliderStage.json")));
+	gliderStartStageData_ = (LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"AirGliderStartStage.json")));
 }
 
 void StageManager::Init(const MODE _mode, int _createNum)
@@ -32,6 +33,20 @@ void StageManager::Init(const MODE _mode, int _createNum)
 
 	//モード設定
 	mode_ = _mode;
+
+	//エアグライダー系のみスタート台を作る
+	if (mode_ == MODE::AIR_GLIDER)
+	{
+		//ステージの作成
+		for (const auto& data : gliderStartStageData_)
+		{
+			//モデルの作成
+			int modelId = modelId_[data.name]();
+
+			//ステージの生成
+			stages_.emplace_back(std::make_unique<StageObject>(data, modelId, tag_[data.tag], data.position));
+		}
+	}
 
 	//生成数分作成
 	for (int i = 0; i < _createNum; i++)
@@ -60,18 +75,18 @@ void StageManager::Init(const MODE _mode, int _createNum)
 
 void StageManager::Update(void)
 {
-	//ステージの更新
-	for (const auto& stage : stages_)
-	{
-		stage->Update();
-	}
+	//モードごとの更新
+	update_[mode_]();
 }
 
-void StageManager::Draw(void)
+void StageManager::Draw(const Camera& _camera)
 {
 	//ステージの描画
 	for (const auto& stage : stages_)
 	{
+		//カメラ制限
+		if (Utility::MagnitudeF(VSub(stage->GetTrans().pos, _camera.GetPos())) > Camera::VIEW_RANGE)continue;
+
 		stage->Draw();
 	}
 }
@@ -115,6 +130,12 @@ StageManager::StageManager(void)
 		auto& res = ResourceManager::GetInstance();
 		return res.LoadModelDuplicate(ResourceManager::SRC::GLIDE_STAGE);
 	};
+	modelId_["GlideStartStage"] = [this](void)
+	{
+		//インスタンス
+		auto& res = ResourceManager::GetInstance();
+		return res.LoadModelDuplicate(ResourceManager::SRC::GLIDE_START_STAGE);
+	};
 	modelId_["WorldBorder"] = [this](void)
 	{
 		//ワールドボーダーなのでモデルなし
@@ -125,13 +146,34 @@ StageManager::StageManager(void)
 	tag_["normalObject"] = Collider::TAG::NORMAL_OBJECT;
 	tag_["building"] = Collider::TAG::NORMAL_OBJECT;
 	tag_["worldBorder"] = Collider::TAG::WORLD_BORDER;
+	tag_["gliderBorder"] = Collider::TAG::GLIDER_BORDER;
+	tag_["glideStage"] = Collider::TAG::GLIDE_STAGE;
 	tag_["tree"] = Collider::TAG::TREE;
 	tag_["glass"] = Collider::TAG::GROUND;
 	tag_["ground"] = Collider::TAG::GROUND;
+
+	update_[MODE::MAIN] = [this](void){UpdateNormal(); };
+	update_[MODE::BATTLE] = [this](void){UpdateNormal(); };
+	update_[MODE::AIR_GLIDER] = [this](void){UpdateLoop(); };
 
 	mode_ = MODE::MAIN;
 }
 
 StageManager::~StageManager(void)
 {
+}
+
+void StageManager::UpdateNormal(void)
+{
+	//ステージの更新
+	for (const auto& stage : stages_)
+	{
+		stage->Update();
+	}
+}
+
+void StageManager::UpdateLoop(void)
+{
+	//通常更新
+	UpdateNormal();
 }

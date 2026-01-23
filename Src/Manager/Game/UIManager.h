@@ -70,6 +70,7 @@ private:
 	static constexpr int HEALTH_BOX_LOCAL_POS_Y = 0;
 	static constexpr int HEALTH_BOX = 1;
 	static constexpr int HEALTH_LOCAL = 3;
+	static constexpr int HEALTH_BAR_HEIGHT = 100;
 
 	//UI�̈ʒu(Normalize)
 	static constexpr Vector2F HEALTH_POS = { 0.95f,0.6f };

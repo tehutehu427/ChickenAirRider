@@ -70,6 +70,10 @@ public:
 
 	// lÌŒÜ“ü
 	static int Round(float v);
+	//Ø‚èã‚°
+	static int RoundUp(float v);
+	//Ø‚è‰º‚°
+	static int RoundDown(float v);
 
 	// •¶š—ñ‚Ì•ªŠ„
 	static std::vector <std::string> Split(std::string& line, char delimiter);

@@ -33,7 +33,7 @@ public:
 	void Draw(void)override;
 
 	//“–‚½‚è”»’è
-	void OnHit(const std::weak_ptr<Collider> _hitCol)override;
+	void OnHit(const Collider& _hitCol)override;
 
 	//“–‚½‚è”»’è‚Ì¶¬
 	void CreateCol(void);
@@ -69,6 +69,7 @@ private:
 
 	//æÔ”»’è”¼Œa
 	static constexpr float RIDE_COL_RADIUS = 250.0f;
+	static constexpr float BROUD_RADIUS = 300.0f;
 	
 	//ƒ€ƒeƒLŠÔ
 	static constexpr float INVINCIBLE_SPIN = 0.2f;

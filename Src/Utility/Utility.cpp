@@ -8,6 +8,16 @@ int Utility::Round(float v)
     return static_cast<int>(roundf(v));
 }
 
+int Utility::RoundUp(float v)
+{
+    return static_cast<int>(ceilf(v));
+}
+
+int Utility::RoundDown(float v)
+{
+    return static_cast<int>(floorf(v));
+}
+
 std::vector<std::string> Utility::Split(std::string& line, char delimiter)
 {
 

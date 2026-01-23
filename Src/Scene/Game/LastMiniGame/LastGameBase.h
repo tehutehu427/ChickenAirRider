@@ -20,7 +20,7 @@ public:
 	virtual void Update(void)override;
 
 	//•`‰æ
-	virtual void Draw(void)override;
+	virtual void Draw(const Camera& _camera)override;
 
 	//‰ð•ú
 	virtual void Release(void)override;

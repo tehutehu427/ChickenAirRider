@@ -205,29 +205,38 @@ void UIManager::DrawHealth(const int _playerIndex)
 	int healthPosX = posX + static_cast<int>(HEALTH_POS.x * viewPort_[_playerIndex].w);
 	int healthPosY = posY + static_cast<int>(HEALTH_POS.y * viewPort_[_playerIndex].h);
 
-	//最大体力
-	DrawBox(healthPosX - HEALTH_BOX_LOCAL_POS_X,
-		healthPosY + HEALTH_BOX_LOCAL_POS_Y,
+	float baseBottom = healthPosY + HEALTH_BOX_LOCAL_POS_Y;
+	float baseTop = baseBottom - HEALTH_BAR_HEIGHT;
+
+	// 最大体力（背景）
+	DrawBox(
+		healthPosX - HEALTH_BOX_LOCAL_POS_X,
+		baseTop,
 		healthPosX + HEALTH_BOX_LOCAL_POS_X,
-		healthPosY + HEALTH_BOX_LOCAL_POS_Y - maxHealth * HEALTH_BOX,
-		Utility::BLACK, true);
+		baseBottom,
+		Utility::BLACK,
+		true
+	);
 
-	//割合
-	float healthRate = nowHealth / maxHealth;
-	healthRate = std::clamp(healthRate, 0.0f, 1.0f);
-
-	float barMaxHeight = HEALTH_BOX * maxHealth; // バー全体の高さ
-	float barHeight = barMaxHeight * healthRate;
-
-	if (nowHealth > 0.0f)
+	if (nowHealth > 0.0f && maxHealth > 0.0f)
 	{
-		int left = healthPosX - HEALTH_BOX_LOCAL_POS_X + HEALTH_LOCAL;
-		int right = healthPosX + HEALTH_BOX_LOCAL_POS_X - HEALTH_LOCAL;
+		float healthRate = nowHealth / maxHealth;
+		float rawHeight = HEALTH_BAR_HEIGHT * healthRate;
 
-		int bottom = healthPosY + HEALTH_BOX_LOCAL_POS_Y + HEALTH_LOCAL;
-		int top = bottom - barHeight;
+		// パディング込みで描画できる最低高さ
+		float minHeight = 2.0f * HEALTH_LOCAL;
 
-		DrawBox(left, top, right, bottom, Utility::RED, true);
+		// クランプ
+		float healthHeight = std::max(rawHeight, minHeight);
+
+		DrawBox(
+			healthPosX - HEALTH_BOX_LOCAL_POS_X + HEALTH_LOCAL,
+			baseBottom - healthHeight + HEALTH_LOCAL,
+			healthPosX + HEALTH_BOX_LOCAL_POS_X - HEALTH_LOCAL,
+			baseBottom - HEALTH_LOCAL,
+			Utility::RED,
+			true
+		);
 	}
 }
 

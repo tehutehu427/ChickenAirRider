@@ -35,7 +35,7 @@ public:
 	virtual void Draw(void)override;
 
 	//“–‚½‚è”»’è
-	virtual void OnHit(std::weak_ptr<Collider> _hitCol)override;
+	virtual void OnHit(const Collider& _hitCol)override;
 
 	//€–S”»’è‚Ìæ“¾
 	const bool IsDead(void)const { return state_ == STATE::DEAD; }
@@ -56,6 +56,7 @@ protected:
 	//”¼Œa
 	static constexpr float OBJECT_HIT_RADIUS = 70.0f;
 	static constexpr float PLAYER_HIT_RADIUS = 150.0f;
+	static constexpr float BROUD_RADIUS = 200.0f;
 
 	//æ“¾Œã•\¦‘Š‘ÎÀ•W
 	static constexpr float LOCAL_HITER_POS_Y = 60.0f;
@@ -93,6 +94,6 @@ protected:
 	bool isCreateCol_;
 
 	//æ“¾Ò
-	std::weak_ptr<Collider>hiter_;
+	const Collider* hiter_;
 };
 

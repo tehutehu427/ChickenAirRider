@@ -32,6 +32,7 @@ void Machine::Load(void)
 void Machine::Init(void)
 {
 	//初期化
+	broudRadius_ = BROUD_RADIUS;
 	invincible_ = 0;
 
 	//ダメージの初期化
@@ -67,12 +68,12 @@ void Machine::Draw(void)
 	//}
 }
 
-void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
+void Machine::OnHit(const Collider& _hitCol)
 {
-	if (_hitCol.lock()->GetTag() == Collider::TAG::SPIN)
+	if (_hitCol.GetTag() == Collider::TAG::SPIN)
 	{
 		//攻撃者から攻撃力を取得
-		const Player& player = dynamic_cast<const Player&>(_hitCol.lock()->GetParent());
+		const Player& player = dynamic_cast<const Player&>(*_hitCol.GetOwner());
 		const float atk = player.GetAttack();
 
 		//ダメージ
@@ -81,10 +82,10 @@ void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
 		//無敵時間リセット
 		invincible_ = INVINCIBLE_SPIN;
 	}
-	else if(_hitCol.lock()->GetTag() == Collider::TAG::CANNON_SHOT)
+	else if(_hitCol.GetTag() == Collider::TAG::CANNON_SHOT)
 	{
 		//攻撃者から攻撃力を取得
-		const CannonShot& shot = dynamic_cast<const CannonShot&>(_hitCol.lock()->GetParent());
+		const CannonShot& shot = dynamic_cast<const CannonShot&>(*_hitCol.GetOwner());
 		const float atk = shot.GetAttack();
 
 		//ダメージ

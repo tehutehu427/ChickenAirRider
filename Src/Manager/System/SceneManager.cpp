@@ -99,6 +99,9 @@ void SceneManager::Init(void)
 	//初期シーンの挿入
 	changeScene_[CHANGE_SCENE_STATE::PUSH_BACK]();
 
+	//初期カメラ
+	CreateCameras(1);
+
 	screenIndex_ = 0;
 }
 
@@ -196,7 +199,7 @@ void SceneManager::Draw(void)
 		for (auto& scene : scene_)
 		{
 			if (scene == nullptr)continue;
-			scene->Draw();
+			scene->Draw(*cameras_.front());
 		}
 
 		//スカイドームの描画
@@ -570,7 +573,7 @@ void SceneManager::DrawMultiScreen()
 		// 描画
 		for (const auto& scene : scene_)
 		{
-			scene->Draw();
+			scene->Draw(*cameras_[index]);
 		}
 
 		//スカイドームの描画

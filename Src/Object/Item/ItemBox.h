@@ -35,7 +35,7 @@ public:
 	void Draw(void)override;
 
 	//“–‚½‚è”»’è
-	void OnHit(std::weak_ptr<Collider> _hitCol)override;
+	void OnHit(const Collider& _hitCol)override;
 
 	//€–S”»’è‚Ìæ“¾
 	const bool IsDead(void)const { return isDead_; }
@@ -50,6 +50,9 @@ private:
 
 	//“–‚½‚è”»’è‚Ì”¼•ª
 	static constexpr VECTOR BOX_HALF = { 100.0f,100.0f,100.0f };
+
+	//“–‚½‚è”»’è‘O—p
+	static constexpr float BROUD_RADIUS = 200.0f;
 
 	//‘«Œ³”»’è
 	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };				//ü”»’è‚Ìã‘Š‘ÎÀ•W

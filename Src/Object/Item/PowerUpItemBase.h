@@ -25,7 +25,7 @@ public:
 	void Draw(void)override;
 
 	//当たり判定
-	void OnHit(std::weak_ptr<Collider> _hitCol)override;
+	void OnHit(const Collider& _hitCol)override;
 
 	//パラメーターの取得
 	const Parameter& GetParam(void)const { return param_; }

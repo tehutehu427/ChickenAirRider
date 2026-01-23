@@ -26,8 +26,8 @@ void AirGlider::Init(void)
 	auto& plMng = PlayerManager::GetInstance();
 
 	//各初期化
-	plMng.ResetPlayer();
-	stgMng.Init(StageManager::MODE::AIR_GLIDER,15);
+	plMng.ResetPlayer(START_POS);
+	stgMng.Init(StageManager::MODE::AIR_GLIDER,100);
 
 	//共通初期化
 	LastGameBase::Init();
@@ -65,24 +65,24 @@ void AirGlider::Update(void)
 	const int plNum = setting.GetPlayerNum();
 
 	//プレイヤーの死亡状態で勝敗を決める
-	for (int i = 0; i < plNum; i++)
-	{
-		//プレイヤー
-		const auto& pl = plMng.GetPlayer(i);
+	//for (int i = 0; i < plNum; i++)
+	//{
+	//	//プレイヤー
+	//	const auto& pl = plMng.GetPlayer(i);
 
-		//機体から降りたら
-		if (pl.GetState() != Player::STATE::RIDE_MACHINE)
-		{
-			//順位決定
-			ConfirmRank(pl.GetPlayerIndex());
-		}
-	}
+	//	//機体から降りたら
+	//	if (pl.GetState() != Player::STATE::RIDE_MACHINE)
+	//	{
+	//		//順位決定
+	//		ConfirmRank(pl.GetPlayerIndex());
+	//	}
+	//}
 
 	//共通更新
 	LastGameBase::Update();
 }
 
-void AirGlider::Draw(void)
+void AirGlider::Draw(const Camera& _camera)
 {
 	//インスタンス
 	auto& setting = GameSetting::GetInstance();
@@ -90,7 +90,7 @@ void AirGlider::Draw(void)
 	auto& plMng = PlayerManager::GetInstance();
 
 	//ステージの描画
-	stgMng.Draw();
+	stgMng.Draw(_camera);
 
 	//プレイヤーの描画
 	plMng.Draw();

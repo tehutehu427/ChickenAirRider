@@ -5,6 +5,7 @@
 #include<functional>
 #include"../Object/Common/Collider.h"
 #include"../Object/Stage/StageImportData.h"
+#include"../System/Camera.h"
 
 class Geometry;
 class StageObject;
@@ -12,15 +13,6 @@ class StageObject;
 class StageManager
 {
 public:
-
-	//オブジェクトの種類
-	enum class OBJECT_TYPE
-	{
-		GLASS,		//草地
-		BUILDING,	//ビル
-
-		MAX,
-	};
 
 	//ゲームモードごとのステージ
 	enum class MODE
@@ -47,7 +39,7 @@ public:
 	void Update(void);
 
 	//描画
-	void Draw(void);
+	void Draw(const Camera& _camera);
 
 	//解放
 	void Destroy(void);
@@ -62,6 +54,7 @@ private:
 
 	//インポートデータ
 	std::unordered_map<MODE,std::vector<StageImportData>> importData_;
+	std::vector<StageImportData>gliderStartStageData_;
 
 	//名前管理
 	std::unordered_map<std::string, std::function<int(void)>> modelId_;
@@ -73,8 +66,8 @@ private:
 	//ステージ
     std::vector<std::unique_ptr<StageObject>> stages_;
 
-	//ステージの生成数
-	int createNum_;
+	//更新
+	std::unordered_map<MODE, std::function<void(void)>> update_;
 
 	//コンストラクタ
 	StageManager(void);
@@ -85,4 +78,8 @@ private:
 
 	//デストラクタ
 	~StageManager(void);
+
+	//更新
+	void UpdateNormal(void);
+	void UpdateLoop(void);
 };

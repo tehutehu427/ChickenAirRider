@@ -83,6 +83,9 @@ void ItemBox::Init(void)
 	health_ = HEALTH_MAX;
 	invincible_ = INVINCIBLE_SPIN;
 
+	//当たり判定前
+	broudRadius_ = BROUD_RADIUS;
+
 	//更新
 	trans_.Update();
 }
@@ -130,18 +133,18 @@ void ItemBox::Draw(void)
 	renderer_->Draw();
 }
 
-void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
+void ItemBox::OnHit(const Collider& _hitCol)
 {
 	//足元
 	const auto& footCol = collider_[FOOT_COL];
 
-	const auto& hit = _hitCol.lock();
-	const auto& hitTag = hit->GetTag();
+	const auto& hit = _hitCol;
+	const auto& hitTag = hit.GetTag();
 
 	if (hitTag == Collider::TAG::SPIN && invincible_ < 0)
 	{
 		//スピンをもつのはプレイヤーのみ
-		const auto& player = dynamic_cast<const Player&>(_hitCol.lock()->GetParent());
+		const auto& player = dynamic_cast<const Player&>(*_hitCol.GetOwner());
 
 		//攻撃力分ダメージ
 		health_ -= player.GetAttack() * SPIN_DAMAGE_DEF;
@@ -152,7 +155,7 @@ void ItemBox::OnHit(std::weak_ptr<Collider> _hitCol)
 	else if (hitTag == Collider::TAG::CANNON_SHOT && invincible_ < 0)
 	{
 		//ショット
-		const auto& shot = dynamic_cast<const CannonShot&>(_hitCol.lock()->GetParent());
+		const auto& shot = dynamic_cast<const CannonShot&>(*_hitCol.GetOwner());
 
 		//ダメージ
 		health_ -= shot.GetAttack();

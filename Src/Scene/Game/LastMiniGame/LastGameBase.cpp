@@ -68,25 +68,25 @@ void LastGameBase::Update(void)
 	sky_->Update();
 
 	//順位が決まった
-	if (IsComfirmRanks())
-	{
-		//プレイヤー人数
-		const int plNum = setting.GetPlayerNum();
+	//if (IsComfirmRanks())
+	//{
+	//	//プレイヤー人数
+	//	const int plNum = setting.GetPlayerNum();
 
-		//最後が勝者
-		for (int i = 0; i < plNum; i++)
-		{
-			//プレイヤー
-			const auto& pl = plMng.GetPlayer(i);
-			ConfirmRank(pl.GetPlayerIndex());
-		}
+	//	//最後が勝者
+	//	for (int i = 0; i < plNum; i++)
+	//	{
+	//		//プレイヤー
+	//		const auto& pl = plMng.GetPlayer(i);
+	//		ConfirmRank(pl.GetPlayerIndex());
+	//	}
 
-		//タイトルへ
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE, true, true);
-	}
+	//	//タイトルへ
+	//	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE, true, true);
+	//}
 }
 
-void LastGameBase::Draw(void)
+void LastGameBase::Draw(const Camera& _camera)
 {
 	DebugDraw();
 }

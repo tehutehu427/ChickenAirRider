@@ -40,6 +40,7 @@ Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE
 	damage_ = 0.0f;
 	invincible_ = 0.0f;
 	canGetOff_ = false;
+	canMove_ = false;
 
 	//操作タイプ
 	createLogic_[OPERATION_TYPE::USER] = [this](void) {	logic_ = std::make_unique<UserLogic>(padNo_); };
@@ -99,6 +100,9 @@ void Player::Load(void)
 
 void Player::Init(void)
 {
+	//当たり判定前用
+	broudRadius_ = BROUD_RADIUS;
+
 	//座標
 	movedPos_ = VAdd(Utility::VECTOR_ZERO, VScale(LOCAL_POS, static_cast<float>(playerIndex_)));
 	trans_.pos = movedPos_;
@@ -118,14 +122,15 @@ void Player::Init(void)
 
 	machine_->Init();
 	
-	//体力
+	//初期化
 	damage_ = 0.0f;
-
-	//初期更新
-	Update();
+	canMove_ = true;
 
 	//初期状態
 	ChangeState(STATE::RIDE_MACHINE);
+
+	//初期更新
+	Update();
 }
 
 void Player::Update(void)
@@ -151,11 +156,15 @@ void Player::Update(void)
 	prePos_ = trans_.pos;
 	trans_.pos = movedPos_;
 
-	//状態ごとの更新
-	update_[state_]();
+	//動けないかどうか
+	if (canMove_)
+	{
+		//状態ごとの更新
+		update_[state_]();
 
-	//移動
-	movedPos_ = VAdd(movedPos_, movePow_);
+		//移動
+		movedPos_ = VAdd(movedPos_, movePow_);
+	}
 
 	//着地していないなら
 	if (!isGrounded_)
@@ -173,16 +182,16 @@ void Player::Draw(void)
 	//描画
 	draw_[state_]();
 
-	for (auto& col : collider_)
-	{
-		col->GetGeometry().Draw(0);
-	}
+	//for (auto& col : collider_)
+	//{
+	//	col->GetGeometry().Draw(0);
+	//}
 
 	//DrawFormatString(0, 32, 0xffffff, L"%.2f,%.2f,%.2f", trans_.quaRot.ToEuler().x, trans_.quaRot.ToEuler().y, trans_.quaRot.ToEuler().z);
 	//DrawFormatString(0, 80, 0xffffff, L"%.2f,%.2f,%.2f", trans_.pos.x, trans_.pos.y, trans_.pos.z);
 }
 
-void Player::OnHit(const std::weak_ptr<Collider> _hitCol)
+void Player::OnHit(const Collider& _hitCol)
 {
 	//ヒット処理
 	onHit_->OnHit(_hitCol);

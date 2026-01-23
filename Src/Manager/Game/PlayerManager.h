@@ -30,7 +30,7 @@ public:
 	const Player& GetPlayer(const int _playerIndex) { return *players_[_playerIndex]; }
 
 	//プレイヤーの状態の初期化
-	void ResetPlayer(void);
+	void ResetPlayer(const VECTOR _pos = {0.0f,0.0f,0.0f});
 
 	//プレイヤーの降車判定
 	void PlayerCanGetOff(const bool _getOff);

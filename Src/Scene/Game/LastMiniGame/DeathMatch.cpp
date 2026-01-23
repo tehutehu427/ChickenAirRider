@@ -96,7 +96,7 @@ void DeathMatch::Update(void)
 	LastGameBase::Update();
 }
 
-void DeathMatch::Draw(void)
+void DeathMatch::Draw(const Camera& _camera)
 {
 	//インスタンス
 	auto& setting = GameSetting::GetInstance();
@@ -106,7 +106,7 @@ void DeathMatch::Draw(void)
 	auto& itemMng = ItemManager::GetInstance();
 
 	//ステージの描画
-	stgMng.Draw();
+	stgMng.Draw(_camera);
 
 	//機体の描画
 	//machineMng.Draw();
