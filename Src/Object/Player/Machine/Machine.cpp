@@ -68,12 +68,15 @@ void Machine::Draw(void)
 	//}
 }
 
-void Machine::OnHit(const Collider& _hitCol)
+void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
-	if (_hitCol.GetTag() == Collider::TAG::SPIN)
+	//相手コライダ
+	const auto& hitCol = _hitCol.lock();
+
+	if (hitCol->GetTag() == Collider::TAG::SPIN)
 	{
 		//攻撃者から攻撃力を取得
-		const Player& player = dynamic_cast<const Player&>(_hitCol.GetOwner());
+		const Player& player = dynamic_cast<const Player&>(hitCol->GetOwner());
 		const float atk = player.GetAttack();
 
 		//ダメージ
@@ -82,10 +85,10 @@ void Machine::OnHit(const Collider& _hitCol)
 		//無敵時間リセット
 		invincible_ = INVINCIBLE_SPIN;
 	}
-	else if(_hitCol.GetTag() == Collider::TAG::CANNON_SHOT)
+	else if(hitCol->GetTag() == Collider::TAG::CANNON_SHOT)
 	{
 		//攻撃者から攻撃力を取得
-		const CannonShot& shot = dynamic_cast<const CannonShot&>(_hitCol.GetOwner());
+		const CannonShot& shot = dynamic_cast<const CannonShot&>(hitCol->GetOwner());
 		const float atk = shot.GetAttack();
 
 		//ダメージ

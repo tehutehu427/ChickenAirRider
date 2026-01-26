@@ -65,7 +65,7 @@ void StageObject::Draw(void)
 	color_ = 0;
 }
 
-void StageObject::OnHit(const Collider& _hitCol)
+void StageObject::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
 	color_ = 0xff0000;
 }

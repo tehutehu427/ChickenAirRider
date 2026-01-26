@@ -28,7 +28,7 @@ public:
 	static CollisionManager& GetInstance(void) { return *instance_; }
 
 	//コライダの追加
-	void AddCollider(Collider* _collider);
+	void AddCollider(const std::shared_ptr<Collider> _collider);
 
 	//必要なくなったコライダの削除(更新の最後に置く)
 	void Sweep(void);
@@ -45,7 +45,7 @@ private:
 	static CollisionManager* instance_;
 
 	//当たり判定格納
-	std::vector<Collider*>colliders_;
+	std::vector<std::shared_ptr<Collider>>colliders_;
 
 	//当たり判定距離の二乗
 	std::map<Collider::TAG, float> hitRange_;

@@ -30,7 +30,7 @@ ObjectBase::~ObjectBase(void)
 void ObjectBase::Sweep(void)
 {
 	//削除された判定を配列から破棄
-	std::erase_if(collider_, [](std::unique_ptr<Collider>& _collider) {return _collider->IsDead(); });
+	std::erase_if(collider_, [](std::shared_ptr<Collider>& _collider) {return _collider->IsDead(); });
 }
 
 void ObjectBase::ChangeModelColor(const COLOR_F _colorScale)
@@ -48,13 +48,13 @@ void ObjectBase::ChangeModelColor(const COLOR_F _colorScale)
 void ObjectBase::MakeCollider(const Collider::TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags)
 {
 	//情報を使ってコライダの作成
-	std::unique_ptr<Collider> collider = std::make_unique<Collider>(*this, _tag, std::move(_geometry), _notHitTags);
+	std::shared_ptr<Collider> collider = std::make_shared<Collider>(*this, _tag, std::move(_geometry), _notHitTags);
 
 	//コライダを管理マネージャーに追加
-	CollisionManager::GetInstance().AddCollider(collider.get());
+	CollisionManager::GetInstance().AddCollider(collider);
 
 	//配列に格納
-	collider_.push_back(std::move(collider));
+	collider_.push_back(collider);
 }
 
 void ObjectBase::DeleteColliderAtTag(Collider::TAG _tag)
@@ -67,7 +67,7 @@ void ObjectBase::DeleteColliderAtTag(Collider::TAG _tag)
 	}
 
 	//削除
-	std::erase_if(collider_, [](std::unique_ptr<Collider>& _collider) {return _collider->IsDead(); });
+	std::erase_if(collider_, [](std::shared_ptr<Collider>& _collider) {return _collider->IsDead(); });
 }
 
 void ObjectBase::DeleteAllCollider(void)

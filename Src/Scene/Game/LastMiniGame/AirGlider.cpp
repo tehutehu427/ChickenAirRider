@@ -64,19 +64,26 @@ void AirGlider::Update(void)
 	//プレイヤー人数
 	const int plNum = setting.GetPlayerNum();
 
-	//プレイヤーの死亡状態で勝敗を決める
-	//for (int i = 0; i < plNum; i++)
-	//{
-	//	//プレイヤー
-	//	const auto& pl = plMng.GetPlayer(i);
+	//プレイヤーの飛距離で勝敗を決める
+	for (int i = 0; i < plNum; i++)
+	{
+		//プレイヤー
+		const auto& pl = plMng.GetPlayer(i);
 
-	//	//機体から降りたら
-	//	if (pl.GetState() != Player::STATE::RIDE_MACHINE)
-	//	{
-	//		//順位決定
-	//		ConfirmRank(pl.GetPlayerIndex());
-	//	}
-	//}
+		//移動が出来なくなったら
+		if (!pl.GetCanMove())
+		{
+			//プレイヤー番号と飛距離(Z座標)を保持
+			flightDistance_.emplace(pl.GetPlayerIndex(), pl.GetTrans().pos.z);
+		}
+	}
+
+	//プレイヤーごとの飛距離が決まった
+	if (plMng.GetPlayerSize() <= flightDistance_.size())
+	{
+		//飛距離比較
+		CompDistance();
+	}
 
 	//共通更新
 	LastGameBase::Update();
@@ -99,4 +106,41 @@ void AirGlider::Draw(const Camera& _camera)
 void AirGlider::Release(void)
 {
 	LastGameBase::Release();
+}
+
+void AirGlider::CompDistance(void)
+{
+	//インスタンス
+	auto& setting = GameSetting::GetInstance();
+	auto& plMng = PlayerManager::GetInstance();
+
+	//プレイヤー人数
+	const int plNum = setting.GetPlayerNum();
+
+	//順位決定用
+	std::unordered_map<int,int> decideRank;
+
+	for (int i = 0; i < plNum; i++)
+	{
+		//順位
+		int rank = plNum;
+		for (int j = 0; j < plNum; j++)
+		{
+			//比較
+			if (i != j && flightDistance_[i] > flightDistance_[j])
+			{
+				//順位を上に
+				rank--;
+			}
+		}
+
+		//順位保存
+		decideRank.emplace(rank, i);
+	}
+
+	//順位の設定
+	for (const auto& plRank : decideRank)
+	{
+		ConfirmRank(plRank.second);
+	}
 }

@@ -27,5 +27,11 @@ private:
 
 	//プレイヤーのスタート位置
 	static constexpr VECTOR START_POS = { -100.0f,600.0f,0.0f };
+
+	//飛距離
+	std::unordered_map<int, float> flightDistance_;
+
+	//飛距離の比較
+	void CompDistance(void);
 };
 

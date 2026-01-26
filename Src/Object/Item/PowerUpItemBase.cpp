@@ -89,7 +89,7 @@ void PowerUpItemBase::Draw(void)
 	ItemBase::Draw();
 }
 
-void PowerUpItemBase::OnHit(const Collider& _hitCol)
+void PowerUpItemBase::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
 	ItemBase::OnHit(_hitCol);
 }

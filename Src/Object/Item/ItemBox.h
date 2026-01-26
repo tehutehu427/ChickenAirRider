@@ -35,7 +35,7 @@ public:
 	void Draw(void)override;
 
 	//“–‚½‚è”»’è
-	void OnHit(const Collider& _hitCol)override;
+	void OnHit(const std::weak_ptr<Collider> _hitCol)override;
 
 	//Ž€–S”»’è‚ÌŽæ“¾
 	const bool IsDead(void)const { return isDead_; }

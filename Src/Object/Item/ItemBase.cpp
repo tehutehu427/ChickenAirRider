@@ -19,8 +19,6 @@ ItemBase::ItemBase(const VECTOR& _pos, const VECTOR& _vec)
 
 ItemBase::~ItemBase(void)
 {
-	//所持情報のみ破棄(本体は消さない)
-	hiter_ = nullptr;
 }
 
 void ItemBase::Load(void)
@@ -58,24 +56,30 @@ void ItemBase::Draw(void)
 	}
 	else
 	{
+		//所持者
+		const auto& hiter = hiter_.lock();
+
 		//取得者がいないとスキップ
-		if (hiter_ == nullptr)return;
+		if (hiter == nullptr)return;
 
 		//取得者の座標
-		VECTOR hiterPos = hiter_->GetOwner().GetTrans().pos;
-		Sphere& sphere = dynamic_cast<Sphere&>(hiter_->GetGeometry());
+		VECTOR hiterPos = hiter->GetOwner().GetTrans().pos;
+		Sphere& sphere = dynamic_cast<Sphere&>(hiter->GetGeometry());
 		
 		//小さめに描画
 		DrawBillboard3D(VGet(hiterPos.x, hiterPos.y + sphere.GetRadius() + LOCAL_HITER_POS_Y, hiterPos.z), 0.5f, 0.5f, GOT_IMG_SIZE, 0.0f, trans_.modelId, true);
 	}
 }
 
-void ItemBase::OnHit(const Collider& _hitCol)
+void ItemBase::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
-	if (_hitCol.GetTag() == Collider::TAG::PLAYER1
-		|| _hitCol.GetTag() == Collider::TAG::PLAYER2
-		|| _hitCol.GetTag() == Collider::TAG::PLAYER3
-		|| _hitCol.GetTag() == Collider::TAG::PLAYER4
+	//所持者
+	const auto& hiter = _hitCol.lock();
+	
+	if (hiter->GetTag() == Collider::TAG::PLAYER1
+		|| hiter->GetTag() == Collider::TAG::PLAYER2
+		|| hiter->GetTag() == Collider::TAG::PLAYER3
+		|| hiter->GetTag() == Collider::TAG::PLAYER4
 		)
 	{
 		//コライダ削除
@@ -88,9 +92,9 @@ void ItemBase::OnHit(const Collider& _hitCol)
 		state_ = STATE::GOT;
 
 		//取得者
-		hiter_ = &_hitCol;
+		hiter_ = _hitCol;
 	}
-	else if (_hitCol.GetTag() == Collider::TAG::NORMAL_OBJECT)
+	else if (hiter->GetTag() == Collider::TAG::NORMAL_OBJECT)
 	{
 		//コライダ
 		auto& mainCol = collider_[static_cast<int>(COL_VALUE::OBJECT)];
@@ -115,13 +119,13 @@ void ItemBase::OnHit(const Collider& _hitCol)
 		//移動しなくなる
 		movePow_ = Utility::VECTOR_ZERO;
 	}
-	else if (_hitCol.GetTag() == Collider::TAG::GROUND)
+	else if (hiter->GetTag() == Collider::TAG::GROUND)
 	{
 		//コライダ
 		auto& mainCol = collider_[static_cast<int>(COL_VALUE::OBJECT)];
 
 		//相手モデル
-		Model& model = dynamic_cast<Model&>(_hitCol.GetGeometry());
+		Model& model = dynamic_cast<Model&>(hiter->GetGeometry());
 		const int hitNum = model.GetHitInfo().HitNum;
 
 		//自身の球

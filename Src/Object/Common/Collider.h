@@ -79,7 +79,7 @@ public :
 
 	/// @brief “–‚½‚Á‚½‚Ìˆ—
 	/// @param _collider ‘Šè‚ÌƒRƒ‰ƒCƒ_
-	void OnHit(const Collider& _collider);
+	void OnHit(const std::weak_ptr<Collider> _collider);
 
 private:
 

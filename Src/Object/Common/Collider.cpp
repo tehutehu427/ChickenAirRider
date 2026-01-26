@@ -20,10 +20,10 @@ Collider::~Collider(void)
 
 void Collider::Kill(void)
 {
-	isDead_ = false;
+	isDead_ = true;
 }
 
-void Collider::OnHit(const Collider& _collider)
+void Collider::OnHit(const std::weak_ptr<Collider> _collider)
 {
 	//€–SÏ‚İ
 	if (isDead_)return;

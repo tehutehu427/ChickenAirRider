@@ -66,8 +66,11 @@ void Cannon::Draw(void)
 
 void Cannon::CreateShot(void)
 {
+	//èäéùé“
+	const auto& hiter = hiter_.lock();
+	
 	//ë¨ìx
-	VECTOR hiterPos = hiter_->GetOwner().GetTrans().pos;
+	VECTOR hiterPos = hiter->GetOwner().GetTrans().pos;
 	float speed = Utility::Distance(VGet(hiterPos.x, hiterPos.y + LOCAL_POS_Y, hiterPos.z), trans_.pos);
 	VECTOR localPos = VSub(VGet(hiterPos.x, hiterPos.y + LOCAL_POS_Y, hiterPos.z), trans_.pos);
 	VECTOR createPos = trans_.pos; 
@@ -78,7 +81,7 @@ void Cannon::CreateShot(void)
 		if (!shot->IsAlive())
 		{
 			shot.reset();
-			shot = std::make_unique<CannonShot>(createPos, trans_.quaRot, trans_.scl, *hiter_, speed);
+			shot = std::make_unique<CannonShot>(createPos, trans_.quaRot, trans_.scl, hiter_, speed);
 			shot->Load();
 			shot->Init();
 
@@ -87,7 +90,7 @@ void Cannon::CreateShot(void)
 	}
 
 	//íeÇê∂ê¨Ç∑ÇÈ
-	std::unique_ptr<CannonShot>shot = std::make_unique<CannonShot>(createPos, trans_.quaRot, trans_.scl, *hiter_, speed);
+	std::unique_ptr<CannonShot>shot = std::make_unique<CannonShot>(createPos, trans_.quaRot, trans_.scl, hiter_, speed);
 	shot->Load();
 	shot->Init();
 

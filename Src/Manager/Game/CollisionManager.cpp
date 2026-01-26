@@ -18,7 +18,7 @@ void CollisionManager::CreateInstance(void)
 	}
 }
 
-void CollisionManager::AddCollider(Collider* _collider)
+void CollisionManager::AddCollider(const std::shared_ptr<Collider> _collider)
 {
 	//コライダの追加
 	colliders_.push_back(_collider);
@@ -27,7 +27,7 @@ void CollisionManager::AddCollider(Collider* _collider)
 void CollisionManager::Sweep(void)
 {
 	//終了したコライダを削除する
-	std::erase_if(colliders_, [](const Collider* _col) {return _col->IsDead(); });
+	std::erase_if(colliders_, [](const std::shared_ptr<Collider> _col) {return _col->IsDead(); });
 }
 
 void CollisionManager::Update(void)
@@ -102,8 +102,8 @@ void CollisionManager::Update(void)
 			if (IsCollision(*coli, *colj))
 			{
 				//それぞれの当たった処理
-				coli->OnHit(*colj);
-				colj->OnHit(*coli);
+				coli->OnHit(colj);
+				colj->OnHit(coli);
 
 				//当たった後の処理
 				if (!coli->IsDead())
@@ -167,11 +167,11 @@ CollisionManager::~CollisionManager(void)
 const bool CollisionManager::IsBroudCollision(const ObjectBase& _obj1, const ObjectBase& _obj2)
 {
 	//原点
-	const VECTOR& origin = _obj1.GetTrans().overAllPos;
+	const VECTOR& origin = _obj1.GetTrans().pos;
 
 	//座標
 	const VECTOR& pos1 = Utility::VECTOR_ZERO;
-	const VECTOR& pos2 = VSub(_obj2.GetTrans().overAllPos,origin);
+	const VECTOR& pos2 = VSub(_obj2.GetTrans().pos,origin);
 
 	//距離
 	float range = _obj1.GetBroudRadius() + _obj2.GetBroudRadius();

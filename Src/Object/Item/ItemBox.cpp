@@ -133,18 +133,18 @@ void ItemBox::Draw(void)
 	renderer_->Draw();
 }
 
-void ItemBox::OnHit(const Collider& _hitCol)
+void ItemBox::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
 	//足元
 	const auto& footCol = collider_[FOOT_COL];
 
-	const auto& hit = _hitCol;
-	const auto& hitTag = hit.GetTag();
+	const auto& hitCol = _hitCol.lock();
+	const auto& hitTag = hitCol->GetTag();
 
 	if (hitTag == Collider::TAG::SPIN && invincible_ < 0)
 	{
 		//スピンをもつのはプレイヤーのみ
-		const auto& player = dynamic_cast<const Player&>(_hitCol.GetOwner());
+		const auto& player = dynamic_cast<const Player&>(hitCol->GetOwner());
 
 		//攻撃力分ダメージ
 		health_ -= player.GetAttack() * SPIN_DAMAGE_DEF;
@@ -155,7 +155,7 @@ void ItemBox::OnHit(const Collider& _hitCol)
 	else if (hitTag == Collider::TAG::CANNON_SHOT && invincible_ < 0)
 	{
 		//ショット
-		const auto& shot = dynamic_cast<const CannonShot&>(_hitCol.GetOwner());
+		const auto& shot = dynamic_cast<const CannonShot&>(hitCol->GetOwner());
 
 		//ダメージ
 		health_ -= shot.GetAttack();

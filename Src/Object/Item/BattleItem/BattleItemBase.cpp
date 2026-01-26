@@ -81,15 +81,18 @@ void BattleItemBase::Update(void)
 			state_ = STATE::DEAD;
 		}
 
+		//所持者
+		const auto& hiter = hiter_.lock();
+
 		//所持者の座標
-		VECTOR hiterPos = hiter_->GetOwner().GetTrans().pos;
-		const Sphere& sphere = dynamic_cast<const Sphere&>(hiter_->GetGeometry());
+		VECTOR hiterPos = hiter->GetOwner().GetTrans().pos;
+		const Sphere& sphere = dynamic_cast<const Sphere&>(hiter->GetGeometry());
 		hiterPos.y += sphere.GetRadius();
 
 		//モデル更新
 		trans_.pos = VAdd(hiterPos, VGet(0.0f, LOCAL_POS_Y, 0.0f));
-		trans_.quaRot = hiter_->GetOwner().GetTrans().quaRot;
-		trans_.scl = modelScl_;//VScale(modelScl_, hiter_.lock()->GetParent().GetTrans().scl.x);
+		trans_.quaRot = hiter->GetOwner().GetTrans().quaRot;
+		trans_.scl = modelScl_;
 		trans_.Update();
 	}
 }
@@ -108,14 +111,14 @@ void BattleItemBase::Draw(void)
 	else
 	{
 		//取得者がいないとスキップ
-		if (hiter_ == nullptr)return;
+		if (hiter_.lock() == nullptr)return;
 
 		//取得者の頭上にモデル描画
 		MV1DrawModel(trans_.modelId);
 	}
 }
 
-void BattleItemBase::OnHit(const Collider& _hitCol)
+void BattleItemBase::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
 	ItemBase::OnHit(_hitCol);
 }

@@ -29,6 +29,9 @@ public:
 	//プレイヤーの取得
 	const Player& GetPlayer(const int _playerIndex) { return *players_[_playerIndex]; }
 
+	//プレイヤーの数の取得
+	const int GetPlayerSize(void) { return players_.size(); }
+
 	//プレイヤーの状態の初期化
 	void ResetPlayer(const VECTOR _pos = {0.0f,0.0f,0.0f});
 
