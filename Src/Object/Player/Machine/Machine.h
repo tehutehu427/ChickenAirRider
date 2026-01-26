@@ -69,7 +69,7 @@ private:
 
 	//æÔ”»’è”¼Œa
 	static constexpr float RIDE_COL_RADIUS = 250.0f;
-	static constexpr float BROUD_RADIUS = 300.0f;
+	static constexpr float BROUD_RADIUS = 350.0f;
 	
 	//ƒ€ƒeƒLŠÔ
 	static constexpr float INVINCIBLE_SPIN = 0.2f;

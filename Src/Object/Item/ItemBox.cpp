@@ -144,7 +144,7 @@ void ItemBox::OnHit(const Collider& _hitCol)
 	if (hitTag == Collider::TAG::SPIN && invincible_ < 0)
 	{
 		//スピンをもつのはプレイヤーのみ
-		const auto& player = dynamic_cast<const Player&>(*_hitCol.GetOwner());
+		const auto& player = dynamic_cast<const Player&>(_hitCol.GetOwner());
 
 		//攻撃力分ダメージ
 		health_ -= player.GetAttack() * SPIN_DAMAGE_DEF;
@@ -155,7 +155,7 @@ void ItemBox::OnHit(const Collider& _hitCol)
 	else if (hitTag == Collider::TAG::CANNON_SHOT && invincible_ < 0)
 	{
 		//ショット
-		const auto& shot = dynamic_cast<const CannonShot&>(*_hitCol.GetOwner());
+		const auto& shot = dynamic_cast<const CannonShot&>(_hitCol.GetOwner());
 
 		//ダメージ
 		health_ -= shot.GetAttack();

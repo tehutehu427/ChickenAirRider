@@ -19,7 +19,7 @@
     },
     "geometry": "cube",
     "tag": "building",
-    "broudRadius": 1000.0,
+    "broudRadius": 3000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -300.0,
@@ -52,7 +52,7 @@
     },
     "geometry": "cube",
     "tag": "building",
-    "broudRadius": 1000.0,
+    "broudRadius": 3000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -300.0,
@@ -85,7 +85,7 @@
     },
     "geometry": "cube",
     "tag": "building",
-    "broudRadius": 1000.0,
+    "broudRadius": 3000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -300.0,
@@ -118,7 +118,7 @@
     },
     "geometry": "cube",
     "tag": "building",
-    "broudRadius": 1000.0,
+    "broudRadius": 3000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -300.0,
@@ -151,7 +151,7 @@
     },
     "geometry": "cube",
     "tag": "building",
-    "broudRadius": 1000.0,
+    "broudRadius": 3000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -300.0,
@@ -184,7 +184,7 @@
     },
     "geometry": "cube",
     "tag": "building",
-    "broudRadius": 1000.0,
+    "broudRadius": 3000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -300.0,
@@ -217,7 +217,7 @@
     },
     "geometry": "capsule",
     "tag": "tree",
-    "broudRadius": 250.0,
+    "broudRadius": 350.0,
     "radius": 50.0,
     "localPos1": {
       "x": 0.0,
@@ -283,7 +283,7 @@
     },
     "geometry": "cube",
     "tag": "worldBorder",
-    "broudRadius": 30000.0,
+    "broudRadius": 40000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -25000.0,
@@ -316,7 +316,7 @@
     },
     "geometry": "cube",
     "tag": "worldBorder",
-    "broudRadius": 30000.0,
+    "broudRadius": 40000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -10.0,
@@ -349,7 +349,7 @@
     },
     "geometry": "cube",
     "tag": "worldBorder",
-    "broudRadius": 30000.0,
+    "broudRadius": 40000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -25000.0,
@@ -382,7 +382,7 @@
     },
     "geometry": "cube",
     "tag": "worldBorder",
-    "broudRadius": 30000.0,
+    "broudRadius": 40000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -10.0,

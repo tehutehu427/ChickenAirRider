@@ -48,7 +48,7 @@ void ObjectBase::ChangeModelColor(const COLOR_F _colorScale)
 void ObjectBase::MakeCollider(const Collider::TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags)
 {
 	//情報を使ってコライダの作成
-	std::unique_ptr<Collider> collider = std::make_unique<Collider>(this, _tag, std::move(_geometry), _notHitTags);
+	std::unique_ptr<Collider> collider = std::make_unique<Collider>(*this, _tag, std::move(_geometry), _notHitTags);
 
 	//コライダを管理マネージャーに追加
 	CollisionManager::GetInstance().AddCollider(collider.get());

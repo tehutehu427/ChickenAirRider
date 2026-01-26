@@ -51,7 +51,7 @@ void CannonShot::Init(void)
 	movePow_ = Utility::VECTOR_ZERO;
 
 	//攻撃力
-	attack_ = dynamic_cast<const Player&>(*holder_->GetOwner()).GetAttack() * ATTACK_MULTI;
+	attack_ = dynamic_cast<const Player&>(holder_->GetOwner()).GetAttack() * ATTACK_MULTI;
 
 	//コライダ
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SHOT_RADIUS);
@@ -89,7 +89,7 @@ void CannonShot::OnHit(const Collider& _hitCol)
 		if (collider_[static_cast<int>(COL::SEARCH)]->IsHit())
 		{
 			//標的に対する移動ベクトル
-			VECTOR moveVecToTarget = Utility::GetMoveVec(movedPos_, _hitCol.GetOwner()->GetTrans().pos);
+			VECTOR moveVecToTarget = Utility::GetMoveVec(movedPos_, _hitCol.GetOwner().GetTrans().pos);
 			
 			//下方向には補正しない
 			//moveVecToTarget.y = 0.0f;

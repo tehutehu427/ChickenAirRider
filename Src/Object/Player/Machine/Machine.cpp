@@ -73,7 +73,7 @@ void Machine::OnHit(const Collider& _hitCol)
 	if (_hitCol.GetTag() == Collider::TAG::SPIN)
 	{
 		//UŒ‚Ò‚©‚çUŒ‚—Í‚ğæ“¾
-		const Player& player = dynamic_cast<const Player&>(*_hitCol.GetOwner());
+		const Player& player = dynamic_cast<const Player&>(_hitCol.GetOwner());
 		const float atk = player.GetAttack();
 
 		//ƒ_ƒ[ƒW
@@ -85,7 +85,7 @@ void Machine::OnHit(const Collider& _hitCol)
 	else if(_hitCol.GetTag() == Collider::TAG::CANNON_SHOT)
 	{
 		//UŒ‚Ò‚©‚çUŒ‚—Í‚ğæ“¾
-		const CannonShot& shot = dynamic_cast<const CannonShot&>(*_hitCol.GetOwner());
+		const CannonShot& shot = dynamic_cast<const CannonShot&>(_hitCol.GetOwner());
 		const float atk = shot.GetAttack();
 
 		//ƒ_ƒ[ƒW

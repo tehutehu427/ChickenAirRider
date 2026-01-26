@@ -62,7 +62,7 @@ void ItemBase::Draw(void)
 		if (hiter_ == nullptr)return;
 
 		//æ“¾Ò‚ÌÀ•W
-		VECTOR hiterPos = hiter_->GetOwner()->GetTrans().pos;
+		VECTOR hiterPos = hiter_->GetOwner().GetTrans().pos;
 		Sphere& sphere = dynamic_cast<Sphere&>(hiter_->GetGeometry());
 		
 		//¬‚³‚ß‚É•`‰æ

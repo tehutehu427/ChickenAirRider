@@ -71,14 +71,14 @@ void CollisionManager::Update(void)
 			}
 
 			//同一所持者をスキップ
-			if (coli->GetOwner() == colj->GetOwner())
+			if (&coli->GetOwner() == &colj->GetOwner())
 			{
 				//飛ばす
 				continue;
 			}
 
 			//当たり判定前に切り捨て
-			if (!IsBroudCollision(*coli->GetOwner(), *colj->GetOwner()))
+			if (!IsBroudCollision(coli->GetOwner(), colj->GetOwner()))
 			{
 				//飛ばす
 				continue;
@@ -166,15 +166,19 @@ CollisionManager::~CollisionManager(void)
 
 const bool CollisionManager::IsBroudCollision(const ObjectBase& _obj1, const ObjectBase& _obj2)
 {
-	//座標(ワールド)
-	const VECTOR& pos1 = _obj1.GetTrans().pos;
-	const VECTOR& pos2 = _obj2.GetTrans().pos;
+	//原点
+	const VECTOR& origin = _obj1.GetTrans().overAllPos;
+
+	//座標
+	const VECTOR& pos1 = Utility::VECTOR_ZERO;
+	const VECTOR& pos2 = VSub(_obj2.GetTrans().overAllPos,origin);
 
 	//距離
 	float range = _obj1.GetBroudRadius() + _obj2.GetBroudRadius();
+	float sqrDistance = Utility::SqrMagnitudeF(VAdd(pos1, pos2));
 
 	//判定
-	return Utility::MagnitudeF(VAdd(pos1, pos2)) < range;
+	return sqrDistance < range * range;
 }
 
 const bool CollisionManager::IsCollisionTag(const Collider& _col1, const Collider& _col2) const

@@ -51,7 +51,7 @@ public :
 	/// @param _tags 自身の衝突用タグ
 	/// @param _geometry 当たり判定の形状
 	/// @param _notHitTags 衝突させないタグ
-	Collider(ObjectBase* _parent, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags);
+	Collider(ObjectBase& _owner, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags);
 
 	// デストラクタ
 	~Collider(void);
@@ -66,7 +66,7 @@ public :
 	inline const std::set<TAG>& GetNotHitTags(void)const { return notHitTags_; }
 
 	//所持者を取得
-	inline const ObjectBase* GetOwner(void)const { return owner_; }
+	inline const ObjectBase& GetOwner(void)const { return owner_; }
 
 	//当たったかの判定の取得
 	inline const bool IsHit(void)const { return isHit_; }
@@ -75,7 +75,7 @@ public :
 	inline const bool IsDead(void)const { return isDead_; }
 
 	//終了処理(所持者の解放時に置く)
-	inline void Kill(void) { isDead_ = true; }
+	void Kill(void);
 
 	/// @brief 当たった時の処理
 	/// @param _collider 相手のコライダ
@@ -84,7 +84,7 @@ public :
 private:
 
 	//所持者
-	ObjectBase* owner_;
+	ObjectBase& owner_;
 
 	// 自身の衝突用タグ
 	TAG myTag_;

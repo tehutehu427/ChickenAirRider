@@ -82,13 +82,13 @@ void BattleItemBase::Update(void)
 		}
 
 		//所持者の座標
-		VECTOR hiterPos = hiter_->GetOwner()->GetTrans().pos;
+		VECTOR hiterPos = hiter_->GetOwner().GetTrans().pos;
 		const Sphere& sphere = dynamic_cast<const Sphere&>(hiter_->GetGeometry());
 		hiterPos.y += sphere.GetRadius();
 
 		//モデル更新
 		trans_.pos = VAdd(hiterPos, VGet(0.0f, LOCAL_POS_Y, 0.0f));
-		trans_.quaRot = hiter_->GetOwner()->GetTrans().quaRot;
+		trans_.quaRot = hiter_->GetOwner().GetTrans().quaRot;
 		trans_.scl = modelScl_;//VScale(modelScl_, hiter_.lock()->GetParent().GetTrans().scl.x);
 		trans_.Update();
 	}

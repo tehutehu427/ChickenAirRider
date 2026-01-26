@@ -184,7 +184,7 @@ void PlayerOnHit::RideMachineOnHit(const Collider& _hitCol)
 	if (!player_.GetLogic().IsGetOff())return;
 
 	//機体確定なので型変換
-	const Machine& machine = dynamic_cast<const Machine&>(*_hitCol.GetOwner());
+	const Machine& machine = dynamic_cast<const Machine&>(_hitCol.GetOwner());
 
 	//機体管理
 	auto& machineMng = MachineManager::GetInstance();
@@ -208,7 +208,7 @@ void PlayerOnHit::PowerUpItemOnHit(const Collider& _hitCol)
 	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::GET_ITEM, SoundManager::PLAYTYPE::BACK);
 
 	//対象パワーアップアイテム
-	const auto& powerUpItem = dynamic_cast<const PowerUpItemBase&>(*_hitCol.GetOwner());
+	const auto& powerUpItem = dynamic_cast<const PowerUpItemBase&>(_hitCol.GetOwner());
 
 	//パラメーター
 	Parameter param = powerUpItem.GetParam();
@@ -230,7 +230,7 @@ void PlayerOnHit::SpinOnHit(const Collider& _hitCol)
 	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::DAMAGE, SoundManager::PLAYTYPE::BACK);
 
 	//スピンの相手
-	const auto& spinParent = dynamic_cast<const Player&>(*_hitCol.GetOwner());
+	const auto& spinParent = dynamic_cast<const Player&>(_hitCol.GetOwner());
 
 	//攻撃力
 	float attack = spinParent.GetAttack();
@@ -251,7 +251,7 @@ void PlayerOnHit::CannonShotOnHit(const Collider& _hitCol)
 	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::DAMAGE, SoundManager::PLAYTYPE::BACK);
 
 	//大砲の弾
-	const auto& shot = dynamic_cast<const CannonShot&>(*_hitCol.GetOwner());
+	const auto& shot = dynamic_cast<const CannonShot&>(_hitCol.GetOwner());
 
 	//攻撃力
 	float attack = shot.GetAttack();

@@ -67,7 +67,7 @@ void Cannon::Draw(void)
 void Cannon::CreateShot(void)
 {
 	//‘¬“x
-	VECTOR hiterPos = hiter_->GetOwner()->GetTrans().pos;
+	VECTOR hiterPos = hiter_->GetOwner().GetTrans().pos;
 	float speed = Utility::Distance(VGet(hiterPos.x, hiterPos.y + LOCAL_POS_Y, hiterPos.z), trans_.pos);
 	VECTOR localPos = VSub(VGet(hiterPos.x, hiterPos.y + LOCAL_POS_Y, hiterPos.z), trans_.pos);
 	VECTOR createPos = trans_.pos; 
