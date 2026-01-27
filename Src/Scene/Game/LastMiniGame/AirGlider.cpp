@@ -5,6 +5,7 @@
 #include "../Manager/Game/StageManager.h"
 #include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/PlayerManager.h"
+#include "../Manager/Game/UIManager.h"
 #include "../Object/SkyDome/SkyDome.h"
 #include "../Object/Player/Player.h"
 #include "AirGlider.h"
@@ -27,7 +28,7 @@ void AirGlider::Init(void)
 
 	//Še‰Šú‰»
 	plMng.ResetPlayer(START_POS);
-	stgMng.Init(StageManager::MODE::AIR_GLIDER,100);
+	stgMng.Init(StageManager::MODE::AIR_GLIDER,60);
 
 	//‹¤’Ê‰Šú‰»
 	LastGameBase::Init();

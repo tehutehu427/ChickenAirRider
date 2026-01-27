@@ -1,6 +1,7 @@
 #include "../pch.h"
 #include "../Manager/System/KeyConfig.h"
 #include "../Manager/System/SceneManager.h"
+#include "../Manager/System/ResourceManager.h"
 #include "../Manager/Game/UIManager.h"
 #include "../Manager/Game/Timer.h"
 #include "../Manager/Game/GameSetting.h"
@@ -16,6 +17,8 @@ GameCheck::GameCheck(SceneGame& _parent)
 	draw_.emplace(CHECK_STATE::NONE, [](void) {});
 	draw_.emplace(CHECK_STATE::PLAYER_PARAM, [this](void) {DrawPlayerParam(); });
 	draw_.emplace(CHECK_STATE::LAST_GAME, [this](void) {DrawLastGame(); });
+
+	state_ = CHECK_STATE::NONE;
 }
 
 GameCheck::~GameCheck(void)
@@ -38,6 +41,13 @@ void GameCheck::Init(void)
 	{
 		UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::CHECK_PARAM,i);
 	}
+
+	//インスタンス
+	auto& res = ResourceManager::GetInstance();
+
+	//画像
+	lastGameImage_.emplace(static_cast<int>(SceneGame::LAST_GAME_TYPE::AIR_GLIDER), res.Load(ResourceManager::SRC::AIR_GLIDER_CHECK_IMAGE).handleId_);
+	lastGameTitle_.emplace(static_cast<int>(SceneGame::LAST_GAME_TYPE::AIR_GLIDER), res.Load(ResourceManager::SRC::AIR_GLIDER_CHECK_TITLE).handleId_);
 }
 
 void GameCheck::Update(void)

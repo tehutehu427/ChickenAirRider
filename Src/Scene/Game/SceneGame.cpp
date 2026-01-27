@@ -127,6 +127,9 @@ void SceneGame::ResetLastGame(void)
 	LAST_GAME_TYPE rand = static_cast<LAST_GAME_TYPE>(Utility::GetRandomValue(0, static_cast<int>(LAST_GAME_TYPE::MAX) - 1));
 	rand = LAST_GAME_TYPE::AIR_GLIDER;
 
+	//ï€ë∂
+	lastGameType_ = rand;
+
 	//ç≈èIÉQÅ[ÉÄê∂ê¨
-	createGame_.emplace(GAME_STATE::LAST, [this, rand](void) {return std::move(createLastGame_[rand]()); });
+	createGame_.emplace(GAME_STATE::LAST, [this](void) {return std::move(createLastGame_[lastGameType_]()); });
 }

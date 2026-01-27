@@ -45,11 +45,17 @@ public:
 	//ゲームの状態の設定
 	void ChangeGameState(const GAME_STATE _gameState);
 
+	//最終ゲームの取得
+	const LAST_GAME_TYPE GetLastGameType(void)const { return lastGameType_; };
+
 private:
 
 	//状態ごとのシーン
 	GAME_STATE gameState_;
 	std::unique_ptr<GameBase> game_;
+
+	//最終ゲーム
+	LAST_GAME_TYPE lastGameType_;
 
 	//ゲーム生成
 	std::unordered_map<GAME_STATE, std::function<std::unique_ptr<GameBase>(void)>> createGame_;
@@ -57,7 +63,7 @@ private:
 	//最終ゲーム生成
 	std::unordered_map<LAST_GAME_TYPE, std::function<std::unique_ptr<GameBase>(void)>> createLastGame_;
 
-	//最後のミニゲームを再構築
+	//最終ゲームを再構築
 	void ResetLastGame(void);
 };
 

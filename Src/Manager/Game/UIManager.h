@@ -15,9 +15,9 @@ public:
 	//描画種類
 	enum class DRAW_TYPE
 	{
-		CHARGE_GAUGE,	//チャージゲージ
-		HEALTH,			//体力
-		CHECK_PARAM,	//最終チェック
+		CHARGE_GAUGE,		//チャージゲージ
+		HEALTH,				//体力
+		CHECK_PARAM,		//最終チェック
 	};
 
 	//ビューポート

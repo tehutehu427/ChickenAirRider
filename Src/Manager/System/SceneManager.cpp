@@ -9,6 +9,7 @@
 #include "../Scene/Select/SceneOption.h"
 #include "../Scene/Game/SceneGame.h"
 #include "../Game/GameSetting.h"
+#include "../Game/GlobalUIManager.h"
 #include "../Game/Timer.h"
 #include"../Application.h"
 #include"../Game/UIManager.h"
@@ -70,14 +71,6 @@ void SceneManager::Init(void)
 	fader_ = std::make_unique<Fader>();
 	fader_->Init();
 	
-	//タイマー
-	timer_ = std::make_unique<Timer>();
-	timer_->Init(setting.GetTimeLimit());
-
-	//カウント開始
-	timer_->SetCountValid(false);
-	timer_->SetCountView(false);
-
 	// 初期のカメラは1つなので人数を初期化しておく
 	setting.ResetPlayerNum();
 
@@ -168,8 +161,8 @@ void SceneManager::Update(void)
 		c->Update();
 	}
 
-	//タイマーの更新
-	timer_->Update();
+	//全体UIの更新
+	GlobalUIManager::GetInstance().Update();
 }
 
 void SceneManager::Draw(void)
@@ -206,7 +199,7 @@ void SceneManager::Draw(void)
 		if (!cameras_.empty())
 			cameras_.front()->DrawSkyDome();
 
-		//UIは別々で描画
+		//個々のUI描画
 		if (sceneId_ == SCENE_ID::GAME)
 			UIManager::GetInstance().Draw();
 
@@ -214,8 +207,8 @@ void SceneManager::Draw(void)
 		if (!cameras_.empty())
 			cameras_.front()->Draw();
 
-		//タイマーの描画
-		timer_->Draw();
+		//全体UIの描画
+		GlobalUIManager::GetInstance().Draw();
 
 		// Effekseerにより再生中のエフェクトを描画する。
 		DrawEffekseer3D();
@@ -388,7 +381,9 @@ void SceneManager::CreateSplitScreen(const int _playerNum)
 		, Application::SCREEN_HALF_Y + Application::SCREEN_HALF_Y / 2},		//3人
 		{ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y }			//4人
 	};
-	timer_->SetPos(timerPos[_playerNum - 1]);
+
+	//タイマーの位置
+	GlobalUIManager::GetInstance().GetTimer().SetPos(timerPos[_playerNum - 1]);
 
 	//引数が１以下
 	// 最大人数を超える場合,
@@ -603,9 +598,8 @@ void SceneManager::DrawMultiScreen()
 		DrawGraph(screenPos[i].x, screenPos[i].y, splitScreens_[i], true);
 	}
 
-	//タイマーの描画
-	timer_->Draw();
-
+	//全体UIの描画
+	GlobalUIManager::GetInstance().Draw();
 }
 
 std::unique_ptr<SceneBase> SceneManager::CreateSceneTitle(void)

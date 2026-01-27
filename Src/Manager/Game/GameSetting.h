@@ -47,7 +47,7 @@ public:
 private:
 
 	//‰ŠúŠÔ§ŒÀ
-	static constexpr int INIT_TIME_LIMIT = 120;
+	static constexpr int INIT_TIME_LIMIT = 60;
 
 	//ƒ†[ƒU[”
 	int userNum_;

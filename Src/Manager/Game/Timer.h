@@ -39,6 +39,11 @@ public:
 	//残り時間の取得
 	const float RemainingTime(void)const;
 
+	/// @brief 指定秒数以下になったか
+	/// @param _time 指定秒
+	/// @return 指定秒数以下だった
+	const bool IsUnderSeconds(const float _time) { return RemainingTime() < _time; }
+
 	//位置の設定
 	void SetPos(const Vector2 _pos) { pos_ = _pos; }
 			

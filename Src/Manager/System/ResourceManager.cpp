@@ -83,6 +83,15 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"TimerFrame.png");
 	resourcesMap_.emplace(SRC::TIMER_FRAME, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"Finish.png");
+	resourcesMap_.emplace(SRC::FINISH, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"AirGliderExplan.png");
+	resourcesMap_.emplace(SRC::AIR_GLIDER_CHECK_IMAGE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"AirGliderExplanText.png");
+	resourcesMap_.emplace(SRC::AIR_GLIDER_CHECK_TITLE, std::move(res));
+
 #pragma endregion 
 
 

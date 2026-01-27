@@ -6,6 +6,7 @@
 #include"../Manager/System/SoundManager.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/Game/GameSetting.h"
+#include"../Manager/Game/GlobalUIManager.h"
 #include"../Manager/Game/Timer.h"
 #include "SceneSelect.h"
 
@@ -191,6 +192,7 @@ void SceneSelect::UpdateGameStart(void)
 	auto& snd = SoundManager::GetInstance();
 	auto& key = KeyConfig::GetInstance();
 	auto& set = GameSetting::GetInstance();
+	auto& gloUi = GlobalUIManager::GetInstance();
 
 	//決定
 	if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::ENTER, KeyConfig::JOYPAD_NO::PAD1)
@@ -204,7 +206,7 @@ void SceneSelect::UpdateGameStart(void)
 		set.SetNpcNum(playerNum_[PLAYER_NUM_SELECT::NPC]);
 		
 		//タイマーの初期化
-		scnMng.GetTimer().Init(set.GetTimeLimit());
+		gloUi.GetTimer().Init(set.GetTimeLimit());
 
 		//シーンの削除
 		scnMng.ChangeScene(SceneManager::SCENE_ID::GAME, true, true);

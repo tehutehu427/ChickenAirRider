@@ -53,6 +53,10 @@ private:
 	//タイマー
 	std::unique_ptr<Timer> timer_;
 
+	//最終ゲーム画像
+	std::unordered_map<int, int>lastGameImage_;
+	std::unordered_map<int, int>lastGameTitle_;
+
 	//デバッグ描画
 	void DebugDraw(void)override;
 

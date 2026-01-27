@@ -77,6 +77,11 @@ public:
 		NUMBER,					//数字
 		COLON,					//コロン
 		TIMER_FRAME,			//タイマーの枠
+		FINISH,					//終了UI
+
+		//最終ゲーム確認
+		AIR_GLIDER_CHECK_IMAGE,	//エアグライダーの確認画像
+		AIR_GLIDER_CHECK_TITLE,	//エアグライダーの確認見出し
 
 		//サウンド
 

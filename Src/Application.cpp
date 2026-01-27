@@ -7,6 +7,7 @@
 #include "Manager/System/SceneManager.h"
 #include "Manager/System/SoundManager.h"
 #include "Manager/Game/GameSetting.h"
+#include "Manager/Game/GlobalUIManager.h"
 #include "FpsControl/FpsControl.h"
 #include "Common/FontRegistry.h"
 #include "Application.h"
@@ -80,6 +81,9 @@ void Application::Init(void)
 
 	//ƒQ[ƒ€İ’è‚Ì‰Šú‰»
 	GameSetting::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
+
+	//‘S‘ÌUI‚Ì‰Šú‰»
+	GlobalUIManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	// FPS‰Šú‰»
 	fps_ = std::make_unique<FpsControl>();

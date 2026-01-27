@@ -11,7 +11,6 @@
 class SceneBase;
 class Fader;
 class Camera;
-class Timer;
 
 class SceneManager : public Singleton<SceneManager>
 {
@@ -119,9 +118,6 @@ public:
 	/// @return 指定したプレイヤー番号のカメラ
 	std::weak_ptr<Camera> GetCamera(const int _playerIndex) const;
 
-	//全体タイマーの取得
-	Timer& GetTimer(void) { return *timer_; }
-
 	//スクリーンの番号の取得
 	const int GetScreenIndex(void)const { return screenIndex_; }
 
@@ -141,7 +137,6 @@ private:
 	std::list<std::unique_ptr<SceneBase>> scene_;	//各種シーン	
 	std::unique_ptr<Fader> fader_;					//フェード
 	std::vector<std::shared_ptr<Camera>> cameras_;	//カメラ
-	std::unique_ptr<Timer> timer_;					//タイマー
 
 	// シーン遷移中判定
 	bool isSceneChanging_;
