@@ -45,12 +45,23 @@ SceneOption::~SceneOption(void)
 
 void SceneOption::Load(void)
 {
-	//背景
-	backImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE_BACK).handleId_;
-
 	//サウンド
 	auto& snd = SoundManager::GetInstance();
 	auto& res = ResourceManager::GetInstance();
+	
+	//背景
+	backImg_ = res.Load(ResourceManager::SRC::TITLE_BACK).handleId_;
+
+	//メニュー
+	menuBarImg_ = res.Load(ResourceManager::SRC::MENU_BAR).handleId_;
+	numberImgs_ = res.Load(ResourceManager::SRC::NUMBER).handleIds_;
+	colonImg_ = res.Load(ResourceManager::SRC::COLON).handleId_;
+	menuImg_.emplace(OPTION_TYPE::TIME, res.Load(ResourceManager::SRC::TIME_LIMIT_TEXT).handleId_);
+	menuImg_.emplace(OPTION_TYPE::SCREEN, res.Load(ResourceManager::SRC::FULL_SCREEN_TEXT).handleId_);
+	menuImg_.emplace(OPTION_TYPE::KEY_TYPE, res.Load(ResourceManager::SRC::KEY_CONFIG_TEXT).handleId_);
+	menuImg_.emplace(OPTION_TYPE::END, res.Load(ResourceManager::SRC::END_TEXT).handleId_);
+	onOffImg_.emplace(false, res.Load(ResourceManager::SRC::ON_TEXT).handleId_);
+	onOffImg_.emplace(true, res.Load(ResourceManager::SRC::OFF_TEXT).handleId_);
 
 	//追加
 	int id = res.Load(ResourceManager::SRC::SELECT_BGM).handleId_;
@@ -99,15 +110,51 @@ void SceneOption::Draw(const Camera& _camera)
 	//背景
 	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backImg_, true);
 
-	//選択肢(デバッグ)
-	DrawString(SELECT_POS_X, SELECT_POS_Y, L"TIME_LIMIT", type_ == OPTION_TYPE::TIME ? Utility::RED : Utility::WHITE);
-	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y, L"FULLSCREEN", type_ == OPTION_TYPE::SCREEN ? Utility::RED : Utility::WHITE);
-	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y * 2, L"KEY_TYPE", type_ == OPTION_TYPE::KEY_TYPE ? Utility::RED : Utility::WHITE);
-	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y * 3, L"END", type_ == OPTION_TYPE::END ? Utility::RED : Utility::WHITE);
+	//時間
+	int minute = modiTimeLimit_ / TIME_MIN_MULTI;
+	int second = modiTimeLimit_ % TIME_MIN_MULTI;
+
+	//制限時間
+	if(type_ == OPTION_TYPE::TIME)SetDrawBright(255, 255, 0);
+	DrawExtendGraph(SELECT_POS_X_1, SELECT_POS_Y_1, SELECT_POS_X_2, SELECT_POS_Y_2, menuBarImg_, true);
+	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y, SELECT_SCALE_DEFAULT, 0.0, menuImg_[OPTION_TYPE::TIME], true);
+	SetDrawBright(255, 255, 255);
 	
-	DrawFormatString(SELECT_POS_X + SELECT_LOCAL_POS_X, SELECT_POS_Y, type_ == OPTION_TYPE::TIME ? Utility::RED : Utility::WHITE, L"%.2d:%.2d",modiTimeLimit_ / TIME_MIN_MULTI, modiTimeLimit_ % TIME_MIN_MULTI);
-	DrawString(SELECT_POS_X + SELECT_LOCAL_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y, modiScreenSize_ == true ? L"OFF" : L"ON", type_ == OPTION_TYPE::SCREEN ? Utility::RED : Utility::WHITE);
-	DrawFormatString(SELECT_POS_X + SELECT_LOCAL_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y * 2, type_ == OPTION_TYPE::KEY_TYPE ? Utility::RED : Utility::WHITE, L"KEY_TYPE");
+	//コロン
+	DrawRotaGraph(SELECT_POS_X + SELECT_LOCAL_POS_X, SELECT_POS_Y, NUMBER_SCALE, 0.0, colonImg_, true);
+
+	//秒
+	if (nowType_ == OPTION_TYPE::TIME && timeMulti_ == TIME_SEC_MULTI)SetDrawBright(255, 100, 100);
+	DrawRotaGraph(SELECT_POS_X + SELECT_LOCAL_POS_X + NUMBER_INTERVAL * 2, SELECT_POS_Y, NUMBER_SCALE, 0.0, numberImgs_[second % TIME_SEC_MULTI], true);
+	DrawRotaGraph(SELECT_POS_X + SELECT_LOCAL_POS_X + NUMBER_INTERVAL, SELECT_POS_Y, NUMBER_SCALE, 0.0, numberImgs_[second / TIME_SEC_MULTI], true);
+	SetDrawBright(255, 255, 255);
+
+	//分
+	if (nowType_ == OPTION_TYPE::TIME && timeMulti_ == TIME_MIN_MULTI)SetDrawBright(255, 100, 100);
+	DrawRotaGraph(SELECT_POS_X + SELECT_LOCAL_POS_X - NUMBER_INTERVAL, SELECT_POS_Y, NUMBER_SCALE, 0.0, numberImgs_[minute % TIME_SEC_MULTI], true);
+	DrawRotaGraph(SELECT_POS_X + SELECT_LOCAL_POS_X - NUMBER_INTERVAL * 2, SELECT_POS_Y, NUMBER_SCALE, 0.0, numberImgs_[minute / TIME_SEC_MULTI], true);
+	SetDrawBright(255, 255, 255);
+
+	//フルスクリーン
+	if (type_ == OPTION_TYPE::SCREEN)SetDrawBright(255, 255, 0);
+	DrawExtendGraph(SELECT_POS_X_1, SELECT_POS_Y_1 + SELECT_LOCAL_POS_Y, SELECT_POS_X_2, SELECT_POS_Y_2 + SELECT_LOCAL_POS_Y, menuBarImg_, true);
+	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y, SELECT_SCALE_DEFAULT, 0.0, menuImg_[OPTION_TYPE::SCREEN], true);
+	SetDrawBright(255, 255, 255);
+
+	//オンオフ
+	DrawRotaGraph(SELECT_POS_X + SELECT_LOCAL_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y, SELECT_SCALE_DEFAULT, 0.0, onOffImg_[modiScreenSize_], true);
+
+	//キーコンフィグ
+	if (type_ == OPTION_TYPE::KEY_TYPE)SetDrawBright(255, 255, 0);
+	DrawExtendGraph(SELECT_POS_X_1, SELECT_POS_Y_1 + SELECT_LOCAL_POS_Y * 2, SELECT_POS_X_2 - SELECT_LOCAL_POS_X_2, SELECT_POS_Y_2 + SELECT_LOCAL_POS_Y * 2, menuBarImg_, true);
+	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y * 2, SELECT_SCALE_DEFAULT, 0.0, menuImg_[OPTION_TYPE::KEY_TYPE]	, true);
+	SetDrawBright(255, 255, 255);
+
+	//終了
+	if (type_ == OPTION_TYPE::END)SetDrawBright(255, 255, 0);
+	DrawExtendGraph(SELECT_POS_X_1, SELECT_POS_Y_1 + SELECT_LOCAL_POS_Y * 3, SELECT_POS_X_2 - SELECT_LOCAL_POS_X_2, SELECT_POS_Y_2 + SELECT_LOCAL_POS_Y * 3, menuBarImg_, true);
+	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS_Y * 3, SELECT_SCALE_DEFAULT, 0.0, menuImg_[OPTION_TYPE::END], true);
+	SetDrawBright(255, 255, 255);
 }
 
 void SceneOption::Release(void)

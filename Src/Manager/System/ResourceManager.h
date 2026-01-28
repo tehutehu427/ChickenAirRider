@@ -70,6 +70,19 @@ public:
 		TITLE_LOGO,			//タイトルロゴ
 		PUSH_ANY_BUTTON,	//何かボタンを押してください
 
+		//セレクトメニュー
+		MENU_BAR,			//メニューバー
+		GAME_START_TEXT,	//ゲームスタートテキスト
+		OPTION_TEXT,		//オプションテキスト
+		GO_TITLE_TEXT,		//タイトルへテキスト
+		GAME_END_TEXT,		//ゲーム終了テキスト
+		TIME_LIMIT_TEXT,	//制限時間テキスト
+		FULL_SCREEN_TEXT,	//フルスクリーンテキスト
+		ON_TEXT,			//オンテキスト
+		OFF_TEXT,			//オフテキスト
+		KEY_CONFIG_TEXT,	//キーコンフィグテキスト
+		END_TEXT,			//終了テキスト
+
 		//UI
 		CHARGE_GAUGE,			//チャージゲージ
 		CHARGE_GAUGE_MASK,		//チャージゲージマスク
@@ -77,11 +90,14 @@ public:
 		NUMBER,					//数字
 		COLON,					//コロン
 		TIMER_FRAME,			//タイマーの枠
+		FINISH_NUMBER,			//終了用の数字
 		FINISH,					//終了UI
 
 		//最終ゲーム確認
-		AIR_GLIDER_CHECK_IMAGE,	//エアグライダーの確認画像
-		AIR_GLIDER_CHECK_TITLE,	//エアグライダーの確認見出し
+		DEATH_MATCH_CHECK_IMAGE,	//デスマッチの確認画像
+		DEATH_MATCH_CHECK_TITLE,	//デスマッチの確認見出し
+		AIR_GLIDER_CHECK_IMAGE,		//エアグライダーの確認画像
+		AIR_GLIDER_CHECK_TITLE,		//エアグライダーの確認見出し
 
 		//サウンド
 

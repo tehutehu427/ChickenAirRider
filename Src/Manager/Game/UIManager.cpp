@@ -257,6 +257,8 @@ void UIManager::DrawParam(const int _playerIndex)
 	//間隔
 	int interval = PARAM_BOX_INTERVAL / magnification;
 	int powerUpInterval = POWER_UP_INTERVAL / magnification;
+	int numberLocalPos = PARAM_NUMBER_LOCAL_POS / magnification;
+	int numberInterval = NUMBER_INTERVAL / magnification;
 
 	//サイズ
 	int size = PARAM_BOX_SIZE / magnification;
@@ -269,48 +271,88 @@ void UIManager::DrawParam(const int _playerIndex)
 	pos.x = PARAM_BOX_START_POS.x * view.w;
 	pos.y = PARAM_BOX_START_POS.y * view.h;
 
+	//色
+	unsigned int color = Utility::CYAN;
+
+	//パラメーター
+	int paramNum = static_cast<int>(param.maxSpeed_);
+
 	//最高速
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, maxSpeedImg_, true);
-	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.maxSpeed_)), pos.y + size, Utility::CYAN, true);
+	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
+	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
+	DrawBox(pos.x, pos.y, pos.x + (size * paramNum), pos.y + size, color, true);
 	pos.y += interval + size;
 
 	//加速
+	color = Utility::PURPLE;
+	paramNum = static_cast<int>(param.acceleration_);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, acceleImg_, true);
-	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.acceleration_)), pos.y + size, Utility::PURPLE, true);
+	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
+	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
+	DrawBox(pos.x, pos.y, pos.x + (size * paramNum), pos.y + size, color, true);
 	pos.y += interval + size;
 
 	//旋回
+	color = Utility::GREEN;
+	paramNum = static_cast<int>(param.turning_);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, turnImg_, true);
-	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.turning_)), pos.y + size, Utility::GREEN, true);
+	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
+	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
+	DrawBox(pos.x, pos.y, pos.x + (size * paramNum), pos.y + size, color, true);
 	pos.y += interval + size;
 
 	//チャージ
+	color = Utility::YELLOW;
+	paramNum = static_cast<int>(param.charge_);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, chargeImg_, true);
-	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.charge_)), pos.y + size, Utility::YELLOW, true);
+	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
+	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
+	DrawBox(pos.x, pos.y, pos.x + (size * paramNum), pos.y + size, color, true);
 	pos.y += interval + size;
 
 	//飛行
+	color = Utility::WHITE;
+	paramNum = static_cast<int>(param.flight_);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, flightImg_, true);
-	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.flight_)), pos.y + size, Utility::WHITE, true);
+	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
+	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
+	DrawBox(pos.x, pos.y, pos.x + (size * paramNum), pos.y + size, color, true);
 	pos.y += interval + size;
 
 	//重さ
+	color = Utility::BROWN;
+	paramNum = static_cast<int>(param.weight_);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, weightImg_, true);
-	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.weight_)), pos.y + size, Utility::BROWN, true);
+	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
+	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
+	DrawBox(pos.x, pos.y, pos.x + (size * paramNum), pos.y + size, color, true);
 	pos.y += interval + size;
 
 	//攻撃
+	color = Utility::ORANGE;
+	paramNum = static_cast<int>(param.attack_);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, attackImg_, true);
-	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.attack_)), pos.y + size, Utility::ORANGE, true);
+	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
+	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
+	DrawBox(pos.x, pos.y, pos.x + (size * paramNum), pos.y + size, color, true);
 	pos.y += interval + size;
 
 	//防御
+	color = Utility::BLUE;
+	paramNum = static_cast<int>(param.defence_);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, defenceImg_, true);
-	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.defence_)), pos.y + size, Utility::BLUE, true);
+	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
+	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
+	DrawBox(pos.x, pos.y, pos.x + (size * paramNum), pos.y + size, color, true);
 	pos.y += interval + size;
 
 	//最大体力
+	color = Utility::RED;
+	paramNum = static_cast<int>(param.maxHealth_);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, maxHealthImg_, true);
-	DrawBox(pos.x, pos.y, pos.x + (size * static_cast<int>(param.maxHealth_)), pos.y + size, Utility::PINK, true);
+	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
+	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
+	DrawBox(pos.x, pos.y, pos.x + (size * paramNum), pos.y + size, color, true);
 	pos.y += interval + size;
 }

@@ -25,7 +25,7 @@ public:
 private:
 
 	//選択肢
-	enum class SELECT_TYPE
+	enum class MENU_TYPE
 	{
 		HOME = -1,		//初期
 		GAME_START,		//ゲーム開始
@@ -45,8 +45,12 @@ private:
 
 	//選択肢の位置
 	static constexpr int SELECT_POS_X = 200;
-	static constexpr int SELECT_POS_Y = 200;
-	static constexpr int SELECT_LOCAL_POS = 64;
+	static constexpr int SELECT_POS_Y = 150;
+	static constexpr int SELECT_LOCAL_POS = 100;
+	static constexpr float SELECT_SCALE_DEFAULT = 0.3f;
+	static constexpr float SELECT_SCALE_MIN = 0.25f;
+	static constexpr float SELECT_SCALE_MAX = 0.35f;
+	static constexpr float SIN_SPEED = 2.0f;
 
 	//プレイヤー人数の位置
 	static constexpr int PLAYER_NUM_POS_X= 300;
@@ -56,9 +60,13 @@ private:
 	//背景
 	int backImg_;
 
+	//メニュー欄
+	int menuBarImg_;
+	std::unordered_map<MENU_TYPE, int>menuImg_;
+
 	//選択肢
-	SELECT_TYPE selectType_;
-	SELECT_TYPE nowSelectType_;
+	MENU_TYPE selectType_;
+	MENU_TYPE nowSelectType_;
 	int selectTypeNum_;
 
 	//プレイヤー人数
@@ -66,8 +74,8 @@ private:
 	std::unordered_map<PLAYER_NUM_SELECT, int> playerNum_;
 
 	//関数
-	std::unordered_map<SELECT_TYPE, std::function<void(void)>> update_;
-	std::unordered_map<SELECT_TYPE, std::function<void(void)>> draw_;
+	std::unordered_map<MENU_TYPE, std::function<void(void)>> update_;
+	std::unordered_map<MENU_TYPE, std::function<void(void)>> draw_;
 
 	//デバッグ描画
 	void DebugDraw(void)override;

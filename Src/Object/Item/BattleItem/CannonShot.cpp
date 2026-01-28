@@ -84,18 +84,20 @@ void CannonShot::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
 	//所持者
 	const auto& holder = holder_.lock();
+	const auto& hiter = _hitCol.lock();
+	const auto& hitTag = hiter->GetTag();;
 	
-	if (holder->GetTag() == Collider::TAG::PLAYER1
-		|| holder->GetTag() == Collider::TAG::PLAYER2
-		|| holder->GetTag() == Collider::TAG::PLAYER3
-		|| holder->GetTag() == Collider::TAG::PLAYER4
-		|| holder->GetTag() == Collider::TAG::MACHINE
+	if (hitTag == Collider::TAG::PLAYER1
+		|| hitTag == Collider::TAG::PLAYER2
+		|| hitTag == Collider::TAG::PLAYER3
+		|| hitTag == Collider::TAG::PLAYER4
+		|| hitTag == Collider::TAG::MACHINE
 		)
 	{
 		if (collider_[static_cast<int>(COL::SEARCH)]->IsHit())
 		{
 			//標的に対する移動ベクトル
-			VECTOR moveVecToTarget = Utility::GetMoveVec(movedPos_, holder->GetOwner().GetTrans().pos);
+			VECTOR moveVecToTarget = Utility::GetMoveVec(movedPos_, hiter->GetOwner().GetTrans().pos);
 			
 			//下方向には補正しない
 			//moveVecToTarget.y = 0.0f;
@@ -116,8 +118,8 @@ void CannonShot::OnHit(const std::weak_ptr<Collider> _hitCol)
 			sphere.SetRadius(BLAST_RADIUS);
 		}
 	}
-	else if (holder->GetTag() == Collider::TAG::NORMAL_OBJECT
-		|| holder->GetTag() == Collider::TAG::GROUND)
+	else if (hitTag == Collider::TAG::NORMAL_OBJECT
+		|| hitTag == Collider::TAG::GROUND)
 	{
 		if (!collider_[static_cast<int>(COL::MAIN)]->IsHit())return;
 
@@ -162,6 +164,7 @@ void CannonShot::UpdateAlive(void)
 	//移動力
 	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_,200.0f);
 	movePow_ = trans_.quaRot.PosAxis(VGet(0.0f, gravPow_.y, speed_));
+	movePow_ = VScale(movePow_,0.5f);
 
 	//移動
 	movedPos_ = VAdd(movedPos_, movePow_);

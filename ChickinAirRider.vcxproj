@@ -163,6 +163,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\SceneResult.cpp" />
     <ClCompile Include="Src\Manager\Game\GlobalUIManager.cpp" />
     <ClCompile Include="Src\Scene\Game\LastMiniGame\AirGlider.cpp" />
     <ClCompile Include="Src\Scene\Select\SceneOption.cpp" />
@@ -247,6 +248,7 @@
     <ClCompile Include="Src\Manager\Game\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\SceneResult.h" />
     <ClInclude Include="Src\Manager\Game\GlobalUIManager.h" />
     <ClInclude Include="Src\Scene\Game\LastMiniGame\AirGlider.h" />
     <ClInclude Include="Src\Scene\Select\SceneOption.h" />
@@ -481,6 +483,12 @@
     </FxCompile>
     <FxCompile Include="Src\Shader\PostEffect\Monotone.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\PostEffect\Number.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Src\Shader\PostEffect\ScanLine.hlsl">

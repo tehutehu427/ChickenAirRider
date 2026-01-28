@@ -20,6 +20,9 @@ void ResourceManager::Init(void)
 	//タイトル画像のパス
 	std::wstring titleImage = PATH_IMG + L"Title/";
 
+	//セレクト画像のパス
+	std::wstring selectImage = PATH_IMG + L"Select/";
+
 	//UI画像のパス
 	std::wstring uiImage = PATH_IMG + L"UI/";
 
@@ -68,6 +71,39 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, titleImage + L"PushAnyButton.png");
 	resourcesMap_.emplace(SRC::PUSH_ANY_BUTTON, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"SelectMenu.png");
+	resourcesMap_.emplace(SRC::MENU_BAR, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"GameStart.png");
+	resourcesMap_.emplace(SRC::GAME_START_TEXT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"Option.png");
+	resourcesMap_.emplace(SRC::OPTION_TEXT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"ForTitle.png");
+	resourcesMap_.emplace(SRC::GO_TITLE_TEXT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"EndGame.png");
+	resourcesMap_.emplace(SRC::GAME_END_TEXT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"TimeLimit.png");
+	resourcesMap_.emplace(SRC::TIME_LIMIT_TEXT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"FullScreen.png");
+	resourcesMap_.emplace(SRC::FULL_SCREEN_TEXT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"On.png");
+	resourcesMap_.emplace(SRC::ON_TEXT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"Off.png");
+	resourcesMap_.emplace(SRC::OFF_TEXT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"KeyConfig.png");
+	resourcesMap_.emplace(SRC::KEY_CONFIG_TEXT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"End.png");
+	resourcesMap_.emplace(SRC::END_TEXT, std::move(res));
+
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"ChargeGauge.png");
 	resourcesMap_.emplace(SRC::CHARGE_GAUGE, std::move(res));
 
@@ -83,8 +119,17 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"TimerFrame.png");
 	resourcesMap_.emplace(SRC::TIMER_FRAME, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::IMGS, uiImage + L"FinishNumber.png", NUMBER_NUM_X, NUMBER_NUM_Y, NUMBER_SIZE, NUMBER_SIZE);
+	resourcesMap_.emplace(SRC::FINISH_NUMBER, std::move(res));
+	
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"Finish.png");
 	resourcesMap_.emplace(SRC::FINISH, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"DeathMatchExplan.png");
+	resourcesMap_.emplace(SRC::DEATH_MATCH_CHECK_IMAGE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"DeathMatchExplanText.png");
+	resourcesMap_.emplace(SRC::DEATH_MATCH_CHECK_TITLE, std::move(res));
 
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"AirGliderExplan.png");
 	resourcesMap_.emplace(SRC::AIR_GLIDER_CHECK_IMAGE, std::move(res));

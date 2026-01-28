@@ -1,7 +1,10 @@
 #include "../pch.h"
+#include "../Application.h"
+#include "../Utility/Utility.h"
 #include "../Manager/System/KeyConfig.h"
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/ResourceManager.h"
+#include "../Manager/System/SoundManager.h"
 #include "../Manager/Game/UIManager.h"
 #include "../Manager/Game/Timer.h"
 #include "../Manager/Game/GameSetting.h"
@@ -27,6 +30,10 @@ GameCheck::~GameCheck(void)
 
 void GameCheck::Init(void)
 {
+	//インスタンス
+	auto& res = ResourceManager::GetInstance();
+	auto& snd = SoundManager::GetInstance();
+
 	//タイマー設定
 	timer_ = std::make_unique<Timer>();
 	timer_->Init(LAST_GAME_CHECK_TIME);
@@ -42,12 +49,18 @@ void GameCheck::Init(void)
 		UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::CHECK_PARAM,i);
 	}
 
-	//インスタンス
-	auto& res = ResourceManager::GetInstance();
-
 	//画像
+	lastGameImage_.emplace(static_cast<int>(SceneGame::LAST_GAME_TYPE::DEATH_MATCH), res.Load(ResourceManager::SRC::DEATH_MATCH_CHECK_IMAGE).handleId_);
 	lastGameImage_.emplace(static_cast<int>(SceneGame::LAST_GAME_TYPE::AIR_GLIDER), res.Load(ResourceManager::SRC::AIR_GLIDER_CHECK_IMAGE).handleId_);
+	lastGameTitle_.emplace(static_cast<int>(SceneGame::LAST_GAME_TYPE::DEATH_MATCH), res.Load(ResourceManager::SRC::DEATH_MATCH_CHECK_TITLE).handleId_);
 	lastGameTitle_.emplace(static_cast<int>(SceneGame::LAST_GAME_TYPE::AIR_GLIDER), res.Load(ResourceManager::SRC::AIR_GLIDER_CHECK_TITLE).handleId_);
+
+	//BGM読み込み
+	int id = res.Load(ResourceManager::SRC::SELECT_BGM).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::SELECT_BGM, id, SoundManager::TYPE::BGM);
+
+	//BGM再生
+	snd.Play(SoundManager::SOUND_NAME::SELECT_BGM, SoundManager::PLAYTYPE::LOOP);
 }
 
 void GameCheck::Update(void)
@@ -58,14 +71,15 @@ void GameCheck::Update(void)
 
 void GameCheck::Draw(const Camera& _camera)
 {
-	DebugDraw();
-
 	//描画
 	draw_[state_]();
 }
 
 void GameCheck::Release(void)
 {
+	//BGMストップ
+	auto& snd = SoundManager::GetInstance();
+	snd.Stop(SoundManager::SOUND_NAME::SELECT_BGM);
 }
 
 void GameCheck::DebugDraw(void)
@@ -110,9 +124,20 @@ void GameCheck::UpdateLastGame(void)
 
 void GameCheck::DrawPlayerParam(void)
 {
-
+	//UI側で表示
 }
 
 void GameCheck::DrawLastGame(void)
 {
+	//最終ゲーム番号
+	int lastGame = static_cast<int>(parent_.GetLastGameType());
+
+	//最終ゲームの表示
+	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, lastGameImage_[lastGame], true);
+
+	//テキストボックス
+	DrawBox(0, Application::SCREEN_HALF_Y - TEXT_BOX_RANGE, Application::SCREEN_SIZE_X, Application::SCREEN_HALF_Y + TEXT_BOX_RANGE, Utility::GRAY, true);
+
+	//最終ゲームタイトルの表示
+	DrawRotaGraph(Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y, 1.5, 0.0, lastGameTitle_[lastGame], true);
 }

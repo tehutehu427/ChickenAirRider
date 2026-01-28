@@ -63,6 +63,8 @@ private:
 	static constexpr int PARAM_BOX_SIZE = 40;						//箱サイズ
 	static constexpr int PARAM_BOX_INTERVAL = 20;					//箱の間隔
 	static constexpr int POWER_UP_INTERVAL = 150;					//パワーアップ画像の間隔
+	static constexpr int PARAM_NUMBER_LOCAL_POS = 100;				//パラメーター確認用数字の間隔
+	static constexpr int NUMBER_INTERVAL = 30;						//数字間の間
 	static constexpr Vector2F PARAM_BOX_START_POS = { 0.2f,0.1f };	//箱のUV座標
 
 	//体力

@@ -13,58 +13,58 @@
 SceneSelect::SceneSelect(void)
 {
 	backImg_ = -1;
-	selectTypeNum_ = static_cast<int>(SELECT_TYPE::GAME_START);
-	nowSelectType_ = SELECT_TYPE::HOME;
-	selectType_ = SELECT_TYPE::GAME_START;
+	selectTypeNum_ = static_cast<int>(MENU_TYPE::GAME_START);
+	nowSelectType_ = MENU_TYPE::HOME;
+	selectType_ = MENU_TYPE::GAME_START;
 	playerNum_[PLAYER_NUM_SELECT::USER] = 0;
 	playerNum_[PLAYER_NUM_SELECT::NPC] = 0;
 	playerNumSelect_ = PLAYER_NUM_SELECT::USER;
 
 	//更新
-	update_[SELECT_TYPE::HOME] = [this](void)
+	update_[MENU_TYPE::HOME] = [this](void)
 	{
 		UpdateHome();
 	};
-	update_[SELECT_TYPE::GAME_START] = [this](void)
+	update_[MENU_TYPE::GAME_START] = [this](void)
 	{
 		UpdateGameStart();
 	};
-	update_[SELECT_TYPE::OPTION] = [this](void)
+	update_[MENU_TYPE::OPTION] = [this](void)
 	{
 		UpdateOption();
 	};
-	update_[SELECT_TYPE::TITLE] = [this](void)
+	update_[MENU_TYPE::TITLE] = [this](void)
 	{
 		UpdateTitle();
 	};
-	update_[SELECT_TYPE::GAME_END] = [this](void)
+	update_[MENU_TYPE::GAME_END] = [this](void)
 	{
 		UpdateGameEnd();
 	};
-	update_[SELECT_TYPE::MAX] = [this](void){};
+	update_[MENU_TYPE::MAX] = [this](void){};
 
 	//描画
-	draw_[SELECT_TYPE::HOME] = [this](void)
+	draw_[MENU_TYPE::HOME] = [this](void)
 	{
 		DrawHome();
 	};
-	draw_[SELECT_TYPE::GAME_START] = [this](void)
+	draw_[MENU_TYPE::GAME_START] = [this](void)
 	{
 		DrawGameStart();
 	};
-	draw_[SELECT_TYPE::OPTION] = [this](void)
+	draw_[MENU_TYPE::OPTION] = [this](void)
 	{
 		DrawOption();
 	};
-	draw_[SELECT_TYPE::TITLE] = [this](void)
+	draw_[MENU_TYPE::TITLE] = [this](void)
 	{
 		DrawTitle();
 	};
-	draw_[SELECT_TYPE::GAME_END] = [this](void)
+	draw_[MENU_TYPE::GAME_END] = [this](void)
 	{
 		DrawGameEnd();
 	};
-	draw_[SELECT_TYPE::MAX] = [this](void){};
+	draw_[MENU_TYPE::MAX] = [this](void){};
 }
 
 SceneSelect::~SceneSelect(void)
@@ -74,14 +74,21 @@ SceneSelect::~SceneSelect(void)
 
 void SceneSelect::Load(void)
 {
-	//背景
-	backImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE_BACK).handleId_;
-
-	//サウンド
+	//インスタンス
 	auto& snd = SoundManager::GetInstance();
 	auto& res = ResourceManager::GetInstance();
 
-	//追加
+	//背景
+	backImg_ = res.Load(ResourceManager::SRC::TITLE_BACK).handleId_;
+
+	//メニュー
+	menuBarImg_ = res.Load(ResourceManager::SRC::MENU_BAR).handleId_;
+	menuImg_.emplace(MENU_TYPE::GAME_START, res.Load(ResourceManager::SRC::GAME_START_TEXT).handleId_);
+	menuImg_.emplace(MENU_TYPE::OPTION, res.Load(ResourceManager::SRC::OPTION_TEXT).handleId_);
+	menuImg_.emplace(MENU_TYPE::TITLE, res.Load(ResourceManager::SRC::GO_TITLE_TEXT).handleId_);
+	menuImg_.emplace(MENU_TYPE::GAME_END, res.Load(ResourceManager::SRC::GAME_END_TEXT).handleId_);
+
+	//サウンド
 	int id = res.Load(ResourceManager::SRC::SELECT_BGM).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::SELECT_BGM, id, SoundManager::TYPE::BGM);
 
@@ -98,9 +105,9 @@ void SceneSelect::Load(void)
 void SceneSelect::Init(void)
 {
 	//初期化
-	selectTypeNum_ = static_cast<int>(SELECT_TYPE::GAME_START);
-	selectType_ = SELECT_TYPE::GAME_START;
-	nowSelectType_ = SELECT_TYPE::HOME;
+	selectTypeNum_ = static_cast<int>(MENU_TYPE::GAME_START);
+	selectType_ = MENU_TYPE::GAME_START;
+	nowSelectType_ = MENU_TYPE::HOME;
 	playerNum_[PLAYER_NUM_SELECT::USER] = 1;
 	playerNum_[PLAYER_NUM_SELECT::NPC] = 0;
 	playerNumSelect_ = PLAYER_NUM_SELECT::USER;
@@ -169,7 +176,7 @@ void SceneSelect::UpdateHome(void)
 		snd.Play(SoundManager::SOUND_NAME::SELECT_SE, SoundManager::PLAYTYPE::BACK);
 
 		//カウントダウン
-		selectTypeNum_ = (selectTypeNum_ - 1 + static_cast<int>(SELECT_TYPE::MAX)) % static_cast<int>(SELECT_TYPE::MAX);
+		selectTypeNum_ = (selectTypeNum_ - 1 + static_cast<int>(MENU_TYPE::MAX)) % static_cast<int>(MENU_TYPE::MAX);
 	}
 	//下入力
 	else if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_DOWN, KeyConfig::JOYPAD_NO::PAD1))
@@ -178,11 +185,11 @@ void SceneSelect::UpdateHome(void)
 		snd.Play(SoundManager::SOUND_NAME::SELECT_SE, SoundManager::PLAYTYPE::BACK);
 	
 		//カウントアップ
-		selectTypeNum_ = (selectTypeNum_ + 1) % static_cast<int>(SELECT_TYPE::MAX);
+		selectTypeNum_ = (selectTypeNum_ + 1) % static_cast<int>(MENU_TYPE::MAX);
 	}
 
 	//選択肢入れ替え
-	selectType_ = static_cast<SELECT_TYPE>(selectTypeNum_ % static_cast<int>(SELECT_TYPE::MAX));
+	selectType_ = static_cast<MENU_TYPE>(selectTypeNum_ % static_cast<int>(MENU_TYPE::MAX));
 }
 
 void SceneSelect::UpdateGameStart(void)
@@ -220,7 +227,7 @@ void SceneSelect::UpdateGameStart(void)
 		snd.Play(SoundManager::SOUND_NAME::CANCEL, SoundManager::PLAYTYPE::BACK);
 
 		//ホームに戻る
-		nowSelectType_ = SELECT_TYPE::HOME;
+		nowSelectType_ = MENU_TYPE::HOME;
 	}
 
 	//上入力
@@ -250,15 +257,15 @@ void SceneSelect::UpdateGameStart(void)
 		playerNum_[playerNumSelect_] = playerNum_[playerNumSelect_] - 1;
 	}
 	//左右入力
-	else if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_RIGHT, KeyConfig::JOYPAD_NO::PAD1)
-		|| key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_LEFT, KeyConfig::JOYPAD_NO::PAD1))
-	{
-		//選択音
-		snd.Play(SoundManager::SOUND_NAME::SELECT_SE, SoundManager::PLAYTYPE::BACK);
-		
-		//ユーザーとNPC選択の切り替え
-		playerNumSelect_ = static_cast<PLAYER_NUM_SELECT>((static_cast<int>(playerNumSelect_) + 1) % static_cast<int>(PLAYER_NUM_SELECT::MAX));
-	}
+	//else if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_RIGHT, KeyConfig::JOYPAD_NO::PAD1)
+	//	|| key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_LEFT, KeyConfig::JOYPAD_NO::PAD1))
+	//{
+	//	//選択音
+	//	snd.Play(SoundManager::SOUND_NAME::SELECT_SE, SoundManager::PLAYTYPE::BACK);
+	//	
+	//	//ユーザーとNPC選択の切り替え
+	//	playerNumSelect_ = static_cast<PLAYER_NUM_SELECT>((static_cast<int>(playerNumSelect_) + 1) % static_cast<int>(PLAYER_NUM_SELECT::MAX));
+	//}
 }
 
 void SceneSelect::UpdateOption(void)
@@ -267,7 +274,7 @@ void SceneSelect::UpdateOption(void)
 	SceneManager::GetInstance().PushScene(SceneManager::SCENE_ID::OPTION);
 
 	//ホームに戻る
-	nowSelectType_ = SELECT_TYPE::HOME;
+	nowSelectType_ = MENU_TYPE::HOME;
 }
 
 void SceneSelect::UpdateTitle(void)
@@ -284,17 +291,35 @@ void SceneSelect::UpdateGameEnd(void)
 
 void SceneSelect::DrawHome(void)
 {
-	//選択肢(デバッグ)
-	DrawString(SELECT_POS_X, SELECT_POS_Y, L"GAME START", selectType_ == SELECT_TYPE::GAME_START ? Utility::RED : Utility::WHITE);
-	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS, L"OPTION", selectType_ == SELECT_TYPE::OPTION ? Utility::RED : Utility::WHITE);
-	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 2, L"TITLE", selectType_ == SELECT_TYPE::TITLE ? Utility::RED : Utility::WHITE);
-	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 3, L"GAME END", selectType_ == SELECT_TYPE::GAME_END ? Utility::RED : Utility::WHITE);
+	//ゲームスタート
+	if (selectType_ == MENU_TYPE::GAME_START)SetDrawBright(255, 255, 0);
+	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y, SELECT_SCALE_DEFAULT, 0.0, menuBarImg_, true);
+	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y, SELECT_SCALE_DEFAULT, 0.0, menuImg_[MENU_TYPE::GAME_START], true);
+	SetDrawBright(255, 255, 255);
+
+	//オプション
+	if (selectType_ == MENU_TYPE::OPTION)SetDrawBright(255, 255, 0);
+	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS, SELECT_SCALE_DEFAULT, 0.0, menuBarImg_, true);
+	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS, SELECT_SCALE_DEFAULT, 0.0, menuImg_[MENU_TYPE::OPTION], true);
+	SetDrawBright(255, 255, 255);
+
+	//タイトルへ
+	if (selectType_ == MENU_TYPE::TITLE)SetDrawBright(255, 255, 0);
+	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 2, SELECT_SCALE_DEFAULT, 0.0, menuBarImg_, true);
+	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 2, SELECT_SCALE_DEFAULT, 0.0, menuImg_[MENU_TYPE::TITLE], true);
+	SetDrawBright(255, 255, 255);
+
+	//ゲーム終了
+	if (selectType_ == MENU_TYPE::GAME_END)SetDrawBright(255, 255, 0);
+	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 3, SELECT_SCALE_DEFAULT, 0.0, menuBarImg_, true);
+	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 3, SELECT_SCALE_DEFAULT, 0.0, menuImg_[MENU_TYPE::GAME_END], true);
+	SetDrawBright(255, 255, 255);
 }
 
 void SceneSelect::DrawGameStart(void)
 {
 	DrawFormatString(PLAYER_NUM_POS_X, PLAYER_NUM_POS_Y, playerNumSelect_ == PLAYER_NUM_SELECT::USER ? Utility::RED : Utility::WHITE, L"プレイヤー人数 = %d", playerNum_[PLAYER_NUM_SELECT::USER]);
-	DrawFormatString(PLAYER_NUM_POS_X + PLAYER_NUM_LOCAL_POS, PLAYER_NUM_POS_Y, playerNumSelect_ == PLAYER_NUM_SELECT::NPC ? Utility::RED : Utility::WHITE, L"NPC人数 = %d", playerNum_[PLAYER_NUM_SELECT::NPC]);
+	//DrawFormatString(PLAYER_NUM_POS_X + PLAYER_NUM_LOCAL_POS, PLAYER_NUM_POS_Y, playerNumSelect_ == PLAYER_NUM_SELECT::NPC ? Utility::RED : Utility::WHITE, L"NPC人数 = %d", playerNum_[PLAYER_NUM_SELECT::NPC]);
 }
 
 void SceneSelect::DrawOption(void)
@@ -304,10 +329,10 @@ void SceneSelect::DrawOption(void)
 void SceneSelect::DrawTitle(void)
 {
 	//選択肢(デバッグ)
-	DrawString(SELECT_POS_X, SELECT_POS_Y, L"GAME START", selectType_ == SELECT_TYPE::GAME_START ? Utility::RED : Utility::WHITE);
-	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS, L"OPTION", selectType_ == SELECT_TYPE::OPTION ? Utility::RED : Utility::WHITE);
-	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 2, L"TITLE", selectType_ == SELECT_TYPE::TITLE ? Utility::RED : Utility::WHITE);
-	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 3, L"GAME END", selectType_ == SELECT_TYPE::GAME_END ? Utility::RED : Utility::WHITE);
+	DrawString(SELECT_POS_X, SELECT_POS_Y, L"GAME START", selectType_ == MENU_TYPE::GAME_START ? Utility::RED : Utility::WHITE);
+	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS, L"OPTION", selectType_ == MENU_TYPE::OPTION ? Utility::RED : Utility::WHITE);
+	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 2, L"TITLE", selectType_ == MENU_TYPE::TITLE ? Utility::RED : Utility::WHITE);
+	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 3, L"GAME END", selectType_ == MENU_TYPE::GAME_END ? Utility::RED : Utility::WHITE);
 }
 
 void SceneSelect::DrawGameEnd(void)

@@ -106,6 +106,7 @@ void GameMain::Release(void)
 	auto& ui = UIManager::GetInstance();
 	auto& setMng = GameSetting::GetInstance();
 	auto& gloUi = GlobalUIManager::GetInstance();
+	auto& snd = SoundManager::GetInstance();
 
 	//UIの削除
 	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
@@ -119,6 +120,9 @@ void GameMain::Release(void)
 	gloUi.GetTimer().SetCountView(false);
 	gloUi.GetTimer().SetTimeLimit(setMng.GetTimeLimit());
 	gloUi.SubDraw(GlobalUIManager::DRAW_TYPE::TIMER);
+
+	//BGMストップ
+	snd.Stop(SoundManager::SOUND_NAME::MAIN_GAME_BGM);
 }
 
 void GameMain::DebugDraw(void)

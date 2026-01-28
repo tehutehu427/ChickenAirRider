@@ -31,9 +31,6 @@ public:
 	//順位決定
 	void ConfirmRank(const int _playerIndex);
 
-	//順位が決まったかどうか
-	const bool IsComfirmRanks(void) { return nowRank_ < 2; };
-
 protected:
 
 	//プレイヤーの順位
@@ -41,6 +38,9 @@ protected:
 
 	//現在順位
 	int nowRank_;
+
+	//終了判定
+	bool isEnd_;
 
 	//デバッグ描画
 	virtual void DebugDraw(void)override;

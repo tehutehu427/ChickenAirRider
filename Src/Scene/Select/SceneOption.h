@@ -37,14 +37,22 @@ private:
 	};
 
 	//選択肢の位置
-	static constexpr int SELECT_POS_X = 200;
-	static constexpr int SELECT_POS_Y = 200;
-	static constexpr int SELECT_LOCAL_POS_X = 300;
-	static constexpr int SELECT_LOCAL_POS_Y = 64;
+	static constexpr int SELECT_POS_X = 320;
+	static constexpr int SELECT_POS_Y = 150;
+	static constexpr int SELECT_POS_X_1 = 200;
+	static constexpr int SELECT_POS_Y_1 = 100;
+	static constexpr int SELECT_POS_X_2 = 800;
+	static constexpr int SELECT_POS_Y_2 = 200;
+	static constexpr int SELECT_LOCAL_POS_X = 350;
+	static constexpr int SELECT_LOCAL_POS_Y = 130;
+	static constexpr float SELECT_SCALE_DEFAULT = 0.3f;
+	static constexpr int SELECT_LOCAL_POS_X_2 = 360;
 
 	//時間制限の制限
 	static constexpr int TIME_LIMIT_MIN = 10;	
 	static constexpr int TIME_LIMIT_MAX = 300;	
+	static constexpr int NUMBER_INTERVAL = 30;	
+	static constexpr float NUMBER_SCALE = 0.8f;	
 
 	//時間制限の倍率
 	static constexpr int TIME_SEC_MULTI = 10;
@@ -55,6 +63,16 @@ private:
 
 	//背景
 	int backImg_;
+
+	//メニュー欄
+	int menuBarImg_;
+	std::unordered_map<OPTION_TYPE, int>menuImg_;
+	std::unordered_map<bool, int>onOffImg_;
+	int* numberImgs_;
+	int colonImg_;
+
+	//カウンタ
+	float cnt_;
 
 	//設定
 	OPTION_TYPE type_;

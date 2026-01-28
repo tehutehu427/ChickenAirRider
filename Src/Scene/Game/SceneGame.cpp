@@ -1,5 +1,4 @@
 #include"../pch.h"
-#include"../Application.h"
 #include"../Common/SingletonRegistry.h"
 #include"../Utility/Utility.h"
 #include"../Manager/System/SceneManager.h"
@@ -15,7 +14,6 @@
 #include"../Manager/Game/ItemManager.h"
 #include"../Scene/Game/GameMain.h"
 #include"../Scene/Game/GameCheck.h"
-#include"../Scene/Game/LastMiniGame/LastGameBase.h"
 #include"../Scene/Game/LastMiniGame/DeathMatch.h"
 #include"../Scene/Game/LastMiniGame/AirGlider.h"
 #include "SceneGame.h"
@@ -24,8 +22,13 @@ SceneGame::SceneGame(void)
 {
 	gameState_ = GAME_STATE::MAIN;
 
+	//最終ゲーム
 	createLastGame_.emplace(LAST_GAME_TYPE::DEATH_MATCH, [this](void) {return std::make_unique<DeathMatch>(*this); });
 	createLastGame_.emplace(LAST_GAME_TYPE::AIR_GLIDER, [this](void) {return std::make_unique<AirGlider>(*this); });
+	
+	//ソロ用最終ゲーム判定
+	soloLastGameJudge_.emplace(LAST_GAME_TYPE::DEATH_MATCH, false);
+	soloLastGameJudge_.emplace(LAST_GAME_TYPE::AIR_GLIDER, true);
 }
 
 SceneGame::~SceneGame(void)
@@ -123,9 +126,25 @@ void SceneGame::ChangeGameState(const GAME_STATE _gameState)
 
 void SceneGame::ResetLastGame(void)
 {
+	//プレイヤーの数
+	const int plNum = GameSetting::GetInstance().GetPlayerNum();
+
 	//ランダム
 	LAST_GAME_TYPE rand = static_cast<LAST_GAME_TYPE>(Utility::GetRandomValue(0, static_cast<int>(LAST_GAME_TYPE::MAX) - 1));
-	rand = LAST_GAME_TYPE::AIR_GLIDER;
+
+	//ソロなら
+	if (plNum <= 1)
+	{
+		//判定
+		bool judge = soloLastGameJudge_[rand];
+
+		//ソロでできるゲームにする
+		while (!judge)
+		{
+			rand = static_cast<LAST_GAME_TYPE>(Utility::GetRandomValue(0, static_cast<int>(LAST_GAME_TYPE::MAX) - 1));
+			judge = soloLastGameJudge_[rand];
+		}
+	}
 
 	//保存
 	lastGameType_ = rand;

@@ -1,9 +1,11 @@
 #include "../pch.h"
 #include "../Manager/System/SceneManager.h"
+#include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/KeyConfig.h"
 #include "../Manager/System/Camera.h"
 #include "../Manager/Game/GameSetting.h"
 #include "../Manager/Game/PlayerManager.h"
+#include "../Manager/System/SoundManager.h"
 #include "../Object/Player/Player.h"
 #include "../Object/SkyDome/SkyDome.h"
 #include "LastGameBase.h"
@@ -21,7 +23,9 @@ LastGameBase::~LastGameBase(void)
 void LastGameBase::Init(void)
 {
 	//インスタンス
+	auto& res = ResourceManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
+	auto& snd = SoundManager::GetInstance();
 
 	//プレイヤーの人数
 	const int plNum = GameSetting::GetInstance().GetPlayerNum();
@@ -40,6 +44,9 @@ void LastGameBase::Init(void)
 	//順位用
 	nowRank_ = plNum;
 
+	//終了判定
+	isEnd_ = false;
+
 	//プレイヤーが機体から降りれなくする
 	plMng.PlayerCanGetOff(false);
 
@@ -48,6 +55,14 @@ void LastGameBase::Init(void)
 	{
 		SceneManager::GetInstance().SetIsSplitMode(true);
 	}
+
+	//BGM読み込み
+	int id = res.Load(ResourceManager::SRC::LAST_GAME_BGM).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::LAST_GAME_BGM, id, SoundManager::TYPE::BGM);
+
+	//BGM再生
+	snd.Play(SoundManager::SOUND_NAME::LAST_GAME_BGM, SoundManager::PLAYTYPE::LOOP);
+
 }
 
 void LastGameBase::Update(void)
@@ -57,44 +72,49 @@ void LastGameBase::Update(void)
 	auto& setting = GameSetting::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 
-	//決定
-	//if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::ENTER, KeyConfig::JOYPAD_NO::PAD1))
-	//{
-	//	//タイトルへ
-	//	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE, true, true);
-	//}
+	//プレイヤーの人数
+	const int plNum = GameSetting::GetInstance().GetPlayerNum();
 
 	//スカイドームの更新
 	sky_->Update();
 
+	//プレイヤーが二人以上で　かつ　順位が確定した
+	if (plNum > 1 && nowRank_ < 2)
+	{
+		isEnd_ = true;
+	}
+
 	//順位が決まった
-	//if (IsComfirmRanks())
-	//{
-	//	//プレイヤー人数
-	//	const int plNum = setting.GetPlayerNum();
+	if (isEnd_)
+	{
+		//プレイヤー人数
+		const int plNum = setting.GetPlayerNum();
 
-	//	//最後が勝者
-	//	for (int i = 0; i < plNum; i++)
-	//	{
-	//		//プレイヤー
-	//		const auto& pl = plMng.GetPlayer(i);
-	//		ConfirmRank(pl.GetPlayerIndex());
-	//	}
+		//最後が勝者
+		for (int i = 0; i < plNum; i++)
+		{
+			//プレイヤー
+			const auto& pl = plMng.GetPlayer(i);
+			ConfirmRank(pl.GetPlayerIndex());
+		}
 
-	//	//タイトルへ
-	//	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE, true, true);
-	//}
+		//タイトルへ
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE, true, true);
+	}
 }
 
 void LastGameBase::Draw(const Camera& _camera)
 {
-	DebugDraw();
 }
 
 void LastGameBase::Release(void)
 {
 	//プレイヤーの数リセット
 	GameSetting::GetInstance().ResetPlayerNum();
+
+	//BGMストップ
+	auto& snd = SoundManager::GetInstance();
+	snd.Stop(SoundManager::SOUND_NAME::LAST_GAME_BGM);
 }
 
 void LastGameBase::ConfirmRank(const int _playerIndex)

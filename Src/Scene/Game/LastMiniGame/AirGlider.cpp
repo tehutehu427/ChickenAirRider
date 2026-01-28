@@ -76,6 +76,12 @@ void AirGlider::Update(void)
 		{
 			//プレイヤー番号と飛距離(Z座標)を保持
 			flightDistance_.emplace(pl.GetPlayerIndex(), pl.GetTrans().pos.z);
+			
+			//プレイヤーが一人なら
+			if (plNum <= 1)
+			{
+				isEnd_ = true;
+			}
 		}
 	}
 

@@ -62,6 +62,9 @@ private:
 
 	//最終ゲーム生成
 	std::unordered_map<LAST_GAME_TYPE, std::function<std::unique_ptr<GameBase>(void)>> createLastGame_;
+	
+	//ソロでもできるかのチェック
+	std::unordered_map<LAST_GAME_TYPE, bool> soloLastGameJudge_;
 
 	//最終ゲームを再構築
 	void ResetLastGame(void);

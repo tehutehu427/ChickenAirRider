@@ -30,6 +30,9 @@ public:
 
 private:
 
+	//文字背景
+	static constexpr int TEXT_BOX_RANGE = 100;
+
 	//最終ゲーム確認時間
 	static constexpr int LAST_GAME_CHECK_TIME = 5;
 

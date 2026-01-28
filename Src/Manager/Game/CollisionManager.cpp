@@ -48,11 +48,8 @@ void CollisionManager::Update(void)
 
 	for (int i = 0; i < colSize - 1; i++)
 	{
-		//コライダ
-		auto& coli = colliders_[i];
-
 		//コライダが死亡済みなら
-		if (coli->IsDead())
+		if (colliders_[i]->IsDead())
 		{
 			//飛ばす
 			continue;
@@ -60,32 +57,29 @@ void CollisionManager::Update(void)
 
 		for (int j = i + 1; j < colSize; j++)
 		{
-			//コライダ
-			auto& colj = colliders_[j];
-
 			//コライダが死亡済みなら
-			if (coli->IsDead() || colj->IsDead())
+			if (colliders_[i]->IsDead() || colliders_[j]->IsDead())
 			{
 				//飛ばす
 				continue;
 			}
 
 			//同一所持者をスキップ
-			if (&coli->GetOwner() == &colj->GetOwner())
+			if (&colliders_[i]->GetOwner() == &colliders_[j]->GetOwner())
 			{
 				//飛ばす
 				continue;
 			}
 
 			//当たり判定前に切り捨て
-			if (!IsBroudCollision(coli->GetOwner(), colj->GetOwner()))
+			if (!IsBroudCollision(colliders_[i]->GetOwner(), colliders_[j]->GetOwner()))
 			{
 				//飛ばす
 				continue;
 			}
 
 			//当たり判定をするタグか
-			if (!IsCollisionTag(*coli, *colj))
+			if (!IsCollisionTag(*colliders_[i], *colliders_[j]))
 			{
 				//飛ばす
 				continue;
@@ -99,20 +93,20 @@ void CollisionManager::Update(void)
 			}
 
 			//当たり判定
-			if (IsCollision(*coli, *colj))
+			if (IsCollision(*colliders_[i], *colliders_[j]))
 			{
 				//それぞれの当たった処理
-				coli->OnHit(colj);
-				colj->OnHit(coli);
+				colliders_[i]->OnHit(colliders_[j]);
+				colliders_[j]->OnHit(colliders_[i]);
 
 				//当たった後の処理
-				if (!coli->IsDead())
+				if (!colliders_[i]->IsDead())
 				{
-					coli->GetGeometry().HitAfter();
+					colliders_[i]->GetGeometry().HitAfter();
 				}
-				if (!colj->IsDead())
+				if (!colliders_[j]->IsDead())
 				{
-					colj->GetGeometry().HitAfter();
+					colliders_[j]->GetGeometry().HitAfter();
 				}
 			}
 		}
