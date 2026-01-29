@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneBase.h"
+#include "../Object/Common/Transform.h"
 
 class SceneResult : public SceneBase
 {
@@ -21,5 +22,12 @@ public:
 	//‰ğ•ú
 	void Release(void)override;
 
+private:
+
+	//ƒ‚ƒfƒ‹î•ñ
+	std::vector<Transform> trans_;
+
+	//‡ˆÊ
+	std::unordered_map<int, int> rankImg_;
 };
 

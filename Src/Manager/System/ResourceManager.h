@@ -99,6 +99,12 @@ public:
 		AIR_GLIDER_CHECK_IMAGE,		//エアグライダーの確認画像
 		AIR_GLIDER_CHECK_TITLE,		//エアグライダーの確認見出し
 
+		//リザルト
+		RANK_ONE,		//1位
+		RANK_TWO,		//2位
+		RANK_THREE,		//3位
+		RANK_FOUR,		//4位
+
 		//サウンド
 
 		//BGM

@@ -23,6 +23,9 @@ void ResourceManager::Init(void)
 	//セレクト画像のパス
 	std::wstring selectImage = PATH_IMG + L"Select/";
 
+	//リザルト画像のパス
+	std::wstring resultImage = PATH_IMG + L"Result/";
+
 	//UI画像のパス
 	std::wstring uiImage = PATH_IMG + L"UI/";
 
@@ -136,6 +139,18 @@ void ResourceManager::Init(void)
 
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"AirGliderExplanText.png");
 	resourcesMap_.emplace(SRC::AIR_GLIDER_CHECK_TITLE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, resultImage + L"1stImage.png");
+	resourcesMap_.emplace(SRC::RANK_ONE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, resultImage + L"2ndImage.png");
+	resourcesMap_.emplace(SRC::RANK_TWO, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, resultImage + L"3rdImage.png");
+	resourcesMap_.emplace(SRC::RANK_THREE, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, resultImage + L"4thImage.png");
+	resourcesMap_.emplace(SRC::RANK_FOUR, std::move(res));
 
 #pragma endregion 
 
