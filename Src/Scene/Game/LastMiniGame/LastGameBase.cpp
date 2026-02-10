@@ -18,6 +18,7 @@ LastGameBase::LastGameBase(SceneGame& _parent)
 
 LastGameBase::~LastGameBase(void)
 {
+	ranks_.clear();
 }
 
 void LastGameBase::Init(void)
@@ -97,9 +98,12 @@ void LastGameBase::Update(void)
 			const auto& pl = plMng.GetPlayer(i);
 			ConfirmRank(pl.GetPlayerIndex());
 		}
+		
+		//プレイヤーマネージャーに送る
+		plMng.SetRanks(ranks_);
 
 		//タイトルへ
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE, true, true);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT, true, true);
 	}
 }
 
@@ -125,6 +129,15 @@ void LastGameBase::ConfirmRank(const int _playerIndex)
 	//順位決定
 	ranks_.emplace(_playerIndex, nowRank_);
 	nowRank_--;
+}
+
+void LastGameBase::ConfirmRank(const std::unordered_map<int, int> _ranks)
+{
+	//順位を張り付ける
+	ranks_ = _ranks;
+
+	//順位確定
+	nowRank_ = 1;
 }
 
 void LastGameBase::DebugDraw(void)

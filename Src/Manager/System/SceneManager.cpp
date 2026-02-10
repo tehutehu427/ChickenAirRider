@@ -1,13 +1,11 @@
 #include"../pch.h"
 #include "Camera.h"
-#include "ResourceManager.h"
-#include "SoundManager.h"
-#include "../Game/PlayerManager.h"
 #include "../FpsControl/FpsControl.h"
 #include "../Scene/SceneTitle.h"
 #include "../Scene/Select/SceneSelect.h"
 #include "../Scene/Select/SceneOption.h"
 #include "../Scene/Game/SceneGame.h"
+#include "../Scene/SceneResult.h"
 #include "../Game/GameSetting.h"
 #include "../Game/GlobalUIManager.h"
 #include "../Game/Timer.h"
@@ -41,6 +39,7 @@ SceneManager::SceneManager(void)
 	createScene_[SCENE_ID::SELECT] = [this](void) {return CreateSceneSelect(); };
 	createScene_[SCENE_ID::OPTION] = [this](void) {return CreateSceneOption(); };
 	createScene_[SCENE_ID::GAME] = [this](void) {return CreateSceneGame(); };
+	createScene_[SCENE_ID::RESULT] = [this](void) {return CreateSceneResult(); };
 
 	//シーン変更
 	changeScene_[CHANGE_SCENE_STATE::PUSH_BACK] = [this](void) {ChangeScenePushBack(); };
@@ -624,6 +623,11 @@ std::unique_ptr<SceneBase> SceneManager::CreateSceneGame(void)
 {
 	//ゲームシーン生成
 	return std::move(std::make_unique<SceneGame>());
+}
+
+std::unique_ptr<SceneBase> SceneManager::CreateSceneResult(void)
+{
+	return std::move(std::make_unique<SceneResult>());
 }
 
 void SceneManager::ChangeScenePushBack(void)

@@ -89,6 +89,9 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"EndGame.png");
 	resourcesMap_.emplace(SRC::GAME_END_TEXT, std::move(res));
 
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"PlayerNumberText.png");
+	resourcesMap_.emplace(SRC::PLAYER_NUM_TEXT, std::move(res));
+
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"TimeLimit.png");
 	resourcesMap_.emplace(SRC::TIME_LIMIT_TEXT, std::move(res));
 
@@ -151,6 +154,12 @@ void ResourceManager::Init(void)
 
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, resultImage + L"4thImage.png");
 	resourcesMap_.emplace(SRC::RANK_FOUR, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, resultImage + L"ResultBack.png");
+	resourcesMap_.emplace(SRC::RESULT_BACK, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, resultImage + L"ResultBackCurtain.png");
+	resourcesMap_.emplace(SRC::CURTAIN, std::move(res));
 
 #pragma endregion 
 
@@ -245,7 +254,7 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::SOUND, bgmPath + L"LastGameBGM.mp3");
 	resourcesMap_.emplace(SRC::LAST_GAME_BGM, std::move(res));
 
-	res = std::make_unique<Resource>(Resource::TYPE::SOUND, bgmPath + L"Result.mp3");
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, bgmPath + L"ResultBGM.mp3");
 	resourcesMap_.emplace(SRC::RESULT_BGM, std::move(res));
 
 	//SE‚ÌƒpƒX

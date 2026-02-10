@@ -48,14 +48,11 @@ private:
 	static constexpr int SELECT_POS_Y = 150;
 	static constexpr int SELECT_LOCAL_POS = 100;
 	static constexpr float SELECT_SCALE_DEFAULT = 0.3f;
-	static constexpr float SELECT_SCALE_MIN = 0.25f;
-	static constexpr float SELECT_SCALE_MAX = 0.35f;
-	static constexpr float SIN_SPEED = 2.0f;
 
 	//プレイヤー人数の位置
-	static constexpr int PLAYER_NUM_POS_X= 300;
-	static constexpr int PLAYER_NUM_POS_Y = 300;
-	static constexpr int PLAYER_NUM_LOCAL_POS = 300;
+	static constexpr int PLAYER_NUM_TEXT_BOX_POS_X = 250;
+	static constexpr int PLAYER_NUM_TEXT_BOX_POS_Y = 100;
+	static constexpr int PLAYER_NUM_LOCAL_POS = 80;
 
 	//背景
 	int backImg_;
@@ -63,6 +60,8 @@ private:
 	//メニュー欄
 	int menuBarImg_;
 	std::unordered_map<MENU_TYPE, int>menuImg_;
+	int numberTextImg_;
+	int* numberImgs_;
 
 	//選択肢
 	MENU_TYPE selectType_;

@@ -76,6 +76,7 @@ public:
 		OPTION_TEXT,		//オプションテキスト
 		GO_TITLE_TEXT,		//タイトルへテキスト
 		GAME_END_TEXT,		//ゲーム終了テキスト
+		PLAYER_NUM_TEXT,	//プレイヤー人数テキスト
 		TIME_LIMIT_TEXT,	//制限時間テキスト
 		FULL_SCREEN_TEXT,	//フルスクリーンテキスト
 		ON_TEXT,			//オンテキスト
@@ -104,6 +105,8 @@ public:
 		RANK_TWO,		//2位
 		RANK_THREE,		//3位
 		RANK_FOUR,		//4位
+		RESULT_BACK,	//リザルト背景
+		CURTAIN,		//カーテン
 
 		//サウンド
 

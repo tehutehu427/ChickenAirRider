@@ -162,7 +162,7 @@ private:
 	std::unique_ptr<SceneBase> CreateSceneSelect(void);
 	std::unique_ptr<SceneBase> CreateSceneOption(void);
 	std::unique_ptr<SceneBase> CreateSceneGame(void);
-	//std::unique_ptr<SceneBase> CreateSceneResult(void);
+	std::unique_ptr<SceneBase> CreateSceneResult(void);
 
 	//ƒV[ƒ“•ÏX
 	void ChangeScenePushBack(void);

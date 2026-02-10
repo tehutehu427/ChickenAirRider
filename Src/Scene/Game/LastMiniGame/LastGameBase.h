@@ -30,6 +30,7 @@ public:
 
 	//‡ˆÊŒˆ’è
 	void ConfirmRank(const int _playerIndex);
+	void ConfirmRank(const std::unordered_map<int,int> _ranks);
 
 protected:
 

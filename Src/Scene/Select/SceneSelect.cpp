@@ -80,6 +80,8 @@ void SceneSelect::Load(void)
 
 	//背景
 	backImg_ = res.Load(ResourceManager::SRC::TITLE_BACK).handleId_;
+	numberTextImg_ = res.Load(ResourceManager::SRC::PLAYER_NUM_TEXT).handleId_;
+	numberImgs_ = res.Load(ResourceManager::SRC::NUMBER).handleIds_;
 
 	//メニュー
 	menuBarImg_ = res.Load(ResourceManager::SRC::MENU_BAR).handleId_;
@@ -318,8 +320,20 @@ void SceneSelect::DrawHome(void)
 
 void SceneSelect::DrawGameStart(void)
 {
-	DrawFormatString(PLAYER_NUM_POS_X, PLAYER_NUM_POS_Y, playerNumSelect_ == PLAYER_NUM_SELECT::USER ? Utility::RED : Utility::WHITE, L"プレイヤー人数 = %d", playerNum_[PLAYER_NUM_SELECT::USER]);
-	//DrawFormatString(PLAYER_NUM_POS_X + PLAYER_NUM_LOCAL_POS, PLAYER_NUM_POS_Y, playerNumSelect_ == PLAYER_NUM_SELECT::NPC ? Utility::RED : Utility::WHITE, L"NPC人数 = %d", playerNum_[PLAYER_NUM_SELECT::NPC]);
+	//メニュ―バー
+	SetDrawBright(255, 255, 0);
+	DrawExtendGraph(Application::SCREEN_HALF_X - PLAYER_NUM_TEXT_BOX_POS_X,
+		Application::SCREEN_HALF_Y - PLAYER_NUM_TEXT_BOX_POS_Y,
+		Application::SCREEN_HALF_X+ PLAYER_NUM_TEXT_BOX_POS_X,
+		Application::SCREEN_HALF_Y + PLAYER_NUM_TEXT_BOX_POS_Y,
+		menuBarImg_, true);
+	SetDrawBright(255, 255, 255);
+
+	//テキスト
+	DrawRotaGraph(Application::SCREEN_HALF_X - PLAYER_NUM_LOCAL_POS, Application::SCREEN_HALF_Y, SELECT_SCALE_DEFAULT, 0.0, numberTextImg_, true);
+	SetDrawBright(255, 100, 100);
+	DrawRotaGraph(Application::SCREEN_HALF_X + PLAYER_NUM_LOCAL_POS, Application::SCREEN_HALF_Y, 1.0, 0.0, numberImgs_[playerNum_[PLAYER_NUM_SELECT::USER]], true);
+	SetDrawBright(255, 255, 255);
 }
 
 void SceneSelect::DrawOption(void)
@@ -328,11 +342,7 @@ void SceneSelect::DrawOption(void)
 
 void SceneSelect::DrawTitle(void)
 {
-	//選択肢(デバッグ)
-	DrawString(SELECT_POS_X, SELECT_POS_Y, L"GAME START", selectType_ == MENU_TYPE::GAME_START ? Utility::RED : Utility::WHITE);
-	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS, L"OPTION", selectType_ == MENU_TYPE::OPTION ? Utility::RED : Utility::WHITE);
-	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 2, L"TITLE", selectType_ == MENU_TYPE::TITLE ? Utility::RED : Utility::WHITE);
-	DrawString(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 3, L"GAME END", selectType_ == MENU_TYPE::GAME_END ? Utility::RED : Utility::WHITE);
+	DrawHome();
 }
 
 void SceneSelect::DrawGameEnd(void)

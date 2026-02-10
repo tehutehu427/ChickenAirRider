@@ -28,7 +28,7 @@ void AirGlider::Init(void)
 
 	//Še‰Šú‰»
 	plMng.ResetPlayer(START_POS);
-	stgMng.Init(StageManager::MODE::AIR_GLIDER,60);
+	stgMng.Init(StageManager::MODE::AIR_GLIDER,80);
 
 	//‹¤’Ê‰Šú‰»
 	LastGameBase::Init();
@@ -146,8 +146,8 @@ void AirGlider::CompDistance(void)
 	}
 
 	//‡ˆÊ‚ÌÝ’è
-	for (const auto& plRank : decideRank)
+	for (int i = decideRank.size() ; i > 0 ; i--)
 	{
-		ConfirmRank(plRank.second);
+		ConfirmRank(decideRank[i]);
 	}
 }

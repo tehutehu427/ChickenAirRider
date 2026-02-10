@@ -38,6 +38,12 @@ public:
 	//プレイヤーの降車判定
 	void PlayerCanGetOff(const bool _getOff);
 
+	//順位の取得
+	const std::unordered_map<int, int> GetRanks(void)const { return ranks_; }
+
+	//順位の設定
+	void SetRanks(const std::unordered_map<int, int> _ranks) { ranks_ = _ranks; }
+
 private:
 
 	//静的インスタンス
@@ -45,6 +51,9 @@ private:
 
 	//プレイヤー
 	std::vector<std::unique_ptr<Player>> players_;
+
+	//順位
+	std::unordered_map<int, int>ranks_;
 
 	//コンストラクタ
 	PlayerManager(void);
