@@ -98,7 +98,7 @@ void MachineManager::CreateMachine(void)
 	
 	//ƒ‰ƒ“ƒ_ƒ€
 	int rand = Utility::GetRandomValue(0, size - 1);
-	rand = 2;
+	rand = 3;
 
 	//‹@‘Ì‚ÌŽí—Þ
 	int modelId = getModelId_.at(importData_[rand].name)();

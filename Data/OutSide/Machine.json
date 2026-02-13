@@ -166,6 +166,11 @@
       "y": 0.35,
       "z": 0.35
     },
+    "footPos": {
+      "x": 0.0,
+      "y": -70.0,
+      "z": 0.0
+    },
     "parameter": {
       "fixedMaxSpeed": 0.0,
       "fixedAcceleration": 0.0,
@@ -177,7 +182,7 @@
       "fixedDefence": 0.0,
       "fixedMaxHealth": 1.0,
 
-      "affectMaxSpeed": 0.1,
+      "affectMaxSpeed": 0.2,
       "affectAcceleration": 0.05,
       "affectTurning": 0.4,
       "affectCharge": 0.3,
@@ -190,9 +195,9 @@
       "chargeBraking": 0.5,
       "chargeCapacity": 200.0,
       "chargeDamp": 1.0,
-      "boostRate": 5.0,
+      "boostRate": 3.0,
       "boostPower": 15,
-      "rateOfConvergence": 5.0,
+      "rateOfConvergence": 10.0,
 
       "groundSpeed": 1.0,
       "flightSpeed": 1.0

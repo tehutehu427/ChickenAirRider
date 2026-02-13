@@ -267,59 +267,62 @@ void Camera::SyncFollow(void)
 
 void Camera::SyncFollowLeap(void)
 {
-	// --- プレイヤーの位置 ---
+	//プレイヤーの位置
 	VECTOR pos = followTransform_->pos;
 
-	// --- プレイヤーの速度（前フレームとの差から算出） ---
+	//プレイヤーの速度（前フレームとの差から算出）
 	static VECTOR oldPos = pos;
 	VECTOR velocity = VSub(pos, oldPos);
 	oldPos = pos;
 
-	// --- 重力方向制御（今は固定） ---
+	//重力方向制御（今は固定）
 	Quaternion gRot = Quaternion::Euler(VECTOR(0.0, 0.0, 0.0));
 
-	// --- 回転設定 ---
+	//回転設定
 	rotOutX_ = gRot.Mult(Quaternion::AngleAxis(angles_.y, Utility::AXIS_Y));
 	rot_ = rotOutX_;
 
-	// --- カメラ方向ベクトル ---
+	//カメラ方向ベクトル
 	VECTOR forward = rot_.GetForward();
 	VECTOR up = rot_.GetUp();
 
-	// --- プレイヤーの移動方向成分を前方向に投影 ---
+	//プレイヤーの移動方向成分を前方向に投影
 	float speedFront = VDot(velocity, forward);
 
-	// --- 注視点 ---
+	//注視点
 	VECTOR localPos = rotOutX_.PosAxis(LOCAL_F2T_LEAP_POS);
 	VECTOR desiredTargetPos = VAdd(pos, localPos);
 
-	// --- 移動速度に応じて注視点を前に押し出す ---
-	float lookAhead = std::clamp(speedFront * 5.0f, 0.0f, 0.0f);
+	//移動速度に応じて注視点を前に押し出す
+	float lookAhead = std::clamp(speedFront * 5.0f, 50.0f, 1000.0f);
 	desiredTargetPos = VAdd(desiredTargetPos, VScale(forward, lookAhead));
 
-	// --- カメラ理想位置 ---
+	//カメラ理想位置
 	localPos = rot_.PosAxis(localPos_);
 	VECTOR desiredCameraPos = VAdd(pos, localPos);
 
-	// --- 差分 ---
+	//差分
 	VECTOR diff = VSub(desiredCameraPos, pos_);
 
-	// forward方向成分
+	//forward方向成分
 	float front = VDot(diff, forward);
 	VECTOR frontMove = VScale(forward, front);
 
-	// up方向成分
+	//up方向成分
 	float upAmount = VDot(diff, up);
 	VECTOR upMove = VScale(up, upAmount);
 
-	// side方向成分
+	//side方向成分
 	VECTOR temp = VAdd(frontMove, upMove);
 	VECTOR sideMove = VSub(diff, temp);
 
-	// --- 補間係数 ---
-	const float rateFront = 1.0f;	// 前後：速く追従
-	const float rateSide = 0.05f;	// 横：なめらか
-	const float rateUp = 0.9f;		// 縦：速く追従
+	//デルタタイム
+	float delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//補間(fps非依存)
+	const float rateFront = 1.0f - expf(-RATE_FRONT * delta);
+	const float rateSide = 1.0f - expf(-RATE_SIDE * delta);
+	const float rateUp = 1.0f - expf(-RATE_UP * delta);
 
 	// --- カメラ位置補間 ---
 	pos_ = VAdd(pos_,
@@ -331,12 +334,12 @@ void Camera::SyncFollowLeap(void)
 
 	// --- 注視点補間（スムーズに追従） ---
 	const float targetRate = 0.2f;
-	targetPos_.x += (desiredTargetPos.x - targetPos_.x) * targetRate;
-	targetPos_.y += (desiredTargetPos.y - targetPos_.y) * targetRate;
-	targetPos_.z += (desiredTargetPos.z - targetPos_.z) * targetRate;
 
+	//距離
 	float dist = VSize(VSub(targetPos_, pos_));
-	float adaptiveRate = std::clamp(0.2f + (400.0f - dist) * 0.002f, 0.1f, 0.3f);
+
+	//距離による補間(遠いと速く、近いと滑らかに)
+	float adaptiveRate = std::clamp(dist * 0.002f,0.05f,0.3f);
 	targetPos_ = VAdd(targetPos_, VScale(VSub(desiredTargetPos, targetPos_), adaptiveRate));
 
 	// --- 上方向 ---
@@ -427,6 +430,55 @@ void Camera::ProcessZoom(void)
 	}
 }
 
+void Camera::ProcessSpeedZoom(void)
+{
+	//デルタタイム
+	float delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//現在座標
+	VECTOR pos = followTransform_->pos;
+
+	//前座標
+	static VECTOR oldPos = pos;
+
+	//速度
+	VECTOR velocity = VSub(pos, oldPos);
+	float speed = VSize(velocity);
+
+	//速度がないならスキップ
+	if (speed > 0.1f)return;
+
+	//座標更新
+	oldPos = pos;
+
+	//正規化
+	float speedRate = (speed - SPEED_MIN) / (SPEED_MAX - SPEED_MIN);
+	speedRate = std::clamp(speedRate, 0.0f, 1.0f);
+
+	//距離の補間
+	float targetDistance = ZOOM_FAR + (ZOOM_FAR - ZOOM_NEAR) * speedRate;
+
+	//カメラ位置の計算
+	VECTOR forward = followTransform_->quaRot.GetForward();
+	VECTOR desiredPos = VSub(pos, VScale(forward, targetDistance));
+
+	//Leap処理(fps依存なし)
+	float t = 1.0f - expf(-ZOOM_SPEED * delta);
+	VECTOR toTarget = VSub(desiredPos, pos_);
+	pos_ = VAdd(pos_, VScale(toTarget, t));
+
+	float pitch = Utility::Deg2RadF(CAMERA_DEG);
+	
+	float horizontal = cosf(pitch) * targetDistance;
+	float vertical = sinf(pitch) * targetDistance;
+
+	pos_ = {
+		pos.x - forward.x * horizontal,
+		pos.y + vertical,
+		pos.z - forward.z * horizontal
+	};
+}
+
 void Camera::ProcessRotMouse(float* x_m, float* y_m, const float fov_per)
 {
 	int x_t, y_t;
@@ -473,6 +525,9 @@ void Camera::SetBeforeDrawFollowLeap(void)
 {
 	// カメラ操作
 	ProcessRotMachine();
+
+	//速度によるズーム
+	//ProcessSpeedZoom();
 
 	//追従対象を遅れて追尾
 	SyncFollowLeap();

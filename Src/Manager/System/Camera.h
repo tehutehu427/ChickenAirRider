@@ -23,6 +23,17 @@ public:
 	//カメラズームスピード
 	static constexpr float ZOOM_SPEED = 5.0f;
 
+	//速度制限
+	static constexpr float SPEED_MIN = 0.0f;
+	static constexpr float SPEED_MAX = 100.0f;
+
+	//カメラのズーム距離の制限
+	static constexpr float ZOOM_NEAR = 200.0f;
+	static constexpr float ZOOM_FAR = 1000.0f;
+
+	//カメラ角度(DEG)
+	static constexpr float CAMERA_DEG = 0.0f;
+
 	//カメラのズーム範囲
 	static constexpr float ZOOM_RADIUS = 300.0f;
 	// カメラクリップ：NEAR
@@ -54,6 +65,11 @@ public:
 	// 追従位置から注視点までの相対座標
 	static constexpr VECTOR LOCAL_F2T_POS = { 0.0f, 0.0f, 200.0f };
 	static constexpr VECTOR LOCAL_F2T_LEAP_POS = { 0.0f, 0.0f, 200.0f };
+
+	//補間係数
+	const float RATE_FRONT = 15.0f;
+	const float RATE_SIDE = 4.0f;
+	const float RATE_UP = 8.0f;
 
 	// カメラのX回転上限度角
 	static constexpr float LIMIT_X_UP_RAD = 60.0f * (DX_PI_F / 180.0f);
@@ -215,6 +231,7 @@ private:
 	void ProcessRot(void);
 	void ProcessRotMachine(void);
 	void ProcessZoom(void);
+	void ProcessSpeedZoom(void);
 
 	//マウスでのカメラ操作
 	void ProcessRotMouse(float* x_m, float* y_m, const float fov_per = 1.0f);

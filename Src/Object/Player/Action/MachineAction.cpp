@@ -265,10 +265,11 @@ void MachineAction::Charge(void)
 	}
 	else
 	{
+		float rate = (unitParam.chargeCapacity * chargeCnt_ / unitParam.chargeCapacity) * 0.2f;
 		VECTOR scale = player_.GetTrans().scl;
-		scale.y -= chargeCnt_ / CHARGE_MODEL_TRANS;
-		scale.x += chargeCnt_ / CHARGE_MODEL_TRANS;
-		scale.z += chargeCnt_ / CHARGE_MODEL_TRANS;
+		scale.y = 1.0f - rate;
+		scale.x = 1.0f + rate;
+		scale.z = 1.0f + rate;
 		player_.SetScale(scale);
 	}
 
