@@ -12,6 +12,12 @@ public:
 	//デストラクタ
 	~UserLogic(void)override;
 
+	//初期化
+	void Init(void)override;
+
+	//更新
+	void Update(void)override;
+
 #pragma region 機体
 
 	/// @brief プッシュしたか

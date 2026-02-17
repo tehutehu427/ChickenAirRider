@@ -11,6 +11,12 @@ public:
 	//デストラクタ
 	virtual ~LogicBase(void);
 
+	//初期化
+	virtual void Init(void) = 0;
+	
+	//更新
+	virtual void Update(void) = 0;
+
 #pragma region 機体
 
 	/// @brief プッシュしたか

@@ -1,17 +1,25 @@
 #pragma once
-#include "LogicBase.h"
+#include "../LogicBase.h"
 #include "../Common/Vector2F.h"
+#include "../Object/Player/Player.h"
+
+class NpcBrain;
 
 class NpcLogic : public LogicBase
 {
 public:
 
 	//コンストラクタ
-	NpcLogic(void);
+	NpcLogic(const Player& _parent);
 
 	//デストラクタ
 	~NpcLogic(void)override;
 
+	//初期化
+	void Init(void)override;
+
+	//更新
+	void Update(void)override;
 
 #pragma region 機体
 
@@ -65,5 +73,13 @@ public:
 	const bool IsJump(void)override;
 
 #pragma endregion キャラクター
+
+private:
+
+	//行動判断
+	std::unique_ptr<NpcBrain> brain_;
+
+	//親
+	const Player& parent_;
 };
 

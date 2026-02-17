@@ -45,6 +45,12 @@ public:
 
 	//生成タイプの設定
 	void SetSpawnType(const SPAWN_TYPE _type) { type_ = _type; }
+
+	//アイテムボックスの座標
+	const std::vector<VECTOR> GetItemBoxPos(void)const;
+
+	//アイテムの座標
+	const std::vector<VECTOR> GetItemPos(void)const;
 	
 private:
 

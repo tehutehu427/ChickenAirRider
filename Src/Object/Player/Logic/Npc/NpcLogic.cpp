@@ -1,12 +1,27 @@
 #include"../pch.h"
+#include "NpcBrain.h"
 #include "NpcLogic.h"
 
-NpcLogic::NpcLogic(void)
+NpcLogic::NpcLogic(const Player& _parent)
+    : parent_(_parent)
 {
 }
 
 NpcLogic::~NpcLogic(void)
 {
+}
+
+void NpcLogic::Init(void)
+{
+    //çsìÆäÓèÄ
+    brain_ = std::make_unique<NpcBrain>();
+    brain_->Init();
+}
+
+void NpcLogic::Update(void)
+{
+    //çXêV
+    brain_->Update();
 }
 
 const bool NpcLogic::IsPush(void) 

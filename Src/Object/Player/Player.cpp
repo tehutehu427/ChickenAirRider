@@ -13,7 +13,7 @@
 #include "Machine/Machine.h"
 #include "Logic/LogicBase.h"
 #include "Logic/UserLogic.h"
-#include "Logic/NpcLogic.h"
+#include "Logic/Npc/NpcLogic.h"
 #include "Action/ActionBase.h"
 #include "Action/CharacterAction.h"
 #include "Action/MachineAction.h"
@@ -90,6 +90,7 @@ void Player::Load(void)
 
 	//行動基準
 	createLogic_[operation_]();
+	logic_->Init();
 
 	//当たり判定後処理
 	onHit_ = std::make_unique<PlayerOnHit>(*this, trans_);
@@ -121,7 +122,10 @@ void Player::Init(void)
 	}
 
 	machine_->Init();
-	
+
+	//行動基準
+	logic_->Init();
+
 	//初期化
 	damage_ = 0.0f;
 	canMove_ = true;
@@ -135,6 +139,9 @@ void Player::Init(void)
 
 void Player::Update(void)
 {
+	//行動
+	logic_->Update();
+
 	//落ちたら位置を初期化
 	if (movedPos_.y < -500.0f)
 	{

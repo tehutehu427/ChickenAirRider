@@ -18,6 +18,18 @@ UserLogic::~UserLogic(void)
 {
 }
 
+void UserLogic::Init(void)
+{
+    buttonMeshingCnt_ = 0;
+    cnt_ = 0.0f;
+    oldTurnValue_ = {};
+    newTurnValue_ = {};
+}
+
+void UserLogic::Update(void)
+{
+}
+
 const bool UserLogic::IsPush(void)
 {
     //インスタンス

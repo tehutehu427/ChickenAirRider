@@ -163,6 +163,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Player\Logic\Npc\NpcBrain.cpp" />
     <ClCompile Include="Src\Scene\SceneResult.cpp" />
     <ClCompile Include="Src\Manager\Game\GlobalUIManager.cpp" />
     <ClCompile Include="Src\Scene\Game\LastMiniGame\AirGlider.cpp" />
@@ -193,7 +194,7 @@
     <ClCompile Include="Src\Manager\Game\PlayerManager.cpp" />
     <ClCompile Include="Src\Object\Player\Parameter\Parameter.cpp" />
     <ClCompile Include="Src\Object\Player\Logic\LogicBase.cpp" />
-    <ClCompile Include="Src\Object\Player\Logic\NpcLogic.cpp" />
+    <ClCompile Include="Src\Object\Player\Logic\Npc\NpcLogic.cpp" />
     <ClCompile Include="Src\Object\Player\Logic\UserLogic.cpp" />
     <ClCompile Include="Src\Object\Player\Machine\Machine.cpp" />
     <ClCompile Include="Src\Object\Player\Character\Character.cpp" />
@@ -248,6 +249,7 @@
     <ClCompile Include="Src\Manager\Game\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Player\Logic\Npc\NpcBrain.h" />
     <ClInclude Include="Src\Scene\SceneResult.h" />
     <ClInclude Include="Src\Manager\Game\GlobalUIManager.h" />
     <ClInclude Include="Src\Scene\Game\LastMiniGame\AirGlider.h" />
@@ -288,7 +290,7 @@
     <ClInclude Include="Src\Manager\Game\PlayerManager.h" />
     <ClInclude Include="Src\Object\Player\Parameter\Parameter.h" />
     <ClInclude Include="Src\Object\Player\Logic\LogicBase.h" />
-    <ClInclude Include="Src\Object\Player\Logic\NpcLogic.h" />
+    <ClInclude Include="Src\Object\Player\Logic\Npc\NpcLogic.h" />
     <ClInclude Include="Src\Object\Player\Logic\UserLogic.h" />
     <ClInclude Include="Src\Object\Player\Machine\Machine.h" />
     <ClInclude Include="Src\Object\Player\Character\Character.h" />

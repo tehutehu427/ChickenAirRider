@@ -72,7 +72,7 @@ private:
         fs::path path(_fileName);
         std::string ext = path.extension().string();
 
-        // ‚à‚µ ext ‚É ".json" ‚ª“ü‚é‚Ì‚ÅAæ“ª‚Ì '.' ‚ğœ‚­
+        // "."‚ğœ‚­
         if (!ext.empty() && ext[0] == '.') ext.erase(0, 1);
 
         std::cout << "[DEBUG] ext = [" << ext << "]" << std::endl;

@@ -273,3 +273,27 @@ void ItemManager::CreateBattleItem(const VECTOR _pos, const int _num)
 		items_.push_back(std::move(item));
 	}
 }
+
+const std::vector<VECTOR> ItemManager::GetItemBoxPos(void)const
+{
+	std::vector<VECTOR>ret;
+
+	for (const auto& itemBox : itemBoxes_)
+	{
+		ret.push_back(itemBox->GetTrans().pos);
+	}
+
+	return ret;
+}
+
+const std::vector<VECTOR> ItemManager::GetItemPos(void)const
+{
+	std::vector<VECTOR>ret;
+
+	for (const auto& item : items_)
+	{
+		ret.push_back(item->GetTrans().pos);
+	}
+
+	return ret;
+}
