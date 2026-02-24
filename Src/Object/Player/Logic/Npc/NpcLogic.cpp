@@ -14,7 +14,7 @@ NpcLogic::~NpcLogic(void)
 void NpcLogic::Init(void)
 {
     //çsìÆäÓèÄ
-    brain_ = std::make_unique<NpcBrain>();
+    brain_ = std::make_unique<NpcBrain>(parent_);
     brain_->Init();
 }
 
@@ -26,45 +26,45 @@ void NpcLogic::Update(void)
 
 const bool NpcLogic::IsPush(void) 
 {
-    return false;
+    return push_;
 }
 
 const bool NpcLogic::StartCharge(void)
 {
-    return false;
+    return startCharge_;
 }
 
 const bool NpcLogic::DisCharge(void) 
 {
-    return false;
+    return disCharge_;
 }
 
 const Vector2F NpcLogic::TurnValue(void)
 {
-    return {0.0f,0.0f};
+    return turnValue_;
 }
 
 const bool NpcLogic::IsSpecial(void)
 {
-    return false;
+    return special_;
 }
 
 const bool NpcLogic::IsGetOff(void)
 {
-    return false;
+    return getOff_;
 }
 
 const bool NpcLogic::IsButtonMeshing(void)
 {
-    return false;
+    return buttonMeshing_;
 }
 
 const Vector2F NpcLogic::WalkValue(void)
 {
-    return Vector2F();
+    return walkValue_;
 }
 
 const bool NpcLogic::IsJump(void)
 {
-    return false;
+    return jump_;
 }

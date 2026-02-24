@@ -44,7 +44,7 @@ Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE
 
 	//操作タイプ
 	createLogic_[OPERATION_TYPE::USER] = [this](void) {	logic_ = std::make_unique<UserLogic>(padNo_); };
-	createLogic_[OPERATION_TYPE::NPC] = [this](void) {logic_ = std::make_unique<NpcLogic>(); };
+	createLogic_[OPERATION_TYPE::NPC] = [this](void) {logic_ = std::make_unique<NpcLogic>(*this); };
 
 	//行動切り替え
 	changeAction_[STATE::NONE] = [this](void) {};

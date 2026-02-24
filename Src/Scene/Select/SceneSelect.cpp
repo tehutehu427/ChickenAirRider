@@ -259,15 +259,15 @@ void SceneSelect::UpdateGameStart(void)
 		playerNum_[playerNumSelect_] = playerNum_[playerNumSelect_] - 1;
 	}
 	//左右入力
-	//else if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_RIGHT, KeyConfig::JOYPAD_NO::PAD1)
-	//	|| key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_LEFT, KeyConfig::JOYPAD_NO::PAD1))
-	//{
-	//	//選択音
-	//	snd.Play(SoundManager::SOUND_NAME::SELECT_SE, SoundManager::PLAYTYPE::BACK);
-	//	
-	//	//ユーザーとNPC選択の切り替え
-	//	playerNumSelect_ = static_cast<PLAYER_NUM_SELECT>((static_cast<int>(playerNumSelect_) + 1) % static_cast<int>(PLAYER_NUM_SELECT::MAX));
-	//}
+	else if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_RIGHT, KeyConfig::JOYPAD_NO::PAD1)
+		|| key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_LEFT, KeyConfig::JOYPAD_NO::PAD1))
+	{
+		//選択音
+		snd.Play(SoundManager::SOUND_NAME::SELECT_SE, SoundManager::PLAYTYPE::BACK);
+		
+		//ユーザーとNPC選択の切り替え
+		playerNumSelect_ = static_cast<PLAYER_NUM_SELECT>((static_cast<int>(playerNumSelect_) + 1) % static_cast<int>(PLAYER_NUM_SELECT::MAX));
+	}
 }
 
 void SceneSelect::UpdateOption(void)
@@ -333,6 +333,8 @@ void SceneSelect::DrawGameStart(void)
 	DrawRotaGraph(Application::SCREEN_HALF_X - PLAYER_NUM_LOCAL_POS, Application::SCREEN_HALF_Y, SELECT_SCALE_DEFAULT, 0.0, numberTextImg_, true);
 	SetDrawBright(255, 100, 100);
 	DrawRotaGraph(Application::SCREEN_HALF_X + PLAYER_NUM_LOCAL_POS, Application::SCREEN_HALF_Y, 1.0, 0.0, numberImgs_[playerNum_[PLAYER_NUM_SELECT::USER]], true);
+	SetDrawBright(255, 255, 255);
+	DrawRotaGraph(Application::SCREEN_HALF_X + PLAYER_NUM_LOCAL_POS * 2, Application::SCREEN_HALF_Y, 1.0, 0.0, numberImgs_[playerNum_[PLAYER_NUM_SELECT::NPC]], true);
 	SetDrawBright(255, 255, 255);
 }
 

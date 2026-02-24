@@ -74,6 +74,17 @@ public:
 
 #pragma endregion キャラクター
 
+	//セッター
+	void SetIsPush(const bool _value) { push_ = _value; }
+	void SetIsStartCharge(const bool _value) { startCharge_ = _value; }
+	void SetIsDisCharge(const bool _value) { disCharge_ = _value; }
+	void SetTurnValue(const Vector2F _value) { turnValue_ = _value; }
+	void SetIsSpecial(const bool _value) { special_ = _value; }
+	void SetIsGetOff(const bool _value) { getOff_ = _value; }
+	void SetIsButtonMeshing(const bool _value) { buttonMeshing_ = _value; }
+	void SetWalkValue(const Vector2F _value) { walkValue_ = _value; }
+	void SetIsJump(const bool _value) { jump_ = _value; }
+
 private:
 
 	//行動判断
@@ -81,5 +92,16 @@ private:
 
 	//親
 	const Player& parent_;
+
+	//各行動フラグ
+	bool push_;
+	bool startCharge_;
+	bool disCharge_;
+	Vector2F turnValue_;
+	bool special_;
+	bool getOff_;
+	bool buttonMeshing_;
+	Vector2F walkValue_;
+	bool jump_;
 };
 

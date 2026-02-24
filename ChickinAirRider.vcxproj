@@ -250,6 +250,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Object\Player\Logic\Npc\NpcBrain.h" />
+    <ClInclude Include="Src\Object\Player\Logic\Npc\SimulationResult.h" />
     <ClInclude Include="Src\Scene\SceneResult.h" />
     <ClInclude Include="Src\Manager\Game\GlobalUIManager.h" />
     <ClInclude Include="Src\Scene\Game\LastMiniGame\AirGlider.h" />

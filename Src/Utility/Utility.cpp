@@ -531,6 +531,11 @@ const VECTOR Utility::GetMoveVec(const VECTOR _start, const VECTOR _goal, const 
     return ret;
 }
 
+const Vector2F Utility::GetMoveVec(const Vector2F _start, const Vector2F _goal, const float _speed)
+{
+    return Vector2F();
+}
+
 const VECTOR Utility::GetRotAxisToTarget(const VECTOR _pos, const VECTOR _targetPos, const VECTOR _needAxis)
 {
     //‘ÎÛ‚Ü‚Å‚Ì•ûŒüƒxƒNƒgƒ‹
