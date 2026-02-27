@@ -26,4 +26,11 @@ struct Vector2F
 
 	//•ÏŠ·
 	Vector2 ToVector2(void);
+
+	//‘å‚«‚³
+	float Length(void)const;
+
+	//³‹K‰»
+	void Normalize(void);
+	Vector2F Normalized(void)const;
 };

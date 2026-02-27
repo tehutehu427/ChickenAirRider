@@ -6,6 +6,7 @@
 #include <math.h>
 #include <DxLib.h>
 #include "../Common/Vector2.h"
+#include "../Common/Vector2F.h"
 #include "../Common/IntVector3.h"
 #include "../Common/Quaternion.h"
 #include "../Object/Common/Transform.h"

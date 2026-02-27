@@ -14,6 +14,15 @@ NpcBrain::NpcBrain(const Player& _parent, NpcLogic& _logic)
 		simulation_[i] = {};
 	}
 	isEndAction_ = false;
+	order_ = ORDER::THINK;
+
+	//判断基準
+	priorityJudge_.push_back([this](int _num) {JudgeItemBox(_num); });
+	priorityJudge_.push_back([this](int _num) {JudgeItem(_num); });
+
+	//更新
+	update_.emplace(ORDER::THINK, [this](void) {UpdateThink(); });
+	update_.emplace(ORDER::ACTION, [this](void) {UpdateAction(); });
 }
 
 NpcBrain::~NpcBrain(void)
@@ -27,15 +36,31 @@ void NpcBrain::Init(void)
 	{
 		simulation_[i] = {};
 	}
-	isEndAction_ = false;
+	isEndAction_ = true;
+	order_ = ORDER::THINK;
 }
 
 void NpcBrain::Update(void)
 {
+	update_[order_]();
+}
+
+void NpcBrain::UpdateThink(void)
+{
+	//サイズ
+	int size = priorityJudge_.size();
+
+	//行動決め
 	for (int i = 0; i < JUDGE_NUM; i++)
 	{
-		JudgeItemBox(i);
+		priorityJudge_[Utility::GetRandomValue(0, size - 1)](i);
+		//JudgeItemBox(i);
 	}
+}
+
+void NpcBrain::UpdateAction(void)
+{
+
 }
 
 void NpcBrain::JudgeItemBox(int _num)
@@ -45,9 +70,16 @@ void NpcBrain::JudgeItemBox(int _num)
 
 	//座標
 	std::vector<VECTOR> poses = itemMng.GetItemBoxPos();
-	int size = poses.size();
-	if (size < 1)return;
 	const VECTOR parentPos = parent_.GetTrans().pos;
+
+	//大きさ
+	int size = poses.size();
+	if (size < 1)
+	{
+		//アイテムに移す
+		JudgeItem(_num);
+		return;
+	}
 
 	//乱数
 	int rand = Utility::GetRandomValue(0, size - 1);
@@ -85,9 +117,11 @@ void NpcBrain::JudgeItemBox(int _num)
 	//代入
 	simulation_[_num].priority = priority;
 	simulation_[_num].endPoint = poses[rand];
-	simulation_[_num].moveVec = Utility::GetMoveVec()
+	simulation_[_num].moveVec = Utility::GetMoveVec(parentPos, poses[rand]);
 }
 
 void NpcBrain::JudgeItem(int _num)
 {
+	//インスタンス
+	const auto& itemMng = ItemManager::GetInstance();
 }

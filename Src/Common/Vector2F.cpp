@@ -1,3 +1,4 @@
+#include <cmath>
 #include "Vector2F.h"
 #include "Vector2.h"
 
@@ -70,4 +71,30 @@ void Vector2F::operator/=(const Vector2F _value)
 Vector2 Vector2F::ToVector2(void)
 {
 	return { static_cast<int>(x),static_cast<int>(y) };
+}
+
+float Vector2F::Length(void) const
+{
+	return std::sqrtf((x * x) + (y * y));
+}
+
+void Vector2F::Normalize(void)
+{
+	float length = Length();
+
+	if (length == 0.0f)
+	{
+		x = 0.0f;
+		y = 0.0f;
+		return;
+	}
+
+	x /= length;
+	y /= length;
+}
+
+Vector2F Vector2F::Normalized(void) const
+{
+	float length = Length();
+	return { x / length,y / length };
 }

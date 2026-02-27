@@ -533,7 +533,16 @@ const VECTOR Utility::GetMoveVec(const VECTOR _start, const VECTOR _goal, const 
 
 const Vector2F Utility::GetMoveVec(const Vector2F _start, const Vector2F _goal, const float _speed)
 {
-    return Vector2F();
+    //標的への方向ベクトルを取得
+    Vector2F targetVec = _goal - _start;
+
+    //正規化
+    targetVec.Normalize();
+
+    //移動量を求める
+    Vector2F ret = targetVec * _speed;
+
+    return ret;
 }
 
 const VECTOR Utility::GetRotAxisToTarget(const VECTOR _pos, const VECTOR _targetPos, const VECTOR _needAxis)
