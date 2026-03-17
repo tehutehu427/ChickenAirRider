@@ -14,7 +14,7 @@ NpcLogic::~NpcLogic(void)
 void NpcLogic::Init(void)
 {
     //s“®Šî€
-    brain_ = std::make_unique<NpcBrain>(parent_);
+    brain_ = std::make_unique<NpcBrain>(parent_, *this);
     brain_->Init();
 }
 
