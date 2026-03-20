@@ -334,8 +334,8 @@ void SceneSelect::DrawGameStart(void)
 	SetDrawBright(255, 100, 100);
 	DrawRotaGraph(Application::SCREEN_HALF_X + PLAYER_NUM_LOCAL_POS, Application::SCREEN_HALF_Y, 1.0, 0.0, numberImgs_[playerNum_[PLAYER_NUM_SELECT::USER]], true);
 	SetDrawBright(255, 255, 255);
-	DrawRotaGraph(Application::SCREEN_HALF_X + PLAYER_NUM_LOCAL_POS * 2, Application::SCREEN_HALF_Y, 1.0, 0.0, numberImgs_[playerNum_[PLAYER_NUM_SELECT::NPC]], true);
-	SetDrawBright(255, 255, 255);
+	//DrawRotaGraph(Application::SCREEN_HALF_X + PLAYER_NUM_LOCAL_POS * 2, Application::SCREEN_HALF_Y, 1.0, 0.0, numberImgs_[playerNum_[PLAYER_NUM_SELECT::NPC]], true);
+	//SetDrawBright(255, 255, 255);
 }
 
 void SceneSelect::DrawOption(void)

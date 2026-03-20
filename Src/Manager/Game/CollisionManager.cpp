@@ -71,7 +71,7 @@ void CollisionManager::Update(void)
 				continue;
 			}
 
-			//当たり判定前に切り捨て
+			//事前当たり判定
 			if (!IsBroudCollision(colliders_[i]->GetOwner(), colliders_[j]->GetOwner()))
 			{
 				//飛ばす
@@ -82,13 +82,6 @@ void CollisionManager::Update(void)
 			if (!IsCollisionTag(*colliders_[i], *colliders_[j]))
 			{
 				//飛ばす
-				continue;
-			}
-
-			//当たり判定をするか
-			if (!JudgeIsCollision(i, j))
-			{
-				//当たり判定の条件に合わなかったので飛ばす
 				continue;
 			}
 
@@ -128,30 +121,6 @@ void CollisionManager::Destroy(void)
 CollisionManager::CollisionManager(void)
 {
 	updateFrame_ = 0;
-
-	//**********************************************************
-	//ここに当たり判定する範囲の広さをタグごとで設定する
-	//**********************************************************
-
-	hitRange_[Collider::TAG::PLAYER1] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::PLAYER2] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::PLAYER3] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::PLAYER4] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::FOOT] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::SPIN] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::MACHINE] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::MACHINE_RIDE] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::NORMAL_OBJECT] = HIT_RANGE_OBJECT;
-	hitRange_[Collider::TAG::TREE] = HIT_RANGE_OBJECT;
-	hitRange_[Collider::TAG::GLIDE_STAGE] = HIT_RANGE_OBJECT;
-	hitRange_[Collider::TAG::GROUND] = HIT_RANGE_GROUND;
-	hitRange_[Collider::TAG::ITEM_BOX] = HIT_RANGE_OBJECT;
-	hitRange_[Collider::TAG::POWER_UP] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::BATTLE_ITEM] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::CANNON_SHOT] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::SEARCH] = HIT_RANGE_NORMAL;
-	hitRange_[Collider::TAG::WORLD_BORDER] = HIT_RANGE_GROUND;
-	hitRange_[Collider::TAG::GLIDER_BORDER] = HIT_RANGE_OBJECT;
 }
 
 CollisionManager::~CollisionManager(void)
@@ -186,66 +155,20 @@ const bool CollisionManager::IsCollisionTag(const Collider& _col1, const Collide
 	const auto& notColTags2 = _col2.GetNotHitTags();
 
 	//2人目の当たり判定しないタグ
-	for (const auto& notColTag2 : notColTags2)
+	if (notColTags2.contains(tag1))
 	{
-		if (tag1 == notColTag2)
-		{
-			//1人目のタグが2人目の当たり判定しないタグと同一だった
-			return false;
-		}
-	}
-
-	//1人目の当たり判定しないタグ
-	for (const auto& notColTag1 : notColTags1)
-	{
-		if (tag2 == notColTag1)
-		{
-			//2人目のタグが1人目の当たり判定しないタグと同一だった
-			return false;
-		}
-	}
-
-	//当たる
-	return true;
-}
-
-const bool CollisionManager::IsWithInHitRange(const Collider& _col1, const Collider& _col2) const
-{
-	//双方の距離
-	double sqrtDis = Utility::SqrMagnitude(
-		_col1.GetGeometry().GetColPos(),
-		_col2.GetGeometry().GetColPos());
-
-	//タグ
-	const auto& tag1 = _col1.GetTag();
-	const auto& tag2 = _col2.GetTag();
-
-	//双方のタグ
-
-	//距離範囲の比較
-	auto it1 = hitRange_.find(tag1);
-	auto it2 = hitRange_.find(tag2);
-	if (it1 == hitRange_.end() || it2 == hitRange_.end()) return false;
-	float range = std::max(it1->second, it2->second);
-
-	//当たったなら強制終了
-	return sqrtDis <= range * range;
-}
-
-const bool CollisionManager::JudgeIsCollision(const int _col1Num, const int _col2Num)const
-{
-	//コライダ
-	auto& col1 = colliders_[_col1Num];
-	auto& col2 = colliders_[_col2Num];
-
-	//範囲内か
-	if (!IsWithInHitRange(*col1, *col2))
-	{
-		//範囲内でなかった
+		//1人目のタグが2人目の当たり判定しないタグと同一だった
 		return false;
 	}
 
-	//全判定をクリアしたので当たり判定をする
+	//1人目の当たり判定しないタグ
+	if (notColTags1.contains(tag2))
+	{
+		//2人目のタグが1人目の当たり判定しないタグと同一だった
+		return false;
+	}
+
+	//当たる
 	return true;
 }
 

@@ -29,7 +29,7 @@ StageObject::StageObject(const StageImportData& _data,const int _modelId, const 
 	
 	//ÉRÉâÉCÉ_ê∂ê¨
 	std::unique_ptr<Geometry> geo = createGeo_[data_.geometry]();
-	MakeCollider(_tag, std::move(geo), { Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT });
+	MakeCollider(_tag, std::move(geo), { Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT, _tag });
 
 	color_ = 0;
 }

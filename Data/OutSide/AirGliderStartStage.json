@@ -52,7 +52,7 @@
     },
     "geometry": "cube",
     "tag": "gliderBorder",
-    "broudRadius": 5500.0,
+    "broudRadius": 8000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -1000.0,
@@ -85,7 +85,7 @@
     },
     "geometry": "cube",
     "tag": "gliderBorder",
-    "broudRadius": 5500.0,
+    "broudRadius": 8000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -10.0,
@@ -118,7 +118,7 @@
     },
     "geometry": "cube",
     "tag": "gliderBorder",
-    "broudRadius": 5500.0,
+    "broudRadius": 8000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -10.0,
@@ -151,7 +151,7 @@
     },
     "geometry": "cube",
     "tag": "gliderBorder",
-    "broudRadius": 5500.0,
+    "broudRadius": 8000.0,
     "radius": 0.0,
     "localPos1": {
       "x": -1000.0,
