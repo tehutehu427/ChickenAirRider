@@ -61,11 +61,6 @@ void Machine::Update(void)
 void Machine::Draw(void)
 {
 	MV1DrawModel(trans_.modelId);
-
-	//for (auto& col : collider_)
-	//{
-	//	col->GetGeometry().Draw();
-	//}
 }
 
 void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)

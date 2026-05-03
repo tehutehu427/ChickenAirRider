@@ -3,6 +3,7 @@
 #include "../Manager/Game/GravityManager.h"
 #include "../Utility/Utility.h"
 #include "../Object/Common/Geometry/Sphere.h"
+#include "../Object/Player/Player.h"
 #include "BattleItemBase.h"
 
 BattleItemBase::BattleItemBase(const VECTOR& _pos, const VECTOR& _vec)
@@ -83,6 +84,14 @@ void BattleItemBase::Update(void)
 
 		//所持者
 		const auto& hiter = hiter_.lock();
+
+		//取得者がマシンに乗っていないならスキップ
+		if (!dynamic_cast<const Player&>(hiter->GetOwner()).IsRide())
+		{
+			//死亡
+			state_ = STATE::DEAD;
+			return;
+		}
 
 		//所持者の座標
 		VECTOR hiterPos = hiter->GetOwner().GetTrans().pos;

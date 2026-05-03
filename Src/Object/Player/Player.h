@@ -71,6 +71,9 @@ public:
 	//総合パラメーター
 	const Parameter GetAllParam(void)const;
 
+	//マシンに乗っているか
+	const bool IsRide(void)const { return state_ == STATE::RIDE_MACHINE; }
+
 	//HPの値
 	const float GetHealthValue(void)const;
 
