@@ -68,13 +68,17 @@ private:
     /// @param filename ファイル名
     void FileLoad(const std::string& _fileName)
     {
+		//拡張子を取得
         namespace fs = std::filesystem;
+        
+		//ファイル名から拡張子を取得
         fs::path path(_fileName);
         std::string ext = path.extension().string();
 
-        // "."を除く
+        //"."を除く
         if (!ext.empty() && ext[0] == '.') ext.erase(0, 1);
 
+        //デバッグ表示
         std::cout << "[DEBUG] ext = [" << ext << "]" << std::endl;
 
         //ローダー

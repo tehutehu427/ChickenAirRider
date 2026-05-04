@@ -1,11 +1,10 @@
 #include"../pch.h"
-#include "../Application.h"	
 #include "../Utility/Utility.h"
+#include"../Manager/System/ResourceManager.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
 #include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/GravityManager.h"
-#include "../Manager/Game/GameSetting.h"
 #include "../Manager/Game/UIManager.h"
 #include "../Common/Geometry/Sphere.h"
 #include "../Common/Geometry/Line.h"
@@ -35,7 +34,6 @@ Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE
 	backPos_ = Utility::VECTOR_ZERO;
 	movePow_ = Utility::VECTOR_ZERO;
 	isGrounded_ = false;
-	isSpin_ = false;
 	footLine_ = Quaternion();
 	damage_ = 0.0f;
 	invincible_ = 0.0f;
@@ -143,7 +141,7 @@ void Player::Update(void)
 	logic_->Update();
 
 	//落ちたら位置を初期化
-	if (movedPos_.y < -500.0f)
+	if (movedPos_.y < UNDER_BORDER)
 	{
 		//座標
 		movedPos_ = VAdd(Utility::VECTOR_ZERO, VScale(LOCAL_POS, static_cast<float>(playerIndex_)));
@@ -188,14 +186,6 @@ void Player::Draw(void)
 {
 	//描画
 	draw_[state_]();
-
-	//for (auto& col : collider_)
-	//{
-	//	col->GetGeometry().Draw(0);
-	//}
-
-	//DrawFormatString(0, 32, 0xffffff, L"%.2f,%.2f,%.2f", trans_.quaRot.ToEuler().x, trans_.quaRot.ToEuler().y, trans_.quaRot.ToEuler().z);
-	//DrawFormatString(0, 80, 0xffffff, L"%.2f,%.2f,%.2f", trans_.pos.x, trans_.pos.y, trans_.pos.z);
 }
 
 void Player::OnHit(const std::weak_ptr<Collider> _hitCol)
@@ -286,32 +276,6 @@ void Player::ChangeState(const STATE& _state)
 	action_->Init();
 }
 
-void Player::SetIsSpin(const bool _isSpin)
-{
-	//同じなら何もしない
-	if (isSpin_ == _isSpin)return;
-
-	//判定
-	isSpin_ = _isSpin;
-
-	if (_isSpin)
-	{
-		//スピンコライダを生成
-		std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, machine_->GetHitRadius() + SPIN_RADIUS);
-		MakeCollider(Collider::TAG::SPIN, std::move(geo), 
-			{ playerTag_,
-			Collider::TAG::FOOT,
-			Collider::TAG::NORMAL_OBJECT,
-			Collider::TAG::GROUND,
-			Collider::TAG::MACHINE_RIDE });
-	}
-	else
-	{
-		//スピンコライダを消す
-		DeleteColliderAtTag(Collider::TAG::SPIN);
-	}
-}
-
 void Player::RideMachine(std::unique_ptr<Machine> _machine)
 {
 	//コライダ削除
@@ -356,6 +320,24 @@ void Player::Damage(const float _damage)
 		//処理終了
 		return;
 	}
+}
+
+void Player::CreateSpinCollider(void)
+{
+	//スピンコライダを生成
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, machine_->GetHitRadius() + SPIN_RADIUS);
+	MakeCollider(Collider::TAG::SPIN, std::move(geo),
+		{ playerTag_,
+		Collider::TAG::FOOT,
+		Collider::TAG::NORMAL_OBJECT,
+		Collider::TAG::GROUND,
+		Collider::TAG::MACHINE_RIDE });
+}
+
+void Player::DeleteSpinCollider(void)
+{
+	//スピンコライダを消す
+	DeleteColliderAtTag(Collider::TAG::SPIN);
 }
 
 void Player::ChangeActionNormal(void)
@@ -434,18 +416,6 @@ void Player::UpdateRide(void)
 
 	//行動
 	action_->Update();
-
-	//スピン中か
-	if (!isSpin_)
-	{
-		//モデルと回転同期
-		modelQuaRot_ = trans_.quaRot;
-	}
-	else
-	{
-		//スピン
-		modelQuaRot_ = modelQuaRot_.Mult(Quaternion::AngleAxis(Utility::Deg2RadF(SPIN_SPEED), Utility::AXIS_Y));
-	}
 
 	//降りたなら
 	if (state_ == STATE::RIDE_MACHINE && logic_->IsGetOff() && canGetOff_)

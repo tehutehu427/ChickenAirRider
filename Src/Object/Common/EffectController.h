@@ -12,13 +12,9 @@ public:
 	enum class EFF_TYPE
 	{
 		NONE,
-		WIND,		//風
-		BLAST,		//爆発
-		DASH,		//ダッシュ
-		JUMP,		//ジャンプ
-		LANDING,	//着地
-		PUNCH_HIT,	//パンチヒット
-		COIN_GOAL,	//コインのゴール
+		BOOST,		//ブーストエフェクト
+		CHARGE,		//チャージエフェクト
+		SPIN,		//スピンエフェクト
 	};
 
 	//コンストラクタ

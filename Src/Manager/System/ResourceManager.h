@@ -133,6 +133,11 @@ public:
 		HEAL,			//回復
 		JUMP,			//ジャンプ
 		SPIN,			//スピン
+
+		//エフェクト
+		BOOST_EFFECT,	//ブーストエフェクト
+		CHARGE_EFFECT,	//チャージエフェクト
+		SPIN_EFFECT,	//スピンエフェクト
 	};
 
 	// 初期化

@@ -1,8 +1,8 @@
 #pragma once
-#include <map>
-#include <functional>
+#include <unordered_map>
 #include "ActionBase.h"
 #include "../Machine/Machine.h"
+#include "../../Common/EffectController.h"
 
 class PixelMaterial;
 class PixelRenderer;
@@ -74,11 +74,23 @@ private:
 	//空中の速度減衰率
 	static constexpr float FLIGHT_DECELERATION = 2.0f;
 
-	//スピン時間
+	//スピン
 	static constexpr float SPIN_TIME = 0.7f;
+	static constexpr float SPIN_SPEED = 40.0f;
+
+	//エフェクト関係
+	static constexpr VECTOR BOOST_EFF_SCL = {5.0f, 5.0f, 5.0f};
+	static constexpr VECTOR CHARGE_EFF_SCL = {10.0f, 10.0f, 10.0f};
+	static constexpr VECTOR SPIN_EFF_SCL = {1.0f, 1.0f, 1.0f };
 
 	//機体
 	const Machine& machine_;
+
+	//エフェクト
+	std::unique_ptr<EffectController> effectController_;
+
+	//エフェクトの配列番号
+	std::unordered_map<EffectController::EFF_TYPE, int> effNum_;
 
 	//走行時間カウンタ
 	float driveCnt_;
@@ -107,6 +119,9 @@ private:
 	//スピン時間カウント
 	float spinCnt_;
 
+	//スピン判定
+	bool isSpin_;
+
 	//状態ごとの更新
 	void UpdateGround(void)override;
 	void UpdateFlight(void)override;
@@ -119,6 +134,9 @@ private:
 
 	//チャージ解放
 	void DisCharge(void);
+
+	//スピン
+	void Spin(void);
 
 	//旋回
 	void Turn(void);

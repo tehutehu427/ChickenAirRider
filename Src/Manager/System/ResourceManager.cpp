@@ -238,6 +238,15 @@ void ResourceManager::Init(void)
 
 #pragma region エフェクト
 
+	res = std::make_unique<Resource>(Resource::TYPE::EFFEKSEER, PATH_EFF + L"Boost.efkproj");
+	resourcesMap_.emplace(SRC::BOOST_EFFECT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::EFFEKSEER, PATH_EFF + L"Charge.efkproj");
+	resourcesMap_.emplace(SRC::CHARGE_EFFECT, std::move(res));
+
+	res = std::make_unique<Resource>(Resource::TYPE::EFFEKSEER, PATH_EFF + L"Spin.efkproj");
+	resourcesMap_.emplace(SRC::SPIN_EFFECT, std::move(res));
+
 #pragma endregion
 
 #pragma region サウンド

@@ -1,13 +1,11 @@
 #include"../pch.h"
-#include "../Application.h"
 #include "../Utility/Utility.h"
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/Camera.h"
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/SoundManager.h"
 #include "../Manager/Game/GravityManager.h"
-#include "../Renderer/PixelMaterial.h"
-#include "../Renderer/PixelRenderer.h"
+#include "../../Common/EffectController.h"
 #include "../Logic/LogicBase.h"
 #include "MachineAction.h"
 
@@ -24,6 +22,7 @@ MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase
 	isFlightNow_ = false;
 	gravPow_ = Utility::VECTOR_ZERO;
 	spinCnt_ = 0.0f;
+	isSpin_ = false;
 
 	update_[true] = [this](void) {UpdateGround(); };
 	update_[false] = [this](void) {UpdateFlight(); };
@@ -31,35 +30,43 @@ MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase
 
 MachineAction::~MachineAction(void)
 {
+	//エフェクトの消去
+	effectController_->AllDelete();
 }
 
 void MachineAction::Init(void)
 {
-	ResourceManager& res = ResourceManager::GetInstance();
+	ResourceManager& resMng = ResourceManager::GetInstance();
 	const SceneManager& scnMng = SceneManager::GetInstance();
 
 	//SE
 	auto& snd = SoundManager::GetInstance();
 
 	//エンジン音
-	int id = res.Load(ResourceManager::SRC::ENGINE).handleId_;
+	int id = resMng.Load(ResourceManager::SRC::ENGINE).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::ENGINE, id, SoundManager::TYPE::SE, 80);
 	
 	//チャージ
-	id = res.Load(ResourceManager::SRC::CHARGE_SE).handleId_;
+	id = resMng.Load(ResourceManager::SRC::CHARGE_SE).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::CHARGE, id, SoundManager::TYPE::SE, 80);
 
 	//チャージ完了
-	id = res.Load(ResourceManager::SRC::CHARGE_MAX_SE).handleId_;
+	id = resMng.Load(ResourceManager::SRC::CHARGE_MAX_SE).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::CHARGE_MAX, id, SoundManager::TYPE::SE, 80);
 
 	//ブースト
-	id = res.Load(ResourceManager::SRC::BOOST).handleId_;
+	id = resMng.Load(ResourceManager::SRC::BOOST).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::BOOST, id, SoundManager::TYPE::SE, 180);
 
 	//スピン
-	id = res.Load(ResourceManager::SRC::SPIN).handleId_;
+	id = resMng.Load(ResourceManager::SRC::SPIN).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::SPIN, id, SoundManager::TYPE::SE, 80);
+
+	//エフェクト
+	effectController_ = std::make_unique<EffectController>();
+	effectController_->Add(resMng.Load(ResourceManager::SRC::BOOST_EFFECT).handleId_, EffectController::EFF_TYPE::BOOST);
+	effectController_->Add(resMng.Load(ResourceManager::SRC::CHARGE_EFFECT).handleId_, EffectController::EFF_TYPE::CHARGE);
+	effectController_->Add(resMng.Load(ResourceManager::SRC::SPIN_EFFECT).handleId_, EffectController::EFF_TYPE::SPIN);
 
 	//エンジン音
 	snd.Play(SoundManager::SOUND_NAME::ENGINE, SoundManager::PLAYTYPE::LOOP);
@@ -73,41 +80,30 @@ void MachineAction::Update(void)
 	//パラメーター情報
 	const Parameter& param = player_.GetAllParam();
 
-	//デルタタイム
-	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
-
-	//スピン判定
-	if (logic_.IsButtonMeshing() && !player_.IsSpin())
-	{
-		//スピンSE
-		snd.Play(SoundManager::SOUND_NAME::SPIN, SoundManager::PLAYTYPE::BACK);
-
-		//スピン開始
-		player_.SetIsSpin(true);
-	}
-
-	//スピン時間
-	if (player_.IsSpin())
-	{
-		//カウンタ
-		spinCnt_ += delta;
-
-		//スピン時間
-		if (spinCnt_ > SPIN_TIME)
-		{
-			//初期化
-			spinCnt_ = 0.0f;
-
-			//スピン終了
-			player_.SetIsSpin(false);
-		}
-	}
-
+	//エンジン音(速度で音量調整)
 	if (snd.IsPlay(SoundManager::SOUND_NAME::ENGINE))
 		snd.SetVolume(SoundManager::SOUND_NAME::ENGINE, SoundManager::PERCENT_MAX * (speed_ / param.maxSpeed_ * BASE_MAX_SPEED));
 
+	//プレイヤー情報
+	const auto& playerTrans = player_.GetTrans();
+
 	//回転更新
 	player_.SetQuaRot(player_.GetTrans().quaRot.Mult(Quaternion::Euler(axis_)));
+
+	//スピン処理
+	Spin();
+
+	//スピン中か
+	if (!isSpin_)
+	{
+		//モデルと回転同期
+		player_.SetModelRot(player_.GetTrans().quaRot);
+	}
+	else
+	{
+		//スピンによるモデルの回転
+		player_.SetModelRot(player_.GetModelRot().Mult(Quaternion::AngleAxis(Utility::Deg2RadF(SPIN_SPEED), Utility::AXIS_Y)));
+	}
 
 	//状態ごとの更新
 	update_[player_.IsGrounded()]();
@@ -118,6 +114,18 @@ void MachineAction::Update(void)
 
 	//プレイヤーに送る
 	player_.SetMovePow(movePow_);
+	
+	//エフェクト更新
+	effectController_->Update();
+	for (auto& eff : effNum_)
+	{
+		if (eff.second != -1)
+		{
+			effectController_->SetPos(eff.first, eff.second, playerTrans.pos);
+			effectController_->SetQuaRot(eff.first, eff.second, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(180.0f), 0.0f)));
+			effectController_->SetScale(eff.first, eff.second, BOOST_EFF_SCL);
+		}
+	}
 }
 
 void MachineAction::Draw(void)
@@ -296,6 +304,19 @@ void MachineAction::Charge(void)
 			driveCnt_ -= delta * TURN_BRAKE_POW;
 		}
 	}
+
+	//チャージエフェクト(1個のみ)
+	if (effNum_[EffectController::EFF_TYPE::CHARGE] < 1)
+	{
+		//プレイヤー情報
+		const auto& playerTrans = player_.GetTrans();
+		effNum_[EffectController::EFF_TYPE::CHARGE] = effectController_->Play(
+			EffectController::EFF_TYPE::CHARGE
+			, playerTrans.pos
+			, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(180.0f), 0.0f))
+			, CHARGE_EFF_SCL
+			, true);
+	}
 }
 
 void MachineAction::DisCharge(void)
@@ -324,6 +345,68 @@ void MachineAction::DisCharge(void)
 
 	//大きさ初期化
 	player_.SetScale(Utility::VECTOR_ONE);
+
+	//プレイヤー情報
+	const auto& playerTrans = player_.GetTrans();
+
+	//チャージのエフェクトの停止
+	effectController_->Delete(EffectController::EFF_TYPE::CHARGE, effNum_[EffectController::EFF_TYPE::CHARGE]);
+	effNum_[EffectController::EFF_TYPE::CHARGE]--;
+
+	//ブーストエフェクト
+	effNum_[EffectController::EFF_TYPE::BOOST] = effectController_->Play(
+		EffectController::EFF_TYPE::BOOST
+		, playerTrans.pos
+		, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(180.0f), 0.0f))
+		, BOOST_EFF_SCL);
+}
+
+void MachineAction::Spin(void)
+{
+	//SE
+	auto& snd = SoundManager::GetInstance();
+
+	//デルタタイム
+	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//スピン判定
+	if (logic_.IsButtonMeshing() && !isSpin_)
+	{
+		//スピンSE
+		snd.Play(SoundManager::SOUND_NAME::SPIN, SoundManager::PLAYTYPE::BACK);
+
+		//スピン開始
+		player_.CreateSpinCollider();
+		effNum_[EffectController::EFF_TYPE::SPIN] = effectController_->Play(
+			EffectController::EFF_TYPE::SPIN
+			, player_.GetTrans().pos
+			, player_.GetTrans().quaRot
+			, SPIN_EFF_SCL
+			, true);
+		isSpin_ = true;
+	}
+
+	//スピン時間
+	if (isSpin_)
+	{
+		//カウンタ
+		spinCnt_ += delta;
+
+		//スピン時間
+		if (spinCnt_ > SPIN_TIME)
+		{
+			//初期化
+			spinCnt_ = 0.0f;
+			isSpin_ = false;
+			
+			//スピンエフェクトの停止
+			effectController_->Delete(EffectController::EFF_TYPE::SPIN, effNum_[EffectController::EFF_TYPE::SPIN]);
+			effNum_[EffectController::EFF_TYPE::SPIN]--;
+
+			//スピン終了
+			player_.DeleteSpinCollider();
+		}
+	}
 }
 
 void MachineAction::Turn(void)

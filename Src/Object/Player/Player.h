@@ -113,12 +113,6 @@ public:
 	//接地判定の切り替え
 	void SetIsGrounded(const bool _isGrounded) { isGrounded_ = _isGrounded; }
 
-	//スピン判定の取得
-	const bool IsSpin(void)const { return isSpin_; }
-
-	//スピン判定の設定
-	void SetIsSpin(const bool _isSpin);
-
 	//移動前座標の取得
 	const VECTOR& GetPrePos(void)const { return prePos_; }
 
@@ -175,16 +169,28 @@ public:
 	//移動できるかどうかの設定
 	void SetCanMove(const bool _canMove) { canMove_ = _canMove; }
 
+	//スピンコライダの生成
+	void CreateSpinCollider(void);
+
+	//スピンコライダの削除
+	void DeleteSpinCollider(void);
+
+	//スピンによるモデルの回転
+	const Quaternion& GetModelRot(void)const { return modelQuaRot_; }
+	void SetModelRot(const Quaternion& _quaRot) { modelQuaRot_ = _quaRot; }
+
 private:
 
 	//相対座標
 	static constexpr VECTOR LOCAL_POS = { 100.0f,0.0f,0.0f };
 
+	//範囲
+	static constexpr float UNDER_BORDER = -500.0f;												//下の境界
+
 	//当たり判定用
 	static constexpr float NORMAL_RADIUS = 25.0f;												//通常時の球体の半径
 	static constexpr float SPIN_RADIUS = 90.0f;													//スピンの球体の半径
 	static constexpr float BROUD_RADIUS = 95.0f;												//前判定の半径
-	static constexpr float SPIN_SPEED = 40.0f;													//スピンの速度
 	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };									//線判定の上相対座標
 	static constexpr float LOCAL_LINE_DOWN_Y = -15.0f;											//線判定の下相対座標
 	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,LOCAL_LINE_DOWN_Y - NORMAL_RADIUS,0.0f };	//線判定の下相対座標
@@ -238,9 +244,6 @@ private:
 
 	//接地しているか
 	bool isGrounded_;
-
-	//スピンしているか
-	bool isSpin_;
 
 	//現在ダメージ
 	float damage_;
