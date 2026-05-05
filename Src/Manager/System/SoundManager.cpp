@@ -113,10 +113,18 @@ bool SoundManager::IsPlay(const SOUND_NAME _name) const
     return CheckSoundMem(it->second.handleId) == 1;
 }
 
+void SoundManager::SetVolume(const SOUND_NAME _name, const int _volumePercent)
+{
+	//âπó ÇÃê›íË
+    info_[_name].volumePercent = _volumePercent;
+
+    float soundPer = static_cast<float>(info_[_name].volumePercent) / static_cast<float>(PERCENT_MAX);
+    int soundPal = VOLUME_MAX * volume_[static_cast<int>(info_[_name].type)] * soundPer;
+    ChangeVolumeSoundMem(soundPal / PERCENT_MAX, info_[_name].handleId);
+}
+
 void SoundManager::SetSystemVolume(const int _volumePercent, const int _type)
 {    
-    constexpr int VOLUME_MAX = 255;  //ç≈ëÂâπó 
-
     //âπó ê›íË
     volume_[_type] = _volumePercent;
    

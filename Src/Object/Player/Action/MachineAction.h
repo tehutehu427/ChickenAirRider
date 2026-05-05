@@ -78,6 +78,13 @@ private:
 	static constexpr float SPIN_TIME = 0.7f;
 	static constexpr float SPIN_SPEED = 40.0f;
 
+	//サウンド関係
+	static constexpr int ENGINE_SE_VOL = 140;
+	static constexpr int CHARGE_SE_VOL = 80;
+	static constexpr int CHARGE_MAX_SE_VOL = 80;
+	static constexpr int SPIN_SE_VOL = 130;
+	static constexpr int BOOST_SE_VOL = 180;
+
 	//エフェクト関係
 	static constexpr VECTOR BOOST_EFF_SCL = {5.0f, 5.0f, 5.0f};
 	static constexpr VECTOR CHARGE_EFF_SCL = {10.0f, 10.0f, 10.0f};

@@ -67,6 +67,9 @@ public:
 	//音源種類最大数
 	static constexpr int TYPE_MAX = static_cast<int>(TYPE::MAX);
 
+	//システムの最大音量
+	static constexpr int VOLUME_MAX = 255;  
+
 	//音源の最大音量
 	static constexpr int PERCENT_MAX = 100;
 
@@ -103,7 +106,7 @@ public:
 	/// @brief 音源単体ごとの音量
 	/// @param _name 音源の名前
 	/// @param _volumePercent 音量(%表記)
-	void SetVolume(const SOUND_NAME _name, const int _volumePercent) { info_[_name].volumePercent = _volumePercent; }
+	void SetVolume(const SOUND_NAME _name, const int _volumePercent);
 
 	//読み込んだ音量を設定する
 	void SetLoadedSoundsVolume(void) { for (int i = 0; i < TYPE_MAX; i++) { SetSystemVolume(volume_[i], i); } };
