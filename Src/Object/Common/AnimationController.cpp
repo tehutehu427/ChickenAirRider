@@ -18,10 +18,7 @@ AnimationController::AnimationController(int modelId)
 
 AnimationController::~AnimationController(void)
 {
-	for (const auto& anim : animations_)
-	{
-		MV1DeleteModel(anim.second.model);
-	}
+	//リソース側で管理しているため、ここでは解放しない
 }
 
 void AnimationController::Add(const std::string _name, const int _animNum, const float _speed, const int _modelId)
