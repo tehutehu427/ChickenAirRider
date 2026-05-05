@@ -49,11 +49,11 @@ void PlayerOnHit::Load(void)
 	auto& snd = SoundManager::GetInstance();
 
 	//アイテムゲット
-	int id = res.Load(ResourceManager::SRC::GET_ITEM).handleId_;
+	int id = res.Load(ResourceManager::SRC::GET_ITEM_SE).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::GET_ITEM, id, SoundManager::TYPE::SE);
 
 	//ダメージ
-	id = res.Load(ResourceManager::SRC::DAMAGE).handleId_;
+	id = res.Load(ResourceManager::SRC::DAMAGE_SE).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::DAMAGE, id, SoundManager::TYPE::SE);
 }
 

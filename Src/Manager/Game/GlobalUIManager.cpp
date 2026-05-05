@@ -1,10 +1,15 @@
 #include "../pch.h"
+#include"../../Application.h"
+#include"../Utility/Utility.h"
+#include"../Manager/System/ResourceManager.h"
 #include"../Manager/Game/Timer.h"
 #include"../Manager/Game/GameSetting.h"
 #include "GlobalUIManager.h"
 
 void GlobalUIManager::LoadOutSide(void)
 {
+	//画像の読み込み
+	finishImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::FINISH_UI).handleId_;
 }
 
 void GlobalUIManager::Init(void)
@@ -72,4 +77,9 @@ void GlobalUIManager::DrawCountDown(void)
 
 void GlobalUIManager::DrawFinish(void)
 {
+	//枠
+	DrawBox(0, Application::SCREEN_HALF_Y - FINISH_FRAME_HEIGHT, Application::SCREEN_SIZE_X, Application::SCREEN_HALF_Y + FINISH_FRAME_HEIGHT, Utility::GRAY, true);
+
+	//フィニッシュUI描画
+	DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, FINISH_UI_SCALE, 0.0f, finishImg_, true);
 }

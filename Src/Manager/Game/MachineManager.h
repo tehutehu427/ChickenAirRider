@@ -37,6 +37,7 @@ public:
 
 	//機体生成
 	void CreateMachine(void);
+	void CreateMachine(const int _machineType ,const VECTOR& _pos);
 
 	//降りた機体の保持
 	void SaveGetOffMachine(std::unique_ptr<Machine> _machine);
@@ -54,6 +55,13 @@ public:
 	std::unique_ptr<Machine> GetCreateMachine(const MACHINE_TYPE _machineName)const;
 
 private:
+
+	//機体の生成範囲
+	static constexpr float CREATE_RANGE = 1000.0f;
+
+	//デバッグの機体の生成相対位置
+	static constexpr VECTOR DEBUG_CREATE_POS = { 0.0f,-200.0f,400.0f };
+	static constexpr float DEBUG_CREATE_LOCAL_POS_X = 200.0f;
 
 	//インポートデータ
 	std::vector<MachineImportData> importData_;

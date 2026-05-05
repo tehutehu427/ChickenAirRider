@@ -83,6 +83,12 @@ void GameMain::Init(void)
 	int id = res.Load(ResourceManager::SRC::MAIN_GAME_BGM).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::MAIN_GAME_BGM, id, SoundManager::TYPE::BGM);
 
+	//SE読み込み
+	id = res.Load(ResourceManager::SRC::COUNT_DOWN_SE).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::COUNT_DOWN_SE, id, SoundManager::TYPE::SE);
+	id = res.Load(ResourceManager::SRC::TIME_UP_SE).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::TIME_UP_SE, id, SoundManager::TYPE::SE);
+
 	//BGM再生
 	snd.Play(SoundManager::SOUND_NAME::MAIN_GAME_BGM, SoundManager::PLAYTYPE::LOOP);
 }
@@ -115,11 +121,14 @@ void GameMain::Release(void)
 		ui.SubDraw(UIManager::DRAW_TYPE::HEALTH,i);
 	}
 
-	//タイマーの開始
+	//タイマーの削除
 	gloUi.GetTimer().SetCountValid(false);
 	gloUi.GetTimer().SetCountView(false);
 	gloUi.GetTimer().SetTimeLimit(setMng.GetTimeLimit());
 	gloUi.SubDraw(GlobalUIManager::DRAW_TYPE::TIMER);
+
+	//フィニッシュUIの削除
+	gloUi.SubDraw(GlobalUIManager::DRAW_TYPE::FINISH);
 
 	//BGMストップ
 	snd.Stop(SoundManager::SOUND_NAME::MAIN_GAME_BGM);
@@ -138,17 +147,35 @@ void GameMain::UpdateGame(void)
 	//インスタンス
 	auto& scnMng = SceneManager::GetInstance();
 	auto& gloUi = GlobalUIManager::GetInstance();
+	auto& snd = SoundManager::GetInstance();
 
 	//タイムリミットになったなら終了表示
 	if (gloUi.GetTimer().IsTimeOver())
 	{
 		//状態遷移
 		state_ = STATE::FIN;
+
+		//カウントダウンの削除
+		gloUi.SubDraw(GlobalUIManager::DRAW_TYPE::LAST_COUNT_DOWN);
+
+		//タイムアップSEの再生
+		snd.Play(SoundManager::SOUND_NAME::TIME_UP_SE, SoundManager::PLAYTYPE::BACK);
+
+		//タイムアップUIの描画
+		gloUi.AddDraw(GlobalUIManager::DRAW_TYPE::FINISH);
+
 		return;
 	}
 	else if(gloUi.GetTimer().IsUnderSeconds(LAST_COUNT_DOWN))
 	{
+		//カウントダウンSEの再生
+		if (gloUi.GetTimer().IsChanged())
+		{
+			snd.Play(SoundManager::SOUND_NAME::COUNT_DOWN_SE, SoundManager::PLAYTYPE::BACK);
+		}
 
+		//カウントダウンの描画
+		gloUi.AddDraw(GlobalUIManager::DRAW_TYPE::LAST_COUNT_DOWN);
 	}
 
 	//インスタンス

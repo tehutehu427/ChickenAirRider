@@ -41,8 +41,17 @@ public:
 
 private:
 
+	//フィニッシュUIの拡大率
+	static constexpr float FINISH_UI_SCALE = 1.0f;
+	
+	//枠の高さ
+	static constexpr int FINISH_FRAME_HEIGHT = 100;
+
 	//タイマー
 	std::unique_ptr<Timer> timer_;					
+
+	//フィニッシュUI
+	int finishImg_;
 
 	//描画
 	std::unordered_map<DRAW_TYPE, std::function<void(void)>> drawList_;

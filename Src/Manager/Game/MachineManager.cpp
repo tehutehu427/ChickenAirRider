@@ -1,3 +1,4 @@
+#include "MachineManager.h"
 #include "../pch.h"
 #include"../Application.h"
 #include"../Utility/Utility.h"
@@ -58,7 +59,11 @@ void MachineManager::Init(void)
 	machines_.clear();
 
 	//機体の生成
-	CreateMachine();
+	int size = static_cast<int>(MACHINE_TYPE::MAX);
+	for(int i = 0; i < size; ++i)
+	{
+		CreateMachine(i, VGet(DEBUG_CREATE_POS.x + DEBUG_CREATE_LOCAL_POS_X * i, DEBUG_CREATE_POS.y, DEBUG_CREATE_POS.z));
+	}
 }
 
 void MachineManager::Update(void)
@@ -98,14 +103,32 @@ void MachineManager::CreateMachine(void)
 	
 	//ランダム
 	int rand = Utility::GetRandomValue(0, size - 1);
-	rand = 3;
 
 	//機体の種類
 	int modelId = getModelId_.at(importData_[rand].name)();
-	VECTOR pos = { 0.0f,-200.0f,400.0f };
+	VECTOR pos;
+	pos.x = static_cast<float>(Utility::GetRandomValue(-CREATE_RANGE, CREATE_RANGE));
+	pos.y = static_cast<float>(Utility::GetRandomValue(-CREATE_RANGE, CREATE_RANGE));
+	pos.z = static_cast<float>(Utility::GetRandomValue(-CREATE_RANGE, CREATE_RANGE));
 
 	//機体
 	std::unique_ptr<Machine> machine = std::make_unique<Machine>(importData_[rand], modelId, pos);
+	machine->Load();
+	machine->Init();
+	machine->CreateCol();
+
+	//機体生成
+	machines_.push_back(std::move(machine));
+}
+
+void MachineManager::CreateMachine(const int _machineType, const VECTOR& _pos)
+{
+	//機体の種類
+	int modelId = getModelId_.at(importData_[_machineType].name)();
+	VECTOR pos = _pos;
+
+	//機体
+	std::unique_ptr<Machine> machine = std::make_unique<Machine>(importData_[_machineType], modelId, pos);
 	machine->Load();
 	machine->Init();
 	machine->CreateCol();

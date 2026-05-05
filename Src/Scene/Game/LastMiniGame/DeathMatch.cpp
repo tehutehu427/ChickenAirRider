@@ -45,16 +45,12 @@ void DeathMatch::Update(void)
 	auto& setting = GameSetting::GetInstance();
 	auto& colMng = CollisionManager::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
-	//auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
 	auto& key = KeyConfig::GetInstance();
 
 	//ステージ更新
 	stgMng.Update();
-
-	//機体更新
-	//machineMng.Update();
 
 	//プレイヤーの更新
 	plMng.Update();
@@ -101,15 +97,11 @@ void DeathMatch::Draw(const Camera& _camera)
 	//インスタンス
 	auto& setting = GameSetting::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
-	//auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
 
 	//ステージの描画
 	stgMng.Draw(_camera);
-
-	//機体の描画
-	//machineMng.Draw();
 
 	//アイテムの描画
 	itemMng.Draw();

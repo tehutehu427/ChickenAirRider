@@ -13,7 +13,7 @@ public:
 	//サウンドの名前
 	enum class SOUND_NAME
 	{
-		NONE = 1,					//なし
+		NONE = 1,		//なし
 
 		//BGM
 		SELECT_BGM,		//セレクトシーン
@@ -38,6 +38,11 @@ public:
 		HEAL,		//回復
 		JUMP,		//ジャンプ
 		SPIN,		//スピン
+
+		COUNT_DOWN_SE,	//カウントダウン
+		TIME_UP_SE,		//タイムアップ
+
+		MAX
 	};
 
 	//再生種類

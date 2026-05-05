@@ -87,12 +87,11 @@ public:
 		//UI
 		CHARGE_GAUGE,			//チャージゲージ
 		CHARGE_GAUGE_MASK,		//チャージゲージマスク
-		SPEED_GAUGE,			//速度ゲージ
 		NUMBER,					//数字
 		COLON,					//コロン
 		TIMER_FRAME,			//タイマーの枠
 		FINISH_NUMBER,			//終了用の数字
-		FINISH,					//終了UI
+		FINISH_UI,				//終了UI
 
 		//最終ゲーム確認
 		DEATH_MATCH_CHECK_IMAGE,	//デスマッチの確認画像
@@ -122,17 +121,20 @@ public:
 		SELECT_SE,		//選択音
 		CANCEL_SE,		//キャンセル音
 
-		ENGINE,			//エンジン音
+		ENGINE_SE,		//エンジン音
 		CHARGE_SE,		//チャージ音
 		CHARGE_MAX_SE,	//チャージ完了SE
-		BOOST,			//ブースト
-		BEAM,			//ビーム
+		BOOST_SE,		//ブースト
+		BEAM_SE,		//ビーム
 		CANNON_SE,		//大砲音
-		DAMAGE,			//ダメージ
-		GET_ITEM,		//アイテムゲット
-		HEAL,			//回復
-		JUMP,			//ジャンプ
-		SPIN,			//スピン
+		DAMAGE_SE,		//ダメージ
+		GET_ITEM_SE,	//アイテムゲット
+		HEAL_SE,		//回復
+		JUMP_SE,		//ジャンプ
+		SPIN_SE,		//スピン
+
+		COUNT_DOWN_SE,	//カウントダウン
+		TIME_UP_SE,		//タイムアップ
 
 		//エフェクト
 		BOOST_EFFECT,	//ブーストエフェクト

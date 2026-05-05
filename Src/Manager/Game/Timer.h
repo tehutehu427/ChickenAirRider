@@ -22,10 +22,10 @@ public:
 	void Draw(void);
 
 	//時間制限の有無
-	const bool IsTimeLimit(void)const { return timer_ > 0.0f; }
+	const bool IsTimeLimit(void)const { return timeLimit_ > 0.0f; }
 
 	//時間制限の設定
-	void SetTimeLimit(const float _timeLimit) { timer_ = _timeLimit; }
+	void SetTimeLimit(const float _timeLimit) { timeLimit_ = _timeLimit; }
 
 	//カウントの有無の設定
 	void SetCountValid(const bool _cntValid) { cntValid_ = _cntValid; }
@@ -46,11 +46,14 @@ public:
 
 	//位置の設定
 	void SetPos(const Vector2 _pos) { pos_ = _pos; }
+
+	//カウンタの数字が変わったか
+	const bool IsChanged(void)const { return isChanged_; }
 			
 private:
 
 	//秒数の分換算
-	static constexpr float SECOND_TO_MINUTE = 60.0f;
+	static constexpr int SECOND_TO_MINUTE = 60;
 
 	//画像幅
 	static constexpr int IMAGE_WIDTH = 20;
@@ -58,10 +61,16 @@ private:
 	static constexpr float FRAME_EXRATE = 0.4f;
 
 	//時間計測
-	float timer_;
+	float timeLimit_;
 
 	//カウンタ
 	float cnt_;
+
+	//カウンタの前フレーム
+	float preCnt_;
+
+	//カウンタの数字が変わったか
+	bool isChanged_;
 
 	//カウントの状態
 	bool cntValid_;

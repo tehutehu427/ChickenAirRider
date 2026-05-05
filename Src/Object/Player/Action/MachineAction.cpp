@@ -43,7 +43,7 @@ void MachineAction::Init(void)
 	auto& snd = SoundManager::GetInstance();
 
 	//エンジン音
-	int id = resMng.Load(ResourceManager::SRC::ENGINE).handleId_;
+	int id = resMng.Load(ResourceManager::SRC::ENGINE_SE).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::ENGINE, id, SoundManager::TYPE::SE, 80);
 	
 	//チャージ
@@ -55,11 +55,11 @@ void MachineAction::Init(void)
 	snd.Add(SoundManager::SOUND_NAME::CHARGE_MAX, id, SoundManager::TYPE::SE, 80);
 
 	//ブースト
-	id = resMng.Load(ResourceManager::SRC::BOOST).handleId_;
+	id = resMng.Load(ResourceManager::SRC::BOOST_SE).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::BOOST, id, SoundManager::TYPE::SE, 180);
 
 	//スピン
-	id = resMng.Load(ResourceManager::SRC::SPIN).handleId_;
+	id = resMng.Load(ResourceManager::SRC::SPIN_SE).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::SPIN, id, SoundManager::TYPE::SE, 80);
 
 	//エフェクト
