@@ -6,15 +6,15 @@ Parameter Parameter::operator+(const Parameter& _param)const
 {
     //加算
     Parameter ret;
-    ret.maxSpeed_ = maxSpeed_ + _param.maxSpeed_;
-    ret.acceleration_ = acceleration_ + _param.acceleration_;
-    ret.turning_ = turning_ + _param.turning_;
-    ret.charge_ = charge_ + _param.charge_;
-    ret.flight_ = flight_ + _param.flight_;
-    ret.weight_ = weight_ + _param.weight_;
-    ret.attack_ = attack_ + _param.attack_;
-    ret.defence_ = defence_ + _param.defence_;
-    ret.maxHealth_ = maxHealth_ + _param.maxHealth_;
+    ret.maxSpeed = maxSpeed + _param.maxSpeed;
+    ret.acceleration = acceleration + _param.acceleration;
+    ret.turning = turning + _param.turning;
+    ret.charge = charge + _param.charge;
+    ret.flight = flight + _param.flight;
+    ret.weight = weight + _param.weight;
+    ret.attack = attack + _param.attack;
+    ret.defence = defence + _param.defence;
+    ret.maxHealth = maxHealth + _param.maxHealth;
 
     return ret;
 }
@@ -22,35 +22,55 @@ Parameter Parameter::operator+(const Parameter& _param)const
 void Parameter::operator+=(const Parameter& _param)
 {
     //加算
-    maxSpeed_ += _param.maxSpeed_;
-    acceleration_ += _param.acceleration_;
-    turning_ += _param.turning_;
-    charge_ += _param.charge_;
-    flight_ += _param.flight_;
-    weight_ += _param.weight_;
-    attack_ += _param.attack_;
-    defence_ += _param.defence_;
-    maxHealth_ += _param.maxHealth_;
+    maxSpeed += _param.maxSpeed;
+    acceleration += _param.acceleration;
+    turning += _param.turning;
+    charge += _param.charge;
+    flight += _param.flight;
+    weight += _param.weight;
+    attack += _param.attack;
+    defence += _param.defence;
+    maxHealth += _param.maxHealth;
 }
 
 Parameter Parameter::CalcUnitParam(const UnitParameter& _unitParam)const
 {
     //上昇パラメーター * ユニットの成長度 + ユニットの固定パラメーター
     Parameter ret;
-    ret.maxSpeed_ = (maxSpeed_ * _unitParam.affectMaxSpeed) + _unitParam.fixedMaxSpeed;
-    ret.acceleration_ = (acceleration_ * _unitParam.affectAcceleration) + _unitParam.fixedAcceleration;
-    ret.turning_ = (turning_ * _unitParam.affectTurning) + _unitParam.fixedTurning;
-    ret.charge_ = (charge_ * _unitParam.affectCharge) + _unitParam.fixedCharge;
-    ret.flight_ = (flight_ * _unitParam.affectFlight) + _unitParam.fixedFlight;
-    ret.weight_ = (weight_ * _unitParam.affectWeight) + _unitParam.fixedWeight;
-    ret.attack_ = (attack_ * _unitParam.affectAttack) + _unitParam.fixedAttack;
-    ret.defence_ = (defence_ * _unitParam.affectDefence) + _unitParam.fixedDefence;
-    ret.maxHealth_ = (maxHealth_ * _unitParam.affectMaxHealth) + _unitParam.fixedMaxHealth;
+    ret.maxSpeed = (maxSpeed * _unitParam.affectMaxSpeed) + _unitParam.fixedMaxSpeed;
+    ret.acceleration = (acceleration * _unitParam.affectAcceleration) + _unitParam.fixedAcceleration;
+    ret.turning = (turning * _unitParam.affectTurning) + _unitParam.fixedTurning;
+    ret.charge = (charge * _unitParam.affectCharge) + _unitParam.fixedCharge;
+    ret.flight = (flight * _unitParam.affectFlight) + _unitParam.fixedFlight;
+    ret.weight = (weight * _unitParam.affectWeight) + _unitParam.fixedWeight;
+    ret.attack = (attack * _unitParam.affectAttack) + _unitParam.fixedAttack;
+    ret.defence = (defence * _unitParam.affectDefence) + _unitParam.fixedDefence;
+    ret.maxHealth = (maxHealth * _unitParam.affectMaxHealth) + _unitParam.fixedMaxHealth;
 
     return ret;
 }
 
 const float Parameter::GetHealthValue(void) const
 {
-    return maxHealth_ * MAX_HEALTH_VALUE;
+    return maxHealth * MAX_HEALTH_VALUE;
+}
+
+void Parameter::Clamp(void)
+{
+    //最大値
+    const float maxParam = static_cast<float>(Parameter::MAX_PARAM);
+
+    //最小値
+    const float minParam = static_cast<float>(Parameter::MIN_PARAM);
+
+    //上下限値
+    maxSpeed = std::clamp(maxSpeed, minParam, maxParam);
+    acceleration = std::clamp(acceleration, minParam, maxParam);
+    turning = std::clamp(turning, minParam, maxParam);
+    charge = std::clamp(charge, minParam, maxParam);
+    flight = std::clamp(flight, minParam, maxParam);
+    weight = std::clamp(weight, minParam, maxParam);
+    attack = std::clamp(attack, minParam, maxParam);
+    defence = std::clamp(defence, minParam, maxParam);
+    maxHealth = std::clamp(maxHealth, minParam, maxParam);
 }

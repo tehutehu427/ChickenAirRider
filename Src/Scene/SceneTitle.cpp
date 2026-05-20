@@ -15,6 +15,8 @@
 SceneTitle::SceneTitle(void)
 {
 	backImg_ = -1;
+	backFrameImg_ = -1;
+	gearImg_ = -1;
 	logoImg_ = -1;
 	pushAnyButtonImg_ = -1;
 	postEffectScreen_ = -1;
@@ -46,6 +48,9 @@ void SceneTitle::Load(void)
 
 	//âÊëúÇÃì«Ç›çûÇ›
 	backImg_ = res.Load(ResourceManager::SRC::TITLE_BACK).handleId_;
+	backFrameImg_ = res.Load(ResourceManager::SRC::TITLE_BACK_FRAME).handleId_;
+	gearImg_ = res.Load(ResourceManager::SRC::TITLE_GEAR).handleId_;
+
 	logoImg_ = res.Load(ResourceManager::SRC::TITLE_LOGO).handleId_;
 	pushAnyButtonImg_ = res.Load(ResourceManager::SRC::PUSH_ANY_BUTTON).handleId_;
 
@@ -110,8 +115,19 @@ void SceneTitle::Draw(const Camera& _camera)
 
 #endif // _DEBUG
 
+	//ÉXÉNÉäÅ[ÉìÉTÉCÉY
+	int screenSizeHalfX = Application::SCREEN_HALF_X;
+	int screenSizeHalfY = Application::SCREEN_HALF_Y;
+
 	//îwåi
 	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backImg_, true);
+
+	//éïé‘
+	DrawRotaGraph(screenSizeHalfX - GEAR_LOCAL_POS_X, screenSizeHalfY - GEAR_LOCAL_POS_Y, GEAR_SIZE, cnt_, gearImg_, true);
+	DrawRotaGraph(screenSizeHalfX + GEAR_LOCAL_POS_X, screenSizeHalfY + GEAR_LOCAL_POS_Y, GEAR_SIZE, -cnt_ / 2.0f, gearImg_, true);
+
+	//îwåiÇÃòg
+	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backFrameImg_, true);
 
 	//ÉçÉS
 	DrawExtendGraph(LOGO_POS_X_1, LOGO_POS_Y_1, LOGO_POS_X_2, LOGO_POS_Y_2, logoImg_, true);

@@ -26,6 +26,10 @@ SceneOption::SceneOption(void)
 
 	//初期化
 	backImg_ = -1;
+	backFrameImg_ = -1;
+	gearImg_ = -1;
+	gearCnt_ = 0.0f;
+	menuBarImg_ = -1;
 	type_ = OPTION_TYPE::HOME;
 	nowType_ = OPTION_TYPE::HOME;
 	selectNum_ = -1;
@@ -51,6 +55,8 @@ void SceneOption::Load(void)
 	
 	//背景
 	backImg_ = res.Load(ResourceManager::SRC::TITLE_BACK).handleId_;
+	backFrameImg_ = res.Load(ResourceManager::SRC::TITLE_BACK_FRAME).handleId_;
+	gearImg_ = res.Load(ResourceManager::SRC::TITLE_GEAR).handleId_;
 
 	//メニュー
 	menuBarImg_ = res.Load(ResourceManager::SRC::MENU_BAR).handleId_;
@@ -83,6 +89,7 @@ void SceneOption::Init(void)
 	type_ = OPTION_TYPE::HOME;
 	nowType_ = OPTION_TYPE::HOME;
 	selectNum_ = 0;
+	gearCnt_ = 0.0f;
 
 	//インスタンス
 	const auto& setting = GameSetting::GetInstance();
@@ -98,6 +105,9 @@ void SceneOption::Init(void)
 
 void SceneOption::Update(void)
 {
+	//歯車の回転
+	gearCnt_ += SceneManager::GetInstance().GetDeltaTime();
+
 	//更新
 	update_[nowType_]();
 }
@@ -107,8 +117,19 @@ void SceneOption::Draw(const Camera& _camera)
 	//描画
 	draw_[nowType_]();
 
+	//スクリーンサイズ
+	int screenSizeHalfX = Application::SCREEN_HALF_X;
+	int screenSizeHalfY = Application::SCREEN_HALF_Y;
+
 	//背景
 	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backImg_, true);
+
+	//歯車
+	DrawRotaGraph(screenSizeHalfX - GEAR_LOCAL_POS_X, screenSizeHalfY - GEAR_LOCAL_POS_Y, GEAR_SIZE, gearCnt_, gearImg_, true);
+	DrawRotaGraph(screenSizeHalfX + GEAR_LOCAL_POS_X, screenSizeHalfY + GEAR_LOCAL_POS_Y, GEAR_SIZE, -gearCnt_ / 2.0f, gearImg_, true);
+
+	//背景の枠
+	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backFrameImg_, true);
 
 	//時間
 	int minute = modiTimeLimit_ / TIME_MIN_MULTI;

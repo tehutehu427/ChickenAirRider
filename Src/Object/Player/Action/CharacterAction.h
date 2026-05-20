@@ -41,7 +41,7 @@ private:
 	static constexpr float WALK_POW = 10.0f;
 
 	//重力
-	static constexpr float GRAV_POW = 40.0f;
+	static constexpr float GRAVITY_POW = 0.4f;
 
 	//キャラクター
 	Character& chara_;

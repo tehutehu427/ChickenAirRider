@@ -13,6 +13,8 @@
 SceneSelect::SceneSelect(void)
 {
 	backImg_ = -1;
+	backFrameImg_ = -1;
+	gearImg_ = -1;
 	selectTypeNum_ = static_cast<int>(MENU_TYPE::GAME_START);
 	nowSelectType_ = MENU_TYPE::HOME;
 	selectType_ = MENU_TYPE::GAME_START;
@@ -80,6 +82,10 @@ void SceneSelect::Load(void)
 
 	//îwåi
 	backImg_ = res.Load(ResourceManager::SRC::TITLE_BACK).handleId_;
+	backFrameImg_ = res.Load(ResourceManager::SRC::TITLE_BACK_FRAME).handleId_;
+	gearImg_ = res.Load(ResourceManager::SRC::TITLE_GEAR).handleId_;
+
+	//êîéö
 	numberTextImg_ = res.Load(ResourceManager::SRC::PLAYER_NUM_TEXT).handleId_;
 	numberImgs_ = res.Load(ResourceManager::SRC::NUMBER).handleIds_;
 
@@ -113,6 +119,7 @@ void SceneSelect::Init(void)
 	playerNum_[PLAYER_NUM_SELECT::USER] = 1;
 	playerNum_[PLAYER_NUM_SELECT::NPC] = 0;
 	playerNumSelect_ = PLAYER_NUM_SELECT::USER;
+	gearCnt_ = 0.0f;
 
 	//ÉCÉìÉXÉ^ÉìÉX
 	auto& snd = SoundManager::GetInstance();
@@ -123,6 +130,9 @@ void SceneSelect::Init(void)
 
 void SceneSelect::Update(void)
 {
+	//éïé‘ÇÃâÒì]
+	gearCnt_ += SceneManager::GetInstance().GetDeltaTime();
+
 	//ëIëÇµÇΩçÄñ⁄
 	update_[nowSelectType_]();
 }
@@ -136,8 +146,19 @@ void SceneSelect::Draw(const Camera& _camera)
 
 #endif // _DEBUG
 
+	//ÉXÉNÉäÅ[ÉìÉTÉCÉY
+	int screenSizeHalfX = Application::SCREEN_HALF_X;
+	int screenSizeHalfY = Application::SCREEN_HALF_Y;
+
 	//îwåi
 	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backImg_, true);
+
+	//éïé‘
+	DrawRotaGraph(screenSizeHalfX - GEAR_LOCAL_POS_X, screenSizeHalfY - GEAR_LOCAL_POS_Y, GEAR_SIZE, gearCnt_, gearImg_, true);
+	DrawRotaGraph(screenSizeHalfX + GEAR_LOCAL_POS_X, screenSizeHalfY + GEAR_LOCAL_POS_Y, GEAR_SIZE, -gearCnt_ / 2.0f, gearImg_, true);
+
+	//îwåiÇÃòg
+	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backFrameImg_, true);
 
 	//ëIëéàÇ≤Ç∆ÇÃï`âÊ
 	draw_[nowSelectType_]();

@@ -74,8 +74,16 @@ void ResourceManager::Init(void)
 	resourcesMap_.emplace(SRC::CANNON_IMAGE, std::move(res));
 	
 	//タイトル背景
-	res = std::make_unique<Resource>(Resource::TYPE::IMG, titleImage + L"Title.png");
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, titleImage + L"TitleBack.png");
 	resourcesMap_.emplace(SRC::TITLE_BACK, std::move(res));
+
+	//タイトル背景の枠
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, titleImage + L"TitleBackFrame.png");
+	resourcesMap_.emplace(SRC::TITLE_BACK_FRAME, std::move(res));
+
+	//タイトルの歯車
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, titleImage + L"Gear.png");
+	resourcesMap_.emplace(SRC::TITLE_GEAR, std::move(res));
 
 	//タイトルロゴ
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, titleImage + L"TitleLogo.png");
@@ -301,6 +309,10 @@ void ResourceManager::Init(void)
 	//スピンエフェクト
 	res = std::make_unique<Resource>(Resource::TYPE::EFFEKSEER, PATH_EFF + L"Spin.efkproj");
 	resourcesMap_.emplace(SRC::SPIN_EFFECT, std::move(res));
+
+	//爆発エフェクト
+	res = std::make_unique<Resource>(Resource::TYPE::EFFEKSEER, PATH_EFF + L"Blast.efkefc");
+	resourcesMap_.emplace(SRC::BLAST_EFFECT, std::move(res));
 
 #pragma endregion
 

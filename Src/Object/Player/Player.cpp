@@ -113,7 +113,7 @@ void Player::Init(void)
 	const auto& machineMng = MachineManager::GetInstance();
 
 	//機体
-	if (machine_ == nullptr)
+	if (!machine_)
 	{
 		machine_ = std::move(machineMng.GetCreateMachine(MachineManager::MACHINE_TYPE::WAKABA));
 		machine_->Load();
@@ -137,39 +137,23 @@ void Player::Init(void)
 
 void Player::Update(void)
 {
-	//行動
-	logic_->Update();
-
-	//落ちたら位置を初期化
-	if (movedPos_.y < UNDER_BORDER)
-	{
-		//座標
-		movedPos_ = VAdd(Utility::VECTOR_ZERO, VScale(LOCAL_POS, static_cast<float>(playerIndex_)));
-		trans_.pos = movedPos_;
-	}
-
 	//インスタンス
 	auto& grvMng = GravityManager::GetInstance();
 
 	//デルタタイム
 	const float delta = SceneManager::GetInstance().GetDeltaTime();
 
+	//行動
+	logic_->Update();
+
+	//奈落判定
+	CheckUnder();
+
 	//無敵時間
 	invincible_ -= delta;
 
-	//移動更新
-	prePos_ = trans_.pos;
-	trans_.pos = movedPos_;
-
-	//動けないかどうか
-	if (canMove_)
-	{
-		//状態ごとの更新
-		update_[state_]();
-
-		//移動
-		movedPos_ = VAdd(movedPos_, movePow_);
-	}
+	//移動
+	MoveAndUpdateState();
 
 	//着地していないなら
 	if (!isGrounded_)
@@ -199,33 +183,8 @@ void Player::SetParam(const Parameter& _param)
 	//セット
 	param_ = _param;
 
-	//上下限値
-	if (param_.maxSpeed_ > Parameter::MAX_PARAM)param_.maxSpeed_ = Parameter::MAX_PARAM;
-	else if (param_.maxSpeed_ < 0)param_.maxSpeed_ = 0;
-
-	if (param_.acceleration_ > Parameter::MAX_PARAM)param_.acceleration_ = Parameter::MAX_PARAM;
-	else if (param_.acceleration_ < 0)param_.acceleration_ = 0;
-
-	if (param_.turning_ > Parameter::MAX_PARAM)param_.turning_ = Parameter::MAX_PARAM;
-	else if (param_.turning_ < 0)param_.turning_ = 0;
-
-	if (param_.charge_ > Parameter::MAX_PARAM)param_.charge_ = Parameter::MAX_PARAM;
-	else if (param_.charge_ < 0)param_.charge_ = 0;
-
-	if (param_.flight_ > Parameter::MAX_PARAM)param_.flight_ = Parameter::MAX_PARAM;
-	else if (param_.flight_ < 0)param_.flight_ = 0;
-
-	if (param_.weight_ > Parameter::MAX_PARAM)param_.weight_ = Parameter::MAX_PARAM;
-	else if (param_.weight_ < 0)param_.weight_ = 0;
-
-	if (param_.attack_ > Parameter::MAX_PARAM)param_.attack_ = Parameter::MAX_PARAM;
-	else if (param_.attack_ < 0)param_.attack_ = 0;
-
-	if (param_.defence_ > Parameter::MAX_PARAM)param_.defence_ = Parameter::MAX_PARAM;
-	else if (param_.defence_ < 0)param_.defence_ = 0;
-
-	if (param_.maxHealth_ > Parameter::MAX_PARAM)param_.maxHealth_ = Parameter::MAX_PARAM;
-	else if (param_.maxHealth_ < 0)param_.maxHealth_ = 0;
+	//上下限値の設定
+	param_.Clamp();
 }
 
 const Parameter Player::GetAllParam(void)const
@@ -247,7 +206,7 @@ const float Player::GetAttack(void) const
 	//パラメータ
 	const Parameter& param = GetAllParam();
 
-	return param.attack_ + (param.weight_ * Parameter::WEIGHT_AFFECT) - (param.flight_ * Parameter::FLIGHT_AFFECT);
+	return param.attack + (param.weight * Parameter::WEIGHT_AFFECT) - (param.flight * Parameter::FLIGHT_AFFECT);
 }
 
 const float Player::GetDefence(void) const
@@ -255,7 +214,7 @@ const float Player::GetDefence(void) const
 	//パラメータ
 	const Parameter& param = GetAllParam();
 
-	return (param.defence_ + (param.weight_ * Parameter::WEIGHT_AFFECT) - (param.flight_ * Parameter::FLIGHT_AFFECT)) * Parameter::DEFENCE_AFFECT;
+	return (param.defence + (param.weight * Parameter::WEIGHT_AFFECT) - (param.flight * Parameter::FLIGHT_AFFECT)) * Parameter::DEFENCE_AFFECT;
 }
 
 UnitParameter Player::GetUnitParam(void) const
@@ -340,8 +299,39 @@ void Player::DeleteSpinCollider(void)
 	DeleteColliderAtTag(Collider::TAG::SPIN);
 }
 
+void Player::CheckUnder(void)
+{
+	//落ちたら位置を初期化
+	if (movedPos_.y < UNDER_BORDER)
+	{
+		//座標
+		movedPos_ = VAdd(Utility::VECTOR_ZERO, VScale(LOCAL_POS, static_cast<float>(playerIndex_)));
+		trans_.pos = movedPos_;
+	}
+}
+
+void Player::MoveAndUpdateState(void)
+{
+	//移動更新
+	prePos_ = trans_.pos;
+	trans_.pos = movedPos_;
+
+	//動けないかどうか
+	if (canMove_)
+	{
+		//状態ごとの更新
+		update_[state_]();
+
+		//移動
+		movedPos_ = VAdd(movedPos_, movePow_);
+	}
+}
+
 void Player::ChangeActionNormal(void)
 {
+	//カメラ
+	auto camera = camera_.lock();
+
 	//アクションUIを初期化しておく
 	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE,playerIndex_);
 	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::HEALTH, playerIndex_);
@@ -360,7 +350,7 @@ void Player::ChangeActionNormal(void)
 	line.SetLocalPosPoint2(VGet(0.0f,LOCAL_LINE_DOWN.y,0.0f));
 
 	//カメラ状態の変更
-	camera_.lock()->ChangeMode(Camera::MODE::FOLLOW);
+	camera->ChangeMode(Camera::MODE::FOLLOW);
 
 	//アニメーションの変更
 	chara_->GetAnim().Play("idle");
@@ -368,6 +358,9 @@ void Player::ChangeActionNormal(void)
 
 void Player::ChangeActionRide(void)
 {
+	//カメラ
+	auto camera = camera_.lock();
+
 	//アクションUIを初期化しておく
 	UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE, playerIndex_);
 	UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::HEALTH, playerIndex_);
@@ -383,11 +376,10 @@ void Player::ChangeActionRide(void)
 	Sphere& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL_VALUE::MAIN)]->GetGeometry());
 	sphere.SetRadius(machine_->GetHitRadius());
 	Line& line = dynamic_cast<Line&>(collider_[static_cast<int>(COL_VALUE::GROUNDED)]->GetGeometry());
-	//line.SetLocalPosPoint2(VGet(0.0f, -sphere.GetRadius() + LOCAL_LINE_DOWN_Y, 0.0f));
 	line.SetLocalPosPoint2(machine_->GetFootPos());
 
 	//カメラ状態の変更
-	camera_.lock()->ChangeMode(Camera::MODE::FOLLOW_LEAP);
+	camera->ChangeMode(Camera::MODE::FOLLOW_LEAP);
 
 	//アニメーションの変更
 	chara_->GetAnim().Play("ride");
@@ -410,8 +402,11 @@ void Player::UpdateNormal(void)
 
 void Player::UpdateRide(void)
 {
+	//カメラ
+	auto camera = camera_.lock();
+
 	//カメラ注視点までのベクトル
-	VECTOR vec = Utility::GetMoveVec(trans_.pos, camera_.lock()->GetTargetPos());
+	VECTOR vec = Utility::GetMoveVec(trans_.pos, camera->GetTargetPos());
 	trans_.quaRot = trans_.quaRot.LookRotation(vec);
 
 	//行動

@@ -24,7 +24,7 @@ public:
 
 		//キャラクターモデル
 		CHICKEN,			//チキンモデル
-		
+
 		//マシンモデル
 		WAKABA_STAR,		//ワカバモデル
 		EARTH_STAR,			//アースモデル
@@ -67,6 +67,8 @@ public:
 
 		//タイトル、セレクト
 		TITLE_BACK,			//タイトル背景
+		TITLE_BACK_FRAME,	//タイトル背景の枠
+		TITLE_GEAR,			//タイトルの歯車
 		TITLE_LOGO,			//タイトルロゴ
 		PUSH_ANY_BUTTON,	//何かボタンを押してください
 
@@ -140,6 +142,8 @@ public:
 		BOOST_EFFECT,	//ブーストエフェクト
 		CHARGE_EFFECT,	//チャージエフェクト
 		SPIN_EFFECT,	//スピンエフェクト
+		BLAST_EFFECT,	//爆発エフェクト
+
 	};
 
 	// 初期化

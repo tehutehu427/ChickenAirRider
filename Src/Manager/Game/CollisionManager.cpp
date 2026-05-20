@@ -146,23 +146,19 @@ const bool CollisionManager::IsBroudCollision(const ObjectBase& _obj1, const Obj
 
 const bool CollisionManager::IsCollisionTag(const Collider& _col1, const Collider& _col2) const
 {
-	//タグ
-	const auto& tag1 = _col1.GetTag();
-	const auto& tag2 = _col2.GetTag();
-
 	//当たり判定しないタグ
 	const auto& notColTags1 = _col1.GetNotHitTags();
 	const auto& notColTags2 = _col2.GetNotHitTags();
 
 	//2人目の当たり判定しないタグ
-	if (notColTags2.contains(tag1))
+	if (_col1.IsIncludeMyTag(notColTags2))
 	{
 		//1人目のタグが2人目の当たり判定しないタグと同一だった
 		return false;
 	}
 
 	//1人目の当たり判定しないタグ
-	if (notColTags1.contains(tag2))
+	if (_col2.IsIncludeMyTag(notColTags1))
 	{
 		//2人目のタグが1人目の当たり判定しないタグと同一だった
 		return false;

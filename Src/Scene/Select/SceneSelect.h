@@ -54,8 +54,20 @@ private:
 	static constexpr int PLAYER_NUM_TEXT_BOX_POS_Y = 100;
 	static constexpr int PLAYER_NUM_LOCAL_POS = 80;
 
+	//歯車の位置
+	static constexpr int GEAR_LOCAL_POS_X = 500;
+	static constexpr int GEAR_LOCAL_POS_Y = 250;
+
+	//歯車の大きさ
+	static constexpr float GEAR_SIZE = 2.0f;
+
 	//背景
 	int backImg_;
+	int backFrameImg_;
+	int gearImg_;
+
+	//歯車用カウンタ
+	float gearCnt_;
 
 	//メニュー欄
 	int menuBarImg_;

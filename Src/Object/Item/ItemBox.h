@@ -68,7 +68,7 @@ private:
 	static constexpr float FALL_ROT = 12.0f;
 
 	//重力影響度
-	static constexpr float GRAVITY_POW = 300.0f;
+	static constexpr float GRAVITY_POW = 3.0f;
 
 	//テクスチャバッファ
 	static constexpr int CRACK_IMG_BUFF = 11;

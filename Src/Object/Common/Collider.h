@@ -81,6 +81,20 @@ public :
 	/// @param _collider 相手のコライダ
 	void OnHit(const std::weak_ptr<Collider> _collider);
 
+	/// <summary>
+	/// 指定されたタグが自分の衝突用タグに含まれているか
+	/// </summary>
+	/// <param name="_tags">指定タグ群</param>
+	/// <returns>true:含まれている</returns>
+	const bool IsIncludeMyTag(const std::set<TAG>& _tags)const;
+
+	/// <summary>
+	/// 指定されたタグが自分の衝突させないタグに含まれているか
+	/// </summary>
+	/// <param name="_tags">指定タグ群</param>
+	/// <returns>true:含まれている</returns>
+	const bool IsIncludeNotHitTag(const std::set<TAG>& _tags)const;
+
 private:
 
 	//所持者

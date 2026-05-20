@@ -275,7 +275,7 @@ void UIManager::DrawParam(const int _playerIndex)
 	unsigned int color = Utility::CYAN;
 
 	//パラメーター
-	int paramNum = static_cast<int>(param.maxSpeed_);
+	int paramNum = static_cast<int>(param.maxSpeed);
 
 	//最高速
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, maxSpeedImg_, true);
@@ -286,7 +286,7 @@ void UIManager::DrawParam(const int _playerIndex)
 
 	//加速
 	color = Utility::PURPLE;
-	paramNum = static_cast<int>(param.acceleration_);
+	paramNum = static_cast<int>(param.acceleration);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, acceleImg_, true);
 	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
 	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
@@ -295,7 +295,7 @@ void UIManager::DrawParam(const int _playerIndex)
 
 	//旋回
 	color = Utility::GREEN;
-	paramNum = static_cast<int>(param.turning_);
+	paramNum = static_cast<int>(param.turning);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, turnImg_, true);
 	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
 	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
@@ -304,7 +304,7 @@ void UIManager::DrawParam(const int _playerIndex)
 
 	//チャージ
 	color = Utility::YELLOW;
-	paramNum = static_cast<int>(param.charge_);
+	paramNum = static_cast<int>(param.charge);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, chargeImg_, true);
 	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
 	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
@@ -313,7 +313,7 @@ void UIManager::DrawParam(const int _playerIndex)
 
 	//飛行
 	color = Utility::WHITE;
-	paramNum = static_cast<int>(param.flight_);
+	paramNum = static_cast<int>(param.flight);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, flightImg_, true);
 	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
 	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
@@ -322,7 +322,7 @@ void UIManager::DrawParam(const int _playerIndex)
 
 	//重さ
 	color = Utility::BROWN;
-	paramNum = static_cast<int>(param.weight_);
+	paramNum = static_cast<int>(param.weight);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, weightImg_, true);
 	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
 	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
@@ -331,7 +331,7 @@ void UIManager::DrawParam(const int _playerIndex)
 
 	//攻撃
 	color = Utility::ORANGE;
-	paramNum = static_cast<int>(param.attack_);
+	paramNum = static_cast<int>(param.attack);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, attackImg_, true);
 	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
 	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
@@ -340,7 +340,7 @@ void UIManager::DrawParam(const int _playerIndex)
 
 	//防御
 	color = Utility::BLUE;
-	paramNum = static_cast<int>(param.defence_);
+	paramNum = static_cast<int>(param.defence);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, defenceImg_, true);
 	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
 	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);
@@ -349,7 +349,7 @@ void UIManager::DrawParam(const int _playerIndex)
 
 	//最大体力
 	color = Utility::RED;
-	paramNum = static_cast<int>(param.maxHealth_);
+	paramNum = static_cast<int>(param.maxHealth);
 	DrawExtendGraph(pos.x - powerUpInterval, pos.y, pos.x + size - powerUpInterval, pos.y + size, maxHealthImg_, true);
 	DrawExtendGraph(pos.x - numberLocalPos + numberInterval, pos.y, pos.x + size - numberLocalPos + numberInterval, pos.y + size, numImgs_[paramNum % 10], true);
 	DrawExtendGraph(pos.x - numberLocalPos, pos.y, pos.x + size - numberLocalPos, pos.y + size, numImgs_[paramNum / 10], true);

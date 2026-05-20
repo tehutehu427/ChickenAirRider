@@ -74,6 +74,9 @@ private:
 	//索敵補正値
 	static constexpr float SEARCH_MOVE_POW_MULTI = 1.0f;
 
+	//重力影響度
+	static constexpr float GRAVITY_POW = 2.0f;
+
 	//所有者タグ
 	std::weak_ptr<Collider> holder_;
 
@@ -106,6 +109,9 @@ private:
 	//描画
 	std::unordered_map<STATE, std::function<void(void)>> draw_;
 
+	//状態変更
+	std::unordered_map<STATE, std::function<void(void)>> changeState_;
+
 	//各更新
 	void UpdateAlive(void);
 	void UpdateBlast(void);
@@ -115,5 +121,10 @@ private:
 	void DrawAlive(void);
 	void DrawBlast(void);
 	void DrawDead(void);
+
+	//状態変更
+	void ChangeStateAlive(void);
+	void ChangeStateBlast(void);
+	void ChangeStateDead(void);
 };
 

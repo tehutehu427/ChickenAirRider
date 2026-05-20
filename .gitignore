@@ -3,3 +3,6 @@ Log.txt
 x64/
 *.ipch
 Data/Shader/
+*.cso
+*.user
+*.vcxproj.user

@@ -61,8 +61,20 @@ private:
 	//キーの保持時間
 	static constexpr float HOLD_TIME = 0.3f;
 
+	//歯車の位置
+	static constexpr int GEAR_LOCAL_POS_X = 500;
+	static constexpr int GEAR_LOCAL_POS_Y = 250;
+
+	//歯車の大きさ
+	static constexpr float GEAR_SIZE = 2.0f;
+
 	//背景
 	int backImg_;
+	int backFrameImg_;
+	int gearImg_;
+
+	//歯車用カウンタ
+	float gearCnt_;
 
 	//メニュー欄
 	int menuBarImg_;

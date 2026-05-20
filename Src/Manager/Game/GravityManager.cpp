@@ -52,7 +52,7 @@ void GravityManager::CalcGravity(const VECTOR& _dir, VECTOR& _pow, const float _
 	VECTOR dirGravity = _dir;
 
 	// èdóÕÇÃã≠Ç≥
-	float gravityPow = GRAVITY_POW * _per / 100.0f;
+	float gravityPow = GRAVITY_POW * _per;
 
 	// èdóÕÇçÏÇÈ
 	VECTOR gravity = VScale(dirGravity, gravityPow);

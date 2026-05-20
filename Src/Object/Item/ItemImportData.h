@@ -57,39 +57,39 @@ inline void FromJson(const nlohmann::json& _j, PowerUpItemImportData& _data)
 		//各パラメータ
 		if (parameter.contains("maxSpeed"))
 		{
-			_data.param.maxSpeed_ = parameter.value("maxSpeed", 0);
+			_data.param.maxSpeed = parameter.value("maxSpeed", 0);
 		}
 		if (parameter.contains("acceleration"))
 		{
-			_data.param.acceleration_ = parameter.value("acceleration", 0);
+			_data.param.acceleration = parameter.value("acceleration", 0);
 		}
 		if (parameter.contains("turning"))
 		{
-			_data.param.turning_ = parameter.value("turning", 0);
+			_data.param.turning = parameter.value("turning", 0);
 		}
 		if (parameter.contains("charge"))
 		{
-			_data.param.charge_ = parameter.value("charge", 0);
+			_data.param.charge = parameter.value("charge", 0);
 		}
 		if (parameter.contains("flight"))
 		{
-			_data.param.flight_ = parameter.value("flight", 0);
+			_data.param.flight = parameter.value("flight", 0);
 		}
 		if (parameter.contains("weight"))
 		{
-			_data.param.weight_ = parameter.value("weight", 0);
+			_data.param.weight = parameter.value("weight", 0);
 		}
 		if (parameter.contains("attack"))
 		{
-			_data.param.attack_ = parameter.value("attack", 0);
+			_data.param.attack = parameter.value("attack", 0);
 		}
 		if (parameter.contains("defence"))
 		{
-			_data.param.defence_ = parameter.value("defence", 0);
+			_data.param.defence = parameter.value("defence", 0);
 		}
 		if (parameter.contains("maxHealth"))
 		{
-			_data.param.maxHealth_ = parameter.value("maxHealth", 0);
+			_data.param.maxHealth = parameter.value("maxHealth", 0);
 		}
 	}
 

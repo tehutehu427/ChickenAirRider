@@ -83,7 +83,7 @@ void MachineAction::Update(void)
 	if (snd.IsPlay(SoundManager::SOUND_NAME::ENGINE))
 	{
 		//音量制限
-		float speedRate = speed_ / (param.maxSpeed_ * BASE_MAX_SPEED);
+		float speedRate = speed_ / (param.maxSpeed * BASE_MAX_SPEED);
 		float vol = (speedRate > 1.0f ? 1.0f : speedRate) * ENGINE_SE_VOL;
 		snd.SetVolume(SoundManager::SOUND_NAME::ENGINE, vol);
 	}
@@ -218,7 +218,7 @@ void MachineAction::Move(void)
 	//チャージ中　かつ　地上にいないなら加速しない
 	if (!logic_.StartCharge() && player_.IsGrounded())
 	{
-		if(speed_ < param.maxSpeed_ * BASE_MAX_SPEED * speedAffect)
+		if(speed_ < param.maxSpeed * BASE_MAX_SPEED * speedAffect)
 		{
 			//カウンタ
 			driveCnt_ += delta;
@@ -226,7 +226,7 @@ void MachineAction::Move(void)
 	}
 
 	//最高速の制限　又は　飛行中なら
-	if (speed_ > param.maxSpeed_ * BASE_MAX_SPEED * speedAffect)
+	if (speed_ > param.maxSpeed * BASE_MAX_SPEED * speedAffect)
 	{
 		//減速なのでカウンタ減少
 		driveCnt_ -= delta * unitParam.rateOfConvergence;
@@ -241,7 +241,7 @@ void MachineAction::Move(void)
 	float velocity = velocity_ * speedAffect;
 
 	//速度の方程式に当てはめる
-	speed_ = velocity + (param.acceleration_ * driveCnt_) * speedAffect;
+	speed_ = velocity + (param.acceleration * driveCnt_) * speedAffect;
 
 	//速度が負の値にならないようにする
 	if (speed_ < 0.0f)
@@ -263,7 +263,7 @@ void MachineAction::Charge(void)
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
 	//チャージカウンタ
-	chargeCnt_ += BASE_CHARGE * param.charge_ / unitParam.chargeCapacity;
+	chargeCnt_ += BASE_CHARGE * param.charge / unitParam.chargeCapacity;
 
 	//チャージの制限
 	if (chargeCnt_ > 1.0f)
@@ -330,7 +330,7 @@ void MachineAction::DisCharge(void)
 	const auto& unitParam = player_.GetUnitParam();
 
 	//チャージの割合で初速度を決める
-	float velocity = (param.maxSpeed_ * BASE_MAX_SPEED) * (1 + unitParam.boostRate * std::pow(chargeCnt_,unitParam.boostPower)) * std::pow(chargeCnt_,unitParam.chargeDamp);
+	float velocity = (param.maxSpeed * BASE_MAX_SPEED) * (1 + unitParam.boostRate * std::pow(chargeCnt_,unitParam.boostPower)) * std::pow(chargeCnt_,unitParam.chargeDamp);
 
 	//速度
 	if (speed_ < velocity)
@@ -428,8 +428,8 @@ void MachineAction::Turn(void)
 	if (turnPow == 0.0f)return;
 
 	//パラメーターで回転しやすくする
-	turnPow += turnPow > 0.0f ? param.turning_ * delta
-		: -param.turning_ * delta;
+	turnPow += turnPow > 0.0f ? param.turning * delta
+		: -param.turning * delta;
 
 	//チャージ中だと回転しやすい
 	if(player_.IsGrounded())turnPow = logic_.StartCharge() ? turnPow * CHARGE_TURN : turnPow;
@@ -468,7 +468,7 @@ void MachineAction::Flight(void)
 	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);
 
 	//落ちる力
-	float fallPow = (delta * gravPow_.y * (param.weight_ * BASE_WEIGHT)) / (param.flight_ * BASE_FLIGHT);
+	float fallPow = (delta * gravPow_.y * (param.weight * BASE_WEIGHT)) / (param.flight * BASE_FLIGHT);
 
 	//だんだん落ちていく
 	flightPow_ += fallPow;

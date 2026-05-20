@@ -37,3 +37,15 @@ void Collider::OnHit(const std::weak_ptr<Collider> _collider)
 	//当たり判定が終わった
 	isHit_ = false;
 }
+
+const bool Collider::IsIncludeMyTag(const std::set<TAG>& _tags) const
+{
+	//指定されたタグのどれかが自身のタグに含まれているか
+	return _tags.contains(myTag_);
+}
+
+const bool Collider::IsIncludeNotHitTag(const std::set<TAG>& _tags) const
+{
+	//衝突させないタグのどれかが指定されたタグに含まれているか
+	return std::any_of(_tags.begin(), _tags.end(), [this](const TAG& tag) { return notHitTags_.contains(tag); });
+}

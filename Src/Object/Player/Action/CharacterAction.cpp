@@ -117,7 +117,7 @@ void CharacterAction::CalcGravity(void)
 	VECTOR gravPow = Utility::VECTOR_ZERO;
 
 	//加算
-	GravityManager::GetInstance().CalcGravity(player_.GetFoot().PosAxis(Utility::DIR_D), gravPow_,GRAV_POW);
+	GravityManager::GetInstance().CalcGravity(player_.GetFoot().PosAxis(Utility::DIR_D), gravPow_,GRAVITY_POW);
 
 	jumpPow_ = VAdd(jumpPow_, gravPow_);
 
@@ -145,6 +145,7 @@ void CharacterAction::UpdateGround(void)
 
 void CharacterAction::UpdateFlight(void)
 {
+	//デルタタイム
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
 	//重力

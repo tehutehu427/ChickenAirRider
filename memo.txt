@@ -1,1 +1,0 @@
-現在はActionがLogicを持っているがLogicがActionを持つほうがよさそう。

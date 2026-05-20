@@ -12,7 +12,7 @@ class ActionBase;
 class PlayerOnHit;
 class Camera;
 
-class Player : public ObjectBase, public std::enable_shared_from_this<Player>
+class Player : public ObjectBase
 {
 public:
 
@@ -262,6 +262,12 @@ private:
 	std::map<STATE, std::function<void(void)>> changeAction_;			//行動切り替え
 	std::map<STATE, std::function<void(void)>> update_;					//状態ごとの更新
 	std::map<STATE, std::function<void(void)>> draw_;					//状態ごとの描画
+
+	//奈落判定
+	void CheckUnder(void);
+
+	//移動と状態更新
+	void MoveAndUpdateState(void);
 
 	//状態ごとのアクションの変更
 	void ChangeActionNormal(void);

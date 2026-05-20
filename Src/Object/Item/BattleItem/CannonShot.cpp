@@ -1,8 +1,9 @@
 #include "../pch.h"
+#include "../Utility/Utility.h"
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/ResourceManager.h"
 #include"../Manager/Game/GravityManager.h"
-#include "../Utility/Utility.h"
+#include "../../Common/EffectController.h"
 #include "../../Common/Geometry/Sphere.h"
 #include "../../Player/Player.h"
 #include "CannonShot.h"
@@ -12,12 +13,13 @@ CannonShot::CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR&
 	movedPos_ = _pos;
 	trans_.pos = _pos;
 	trans_.quaRot = _rot;
-	trans_.scl = VScale(_scl,0.3f);
+	trans_.scl = VScale(_scl, 0.3f);
 	holder_ = _holder;
 	speed_ = _speed + SPEED;
 	gravPow_ = Utility::VECTOR_ZERO;
 	movePow_ = Utility::VECTOR_ZERO;
 	aliveCnt_ = 0.0f;
+	blastCnt_ = 0.0f;
 	state_ = STATE::ALIVE;
 	attack_ = 0.0f;
 
@@ -28,6 +30,10 @@ CannonShot::CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR&
 	draw_.emplace(STATE::ALIVE, [this](void) {DrawAlive(); });
 	draw_.emplace(STATE::BLAST, [this](void) {DrawBlast(); });
 	draw_.emplace(STATE::DEAD, [this](void) {DrawDead(); });
+
+	changeState_.emplace(STATE::ALIVE, [this](void) {ChangeStateAlive(); });
+	changeState_.emplace(STATE::BLAST, [this](void) {ChangeStateBlast(); });
+	changeState_.emplace(STATE::DEAD, [this](void) {ChangeStateDead(); });
 }
 
 CannonShot::~CannonShot(void)
@@ -36,8 +42,15 @@ CannonShot::~CannonShot(void)
 
 void CannonShot::Load(void)
 {
+	//リソース
+	auto& resMng = ResourceManager::GetInstance();
+
 	//モデル
-	trans_.modelId = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::CANNON_SHOT_MODEL);
+	trans_.modelId = resMng.LoadModelDuplicate(ResourceManager::SRC::CANNON_SHOT_MODEL);
+
+	//エフェクト
+	int id = resMng.Load(ResourceManager::SRC::BLAST_EFFECT).handleId_;
+	effect_->Add(id,EffectController::EFF_TYPE::BLAST);
 }
 
 void CannonShot::Init(void)
@@ -52,16 +65,17 @@ void CannonShot::Init(void)
 
 	//所持者
 	const auto& holder = holder_.lock();
+	const auto& tag = holder->GetTag();
 
 	//攻撃力
 	attack_ = dynamic_cast<const Player&>(holder->GetOwner()).GetAttack() * ATTACK_MULTI;
 
 	//コライダ
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SHOT_RADIUS);
-	MakeCollider(Collider::TAG::CANNON_SHOT, std::move(geo), { holder->GetTag(),Collider::TAG::FOOT,Collider::TAG::SPIN});
+	MakeCollider(Collider::TAG::CANNON_SHOT, std::move(geo), { tag,Collider::TAG::FOOT,Collider::TAG::SPIN});
 
 	geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SEARCH_RADIUS);
-	MakeCollider(Collider::TAG::SEARCH, std::move(geo), { holder->GetTag(),Collider::TAG::FOOT,Collider::TAG::SPIN,Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT});
+	MakeCollider(Collider::TAG::SEARCH, std::move(geo), { tag,Collider::TAG::FOOT,Collider::TAG::SPIN,Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT});
 	
 	trans_.Update();
 
@@ -85,49 +99,33 @@ void CannonShot::OnHit(const std::weak_ptr<Collider> _hitCol)
 	//所持者
 	const auto& holder = holder_.lock();
 	const auto& hiter = _hitCol.lock();
-	const auto& hitTag = hiter->GetTag();;
 	
-	if (hitTag == Collider::TAG::PLAYER1
-		|| hitTag == Collider::TAG::PLAYER2
-		|| hitTag == Collider::TAG::PLAYER3
-		|| hitTag == Collider::TAG::PLAYER4
-		|| hitTag == Collider::TAG::MACHINE
-		)
+	if (hiter->IsIncludeMyTag({Collider::TAG::PLAYER1, Collider::TAG::PLAYER2, Collider::TAG::PLAYER3, Collider::TAG::PLAYER4, Collider::TAG::MACHINE}))
 	{
 		if (collider_[static_cast<int>(COL::SEARCH)]->IsHit())
 		{
 			//標的に対する移動ベクトル
 			VECTOR moveVecToTarget = Utility::GetMoveVec(movedPos_, hiter->GetOwner().GetTrans().pos);
 			
-			//下方向には補正しない
-			//moveVecToTarget.y = 0.0f;
-
 			//標的に少し傾ける
 			movePowToTarget_ = VAdd(movePow_,VScale(moveVecToTarget,speed_* SEARCH_MOVE_POW_MULTI));
 		}
 		else
 		{
 			//爆発
-			state_ = STATE::BLAST;
-
-			//カウンタ
-			aliveCnt_ = 0.0f;
+			changeState_[STATE::BLAST]();
 
 			//当たり判定増大
 			auto& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL::MAIN)]->GetGeometry());
 			sphere.SetRadius(BLAST_RADIUS);
 		}
 	}
-	else if (hitTag == Collider::TAG::NORMAL_OBJECT
-		|| hitTag == Collider::TAG::GROUND)
+	else if (hiter->IsIncludeMyTag({Collider::TAG::NORMAL_OBJECT, Collider::TAG::GROUND}))
 	{
 		if (!collider_[static_cast<int>(COL::MAIN)]->IsHit())return;
 
 		//爆発
-		state_ = STATE::BLAST;
-
-		//カウンタ
-		aliveCnt_ = 0.0f;
+		changeState_[STATE::BLAST]();
 
 		//当たり判定増大
 		auto& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL::MAIN)]->GetGeometry());
@@ -140,6 +138,7 @@ void CannonShot::UpdateAlive(void)
 	//デルタタイム
 	const float delta = SceneManager::GetInstance().GetDeltaTime();
 
+	//座標更新
 	trans_.pos = movedPos_;
 
 	//カウンタ
@@ -149,20 +148,13 @@ void CannonShot::UpdateAlive(void)
 	if (aliveCnt_ > ALIVE_TIME)
 	{
 		//爆発
-		state_ = STATE::BLAST;
-
-		//カウンタ初期化
-		aliveCnt_ = 0.0f;
-
-		//当たり判定増大
-		auto& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL::MAIN)]->GetGeometry());
-		sphere.SetRadius(BLAST_RADIUS);
+		changeState_[STATE::BLAST]();
 
 		return;
 	}
 
 	//移動力
-	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_,200.0f);
+	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_, GRAVITY_POW);
 	movePow_ = trans_.quaRot.PosAxis(VGet(0.0f, gravPow_.y, speed_));
 	movePow_ = VScale(movePow_,0.5f);
 
@@ -188,9 +180,7 @@ void CannonShot::UpdateBlast(void)
 	if (blastCnt_ > BLAST_TIME)
 	{
 		//死亡
-		state_ = STATE::DEAD;
-
-		return;
+		changeState_[STATE::DEAD]();
 	}
 }
 
@@ -202,21 +192,53 @@ void CannonShot::DrawAlive(void)
 {
 	//モデル描画
 	MV1DrawModel(trans_.modelId);
-
-	//for (auto& col : collider_)
-	//{
-	//	col->GetGeometry().Draw();
-	//}
 }
 
 void CannonShot::DrawBlast(void)
 {
-	//for (auto& col : collider_)
-	//{
-	//	col->GetGeometry().Draw();
-	//}
+	for (auto& col : collider_)
+	{
+		col->GetGeometry().Draw();
+	}
 }
 
 void CannonShot::DrawDead(void)
 {
+	for (auto& col : collider_)
+	{
+		col->GetGeometry().Draw();
+	}
+}
+
+void CannonShot::ChangeStateAlive(void)
+{
+	//生存
+	state_ = STATE::ALIVE;
+
+	//カウンタ初期化
+	aliveCnt_ = 0.0f;
+	blastCnt_ = 0.0f;
+}
+
+void CannonShot::ChangeStateBlast(void)
+{
+	//爆発
+	state_ = STATE::BLAST;
+
+	//当たり判定増大
+	auto& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL::MAIN)]->GetGeometry());
+	sphere.SetRadius(BLAST_RADIUS);
+
+	//カウンタ初期化
+	aliveCnt_ = 0.0f;
+	blastCnt_ = 0.0f;
+}
+
+void CannonShot::ChangeStateDead(void)
+{
+	//死亡
+	state_ = STATE::DEAD;
+
+	//当たり判定削除
+	DeleteAllCollider();
 }

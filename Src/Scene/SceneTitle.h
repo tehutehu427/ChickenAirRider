@@ -39,8 +39,17 @@ private:
 	static constexpr int PUSH_SIZE_X = 600;
 	static constexpr int PUSH_SIZE_Y = 80;
 
+	//歯車の位置
+	static constexpr int GEAR_LOCAL_POS_X = 500;
+	static constexpr int GEAR_LOCAL_POS_Y = 250;
+
+	//歯車の大きさ
+	static constexpr float GEAR_SIZE = 2.0f;
+
 	//タイトル背景
 	int backImg_;
+	int backFrameImg_;
+	int gearImg_;
 
 	//タイトルロゴ
 	int logoImg_;

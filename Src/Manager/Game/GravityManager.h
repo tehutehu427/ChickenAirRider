@@ -31,7 +31,7 @@ public:
 	/// @param _dir 重力方向
 	/// @param _pow 重力計算に使う変数
 	/// @param _per 重力倍率
-	void CalcGravity(const VECTOR& _dir, VECTOR& _pow, const float _per = 100.0f);
+	void CalcGravity(const VECTOR& _dir, VECTOR& _pow, const float _per = 1.0f);
 
 	//重力計算
 	void Calculate(void);
