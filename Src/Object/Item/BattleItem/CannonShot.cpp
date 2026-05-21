@@ -86,6 +86,9 @@ void CannonShot::Update(void)
 {
 	//更新
 	update_[state_]();
+
+	//エフェクト更新
+	effect_->Update();
 }
 
 void CannonShot::Draw(void)
@@ -112,24 +115,20 @@ void CannonShot::OnHit(const std::weak_ptr<Collider> _hitCol)
 		}
 		else
 		{
+			//すでに爆発しているなら
+			if (state_== STATE::BLAST)return;
+
 			//爆発
 			changeState_[STATE::BLAST]();
-
-			//当たり判定増大
-			auto& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL::MAIN)]->GetGeometry());
-			sphere.SetRadius(BLAST_RADIUS);
 		}
 	}
 	else if (hiter->IsIncludeMyTag({Collider::TAG::NORMAL_OBJECT, Collider::TAG::GROUND}))
 	{
-		if (!collider_[static_cast<int>(COL::MAIN)]->IsHit())return;
+		//メイン判定にあたってない　または　すでに爆発しているなら
+		if (!collider_[static_cast<int>(COL::MAIN)]->IsHit() || state_ == STATE::BLAST)return;
 
 		//爆発
 		changeState_[STATE::BLAST]();
-
-		//当たり判定増大
-		auto& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL::MAIN)]->GetGeometry());
-		sphere.SetRadius(BLAST_RADIUS);
 	}
 }
 
@@ -156,7 +155,6 @@ void CannonShot::UpdateAlive(void)
 	//移動力
 	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_, GRAVITY_POW);
 	movePow_ = trans_.quaRot.PosAxis(VGet(0.0f, gravPow_.y, speed_));
-	movePow_ = VScale(movePow_,0.5f);
 
 	//移動
 	movedPos_ = VAdd(movedPos_, movePow_);
@@ -196,28 +194,16 @@ void CannonShot::DrawAlive(void)
 
 void CannonShot::DrawBlast(void)
 {
-	for (auto& col : collider_)
-	{
-		col->GetGeometry().Draw();
-	}
 }
 
 void CannonShot::DrawDead(void)
 {
-	for (auto& col : collider_)
-	{
-		col->GetGeometry().Draw();
-	}
 }
 
 void CannonShot::ChangeStateAlive(void)
 {
 	//生存
 	state_ = STATE::ALIVE;
-
-	//カウンタ初期化
-	aliveCnt_ = 0.0f;
-	blastCnt_ = 0.0f;
 }
 
 void CannonShot::ChangeStateBlast(void)
@@ -229,9 +215,11 @@ void CannonShot::ChangeStateBlast(void)
 	auto& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL::MAIN)]->GetGeometry());
 	sphere.SetRadius(BLAST_RADIUS);
 
-	//カウンタ初期化
-	aliveCnt_ = 0.0f;
-	blastCnt_ = 0.0f;
+	//索敵範囲は削除
+	DeleteColliderAtTag(Collider::TAG::SEARCH);
+
+	//爆発エフェクト
+	effect_->Play(EffectController::EFF_TYPE::BLAST, trans_.pos, Utility::VECTOR_ZERO, BLAST_EFFECT_SIZE);
 }
 
 void CannonShot::ChangeStateDead(void)

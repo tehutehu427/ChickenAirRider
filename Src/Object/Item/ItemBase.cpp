@@ -83,10 +83,7 @@ void ItemBase::OnHit(const std::weak_ptr<Collider> _hitCol)
 		)
 	{
 		//ƒRƒ‰ƒCƒ_íœ
-		for (auto& col : collider_)
-		{
-			col->Kill();
-		}
+		DeleteAllCollider();
 
 		//Ž€–S”»’è
 		state_ = STATE::GOT;

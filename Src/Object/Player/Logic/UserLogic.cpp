@@ -89,14 +89,19 @@ const Vector2F UserLogic::TurnValue(void)
     //ゲームコントローラーがついてないなら
     if (GetJoypadNum() < 1)
     {
+		//マウスの移動量
         ret = key.GetMouseMove().ToVector2F() / TURN_MOUSE;
+		
+		//マウスは上下左右が逆なので反転させる
+        ret.y *= -1.0f;
     }
     else
     {
+		//スティックの傾き
         ret.x -= static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_RIGHT)) / TURN_STICK;
         ret.x += static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_LEFT)) / TURN_STICK;
-        ret.y += static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_UP)) / TURN_STICK;
-        ret.y -= static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_DOWN)) / TURN_STICK;
+        ret.y -= static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_UP)) / TURN_STICK;
+        ret.y += static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_DOWN)) / TURN_STICK;
     }
 
     return ret;

@@ -56,7 +56,7 @@ private:
 	};
 
 	//速度
-	static constexpr float SPEED = 50.0f;
+	static constexpr float SPEED = 25.0f;
 
 	//半径
 	static constexpr float SHOT_RADIUS = 50.0f;
@@ -66,7 +66,7 @@ private:
 
 	//生存時間
 	static constexpr float ALIVE_TIME = 10.0f;
-	static constexpr float BLAST_TIME = 0.3f;
+	static constexpr float BLAST_TIME = 0.4f;
 
 	//攻撃力補正
 	static constexpr float ATTACK_MULTI = 2.0f;
@@ -76,6 +76,9 @@ private:
 
 	//重力影響度
 	static constexpr float GRAVITY_POW = 2.0f;
+
+	//爆発エフェクトの大きさ
+	static constexpr VECTOR BLAST_EFFECT_SIZE = {30.0f, 30.0f, 30.0f};
 
 	//所有者タグ
 	std::weak_ptr<Collider> holder_;

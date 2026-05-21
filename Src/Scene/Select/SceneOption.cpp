@@ -74,13 +74,13 @@ void SceneOption::Load(void)
 	snd.Add(SoundManager::SOUND_NAME::SELECT_BGM, id, SoundManager::TYPE::BGM);
 
 	id = res.Load(ResourceManager::SRC::ENTER_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::ENTER, id, SoundManager::TYPE::SE, 80);
+	snd.Add(SoundManager::SOUND_NAME::ENTER, id, SoundManager::TYPE::SE, SE_VOLUME);
 
 	id = res.Load(ResourceManager::SRC::SELECT_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::SELECT_SE, id, SoundManager::TYPE::SE, 80);
+	snd.Add(SoundManager::SOUND_NAME::SELECT_SE, id, SoundManager::TYPE::SE, SE_VOLUME);
 
 	id = res.Load(ResourceManager::SRC::CANCEL_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::CANCEL, id, SoundManager::TYPE::SE, 80);
+	snd.Add(SoundManager::SOUND_NAME::CANCEL, id, SoundManager::TYPE::SE, SE_VOLUME);
 }
 
 void SceneOption::Init(void)
@@ -126,7 +126,7 @@ void SceneOption::Draw(const Camera& _camera)
 
 	//Ž•ŽÔ
 	DrawRotaGraph(screenSizeHalfX - GEAR_LOCAL_POS_X, screenSizeHalfY - GEAR_LOCAL_POS_Y, GEAR_SIZE, gearCnt_, gearImg_, true);
-	DrawRotaGraph(screenSizeHalfX + GEAR_LOCAL_POS_X, screenSizeHalfY + GEAR_LOCAL_POS_Y, GEAR_SIZE, -gearCnt_ / 2.0f, gearImg_, true);
+	DrawRotaGraph(screenSizeHalfX + GEAR_LOCAL_POS_X, screenSizeHalfY + GEAR_LOCAL_POS_Y, GEAR_SIZE, -gearCnt_ / GEAR_SPEED_MULTI, gearImg_, true);
 
 	//”wŒi‚Ì˜g
 	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backFrameImg_, true);

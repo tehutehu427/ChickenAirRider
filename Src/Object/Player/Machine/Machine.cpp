@@ -68,7 +68,7 @@ void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
 	//‘ŠèƒRƒ‰ƒCƒ_
 	const auto& hitCol = _hitCol.lock();
 
-	if (hitCol->GetTag() == Collider::TAG::SPIN)
+	if (hitCol->IsIncludeMyTag({Collider::TAG::SPIN}))
 	{
 		//UŒ‚Ò‚©‚çUŒ‚—Í‚ğæ“¾
 		const Player& player = dynamic_cast<const Player&>(hitCol->GetOwner());
@@ -80,7 +80,7 @@ void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
 		//–³“GŠÔƒŠƒZƒbƒg
 		invincible_ = INVINCIBLE_SPIN;
 	}
-	else if(hitCol->GetTag() == Collider::TAG::CANNON_SHOT)
+	else if(hitCol->IsIncludeMyTag({Collider::TAG::CANNON_SHOT}))
 	{
 		//UŒ‚Ò‚©‚çUŒ‚—Í‚ğæ“¾
 		const CannonShot& shot = dynamic_cast<const CannonShot&>(hitCol->GetOwner());

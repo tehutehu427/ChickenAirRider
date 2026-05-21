@@ -68,6 +68,12 @@ private:
 	//•Ô‚Ì‘å‚«‚³
 	static constexpr float GEAR_SIZE = 2.0f;
 
+	//•Ô‚Ì‘¬“x‚Ì·ˆÙ
+	static constexpr float GEAR_SPEED_MULTI = 2.0f;
+
+	//SE‚Ì‰¹—Ê
+	static constexpr int SE_VOLUME = 80;
+
 	//”wŒi
 	int backImg_;
 	int backFrameImg_;

@@ -184,7 +184,7 @@ void ItemBox::OnHit(const std::weak_ptr<Collider> _hitCol)
 	if (health_ < 0)
 	{
 		//ƒRƒ‰ƒCƒ_íœ
-		collider_[0]->Kill();
+		DeleteAllCollider();
 
 		//Ž€–S”»’è
 		isDead_ = true;
