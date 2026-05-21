@@ -10,7 +10,7 @@
 #include "../Game/GlobalUIManager.h"
 #include "../Game/Timer.h"
 #include"../Application.h"
-#include"../Game/UIManager.h"
+#include"../Game/SplitScreenManager.h"
 #include"SceneManager.h"
 
 SceneManager::SceneManager(void)
@@ -200,7 +200,7 @@ void SceneManager::Draw(void)
 
 		//個々のUI描画
 		if (sceneId_ == SCENE_ID::GAME)
-			UIManager::GetInstance().Draw();
+			SplitScreenManager::GetInstance().Draw();
 
 		// 主にポストエフェクト用
 		if (!cameras_.empty())
@@ -357,7 +357,7 @@ void SceneManager::CreateCameras(const int _playerNum)
 	}
 
 	//UIの分割
-	UIManager::GetInstance().CreateViewports(_playerNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+	SplitScreenManager::GetInstance().CreateViewports(_playerNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 
 	//カメラ生成
 	for (int i = 0; i < _playerNum; i++)
@@ -575,7 +575,7 @@ void SceneManager::DrawMultiScreen()
 			cameras_[index]->DrawSkyDome();
 
 		//UIは別々で描画
-		UIManager::GetInstance().Draw(index);
+		SplitScreenManager::GetInstance().Draw(index);
 
 		// 主にポストエフェクト用
 		cameras_[index]->Draw(index);

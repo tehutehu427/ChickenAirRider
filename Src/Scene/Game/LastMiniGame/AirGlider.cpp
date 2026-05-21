@@ -5,7 +5,7 @@
 #include "../Manager/Game/StageManager.h"
 #include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/PlayerManager.h"
-#include "../Manager/Game/UIManager.h"
+#include "../Manager/Game/SplitScreenManager.h"
 #include "../Object/SkyDome/SkyDome.h"
 #include "../Object/Player/Player.h"
 #include "AirGlider.h"

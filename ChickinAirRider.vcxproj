@@ -163,6 +163,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Player\UI\PlayerUIBase.cpp" />
     <ClCompile Include="Src\Object\Player\Logic\Npc\NpcBrain.cpp" />
     <ClCompile Include="Src\Scene\SceneResult.cpp" />
     <ClCompile Include="Src\Manager\Game\GlobalUIManager.cpp" />
@@ -246,9 +247,10 @@
     <ClCompile Include="Src\Utility\Utility.cpp" />
     <ClCompile Include="Src\Manager\Game\Timer.cpp" />
     <ClCompile Include="Src\Common\Vector2F.cpp" />
-    <ClCompile Include="Src\Manager\Game\UIManager.cpp" />
+    <ClCompile Include="Src\Manager\Game\SplitScreenManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Player\UI\PlayerUIBase.h" />
     <ClInclude Include="Src\Object\Player\Logic\Npc\NpcBrain.h" />
     <ClInclude Include="Src\Object\Player\Logic\Npc\SimulationResult.h" />
     <ClInclude Include="Src\Scene\SceneResult.h" />
@@ -409,7 +411,7 @@
     <ClInclude Include="Src\Utility\UtilityTemplates.h" />
     <ClInclude Include="Src\Manager\Game\Timer.h" />
     <ClInclude Include="Src\Common\Vector2F.h" />
-    <ClInclude Include="Src\Manager\Game\UIManager.h" />
+    <ClInclude Include="Src\Manager\Game\SplitScreenManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\PixelShader2DHeader.hlsli" />

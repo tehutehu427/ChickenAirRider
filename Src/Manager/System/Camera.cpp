@@ -5,7 +5,7 @@
 #include "../../Manager/System/SceneManager.h"
 #include "../../Manager/Game/GravityManager.h"
 #include "../../Manager/Game/GameSetting.h"
-#include "../../Manager/Game/UIManager.h"
+#include "../../Manager/Game/SplitScreenManager.h"
 #include "../Renderer/PixelMaterial.h"
 #include "../Renderer/PixelRenderer.h"
 #include "../../Object/SkyDome/SkyDome.h"
@@ -36,7 +36,7 @@ void Camera::Init(void)
 {
 	ChangeMode(MODE::FIXED_POINT);
 
-	auto& ui = UIManager::GetInstance();
+	auto& ui = SplitScreenManager::GetInstance();
 	auto& view = ui.GetViewport(static_cast<int>(padNo_) - 1);
 
 	material_ = std::make_unique<PixelMaterial>(L"GodRay.cso", 1);

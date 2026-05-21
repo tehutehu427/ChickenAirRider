@@ -13,7 +13,7 @@
 #include"../Manager/Game/MachineManager.h"
 #include"../Manager/Game/PlayerManager.h"
 #include"../Manager/Game/ItemManager.h"
-#include"../Manager/Game/UIManager.h"
+#include"../Manager/Game/SplitScreenManager.h"
 #include"../Manager/Game/GlobalUIManager.h"
 #include"../Object/SkyDome/SkyDome.h"
 #include"../Object/Player/Player.h"
@@ -46,7 +46,7 @@ void GameMain::Init(void)
 	auto& itemMng = ItemManager::GetInstance();
 	auto& res = ResourceManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
-	auto& ui = UIManager::GetInstance();
+	auto& ui = SplitScreenManager::GetInstance();
 	auto& gloUi = GlobalUIManager::GetInstance();
 
 	//タイマーの開始
@@ -109,7 +109,7 @@ void GameMain::Release(void)
 {
 	//インスタンス
 	auto& scnMng = SceneManager::GetInstance();
-	auto& ui = UIManager::GetInstance();
+	auto& ui = SplitScreenManager::GetInstance();
 	auto& setMng = GameSetting::GetInstance();
 	auto& gloUi = GlobalUIManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
@@ -117,8 +117,8 @@ void GameMain::Release(void)
 	//UIの削除
 	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
 	{
-		ui.SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE,i);
-		ui.SubDraw(UIManager::DRAW_TYPE::HEALTH,i);
+		ui.SubDraw(SplitScreenManager::DRAW_TYPE::CHARGE_GAUGE,i);
+		ui.SubDraw(SplitScreenManager::DRAW_TYPE::HEALTH,i);
 	}
 
 	//タイマーの削除

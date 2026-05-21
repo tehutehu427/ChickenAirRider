@@ -5,7 +5,7 @@
 #include"../Manager/System/Camera.h"
 #include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/GravityManager.h"
-#include "../Manager/Game/UIManager.h"
+#include "../Manager/Game/SplitScreenManager.h"
 #include "../Common/Geometry/Sphere.h"
 #include "../Common/Geometry/Line.h"
 #include "Character/Character.h"
@@ -333,8 +333,8 @@ void Player::ChangeActionNormal(void)
 	auto camera = camera_.lock();
 
 	//アクションUIを初期化しておく
-	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE,playerIndex_);
-	UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::HEALTH, playerIndex_);
+	SplitScreenManager::GetInstance().SubDraw(SplitScreenManager::DRAW_TYPE::CHARGE_GAUGE,playerIndex_);
+	SplitScreenManager::GetInstance().SubDraw(SplitScreenManager::DRAW_TYPE::HEALTH, playerIndex_);
 
 	//キャラクターの行動に変更
 	action_ = std::make_shared<CharacterAction>(*this, *chara_, *logic_);
@@ -362,8 +362,8 @@ void Player::ChangeActionRide(void)
 	auto camera = camera_.lock();
 
 	//アクションUIを初期化しておく
-	UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE, playerIndex_);
-	UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::HEALTH, playerIndex_);
+	SplitScreenManager::GetInstance().AddDraw(SplitScreenManager::DRAW_TYPE::CHARGE_GAUGE, playerIndex_);
+	SplitScreenManager::GetInstance().AddDraw(SplitScreenManager::DRAW_TYPE::HEALTH, playerIndex_);
 
 	//機体の行動に変更
 	action_ = std::make_shared<MachineAction>(*this, *machine_, *logic_);

@@ -7,7 +7,7 @@
 #include "../Manager/System/SoundManager.h"
 #include "../Renderer/PixelMaterial.h"
 #include "../Renderer/PixelRenderer.h"
-#include"../Manager/Game/UIManager.h"
+#include"../Manager/Game/SplitScreenManager.h"
 #include"../Manager/Game/GameSetting.h"
 #include "Select/SceneSelect.h"
 #include "SceneTitle.h"
@@ -38,13 +38,13 @@ void SceneTitle::Load(void)
 	auto& snd = SoundManager::GetInstance();
 
 	//UI‚Ì¶¬
-	UIManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
+	SplitScreenManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//ƒ†[ƒU[”
 	int userNum = GameSetting::GetInstance().GetUserNum();
 
 	//‰æ–Ê‚²‚Æ‚ÌUIî•ñ
-	UIManager::GetInstance().CreateViewports(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+	SplitScreenManager::GetInstance().CreateViewports(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 
 	//‰æ‘œ‚Ì“Ç‚İ‚İ
 	backImg_ = res.Load(ResourceManager::SRC::TITLE_BACK).handleId_;

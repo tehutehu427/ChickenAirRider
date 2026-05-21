@@ -9,17 +9,19 @@
 #include "../Renderer/PixelRenderer.h"
 #include "../Object/Player/Player.h"
 #include "../Object/Player/Action/MachineAction.h"
-#include "UIManager.h"
+#include "SplitScreenManager.h"
 
-void UIManager::LoadOutSide(void)
+void SplitScreenManager::LoadOutSide(void)
 {
 }
 
-void UIManager::Init(void)
+void SplitScreenManager::Init(void)
 {
 	//インスタンス
 	ResourceManager& res = ResourceManager::GetInstance();
 	const SceneManager& scnMng = SceneManager::GetInstance();
+
+
 
 	//画像
 	gaugeImg_ = res.Load(ResourceManager::SRC::CHARGE_GAUGE).handleId_;
@@ -44,7 +46,7 @@ void UIManager::Init(void)
 	renderer_ = std::make_unique<PixelRenderer>(*material_);
 }
 
-void UIManager::Update(void)
+void SplitScreenManager::Update(void)
 {
 	//デルタタイム
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
@@ -53,7 +55,7 @@ void UIManager::Update(void)
 	gaugeCnt_ += delta;
 }
 
-void UIManager::Draw(const int _playerIndex)
+void SplitScreenManager::Draw(const int _playerIndex)
 {
 	//描画
 	for (const auto playerDraw : drawView_)
@@ -68,58 +70,61 @@ void UIManager::Draw(const int _playerIndex)
 	}
 }
 
-void UIManager::AddDraw(const DRAW_TYPE _type, const int _playerIndex)
+void SplitScreenManager::AddDraw(const DRAW_TYPE _type, const int _playerIndex)
 {
 	//描画するUIに追加
 	drawView_[_playerIndex].emplace(_type, drawList_[_type]);
 }
 
-void UIManager::SubDraw(const DRAW_TYPE _type, const int _playerIndex)
+void SplitScreenManager::SubDraw(const DRAW_TYPE _type, const int _playerIndex)
 {
 	//描画するUIから削除
 	drawView_[_playerIndex].erase(_type);
 }
 
-void UIManager::CreateViewports(const int _playerCnt, const int _screenW, const int _screenH)
+void SplitScreenManager::CreateViewports(const int _playerCnt, const int _screenW, const int _screenH)
 {
 	//中身があるなら
-	if (!viewPort_.empty())
+	if (!splitViews_.empty())
 	{
 		//初期化
-		viewPort_.clear();
+		splitViews_.fill({});
 	}
+
+	//プレイヤーの添え字
+	int p = 0;
 
 	//プレイヤーの人数
 	if (_playerCnt == 1)
 	{
 		//全画面描画
-		viewPort_.push_back({ 0,0,_screenW,_screenH });
+		splitViews_[p++].viewPort = { 0,0,_screenW,_screenH };
 	}
 	else if (_playerCnt == 2)
 	{
 		//上下分割
 		int h = _screenH / 2;
-		viewPort_.push_back({ 0,0,_screenW,h });
-		viewPort_.push_back({ 0,0,_screenW,h });
+		splitViews_[p++].viewPort = { 0,0,_screenW,h };
+		splitViews_[p++].viewPort = { 0,h,_screenW,h };
 	}
 	else if (_playerCnt >= 3)
 	{
 		//4分割
 		int w = _screenW / 2;
 		int h = _screenH / 2;
-		viewPort_.push_back({ 0,0,w,h });
-		viewPort_.push_back({ 0,0,w,h });
-		viewPort_.push_back({ 0,0,w,h });
-		viewPort_.push_back({ 0,0,w,h });
+		splitViews_[p++].viewPort = { 0,0,w,h };
+		splitViews_[p++].viewPort = { w,0,w,h };
+		splitViews_[p++].viewPort = { 0,h,w,h };
+		splitViews_[p++].viewPort = { w,h,w,h };
 	}
 }
 
-const UIManager::Viewport& UIManager::GetViewport(const int _playerIndex)
+const SplitScreenManager::Viewport& SplitScreenManager::GetViewport(const int _playerIndex)
 {
-	return viewPort_[_playerIndex];
+	return splitViews_[_playerIndex].viewPort;
 }
 
-UIManager::UIManager(void)
+SplitScreenManager::SplitScreenManager(void)
 {
 	gaugeImg_ = -1;
 	gaugeMaskImg_ = -1;
@@ -132,12 +137,12 @@ UIManager::UIManager(void)
 	drawList_.emplace(DRAW_TYPE::CHECK_PARAM, [this](const int _playerIndex) {DrawParam(_playerIndex); });
 }
 
-UIManager::~UIManager(void)
+SplitScreenManager::~SplitScreenManager(void)
 {
 	numImgs_ = nullptr;
 }
 
-void UIManager::DrawChargeGauge(const int _playerIndex)
+void SplitScreenManager::DrawChargeGauge(const int _playerIndex)
 {
 	//プレイヤー
 	const auto& player = PlayerManager::GetInstance().GetPlayer(_playerIndex);
@@ -185,7 +190,7 @@ void UIManager::DrawChargeGauge(const int _playerIndex)
 	DrawRotaGraph(chargeGaugePos.x + (NUMBER_LOCAL_POS * size), chargeGaugePos.y, size, 0.0, numImgs_[speed1], true);
 }
 
-void UIManager::DrawHealth(const int _playerIndex)
+void SplitScreenManager::DrawHealth(const int _playerIndex)
 {
 	//プレイヤー
 	const auto& player = PlayerManager::GetInstance().GetPlayer(_playerIndex);
@@ -240,7 +245,7 @@ void UIManager::DrawHealth(const int _playerIndex)
 	}
 }
 
-void UIManager::DrawParam(const int _playerIndex)
+void SplitScreenManager::DrawParam(const int _playerIndex)
 {
 	//プレイヤー
 	const auto& player = PlayerManager::GetInstance().GetPlayer(_playerIndex);

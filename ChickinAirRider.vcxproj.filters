@@ -225,7 +225,7 @@
     <ClCompile Include="Src\Scene\Game\LastMiniGame\LastGameBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\Game\UIManager.cpp">
+    <ClCompile Include="Src\Manager\Game\SplitScreenManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Item\BattleItem\BattleItemBase.cpp">
@@ -256,6 +256,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Player\Logic\Npc\NpcBrain.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Object\Player\UI\PlayerUIBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -707,7 +710,7 @@
     <ClInclude Include="Src\Scene\Game\LastMiniGame\LastGameBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\Game\UIManager.h">
+    <ClInclude Include="Src\Manager\Game\SplitScreenManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Item\BattleItem\BattleItemBase.h">
@@ -741,6 +744,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Player\Logic\Npc\SimulationResult.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Object\Player\UI\PlayerUIBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

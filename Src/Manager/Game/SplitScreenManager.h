@@ -1,36 +1,43 @@
 #pragma once
+#include<unordered_map>
+#include<memory>
+#include<array>
 #include "../Common/Singleton.h"
 #include "../Common/Vector2F.h"
 
+class Camera;
 class PixelMaterial;
 class PixelRenderer;
 
-class UIManager : public Singleton<UIManager>
+class SplitScreenManager : public Singleton<SplitScreenManager>
 {
 	//継承元のコンストラクタ等にアクセスするため
-	friend class Singleton<UIManager>;
+	friend class Singleton<SplitScreenManager>;
 
 public:
 
-	//描画種類
-	enum class DRAW_TYPE
-	{
-		CHARGE_GAUGE,		//チャージゲージ
-		HEALTH,				//体力
-		CHECK_PARAM,		//最終チェック
-	};
+	//画面分割の最大数
+	static constexpr int MAX_SPLIT_NUM = 4;
 
 	//ビューポート
 	struct Viewport
 	{
-		int x = 0, y = 0,		//左上座標
-			w = 0, h = 0;		//サイズ
+		int x = 0, y = 0;			//ビューポート座標(左上)
+		int w = 0, h = 0;			//ビューポートの大きさ
 	};
 
 	//正規化UI座標
 	struct NormalizedPos
 	{
 		float x = 0.0f, y = 0.0f;		//UI座標(0.0～1.0)
+	};
+
+	//分割描画情報
+	struct SplitViewInfo
+	{
+		int screen = -1;					//描画スクリーン
+		std::weak_ptr<Camera> camera = {};	//カメラ
+		Viewport viewPort = {};				//ビューポート
 	};
 
 	//初期化
@@ -86,12 +93,12 @@ private:
 	static constexpr int GAUGE_LOCAL_POS = 5;
 	static constexpr int NUMBER_LOCAL_POS = 40;
 
-	//ビューポート
-	std::vector<Viewport> viewPort_;
+	//描画情報
+	std::array<SplitViewInfo, MAX_SPLIT_NUM> splitViews_;
 
 	//描画
 	std::unordered_map<DRAW_TYPE, std::function<void(int)>> drawList_;
-	std::map<int, std::unordered_map<DRAW_TYPE, std::function<void(int)>>> drawView_;
+	std::unordered_map<int, std::unordered_map<DRAW_TYPE, std::function<void(int)>>> drawView_;
 
 	//ゲージ画像
 	int gaugeImg_;
@@ -115,10 +122,10 @@ private:
 	float gaugeCnt_;
 
 	//コンストラクタ
-	UIManager(void);
+	SplitScreenManager(void);
 
 	//デストラクタ
-	~UIManager(void)override;
+	~SplitScreenManager(void)override;
 
 	//描画
 	void DrawChargeGauge(const int _playerIndex);

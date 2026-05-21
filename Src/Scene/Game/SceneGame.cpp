@@ -5,7 +5,7 @@
 #include"../Manager/System/SoundManager.h"
 #include"../Manager/Game/GameSetting.h"
 #include"../Manager/Game/CollisionManager.h"
-#include"../Manager/Game/UIManager.h"
+#include"../Manager/Game/SplitScreenManager.h"
 #include"../Manager/Game/GravityManager.h"
 #include"../Manager/Game/StageManager.h"
 #include"../Manager/Game/MachineManager.h"
@@ -42,9 +42,9 @@ SceneGame::~SceneGame(void)
 
 	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
 	{
-		UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHARGE_GAUGE,i);
-		UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::HEALTH,i);
-		UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHECK_PARAM,i);
+		SplitScreenManager::GetInstance().SubDraw(SplitScreenManager::DRAW_TYPE::CHARGE_GAUGE,i);
+		SplitScreenManager::GetInstance().SubDraw(SplitScreenManager::DRAW_TYPE::HEALTH,i);
+		SplitScreenManager::GetInstance().SubDraw(SplitScreenManager::DRAW_TYPE::CHECK_PARAM,i);
 	}
 }
 
@@ -95,7 +95,7 @@ void SceneGame::Update(void)
 	game_->Update();
 
 	//UIó‘Ô‚ÌXV
-	UIManager::GetInstance().Update();
+	SplitScreenManager::GetInstance().Update();
 }
 
 void SceneGame::Draw(const Camera& _camera)

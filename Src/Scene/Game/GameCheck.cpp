@@ -5,7 +5,7 @@
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/SoundManager.h"
-#include "../Manager/Game/UIManager.h"
+#include "../Manager/Game/SplitScreenManager.h"
 #include "../Manager/Game/Timer.h"
 #include "../Manager/Game/GameSetting.h"
 #include "GameCheck.h"
@@ -46,7 +46,7 @@ void GameCheck::Init(void)
 	//パラメーター確認
 	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
 	{
-		UIManager::GetInstance().AddDraw(UIManager::DRAW_TYPE::CHECK_PARAM,i);
+		SplitScreenManager::GetInstance().AddDraw(SplitScreenManager::DRAW_TYPE::CHECK_PARAM,i);
 	}
 
 	//画像
@@ -104,7 +104,7 @@ void GameCheck::UpdatePlayerParam(void)
 		//パラメーター確認
 		for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
 		{
-			UIManager::GetInstance().SubDraw(UIManager::DRAW_TYPE::CHECK_PARAM, i);
+			SplitScreenManager::GetInstance().SubDraw(SplitScreenManager::DRAW_TYPE::CHECK_PARAM, i);
 		}
 	}
 }
