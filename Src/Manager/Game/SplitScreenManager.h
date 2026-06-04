@@ -22,14 +22,8 @@ public:
 	//ビューポート
 	struct Viewport
 	{
-		int x = 0, y = 0;			//ビューポート座標(左上)
-		int w = 0, h = 0;			//ビューポートの大きさ
-	};
-
-	//正規化UI座標
-	struct NormalizedPos
-	{
-		float x = 0.0f, y = 0.0f;		//UI座標(0.0～1.0)
+		int left = 0, top = 0;			//ビューポート座標(左上)
+		int width = 0, height = 0;		//ビューポートの大きさ
 	};
 
 	//分割描画情報
@@ -37,7 +31,7 @@ public:
 	{
 		int screen = -1;					//描画スクリーン
 		std::weak_ptr<Camera> camera = {};	//カメラ
-		Viewport viewPort = {};				//ビューポート
+		Viewport viewport = {};				//ビューポート
 	};
 
 	//初期化
