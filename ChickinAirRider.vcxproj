@@ -163,7 +163,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Object\Player\UI\PlayerUIBase.cpp" />
+    <ClCompile Include="Src\Manager\Game\HUDManager.cpp" />
     <ClCompile Include="Src\Object\Player\Logic\Npc\NpcBrain.cpp" />
     <ClCompile Include="Src\Scene\SceneResult.cpp" />
     <ClCompile Include="Src\Manager\Game\GlobalUIManager.cpp" />
@@ -250,7 +250,7 @@
     <ClCompile Include="Src\Manager\Game\SplitScreenManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Object\Player\UI\PlayerUIBase.h" />
+    <ClInclude Include="Src\Manager\Game\HUDManager.h" />
     <ClInclude Include="Src\Object\Player\Logic\Npc\NpcBrain.h" />
     <ClInclude Include="Src\Object\Player\Logic\Npc\SimulationResult.h" />
     <ClInclude Include="Src\Scene\SceneResult.h" />

@@ -15,7 +15,7 @@ Camera::Camera(int _userNum)
 {
 	angles_ = VECTOR();
 	cameraUp_ = VECTOR();
-	mode_ = MODE::NONE;
+	mode_ = MODE::MAX;
 	pos_ = Utility::VECTOR_ZERO;
 	targetPos_ = Utility::VECTOR_ZERO;
 	followTransform_ = nullptr;
@@ -25,6 +25,18 @@ Camera::Camera(int _userNum)
 	leapTargetPos_ = Utility::VECTOR_ZERO;
 	vel_ = Utility::VECTOR_ZERO;
 	postEffectScreen_ = -1;
+
+	// カメラモードごとの更新関数を登録
+	updateFunc_[static_cast<int>(MODE::FIXED_POINT)] = &Camera::UpdateFixedPoint;
+	updateFunc_[static_cast<int>(MODE::FOLLOW)] = &Camera::UpdateFollow;
+	updateFunc_[static_cast<int>(MODE::FOLLOW_LEAP)] = &Camera::UpdateFollowLeap;
+	updateFunc_[static_cast<int>(MODE::FOLLOW_ROTATION)] = &Camera::UpdateFollowRotation;
+	updateFunc_[static_cast<int>(MODE::SELF_SHOT)] = &Camera::UpdateSelfShot;
+	updateFunc_[static_cast<int>(MODE::FPS)] = &Camera::UpdateFPS;
+	updateFunc_[static_cast<int>(MODE::FREE_CONTROLL)] = &Camera::UpdateFreeControll;
+	updateFunc_[static_cast<int>(MODE::FIXED_UP)] = &Camera::UpdateFixedUp;
+	updateFunc_[static_cast<int>(MODE::FIXED_DIAGONAL)] = &Camera::UpdateFixedDiagonal;
+	updateFunc_[static_cast<int>(MODE::MAX)] = nullptr;
 }
 
 Camera::~Camera(void)
@@ -44,58 +56,30 @@ void Camera::Init(void)
 
 	material_->AddConstBuf(FLOAT4{ 0.1f, 0.0f,0.95f, 0.7f });
 	material_->AddTextureBuf(SceneManager::GetInstance().GetMainScreen());
-	renderer_->MakeSquereVertex({ view.x,view.y }, { view.w, view.h });
+	renderer_->MakeSquereVertex({ view.x,view.y }, { view.width, view.height });
 
 	postEffectScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
 }
 
 void Camera::Update(void)
 {
+	// カメラの更新
+	if (updateFunc_[static_cast<int>(mode_)] != nullptr)
+	{
+		(this->*updateFunc_[static_cast<int>(mode_)])();
+	}
 }
 
-void Camera::SetBeforeDraw(void)
+void Camera::Apply(void)
 {
-
 	// クリップ距離を設定する(SetDrawScreenでリセットされる)
 	SetCameraNearFar(CAMERA_NEAR, CAMERA_FAR);
-
-	switch (mode_)
-	{
-	case Camera::MODE::FIXED_POINT:
-		SetBeforeDrawFixedPoint();
-		break;
-	case Camera::MODE::FOLLOW:
-		SetBeforeDrawFollow();
-		break;
-	case Camera::MODE::FOLLOW_LEAP:
-		SetBeforeDrawFollowLeap();
-		break;
-	case Camera::MODE::FOLLOW_ROTATION:
-		SetBeforeDrawFollowRotation();
-		break;
-	case Camera::MODE::SELF_SHOT:
-		SetBeforeDrawSelfShot();
-		break;
-	case Camera::MODE::FPS:
-		SetBeforeDrawFPS();
-		break;
-	case Camera::MODE::FREE_CONTROLL:
-		SetBeforeDrawFreeControll();
-		break;
-	case Camera::MODE::FIXED_UP:
-		SetBeforeDrawFixedUp();
-		break;
-	case Camera::MODE::FIXED_DIAGONAL:
-		SetBeforeDrawFixedDiagonal();
-		break;
-	}
 
 	//カメラの設定
 	CameraSetting();
 
 	// DXライブラリのカメラとEffekseerのカメラを同期する。
 	Effekseer_Sync3DSetting();
-
 }
 
 void Camera::CameraSetting()
@@ -500,7 +484,7 @@ void Camera::ProcessRotMouse(float* x_m, float* y_m, const float fov_per)
 	}
 }
 
-void Camera::SetBeforeDrawFixedPoint(void)
+void Camera::UpdateFixedPoint(void)
 {
 	rot_ = Quaternion::Quaternion(angles_);
 
@@ -512,7 +496,7 @@ void Camera::SetBeforeDrawFixedPoint(void)
 }
 
 
-void Camera::SetBeforeDrawFollow(void)
+void Camera::UpdateFollow(void)
 {
 	// カメラ操作
 	ProcessRot();
@@ -521,7 +505,7 @@ void Camera::SetBeforeDrawFollow(void)
 	SyncFollow();
 }
 
-void Camera::SetBeforeDrawFollowLeap(void)
+void Camera::UpdateFollowLeap(void)
 {
 	// カメラ操作
 	ProcessRotMachine();
@@ -533,7 +517,7 @@ void Camera::SetBeforeDrawFollowLeap(void)
 	SyncFollowLeap();
 }
 
-void Camera::SetBeforeDrawFollowRotation(void)
+void Camera::UpdateFollowRotation(void)
 {
 	const float SPEED_DEG = 1.5f;
 	angles_.y += Utility::Deg2RadF(SPEED_DEG);
@@ -550,7 +534,7 @@ void Camera::SetBeforeDrawFollowRotation(void)
 	SyncFollow();
 }
 
-void Camera::SetBeforeDrawSelfShot(void)
+void Camera::UpdateSelfShot(void)
 {
 	auto gIns = GravityManager::GetInstance();
 
@@ -574,7 +558,7 @@ void Camera::SetBeforeDrawSelfShot(void)
 
 }
 
-void Camera::SetBeforeDrawFPS(void)
+void Camera::UpdateFPS(void)
 {
 	//マウスでのカメラ操作
 	ProcessRotMouse(&angles_.y, &angles_.x, 0.2f);
@@ -583,7 +567,7 @@ void Camera::SetBeforeDrawFPS(void)
 	SyncFollowFPS();
 }
 
-void Camera::SetBeforeDrawFreeControll(void)
+void Camera::UpdateFreeControll(void)
 {
 	auto& ins = KeyConfig::GetInstance();
 	float rotPow = Utility::Deg2RadF(SPEED);
@@ -645,14 +629,14 @@ void Camera::SetBeforeDrawFreeControll(void)
 
 }
 
-void Camera::SetBeforeDrawFixedUp(void)
+void Camera::UpdateFixedUp(void)
 {
 	targetPos_ = VAdd(pos_, FIXED_LOCAL_P2T_POS);
 	rot_ = Quaternion::Quaternion(angles_);
 	cameraUp_ = rot_.GetUp();
 }
 
-void Camera::SetBeforeDrawFixedDiagonal(void)
+void Camera::UpdateFixedDiagonal(void)
 {
 	targetPos_ = FIXED_DIAGONAL_TARGET_POS;
 	rot_ = Quaternion::Quaternion(angles_);

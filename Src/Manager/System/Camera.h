@@ -85,7 +85,6 @@ public:
 	// カメラモード
 	enum class MODE
 	{
-		NONE,
 		FIXED_POINT,
 		FOLLOW,
 		FOLLOW_LEAP,		//遅れてカメラ追従
@@ -94,7 +93,8 @@ public:
 		FPS,
 		FREE_CONTROLL,
 		FIXED_UP,
-		FIXED_DIAGONAL,	//斜め固定
+		FIXED_DIAGONAL,		//斜め固定
+		MAX
 	};
 
 
@@ -111,8 +111,8 @@ public:
 	//更新
 	void Update(void);
 	
-	//描画前処理
-	void SetBeforeDraw(void);
+	//DxLibにカメラの設定を反映
+	void Apply(void);
 	
 	//描画
 	void Draw(const int _index = 0);
@@ -215,6 +215,10 @@ private:
 	std::unique_ptr<PixelRenderer> renderer_;
 	std::weak_ptr<SkyDome> sky_;
 
+	//カメラ状態関数ポインタ用
+	using UpdateFunc = void (Camera::*)(void);
+	std::array<UpdateFunc, static_cast<int>(MODE::MAX)> updateFunc_;
+
 	// カメラを初期位置に戻す
 	void SetDefault(void);
 
@@ -237,14 +241,14 @@ private:
 	void ProcessRotMouse(float* x_m, float* y_m, const float fov_per = 1.0f);
 
 	// モード別更新ステップ
-	void SetBeforeDrawFixedPoint(void);
-	void SetBeforeDrawFollow(void);
-	void SetBeforeDrawFollowLeap(void);
-	void SetBeforeDrawFollowRotation(void);
-	void SetBeforeDrawSelfShot(void);
-	void SetBeforeDrawFPS(void);
-	void SetBeforeDrawFreeControll(void);
-	void SetBeforeDrawFixedUp(void);
-	void SetBeforeDrawFixedDiagonal(void);
+	void UpdateFixedPoint(void);
+	void UpdateFollow(void);
+	void UpdateFollowLeap(void);
+	void UpdateFollowRotation(void);
+	void UpdateSelfShot(void);
+	void UpdateFPS(void);
+	void UpdateFreeControll(void);
+	void UpdateFixedUp(void);
+	void UpdateFixedDiagonal(void);
 };
 

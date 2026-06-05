@@ -44,7 +44,7 @@ void SceneTitle::Load(void)
 	int userNum = GameSetting::GetInstance().GetUserNum();
 
 	//‰æ–Ê‚²‚Æ‚ÌUIî•ñ
-	SplitScreenManager::GetInstance().CreateViewports(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+	SplitScreenManager::GetInstance().CreateSplitViews(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 
 	//‰æ‘œ‚Ì“Ç‚İ‚İ
 	backImg_ = res.Load(ResourceManager::SRC::TITLE_BACK).handleId_;
