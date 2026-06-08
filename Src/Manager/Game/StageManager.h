@@ -39,7 +39,7 @@ public:
 	void Update(void);
 
 	//•`‰æ
-	void Draw(const Camera& _camera);
+	void Draw(void);
 
 	//‰ð•ú
 	void Destroy(void);

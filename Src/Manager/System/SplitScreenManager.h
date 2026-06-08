@@ -4,6 +4,8 @@
 #include<array>
 #include "../Common/Singleton.h"
 
+class PixelMaterial;
+class PixelRenderer;
 class Camera;
 
 class SplitScreenManager : public Singleton<SplitScreenManager>
@@ -13,8 +15,13 @@ class SplitScreenManager : public Singleton<SplitScreenManager>
 
 public:
 
-	//画面分割の最大数
-	static constexpr int MAX_SPLIT_NUM = 4;
+	//シェーダー種類
+	enum class SHADER_TYPE
+	{
+		DEFAULT,	//通常
+		MONO,		//分割スクリーン合成用
+		MAX
+	};
 
 	//ビューポート
 	struct Viewport
@@ -26,10 +33,14 @@ public:
 	//分割描画情報
 	struct SplitView
 	{
-		int screen = -1;					//描画スクリーン
-		std::weak_ptr<Camera> camera = {};	//カメラ
-		Viewport viewport = {};				//ビューポート
+		int renderScreen = -1;						//描画先のスクリーン
+		std::weak_ptr<Camera> camera = {};			//カメラ
+		Viewport viewport = {};						//ビューポート
+		std::unique_ptr<PixelMaterial> materials_;	//ピクセルシェーダー
 	};
+
+	//画面分割の最大数
+	static constexpr int MAX_SPLIT_NUM = 4;
 
 	//初期化
 	void LoadOutSide(void)override;
@@ -46,16 +57,23 @@ public:
 	//ビューポートの生成
 	void CreateSplitViews(const int _playerCnt, const int _screenW, const int _screenH);
 
+	//分割スクリーン数の取得
+	const int GetActiveViewCount(void)const { return activeViewCount_; }
+
 	//カメラの設定
 	void SetCamera(const int _playerIndex, const std::shared_ptr<Camera>& _camera);
 
 	//ビューポートの取得
-	const Viewport& GetViewport(const int _playerIndex);
+	const Viewport& GetViewport(const int _playerIndex)const;
 
 private:
 
 	//描画情報
 	std::array<SplitView, MAX_SPLIT_NUM> splitViews_;
+
+	//ピクセルシェーダー
+	std::unique_ptr<PixelRenderer> pixelRenderer_;
+	std::array<std::unique_ptr<PixelMaterial>, static_cast<int>(SHADER_TYPE::MAX)> pixelMaterials_;
 
 	//有効な分割数
 	int activeViewCount_;
@@ -65,6 +83,9 @@ private:
 
 	//デストラクタ
 	~SplitScreenManager(void)override;
+
+	//削除
+	void Destroy(void)override;
 
 	//描画情報の作成
 	void CreateView(const int _index, const int _x, const int _y, const int _width, const int _height);

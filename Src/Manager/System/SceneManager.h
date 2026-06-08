@@ -94,18 +94,8 @@ public:
 	//フェード開始
 	void StartFadeIn(void);
 
-	/// @brief 分割描画の設定
-	/// @param _isSplitMode 分割する場合true、しない場合false
-	void SetIsSplitMode(const bool _isSplitMode) { isSplitMode_ = _isSplitMode; }
-
 	//シーンIDの取得
 	const SCENE_ID GetSceneID(void) const { return sceneId_; }
-
-	//メインスクリーンの取得
-	const int GetMainScreen() const { return mainScreen_; }
-	
-	//スクリーンの取得
-	const int GetScreen(int _screenNum) const { return splitScreens_[_screenNum]; }
 
 	//デルタタイムの取得
 	const float GetDeltaTime(void) const { return deltaTime_; }
@@ -118,13 +108,7 @@ public:
 	/// @return 指定したプレイヤー番号のカメラ
 	std::weak_ptr<Camera> GetCamera(const int _playerIndex) const;
 
-	//スクリーンの番号の取得
-	const int GetScreenIndex(void)const { return screenIndex_; }
-
 private:
-
-	//条件人数
-	static constexpr int CASE_VALUE = 3;
 
 	//シーンID
 	SCENE_ID sceneId_;		//現在シーンID
@@ -145,12 +129,6 @@ private:
 	std::chrono::system_clock::time_point preTime_;		//前の時間
 	float deltaTime_;									//デルタタイム
 	float totalTime_;									//経過時間
-
-	//スクリーン
-	int mainScreen_;					//メインスクリーン
-	bool isSplitMode_;					//画面分割を行うか
-	int screenIndex_ ;					//分割スクリーンのインデックス
-	std::vector<int> splitScreens_;		//分割用スクリーン
 
 	//関数ポインタ
 	std::map<SCENE_ID, std::function<std::unique_ptr<SceneBase>(void)>> createScene_;	//シーン生成用
@@ -174,11 +152,8 @@ private:
 	void FadeOut(void);
 	void FadeIn(void);
 
-	//カメラ生成
-	void CreateCameras(const int _playerNum);
-
-	//分割スクリーンの生成
-	void CreateSplitScreen(const int _playerNum);
+	//カメラと分割スクリーンの生成
+	void CreateCameraAndSplitScreens(const int _playerNum);
 	
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする
@@ -200,7 +175,4 @@ private:
 
 	// フェード
 	void Fade(void);
-
-	//マルチ画面の描画
-	void DrawMultiScreen();
 };

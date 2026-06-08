@@ -13,7 +13,6 @@
 #include"../Manager/Game/MachineManager.h"
 #include"../Manager/Game/PlayerManager.h"
 #include"../Manager/Game/ItemManager.h"
-#include"../Manager/Game/SplitScreenManager.h"
 #include"../Manager/Game/GlobalUIManager.h"
 #include"../Object/SkyDome/SkyDome.h"
 #include"../Object/Player/Player.h"
@@ -27,8 +26,8 @@ GameMain::GameMain(SceneGame& _parent)
 	update_.emplace(STATE::FIN, [this](void) {UpdateFinish(); });
 
 	//描画
-	draw_.emplace(STATE::GAME, [this](const Camera& _camera) {DrawGame(_camera); });
-	draw_.emplace(STATE::FIN, [this](const Camera& _camera) {DrawFinish(_camera); });
+	draw_.emplace(STATE::GAME, [this](void) {DrawGame(); });
+	draw_.emplace(STATE::FIN, [this](void) {DrawFinish(); });
 }
 
 GameMain::~GameMain(void)
@@ -46,7 +45,6 @@ void GameMain::Init(void)
 	auto& itemMng = ItemManager::GetInstance();
 	auto& res = ResourceManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
-	auto& ui = SplitScreenManager::GetInstance();
 	auto& gloUi = GlobalUIManager::GetInstance();
 
 	//タイマーの開始
@@ -99,27 +97,19 @@ void GameMain::Update(void)
 	update_[state_]();
 }
 
-void GameMain::Draw(const Camera& _camera)
+void GameMain::Draw(void)
 {
 	//各描画
-	draw_[state_](_camera);
+	draw_[state_]();
 }
 
 void GameMain::Release(void)
 {
 	//インスタンス
 	auto& scnMng = SceneManager::GetInstance();
-	auto& ui = SplitScreenManager::GetInstance();
 	auto& setMng = GameSetting::GetInstance();
 	auto& gloUi = GlobalUIManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
-
-	//UIの削除
-	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
-	{
-		ui.SubDraw(SplitScreenManager::DRAW_TYPE::CHARGE_GAUGE,i);
-		ui.SubDraw(SplitScreenManager::DRAW_TYPE::HEALTH,i);
-	}
 
 	//タイマーの削除
 	gloUi.GetTimer().SetCountValid(false);
@@ -230,7 +220,7 @@ void GameMain::UpdateFinish(void)
 	}
 }
 
-void GameMain::DrawGame(const Camera& _camera)
+void GameMain::DrawGame(void)
 {
 #ifdef _DEBUG
 
@@ -247,7 +237,7 @@ void GameMain::DrawGame(const Camera& _camera)
 	auto& itemMng = ItemManager::GetInstance();
 
 	//ステージの描画
-	stgMng.Draw(_camera);
+	stgMng.Draw();
 
 	//機体の描画
 	machineMng.Draw();
@@ -259,8 +249,8 @@ void GameMain::DrawGame(const Camera& _camera)
 	plMng.Draw();
 }
 
-void GameMain::DrawFinish(const Camera& _camera)
+void GameMain::DrawFinish(void)
 {
 	//通常描画
-	DrawGame(_camera);
+	DrawGame();
 }

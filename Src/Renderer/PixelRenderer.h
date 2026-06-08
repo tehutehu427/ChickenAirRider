@@ -21,7 +21,7 @@ public:
 	static constexpr int NUM_POLYGON = 2;
 
 	// コンストラクタ
-	PixelRenderer(PixelMaterial& pixelMaterial);
+	PixelRenderer(void);
 
 	// デストラクタ
 	~PixelRenderer(void);
@@ -37,9 +37,9 @@ public:
 	void SetSize(Vector2 size);
 
 	// 描画
-	void Draw(void);
-	void Draw(int x, int y);
-	void Draw(Vector2 _pos, Vector2 _size);
+	void Draw(PixelMaterial& _pixelMaterial);
+	void Draw(PixelMaterial& _pixelMaterial, int _x, int _y);
+	void Draw(PixelMaterial& _pixelMaterial, Vector2& _pos, Vector2& _size);
 
 private:
 
@@ -54,8 +54,4 @@ private:
 
 	// 頂点インデックス
 	WORD indexes_[NUM_VERTEX_IDX];
-
-	// ピクセルマテリアル
-	PixelMaterial& pixelMaterial_;
-
 };

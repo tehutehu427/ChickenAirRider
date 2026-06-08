@@ -10,14 +10,11 @@
 #include "../Game/GlobalUIManager.h"
 #include "../Game/Timer.h"
 #include"../Application.h"
-#include"../Game/SplitScreenManager.h"
+#include"SplitScreenManager.h"
 #include"SceneManager.h"
 
 SceneManager::SceneManager(void)
 {
-	mainScreen_ = -1;	//メインスクリーンの初期化
-	screenIndex_ = 0;	//分割スクリーンのインデックス初期化
-
 	sceneId_ = SCENE_ID::NONE;
 	waitSceneId_ = SCENE_ID::NONE;
 	changeSceneState_ = CHANGE_SCENE_STATE::NONE;
@@ -25,10 +22,8 @@ SceneManager::SceneManager(void)
 	fader_ = nullptr;
 
 	isSceneChanging_ = false;
-	isSplitMode_ = false;
 
 	cameras_.clear();
-	splitScreens_.clear();
 
 	// デルタタイム
 	deltaTime_ = 1.0f / FPS;
@@ -61,6 +56,9 @@ void SceneManager::Init(void)
 	//ゲーム設定
 	auto& setting = GameSetting::GetInstance();
 
+	//分割スクリーン
+	SplitScreenManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
+
 	//初期シーン
 	sceneId_ = SCENE_ID::TITLE;
 	waitSceneId_ = SCENE_ID::TITLE;
@@ -78,9 +76,6 @@ void SceneManager::Init(void)
 
 	// デルタタイム
 	preTime_ = std::chrono::system_clock::now();
-
-	// メインスクリーン
-	mainScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
 	
 	//ウィンドウがアクティブ状態でなくとも処理を行う
 	SetAlwaysRunFlag(true);
@@ -92,9 +87,7 @@ void SceneManager::Init(void)
 	changeScene_[CHANGE_SCENE_STATE::PUSH_BACK]();
 
 	//初期カメラ
-	CreateCameras(1);
-
-	screenIndex_ = 0;
+	CreateCameraAndSplitScreens(1);
 }
 
 void SceneManager::Init3D(void)
@@ -166,70 +159,36 @@ void SceneManager::Update(void)
 
 void SceneManager::Draw(void)
 {
-	// 描画先グラフィック領域の指定
-	// (３Ｄ描画で使用するカメラの設定などがリセットされる)
-	SetDrawScreen(mainScreen_);
+	// Effekseerにより再生中のエフェクトを更新する。
+	UpdateEffekseer3D();
 
-	// 画面を初期化
-	ClearDrawScreen();
+	//分割スクリーン
+	auto& split = SplitScreenManager::GetInstance();
 
-	if (isSplitMode_)
+	for (int i = 0; i < split.GetActiveViewCount(); i++)
 	{
-		//複数画面の描画
-		DrawMultiScreen();
-	}
-	else
-	{
-		// カメラ設定(単体カメラなので最初のカメラのみ)
-		if (!cameras_.empty())
-			cameras_.front()->Apply();
+		//分割スクリーン描画開始
+		split.BeginView(i);
 
-		// Effekseerにより再生中のエフェクトを更新する。
-		UpdateEffekseer3D();
-
-		// 描画
-		for (auto& scene : scene_)
+		//シーンの描画
+		for (auto& s : scene_) 
 		{
-			if (scene == nullptr)continue;
-			scene->Draw(*cameras_.front());
+			//シーンが空じゃないなら描画
+			if(s != nullptr) s->Draw(*cameras_[i]);
 		}
-
-		//スカイドームの描画
-		if (!cameras_.empty())
-			cameras_.front()->DrawSkyDome();
-
-		//個々のUI描画
-		if (sceneId_ == SCENE_ID::GAME)
-			SplitScreenManager::GetInstance().Composite();
-
-		// 主にポストエフェクト用
-		if (!cameras_.empty())
-			cameras_.front()->Draw();
-
-		//全体UIの描画
-		GlobalUIManager::GetInstance().Draw();
-
-		// Effekseerにより再生中のエフェクトを描画する。
-		DrawEffekseer3D();
-
-		// 暗転・明転
-		fader_->Draw();
 	}
 
-	//背面スクリーンにメインスクリーンを描画
-	SetDrawScreen(DX_SCREEN_BACK);
+	//分割スクリーン合成
+	split.Composite();
 
-	// 画面を初期化
-	ClearDrawScreen();
+	//全体UIの描画
+	GlobalUIManager::GetInstance().Draw();
 
-	// カメラ設定
-	for (auto& camera : cameras_)
-	{
-		camera->CameraSetting();
-	}
+	//Effekseerにより再生中のエフェクトを描画する。
+	DrawEffekseer3D();
 
-	//メインスクリーンを描画
-	DrawGraph(0, 0, mainScreen_, false);
+	//フェードの描画
+	fader_->Draw();
 }
 
 void SceneManager::ChangeScene(const SCENE_ID _sceneId, const bool _isReset, const bool _isFade)
@@ -319,12 +278,8 @@ void SceneManager::ResetScene(void)
 void SceneManager::Destroy(void)
 {
 	//スクリーンの解放
-	DeleteGraph(mainScreen_);
-	for(auto & screen : splitScreens_){ DeleteGraph(screen); }
-	
-	//自身のインスタンス解放
-	delete instance_;
-	instance_ = nullptr;
+	//DeleteGraph(mainScreen_);
+	//for(auto & screen : splitScreens_){ DeleteGraph(screen); }
 }
 
 void SceneManager::StartFadeIn(void)
@@ -341,8 +296,14 @@ std::weak_ptr<Camera> SceneManager::GetCamera(const int _playerIndex) const
 	return cameras_[_playerIndex];
 }
 
-void SceneManager::CreateCameras(const int _playerNum)
+void SceneManager::CreateCameraAndSplitScreens(const int _playerNum)
 {
+	//分割スクリーン
+	auto& split = SplitScreenManager::GetInstance();
+
+	//UIの分割
+	split.CreateSplitViews(_playerNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+
 	//現在のカメラの数が引数と同じ場合
 	if (cameras_.size() == _playerNum)
 	{
@@ -356,79 +317,19 @@ void SceneManager::CreateCameras(const int _playerNum)
 		cameras_.clear();
 	}
 
-	//UIの分割
-	SplitScreenManager::GetInstance().CreateSplitViews(_playerNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
-
 	//カメラ生成
 	for (int i = 0; i < _playerNum; i++)
 	{
+		//カメラ生成
 		std::shared_ptr<Camera> camera;
 		camera = std::make_shared<Camera>(i);
 		camera->Init();
 		cameras_.push_back(camera);
+
+		//UIの分割にカメラを登録
+		split.SetCamera(i, camera);
 	}
 
-}
-
-void SceneManager::CreateSplitScreen(const int _playerNum)
-{
-	//プレイヤー人数ごとのタイマー位置
-	Vector2 timerPos[GameSetting::PLAYER_MAX_NUM] = {
-		{ Application::SCREEN_HALF_X, 64 },									//1人
-		{ 100, Application::SCREEN_HALF_Y },								//2人
-		{ Application::SCREEN_HALF_X + Application::SCREEN_HALF_X / 2
-		, Application::SCREEN_HALF_Y + Application::SCREEN_HALF_Y / 2},		//3人
-		{ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y }			//4人
-	};
-
-	//タイマーの位置
-	GlobalUIManager::GetInstance().GetTimer().SetPos(timerPos[_playerNum - 1]);
-
-	//引数が１以下
-	// 最大人数を超える場合,
-	// または引数と現在のスクリーン数が同じとき
-	if (_playerNum <= 1 || 
-		_playerNum > 4/* ||
-		splitScreens_.size() == _playerNum*/)
-	{
-		isSplitMode_ = false;	//分割しない
-		return;					//生成しない
-	}
-	//空じゃない場合
-	else if (!splitScreens_.empty())
-	{
-		//中身削除
-		splitScreens_.clear();
-	}
-
-	//分割を行う
-	isSplitMode_ = true;
-
-	int createNum = _playerNum;	//生成数
-	int divX = 1;				//Xの分割数
-	int divY = 1;				//Yの分割数
-	
-	//人数が条件以上の場合
-	if (_playerNum >= CASE_VALUE)
-	{
-		createNum = 4;	//最大人数分生成
-		divX++;			//画面分割数増加
-		divY++;			
-	}
-	else if (_playerNum == 2)
-	{
-		divY++;
-	}
-
-	//スクリーン生成
-	for (int i = 0; i < createNum; i++)
-	{
-		int screen = MakeScreen(
-			Application::SCREEN_SIZE_X / divX,
-			Application::SCREEN_SIZE_Y / divY,
-			true);
-		splitScreens_.push_back(screen);
-	}
 }
 
 void SceneManager::ResetDeltaTime(void)
@@ -517,90 +418,6 @@ void SceneManager::Fade(void)
 	fadeState_[fState]();
 }
 
-void SceneManager::DrawMultiScreen()
-{
-	const int userNum = GameSetting::GetInstance().GetUserNum();
-
-	//描画位置（分割スクリーンの左上位置）
-	Vector2 screenPos[GameSetting::PLAYER_MAX_NUM] =
-	{
-		{ 0, 0 },													// 左上
-		{ 0, Application::SCREEN_HALF_Y},							// 左下
-		{ Application::SCREEN_HALF_X, 0 },							// 右上
-		{ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y }	// 右下
-	};
-
-	//3人以上なら
-	if (userNum >= CASE_VALUE)
-	{
-		//2Pを右上に、3Pを左下に入れ替える
-		Vector2 savePos = screenPos[1];
-		screenPos[1] = screenPos[2];
-		screenPos[2] = savePos;
-	}
-
-	//スクリーン数分描画
-	for (int i = 0; i < splitScreens_.size(); i++)
-	{
-		//プレイ人数が3人の時の4つ目の画面を1Pの画面を表示する
-		screenIndex_ = i;	//分割スクリーンのインデックス
-		int index = i;
-		if (CASE_VALUE == userNum &&
-			index == CASE_VALUE)
-		{
-			index = 1;
-			screenIndex_ = 1;
-		}
-
-		//分割スクリーンの設定
-		SetDrawScreen(splitScreens_[index]);
-
-		//画面クリア
-		ClearDrawScreen();
-
-		// カメラ設定
-		cameras_[index]->Apply();
-
-		// Effekseerにより再生中のエフェクトを更新する。
-		UpdateEffekseer3D();
-
-		// 描画
-		for (const auto& scene : scene_)
-		{
-			scene->Draw(*cameras_[index]);
-		}
-
-		//スカイドームの描画
-		if (!cameras_.empty())
-			cameras_[index]->DrawSkyDome();
-
-		//UIは別々で描画
-		SplitScreenManager::GetInstance().Composite(index);
-
-		// 主にポストエフェクト用
-		cameras_[index]->Draw(index);
-
-		// Effekseerにより再生中のエフェクトを描画する。
-		DrawEffekseer3D();
-
-		// 暗転・明転
-		fader_->Draw();
-	}
-
-	//メインスクリーンへ描画
-	SetDrawScreen(mainScreen_);
-
-
-	for (int i = 0; i < splitScreens_.size(); i++)
-	{
-		//分割したスクリーンを描画
-		DrawGraph(screenPos[i].x, screenPos[i].y, splitScreens_[i], true);
-	}
-
-	//全体UIの描画
-	GlobalUIManager::GetInstance().Draw();
-}
-
 std::unique_ptr<SceneBase> SceneManager::CreateSceneTitle(void)
 {
 	//タイトルシーン生成   
@@ -681,18 +498,29 @@ void SceneManager::FadeOut(void)
 		sceneId_ = waitSceneId_;
 
 		//シーンに合わせて生成数を設定
-		const int createNum = GameSetting::GetInstance().GetUserNum();
+		int createNum = 1; 
 
 		//ゲームの時のみ分割
 		if (sceneId_ == SCENE_ID::GAME)
 		{
-			//カメラ生成
-			CreateCameras(createNum);
+			//プレイヤー人数
+			createNum = GameSetting::GetInstance().GetUserNum();
 
+			//プレイヤー人数ごとのタイマー位置
+			Vector2 timerPos[GameSetting::PLAYER_MAX_NUM] = {
+				{ Application::SCREEN_HALF_X, 64 },									//1人
+				{ 100, Application::SCREEN_HALF_Y },								//2人
+				{ Application::SCREEN_HALF_X + Application::SCREEN_HALF_X / 2
+				, Application::SCREEN_HALF_Y + Application::SCREEN_HALF_Y / 2},		//3人
+				{ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y }			//4人
+			};
+
+			//タイマーの位置
+			GlobalUIManager::GetInstance().GetTimer().SetPos(timerPos[createNum - 1]);
 		}
 
-		//分割スクリーン生成
-		CreateSplitScreen(createNum);
+		//カメラ生成と分割スクリーンの設定
+		CreateCameraAndSplitScreens(createNum);
 
 		//シーンの遷移
 		changeScene_[changeSceneState_]();

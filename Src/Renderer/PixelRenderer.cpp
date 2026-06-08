@@ -1,7 +1,7 @@
 #include"../pch.h"
 #include "PixelRenderer.h"
 
-PixelRenderer::PixelRenderer(PixelMaterial& pixelMaterial) : pixelMaterial_(pixelMaterial)
+PixelRenderer::PixelRenderer(void)
 {
 }
 
@@ -11,7 +11,6 @@ PixelRenderer::~PixelRenderer(void)
 
 void PixelRenderer::MakeSquereVertex(Vector2 pos, Vector2 size)
 {
-
 	pos_ = pos;
 	size_ = size;
 
@@ -101,16 +100,15 @@ void PixelRenderer::SetSize(Vector2 size)
 	size_ = size;
 }
 
-void PixelRenderer::Draw(void)
+void PixelRenderer::Draw(PixelMaterial& _pixelMaterial)
 {
-
 	// ピクセルシェーダ設定
-	SetUsePixelShader(pixelMaterial_.GetShader());
+	SetUsePixelShader(_pixelMaterial.GetShader());
 
 	size_t size;
 
 	// ピクセルシェーダにテクスチャを転送
-	const auto& textures = pixelMaterial_.GetTextures();
+	const auto& textures = _pixelMaterial.GetTextures();
 	size = textures.size();
 	for (int i = 0; i < size; i++)
 	{
@@ -118,10 +116,10 @@ void PixelRenderer::Draw(void)
 	}
 
 	// 定数バッファハンドル
-	int constBuf = pixelMaterial_.GetConstBuf();
+	int constBuf = _pixelMaterial.GetConstBuf();
 
 	FLOAT4* constBufsPtr = (FLOAT4*)GetBufferShaderConstantBuffer(constBuf);
-	const auto& constBufs = pixelMaterial_.GetConstBufs();
+	const auto& constBufs = _pixelMaterial.GetConstBufs();
 
 	size = constBufs.size();
 	for (int i = 0; i < size; i++)
@@ -144,7 +142,7 @@ void PixelRenderer::Draw(void)
 		constBuf, DX_SHADERTYPE_PIXEL, CONSTANT_BUF_SLOT_BEGIN_PS);
 
 	// テクスチャアドレスタイプの取得
-	auto texA = pixelMaterial_.GetTextureAddress();
+	auto texA = _pixelMaterial.GetTextureAddress();
 	int texAType = static_cast<int>(texA);
 
 	// テクスチャアドレスタイプを変更
@@ -175,18 +173,18 @@ void PixelRenderer::Draw(void)
 
 }
 
-void PixelRenderer::Draw(int x, int y)
+void PixelRenderer::Draw(PixelMaterial& _pixelMaterial, int x, int y)
 {
 	pos_.x = x;
 	pos_.y = y;
 	MakeSquereVertex();
-	Draw();
+	Draw(_pixelMaterial);
 }
 
-void PixelRenderer::Draw(Vector2 _pos, Vector2 _size)
+void PixelRenderer::Draw(PixelMaterial& _pixelMaterial, Vector2& _pos, Vector2& _size)
 {
 	pos_ = _pos;
 	size_ = _size;
 	MakeSquereVertex();
-	Draw();
+	Draw(_pixelMaterial);
 }

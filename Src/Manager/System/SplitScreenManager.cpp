@@ -1,25 +1,35 @@
 #include "../pch.h"
 #include "../System/Camera.h"
+#include "../../Renderer/PixelMaterial.h"
+#include "../../Renderer/PixelRenderer.h"
 #include "SplitScreenManager.h"
 
 void SplitScreenManager::LoadOutSide(void)
 {
+	//ピクセルシェーダーの作成
+	pixelMaterials_[static_cast<int>(SHADER_TYPE::DEFAULT)] = std::make_unique<PixelMaterial>(L"Default.cso", 1);	
 }
 
 void SplitScreenManager::Init(void)
 {
+	//描画情報の破棄
+	Destroy();
+
 	//初期化
 	activeViewCount_ = 0;
+}
 
+void SplitScreenManager::Destroy(void)
+{
 	//描画スクリーンの削除
 	for (auto& view : splitViews_)
 	{
 		//スクリーンがあるなら
-		if (view.screen != -1)
+		if (view.renderScreen != -1)
 		{
 			//スクリーンの削除
-			DeleteGraph(view.screen);
-			view.screen = -1;
+			DeleteGraph(view.renderScreen);
+			view.renderScreen = -1;
 		}
 	}
 
@@ -33,10 +43,10 @@ void SplitScreenManager::BeginView(const int _playerIndex)
 	auto& view = splitViews_[_playerIndex];
 
 	//スクリーンがないなら
-	if (view.screen == -1)return;
+	if (view.renderScreen == -1)return;
 
 	//分割スクリーンの描画
-	SetDrawScreen(view.screen);
+	SetDrawScreen(view.renderScreen);
 
 	//スクリーンのクリア
 	ClearDrawScreen();
@@ -64,10 +74,10 @@ void SplitScreenManager::Composite(void)
 		const auto& view = splitViews_[i];
 
 		//スクリーンがないなら
-		if (view.screen == -1)continue;
+		if (view.renderScreen == -1)continue;
 
 		//分割スクリーンの描画
-		DrawGraph(view.viewport.x, view.viewport.y, view.screen, true);
+		DrawGraph(view.viewport.x, view.viewport.y, view.renderScreen, true);
 	}
 }
 
@@ -114,7 +124,7 @@ void SplitScreenManager::SetCamera(const int _playerIndex, const std::shared_ptr
 	splitViews_[_playerIndex].camera = _camera;
 }
 
-const SplitScreenManager::Viewport& SplitScreenManager::GetViewport(const int _playerIndex)
+const SplitScreenManager::Viewport& SplitScreenManager::GetViewport(const int _playerIndex)const
 {
 	//ビューポートの取得
 	return splitViews_[_playerIndex].viewport;
@@ -127,11 +137,13 @@ SplitScreenManager::SplitScreenManager(void)
 
 SplitScreenManager::~SplitScreenManager(void)
 {
+	//描画情報の破棄
+	Destroy();
 }
 
 void SplitScreenManager::CreateView(const int _index, const int _x, const int _y, const int _width, const int _height)
 {
 	//描画情報の作成
 	splitViews_[_index].viewport = { _x,_y,_width,_height };
-	splitViews_[_index].screen = MakeScreen(_width, _height);
+	splitViews_[_index].renderScreen = MakeScreen(_width, _height, true);
 }

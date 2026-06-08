@@ -79,7 +79,7 @@ void StageManager::Update(void)
 	update_[mode_]();
 }
 
-void StageManager::Draw(const Camera& _camera)
+void StageManager::Draw(void)
 {
 	//ステージの描画
 	for (const auto& stage : stages_)
