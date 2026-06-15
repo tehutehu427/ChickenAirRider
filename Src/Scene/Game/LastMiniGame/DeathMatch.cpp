@@ -101,7 +101,7 @@ void DeathMatch::Draw(const Camera& _camera)
 	auto& itemMng = ItemManager::GetInstance();
 
 	//ステージの描画
-	stgMng.Draw(_camera);
+	stgMng.Draw();
 
 	//アイテムの描画
 	itemMng.Draw();

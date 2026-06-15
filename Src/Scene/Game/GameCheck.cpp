@@ -5,7 +5,7 @@
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/SoundManager.h"
-#include "../Manager/Game/SplitScreenManager.h"
+#include "../Manager/System/SplitScreenManager.h"
 #include "../Manager/Game/Timer.h"
 #include "../Manager/Game/GameSetting.h"
 #include "GameCheck.h"
@@ -95,9 +95,6 @@ void GameCheck::UpdatePlayerParam(void)
 	//決定
 	if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::ENTER, KeyConfig::JOYPAD_NO::PAD1))
 	{
-		//分割なし
-		SceneManager::GetInstance().SetIsSplitMode(false);
-
 		//最終ゲーム確認へ
 		state_ = CHECK_STATE::LAST_GAME;
 

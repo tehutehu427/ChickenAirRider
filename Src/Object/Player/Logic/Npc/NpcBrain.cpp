@@ -108,7 +108,7 @@ void NpcBrain::JudgeItemBox(int _num)
 	for (int i = 0; i < plNum; i++)
 	{
 		//相手側のボックスとの距離
-		float enemyDist = Utility::Distance(plMng.GetPlayer(i).GetTrans().pos,poses[rand]);
+		float enemyDist = Utility::Distance(plMng.GetPlayer(i)->GetTrans().pos,poses[rand]);
 
 		//相手より遠いなら優先度を下げる
 		if (randDist < enemyDist)priority -= ENEMY_WEIGHT;

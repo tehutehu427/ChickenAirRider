@@ -27,7 +27,7 @@ public:
 	void Destroy(void);
 
 	//プレイヤーの取得
-	const Player& GetPlayer(const int _playerIndex) { return *players_[_playerIndex]; }
+	const Player* GetPlayer(const int _playerIndex) { return players_[_playerIndex].get(); }
 
 	//プレイヤーの数の取得
 	const int GetPlayerSize(void) { return players_.size(); }

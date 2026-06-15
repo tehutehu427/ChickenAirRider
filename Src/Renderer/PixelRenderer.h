@@ -27,8 +27,8 @@ public:
 	~PixelRenderer(void);
 
 	// ï`âÊãÈå`ÇÃê∂ê¨
-	void MakeSquereVertex(Vector2 pos, Vector2 size);
-	void MakeSquereVertex(void);
+	void MakeSquareVertex(Vector2 pos, Vector2 size);
+	void MakeSquareVertex(void);
 
 	// ç¿ïWê›íË
 	void SetPos(Vector2 pos);
@@ -39,7 +39,7 @@ public:
 	// ï`âÊ
 	void Draw(PixelMaterial& _pixelMaterial);
 	void Draw(PixelMaterial& _pixelMaterial, int _x, int _y);
-	void Draw(PixelMaterial& _pixelMaterial, Vector2& _pos, Vector2& _size);
+	void Draw(PixelMaterial& _pixelMaterial, const Vector2& _pos, const Vector2& _size);
 
 private:
 

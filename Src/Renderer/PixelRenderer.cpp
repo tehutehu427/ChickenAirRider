@@ -9,7 +9,7 @@ PixelRenderer::~PixelRenderer(void)
 {
 }
 
-void PixelRenderer::MakeSquereVertex(Vector2 pos, Vector2 size)
+void PixelRenderer::MakeSquareVertex(Vector2 pos, Vector2 size)
 {
 	pos_ = pos;
 	size_ = size;
@@ -85,9 +85,9 @@ void PixelRenderer::MakeSquereVertex(Vector2 pos, Vector2 size)
 
 }
 
-void PixelRenderer::MakeSquereVertex(void)
+void PixelRenderer::MakeSquareVertex(void)
 {
-	MakeSquereVertex(pos_, size_);
+	MakeSquareVertex(pos_, size_);
 }
 
 void PixelRenderer::SetPos(Vector2 pos)
@@ -177,14 +177,14 @@ void PixelRenderer::Draw(PixelMaterial& _pixelMaterial, int x, int y)
 {
 	pos_.x = x;
 	pos_.y = y;
-	MakeSquereVertex();
+	MakeSquareVertex();
 	Draw(_pixelMaterial);
 }
 
-void PixelRenderer::Draw(PixelMaterial& _pixelMaterial, Vector2& _pos, Vector2& _size)
+void PixelRenderer::Draw(PixelMaterial& _pixelMaterial, const Vector2& _pos, const Vector2& _size)
 {
 	pos_ = _pos;
 	size_ = _size;
-	MakeSquereVertex();
+	MakeSquareVertex();
 	Draw(_pixelMaterial);
 }

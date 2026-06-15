@@ -24,7 +24,6 @@ Camera::Camera(int _userNum)
 	rotPow_ = 0.0f;
 	leapTargetPos_ = Utility::VECTOR_ZERO;
 	vel_ = Utility::VECTOR_ZERO;
-	postEffectScreen_ = -1;
 
 	// カメラモードごとの更新関数を登録
 	updateFunc_[static_cast<int>(MODE::FIXED_POINT)] = &Camera::UpdateFixedPoint;
@@ -41,7 +40,6 @@ Camera::Camera(int _userNum)
 
 Camera::~Camera(void)
 {
-	DeleteGraph(postEffectScreen_);
 }
 
 void Camera::Init(void)
@@ -51,14 +49,14 @@ void Camera::Init(void)
 	auto& ui = SplitScreenManager::GetInstance();
 	auto& view = ui.GetViewport(static_cast<int>(padNo_) - 1);
 
-	material_ = std::make_unique<PixelMaterial>(L"GodRay.cso", 1);
-	renderer_ = std::make_unique<PixelRenderer>(*material_);
+	//material_ = std::make_unique<PixelMaterial>(L"GodRay.cso", 1);
+	//renderer_ = std::make_unique<PixelRenderer>();
 
-	material_->AddConstBuf(FLOAT4{ 0.1f, 0.0f,0.95f, 0.7f });
-	material_->AddTextureBuf(SceneManager::GetInstance().GetMainScreen());
-	renderer_->MakeSquereVertex({ view.x,view.y }, { view.width, view.height });
+	//material_->AddConstBuf(FLOAT4{ 0.1f, 0.0f,0.95f, 0.7f });
+	//material_->AddTextureBuf(SceneManager::GetInstance().GetMainScreen());
+	//renderer_->MakeSquareVertex({ view.x,view.y }, { view.width, view.height });
 
-	postEffectScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
+	//postEffectScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
 }
 
 void Camera::Update(void)
@@ -135,17 +133,17 @@ void Camera::SetPostEffectScreenSize(const int _sizeX, const int _sizeY, const i
 	//一人なら再設定しない
 	if (GameSetting::GetInstance().GetUserNum() <= 1)return;
 
-	material_.reset();
-	renderer_.reset();
+	//material_.reset();
+	//renderer_.reset();
 
-	material_ = std::make_unique<PixelMaterial>(L"GodRay.cso", 1);
-	renderer_ = std::make_unique<PixelRenderer>(*material_);
+	//material_ = std::make_unique<PixelMaterial>(L"GodRay.cso", 1);
+	//renderer_ = std::make_unique<PixelRenderer>(*material_);
 
-	//初期化
-	material_->AddConstBuf(FLOAT4{ 0.1f, 0.0f,0.95f, 0.7f });
-	material_->AddTextureBuf(SceneManager::GetInstance().GetScreen(_index));
-	renderer_->MakeSquereVertex({ 0,0 }, { _sizeX, _sizeY });
-	postEffectScreen_ = MakeScreen(_sizeX, _sizeY, true);
+	////初期化
+	//material_->AddConstBuf(FLOAT4{ 0.1f, 0.0f,0.95f, 0.7f });
+	//material_->AddTextureBuf(SceneManager::GetInstance().GetScreen(_index));
+	//renderer_->MakeSquareVertex({ 0,0 }, { _sizeX, _sizeY });
+	//postEffectScreen_ = MakeScreen(_sizeX, _sizeY, true);
 }
 
 VECTOR Camera::GetPos(void) const

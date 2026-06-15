@@ -152,7 +152,7 @@ void Fader::SpriteMask()
 		true);
 
 	//•`‰æ—Ìˆæ‚ğŒ³‚É–ß‚·
-	SetDrawScreen(SceneManager::GetInstance().GetMainScreen());
+	SetDrawScreen(DX_SCREEN_BACK);
 
 	//•`‰æ‚ğF‚ÌæZƒ‚[ƒh‚É‚·‚é
 	SetDrawBlendMode(DX_BLENDMODE_MUL, 0);

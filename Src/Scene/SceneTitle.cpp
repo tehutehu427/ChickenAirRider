@@ -7,7 +7,7 @@
 #include "../Manager/System/SoundManager.h"
 #include "../Renderer/PixelMaterial.h"
 #include "../Renderer/PixelRenderer.h"
-#include"../Manager/Game/SplitScreenManager.h"
+#include"../Manager/System/SplitScreenManager.h"
 #include"../Manager/Game/GameSetting.h"
 #include "Select/SceneSelect.h"
 #include "SceneTitle.h"
@@ -69,13 +69,13 @@ void SceneTitle::Load(void)
 	uiRenderer_ = std::make_unique<PixelRenderer>(*uiMaterial_);
 	uiRenderer_->SetPos({ PUSH_POS_X - PUSH_SIZE_X / 2, PUSH_POS_Y });
 	uiRenderer_->SetSize({ PUSH_SIZE_X, PUSH_SIZE_Y });
-	uiRenderer_->MakeSquereVertex();
+	uiRenderer_->MakeSquareVertex();
 }
 
 void SceneTitle::Init(void)
 {
 	//分割なし
-	SceneManager::GetInstance().SetIsSplitMode(false);
+	//SceneManager::GetInstance().SetIsSplitMode(false);
 
 	//プレイヤー人数リセット
 	GameSetting::GetInstance().ResetPlayerNum();
@@ -135,7 +135,7 @@ void SceneTitle::Draw(const Camera& _camera)
 	//プッシュボタン
 	uiMaterial_->SetConstBuf(0, { cnt_, 0.0f, 0.0f, 0.0f });
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
-	uiRenderer_->Draw();
+	uiRenderer_->Draw(*uiMaterial_);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
 	// ポストエフェクトの描画

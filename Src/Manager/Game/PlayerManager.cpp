@@ -121,7 +121,7 @@ void PlayerManager::CreateUserPlayer(const int _playerIndex)
 
 	//ƒJƒƒ‰Ý’è
 	auto camera = scnMng.GetCamera(_playerIndex).lock();
-	camera->SetFollow(&GetPlayer(_playerIndex).GetTrans());
+	camera->SetFollow(&GetPlayer(_playerIndex)->GetTrans());
 	camera->ChangeMode(Camera::MODE::FOLLOW_LEAP);
 }
 

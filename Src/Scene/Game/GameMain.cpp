@@ -74,7 +74,7 @@ void GameMain::Init(void)
 	//スカイドームの設定
 	for (int i = 0; i < plNum; i++)
 	{
-		plMng.GetPlayer(i).GetCamera().lock()->SetSkyDome(sky_);
+		plMng.GetPlayer(i)->GetCamera().lock()->SetSkyDome(sky_);
 	}
 
 	//BGM読み込み

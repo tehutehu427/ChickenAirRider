@@ -39,7 +39,7 @@ void LastGameBase::Init(void)
 	//スカイドームの設定
 	for (int i = 0; i < plNum; i++)
 	{
-		plMng.GetPlayer(i).GetCamera().lock()->SetSkyDome(sky_);
+		plMng.GetPlayer(i)->GetCamera().lock()->SetSkyDome(sky_);
 	}
 
 	//順位用
@@ -50,12 +50,6 @@ void LastGameBase::Init(void)
 
 	//プレイヤーが機体から降りれなくする
 	plMng.PlayerCanGetOff(false);
-
-	//画面分割
-	if (plNum > 1)
-	{
-		SceneManager::GetInstance().SetIsSplitMode(true);
-	}
 
 	//BGM読み込み
 	int id = res.Load(ResourceManager::SRC::LAST_GAME_BGM).handleId_;
@@ -96,7 +90,7 @@ void LastGameBase::Update(void)
 		{
 			//プレイヤー
 			const auto& pl = plMng.GetPlayer(i);
-			ConfirmRank(pl.GetPlayerIndex());
+			ConfirmRank(pl->GetPlayerIndex());
 		}
 		
 		//プレイヤーマネージャーに送る

@@ -7,7 +7,10 @@
 void SplitScreenManager::LoadOutSide(void)
 {
 	//ピクセルシェーダーの作成
-	pixelMaterials_[static_cast<int>(SHADER_TYPE::DEFAULT)] = std::make_unique<PixelMaterial>(L"Default.cso", 1);	
+	pixelMaterials_[static_cast<int>(SHADER_TYPE::DEFAULT)] = std::make_unique<PixelMaterial>(L"Default.cso", 1);
+
+	//レンダーの作成
+	pixelRenderer_ = std::make_unique<PixelRenderer>();
 }
 
 void SplitScreenManager::Init(void)

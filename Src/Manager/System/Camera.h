@@ -210,9 +210,6 @@ private:
 	VECTOR vel_;
 
 	//シェーダー
-	int postEffectScreen_;
-	std::unique_ptr<PixelMaterial> material_;
-	std::unique_ptr<PixelRenderer> renderer_;
 	std::weak_ptr<SkyDome> sky_;
 
 	//カメラ状態関数ポインタ用

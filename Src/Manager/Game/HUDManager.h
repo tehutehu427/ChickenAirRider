@@ -1,9 +1,13 @@
 #pragma once
+#include<array>
+#include<bitset>
 #include "../Common/Singleton.h"
 #include "../Common/Vector2F.h"
+#include "GameSetting.h"
 
 class PixelMaterial;
 class PixelRenderer;
+class Player;
 
 class HUDManager : public Singleton<HUDManager>
 {
@@ -11,6 +15,15 @@ class HUDManager : public Singleton<HUDManager>
 	friend class Singleton<HUDManager>;
 
 public:
+
+	//UI情報
+	enum class HUD_TYPE
+	{
+		CHARGE_GAUGE,	//チャージゲージ
+		HEALTH,			//体力
+		PARAMETER,		//パラメーター
+		MAX
+	};
 
 	//初期化
 	void LoadOutSide(void)override;
@@ -22,10 +35,33 @@ public:
 	void Update(void);
 
 	//描画
-	void Draw(const int _playerIndex = 0);
+	void Draw(void);
+
+	//プレイヤーの設定
+	void SetPlayer(const Player* _player, const int _index);
+
+	//プレイヤーの表示設定
+	void SetVisible(const int _index, const HUD_TYPE _type, const bool _visible);
 
 private:
 
+	//描画用関数ポインタ
+	using DrawFunc = void(HUDManager::*)(const int);
+
+	//描画情報
+	struct HUDData
+	{
+		bool visible;	//描画判定
+		DrawFunc func;	//描画処理
+	};
+
+	//プレイヤーUI情報
+	struct PlayerHUD
+	{
+		const Player* player = nullptr;										//プレイヤー
+		std::array<HUDData, static_cast<size_t>(HUD_TYPE::MAX)> hudData;	//描画情報
+	};
+	
 	//パラメーター
 	static constexpr int PARAM_BOX_SIZE = 40;						//箱サイズ
 	static constexpr int PARAM_BOX_INTERVAL = 20;					//箱の間隔
@@ -59,10 +95,6 @@ private:
 	//デストラクタ
 	~HUDManager(void)override;
 
-	//描画
-	//std::unordered_map<DRAW_TYPE, std::function<void(int)>> drawList_;
-	//std::unordered_map<int, std::unordered_map<DRAW_TYPE, std::function<void(int)>>> drawView_;
-
 	//ゲージ画像
 	int gaugeImg_;
 	int gaugeMaskImg_;
@@ -81,10 +113,16 @@ private:
 
 	//シェーダー
 	std::unique_ptr<PixelMaterial> material_;
-	std::unique_ptr<PixelRenderer> renderer_;
+	PixelRenderer renderer_;
 	float gaugeCnt_;
 
+	//プレイヤー参照
+	std::array<PlayerHUD, static_cast<int>(GameSetting::PLAYER_MAX_NUM)> playerHUD_;
+
 	//描画
+	void DrawPlayerHUD(const int _playerIndex);
+
+	//各描画
 	void DrawChargeGauge(const int _playerIndex);
 	void DrawHealth(const int _playerIndex);
 	void DrawParam(const int _playerIndex);

@@ -3,10 +3,7 @@
 #include "../Manager/Game/CollisionManager.h"
 #include "../Manager/Game/GameSetting.h"
 #include "../Manager/Game/StageManager.h"
-#include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/PlayerManager.h"
-#include "../Manager/Game/SplitScreenManager.h"
-#include "../Object/SkyDome/SkyDome.h"
 #include "../Object/Player/Player.h"
 #include "AirGlider.h"
 
@@ -72,10 +69,10 @@ void AirGlider::Update(void)
 		const auto& pl = plMng.GetPlayer(i);
 
 		//移動が出来なくなったら
-		if (!pl.GetCanMove())
+		if (!pl->GetCanMove())
 		{
 			//プレイヤー番号と飛距離(Z座標)を保持
-			flightDistance_.emplace(pl.GetPlayerIndex(), pl.GetTrans().pos.z);
+			flightDistance_.emplace(pl->GetPlayerIndex(), pl->GetTrans().pos.z);
 			
 			//プレイヤーが一人なら
 			if (plNum <= 1)
