@@ -1,6 +1,5 @@
 #pragma once
 #include<array>
-#include<bitset>
 #include "../Common/Singleton.h"
 #include "../Common/Vector2F.h"
 #include "GameSetting.h"

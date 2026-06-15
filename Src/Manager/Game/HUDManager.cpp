@@ -7,6 +7,8 @@
 #include "../System/SplitScreenManager.h"
 #include "../Renderer/PixelMaterial.h"
 #include "../Renderer/PixelRenderer.h"
+#include "../../Object/Player/Player.h"
+#include "../../Object/Player/Action/MachineAction.h"
 #include "HUDManager.h"
 
 void HUDManager::LoadOutSide(void)
@@ -115,6 +117,54 @@ void HUDManager::DrawPlayerHUD(const int _playerIndex)
 
 void HUDManager::DrawChargeGauge(const int _playerIndex)
 {
+	//プレイヤー
+	const auto& player = playerHUD_[_playerIndex].player;
+
+	//アクションのポインタ(キャスト用)
+	const auto actionPtr = &player->GetAction();
+
+	//ポインタをキャストし、MachineActionではなかった場合、処理しないように
+	const auto* mAction = dynamic_cast<const MachineAction*>(actionPtr);
+	if (!mAction)return;
+
+	//分割
+	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
+
+	//各要素
+	const float chargeCnt = mAction->GetChargeCnt();
+	const float speed = mAction->GetSpeed();
+
+	//サイズ比率(XYほぼ同一なので統一)
+	float scale = static_cast<float>(view.width) / Application::SCREEN_SIZE_X;
+
+	//中央位置
+	Vector2 gaugeCenter =
+	{
+		static_cast<int>(CHARGE_POS.x * view.width) - GAUGE_LOCAL_POS * scale,
+		static_cast<int>(CHARGE_POS.y * view.height) - GAUGE_LOCAL_POS * scale
+	};
+
+	//合計サイズ
+	float totalScale = scale * GAUGE_SIZE_MULTI;
+	Vector2 gaugeSize = { GAUGE_SIZE * totalScale, GAUGE_SIZE * totalScale };
+
+	//外枠の描画
+	DrawRotaGraph(gaugeCenter.x, gaugeCenter.y, totalScale, 0.0, gaugeImg_, true);
+
+	//メーターの描画
+	material_->SetConstBuf(0, { 0.5f,0.5f,chargeCnt,gaugeCnt_ });
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	renderer_.Draw(*material_, gaugeCenter - gaugeSize / 2, gaugeSize);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+	//速度計の描画(3桁までの描画)
+	int speedInt = static_cast<int>(speed);
+	std::array<int, 3>digits = { (speedInt / 100),(speedInt / 10) % 10, speedInt % 10 };
+	float offset = NUMBER_LOCAL_POS * scale;
+
+	DrawRotaGraph(gaugeCenter.x - offset, gaugeCenter.y, totalScale, 0.0, numImgs_[digits[0]], true);
+	DrawRotaGraph(gaugeCenter.x, gaugeCenter.y, totalScale, 0.0, numImgs_[digits[1]], true);
+	DrawRotaGraph(gaugeCenter.x + offset, gaugeCenter.y, totalScale, 0.0, numImgs_[digits[2]], true);
 }
 
 void HUDManager::DrawHealth(const int _playerIndex)
