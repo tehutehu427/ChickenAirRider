@@ -50,7 +50,7 @@ Parameter Parameter::CalcUnitParam(const UnitParameter& _unitParam)const
     return ret;
 }
 
-const float Parameter::GetHealthValue(void) const
+const float Parameter::GetMaxHealth(void) const
 {
     return maxHealth * MAX_HEALTH_VALUE;
 }

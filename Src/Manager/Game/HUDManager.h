@@ -50,8 +50,8 @@ private:
 	//描画情報
 	struct HUDData
 	{
-		bool visible;	//描画判定
 		DrawFunc func;	//描画処理
+		bool visible;	//描画判定
 	};
 
 	//プレイヤーUI情報
@@ -59,6 +59,19 @@ private:
 	{
 		const Player* player = nullptr;										//プレイヤー
 		std::array<HUDData, static_cast<size_t>(HUD_TYPE::MAX)> hudData;	//描画情報
+	};
+
+	//描画パラメーターの紐付け
+	struct ParamInfo
+	{
+		//値
+		int value = -1;
+		
+		//アイコン画像
+		int icon = -1;
+
+		//色
+		int color = 0;
 	};
 	
 	//パラメーター
@@ -70,10 +83,8 @@ private:
 	static constexpr Vector2F PARAM_BOX_START_POS = { 0.2f,0.1f };	//箱のUV座標
 
 	//体力
-	static constexpr int HEALTH_BOX_LOCAL_POS_X = 10;
-	static constexpr int HEALTH_BOX_LOCAL_POS_Y = 0;
-	static constexpr int HEALTH_BOX = 1;
-	static constexpr int HEALTH_LOCAL = 3;
+	static constexpr int FRAME_SIZE = 2;
+	static constexpr int HEALTH_BAR_WIDTH = 20;
 	static constexpr int HEALTH_BAR_HEIGHT = 100;
 
 	//UIの位置(Normalize)

@@ -7,7 +7,13 @@
 void SplitScreenManager::LoadOutSide(void)
 {
 	//ピクセルシェーダーの作成
-	pixelMaterials_[static_cast<int>(SHADER_TYPE::DEFAULT)] = std::make_unique<PixelMaterial>(L"Default.cso", 1);
+	//pixelMaterials_[static_cast<int>(SHADER_TYPE::DEFAULT)] = std::make_unique<PixelMaterial>(L"Default.cso", 1);
+	//pixelMaterials_[static_cast<int>(SHADER_TYPE::MONO)] = std::make_unique<PixelMaterial>(L"Monotone.cso", 1);
+
+	//関数設定
+	setShader_[static_cast<int>(SHADER_TYPE::DEFAULT)] = &SplitScreenManager::SetDefaultShader;
+	setShader_[static_cast<int>(SHADER_TYPE::MONO)] = &SplitScreenManager::SetMonoShader;
+	setShader_[static_cast<int>(SHADER_TYPE::SCAN_LINE)] = &SplitScreenManager::SetScanLineShader;
 
 	//レンダーの作成
 	pixelRenderer_ = std::make_unique<PixelRenderer>();
@@ -20,6 +26,10 @@ void SplitScreenManager::Init(void)
 
 	//初期化
 	activeViewCount_ = 0;
+}
+
+void SplitScreenManager::Update(void)
+{
 }
 
 void SplitScreenManager::Destroy(void)
@@ -133,6 +143,12 @@ const SplitScreenManager::Viewport& SplitScreenManager::GetViewport(const int _p
 	return splitViews_[_playerIndex].viewport;
 }
 
+void SplitScreenManager::SetShader(const int _playerIndex, const SHADER_TYPE& _type)
+{
+	//シェーダ生成
+	(this->*setShader_[static_cast<int>(_type)])(_playerIndex);
+}
+
 SplitScreenManager::SplitScreenManager(void)
 	:activeViewCount_(0)
 {
@@ -149,4 +165,23 @@ void SplitScreenManager::CreateView(const int _index, const int _x, const int _y
 	//描画情報の作成
 	splitViews_[_index].viewport = { _x,_y,_width,_height };
 	splitViews_[_index].renderScreen = MakeScreen(_width, _height, true);
+	SetShader(_index, SHADER_TYPE::DEFAULT);
+}
+
+void SplitScreenManager::SetDefaultShader(const int _index)
+{
+	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"Default.cso", 1);
+	splitViews_[_index].material->AddConstBuf({ 0.0f,0.0f,0.0f,0.0f });
+}
+
+void SplitScreenManager::SetMonoShader(const int _index)
+{
+	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"Monotone.cso", 1);
+	splitViews_[_index].material->AddConstBuf({ 0.0f,0.0f,0.0f,0.0f });
+}
+
+void SplitScreenManager::SetScanLineShader(const int _index)
+{
+	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"ScanLine.cso", 1);
+	splitViews_[_index].material->AddConstBuf({ 0.0f,0.0f,0.0f,0.0f });
 }

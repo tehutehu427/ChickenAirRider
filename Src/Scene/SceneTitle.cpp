@@ -66,7 +66,7 @@ void SceneTitle::Load(void)
 	uiMaterial_ = std::make_unique<PixelMaterial>(L"TitleUi.cso", 1);
 	uiMaterial_->AddConstBuf({ cnt_, 0.0f, 0.0f, 0.0f });
 	uiMaterial_->AddTextureBuf(pushAnyButtonImg_);
-	uiRenderer_ = std::make_unique<PixelRenderer>(*uiMaterial_);
+	uiRenderer_ = std::make_unique<PixelRenderer>();
 	uiRenderer_->SetPos({ PUSH_POS_X - PUSH_SIZE_X / 2, PUSH_POS_Y });
 	uiRenderer_->SetSize({ PUSH_SIZE_X, PUSH_SIZE_Y });
 	uiRenderer_->MakeSquareVertex();

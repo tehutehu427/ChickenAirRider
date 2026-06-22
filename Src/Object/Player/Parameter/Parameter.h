@@ -30,7 +30,7 @@ struct Parameter
 	Parameter CalcUnitParam(const UnitParameter& _unitParam)const;
 
 	//HP‚Ì’l‚Ìæ“¾
-	const float GetHealthValue(void)const;
+	const float GetMaxHealth(void)const;
 
 	//ã‰ºŒÀ’l‚Ìİ’è
 	void Clamp(void);

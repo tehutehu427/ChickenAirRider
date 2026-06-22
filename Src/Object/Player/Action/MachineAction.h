@@ -4,9 +4,6 @@
 #include "../Machine/Machine.h"
 #include "../../Common/EffectController.h"
 
-class PixelMaterial;
-class PixelRenderer;
-
 class MachineAction : public ActionBase
 {
 public:

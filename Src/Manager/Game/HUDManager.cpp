@@ -20,9 +20,9 @@ void HUDManager::LoadOutSide(void)
 	//描画
 	for (auto& playerHud : playerHUD_)
 	{
-		playerHud.hudData[static_cast<size_t>(HUD_TYPE::CHARGE_GAUGE)] = { false,&HUDManager::DrawChargeGauge };
-		playerHud.hudData[static_cast<size_t>(HUD_TYPE::HEALTH)] = { false,&HUDManager::DrawHealth};
-		playerHud.hudData[static_cast<size_t>(HUD_TYPE::PARAMETER)] = { false,&HUDManager::DrawParam};
+		playerHud.hudData[static_cast<int>(HUD_TYPE::CHARGE_GAUGE)] = { &HUDManager::DrawChargeGauge,false };
+		playerHud.hudData[static_cast<int>(HUD_TYPE::HEALTH)] = { &HUDManager::DrawHealth,false };
+		playerHud.hudData[static_cast<int>(HUD_TYPE::PARAMETER)] = { &HUDManager::DrawParam,false };
 	}
 
 	//画像
@@ -118,7 +118,10 @@ void HUDManager::DrawPlayerHUD(const int _playerIndex)
 void HUDManager::DrawChargeGauge(const int _playerIndex)
 {
 	//プレイヤー
-	const auto& player = playerHUD_[_playerIndex].player;
+	const auto* player = playerHUD_[_playerIndex].player;
+
+	//存在しないなら何もしない
+	if (!player)return;
 
 	//アクションのポインタ(キャスト用)
 	const auto actionPtr = &player->GetAction();
@@ -169,8 +172,117 @@ void HUDManager::DrawChargeGauge(const int _playerIndex)
 
 void HUDManager::DrawHealth(const int _playerIndex)
 {
+	//プレイヤー
+	const auto* player = playerHUD_[_playerIndex].player;
+
+	//存在しないなら何もしない
+	if (!player)return;
+
+	//分割
+	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
+
+	//サイズ比率(XYほぼ同一なので統一)
+	float scale = static_cast<float>(view.width) / Application::SCREEN_SIZE_X;
+
+	//HP
+	float health = player->GetNowHealth();
+	float maxHealth = player->GetMaxHealth();
+
+	//割合
+	float rate = health / maxHealth;
+
+	//位置
+	Vector2 pos = {};
+	pos.x = view.x + static_cast<int>(view.width + HEALTH_POS.x);
+	pos.y = view.y + static_cast<int>(view.height + HEALTH_POS.y);
+	float height = static_cast<int>(HEALTH_BAR_HEIGHT * rate);
+	float top = pos.y + (HEALTH_BAR_HEIGHT - height);
+	int frame = FRAME_SIZE * scale;
+
+	//枠
+	DrawBox(pos.x - frame,
+		top - frame,
+		pos.x + HEALTH_BAR_WIDTH + frame,
+		pos.y + HEALTH_BAR_HEIGHT + frame,
+		Utility::GRAY, true);
+	//HPバー
+	if (health > 0.0f)
+	{
+		DrawBox(pos.x,
+			top,
+			pos.x + HEALTH_BAR_WIDTH, 
+			pos.y + HEALTH_BAR_HEIGHT, 
+			Utility::RED, true);
+	}
 }
 
 void HUDManager::DrawParam(const int _playerIndex)
 {
+	//プレイヤー
+	const auto* player = playerHUD_[_playerIndex].player;
+
+	//存在しないなら何もしない
+	if (!player)return;
+
+	//分割
+	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
+	
+	//パラメーター
+	const auto& param = player->GetParam();
+
+	//パラメーター情報まとめ
+	ParamInfo params[] =
+	{
+		{param.maxSpeed, maxSpeedImg_, Utility::CYAN},
+		{param.acceleration, acceleImg_, Utility::PURPLE},
+		{param.turning, turnImg_, Utility::GREEN},
+		{param.charge, chargeImg_, Utility::YELLOW},
+		{param.flight, flightImg_, Utility::WHITE},
+		{param.weight, weightImg_, Utility::BROWN},
+		{param.attack, attackImg_, Utility::ORANGE},
+		{param.defence, defenceImg_, Utility::BLUE},
+		{param.maxHealth, maxHealthImg_, Utility::RED}
+	};
+
+	//開始座標
+	Vector2 start = {};
+	start.x = view.x + static_cast<int>(view.width + PARAM_BOX_START_POS.x);
+	start.y = view.y + static_cast<int>(view.height + PARAM_BOX_START_POS.y);
+
+	//座標
+	int x;
+	int y;
+
+	//数値関係
+	int numberLocal = PARAM_NUMBER_LOCAL_POS - NUMBER_INTERVAL / 2;
+	int tens;
+	int one;
+	
+	//パラメーターの個数
+	int size = std::size(params);
+	for (int i = 0; i < size; i++)
+	{
+		//座標の調整
+		x = start.x;
+		y = start.y + i * POWER_UP_INTERVAL;
+
+		//アイコン
+		DrawRotaGraph(x, y, 1.0, 0.0, params[i].icon, true);
+
+		//数値
+		tens = params[i].value / 10;
+		one = params[i].value % 10;
+		x += numberLocal;
+		DrawRotaGraph(x, y, 1.0, 0.0, numImgs_[tens], true);
+		DrawRotaGraph(x + NUMBER_INTERVAL, y, 1.0, 0.0, numImgs_[one], true);
+
+		//バー
+		x += PARAM_BOX_INTERVAL;
+		DrawBox(x,
+			y - PARAM_BOX_SIZE / 2,
+			x + PARAM_BOX_SIZE * params[i].value,
+			y + PARAM_BOX_SIZE / 2,
+			params[i].color,
+			true);
+	}
 }

@@ -193,12 +193,12 @@ const Parameter Player::GetAllParam(void)const
 	return param_.CalcUnitParam(GetUnitParam());
 }
 
-const float Player::GetHealthValue(void)const
+const float Player::GetMaxHealth(void)const
 {
 	//ƒpƒ‰ƒ[ƒ^
 	const Parameter& param = GetAllParam();
 
-	return param.GetHealthValue();
+	return param.GetMaxHealth();
 }
 
 const float Player::GetAttack(void) const

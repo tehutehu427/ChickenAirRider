@@ -75,7 +75,7 @@ public:
 	const bool IsRide(void)const { return state_ == STATE::RIDE_MACHINE; }
 
 	//HPの値
-	const float GetHealthValue(void)const;
+	const float GetMaxHealth(void)const;
 
 	//攻撃パラメーター
 	const float GetAttack(void)const;
@@ -132,7 +132,7 @@ public:
 	void SetFootLine(const Quaternion _foot) { footLine_ = _foot; }
 
 	//現在体力を返す
-	const float GetNowHealth(void)const { return GetHealthValue() - damage_; }
+	const float GetNowHealth(void)const { return GetMaxHealth() - damage_; }
 
 	//無敵時間が終わったかを返す
 	const float IsEndInvincible(void)const { return invincible_ < 0; }

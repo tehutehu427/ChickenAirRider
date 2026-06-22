@@ -3,8 +3,8 @@
 // 定数バッファ：スロット4番目(b4と書く)
 cbuffer cbParam : register(b4)
 {
-	float4 g_color;
 	float  g_time;
+    float3 dummy;
 }
 
 float4 main(PS_INPUT PSInput) : SV_TARGET
