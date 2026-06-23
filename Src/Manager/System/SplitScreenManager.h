@@ -119,5 +119,7 @@ private:
 	void SetScanLineShader(const int _index);
 
 	//XV
-
+	void UpdateDefaultShader(const int _index);
+	void UpdateMonoShader(const int _index);
+	void UpdateScanLineShader(const int _index);
 };

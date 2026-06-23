@@ -1,5 +1,6 @@
 #include "../pch.h"
 #include "../System/Camera.h"
+#include "../System/SceneManager.h"
 #include "../../Renderer/PixelMaterial.h"
 #include "../../Renderer/PixelRenderer.h"
 #include "SplitScreenManager.h"
@@ -184,4 +185,29 @@ void SplitScreenManager::SetScanLineShader(const int _index)
 {
 	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"ScanLine.cso", 1);
 	splitViews_[_index].material->AddConstBuf({ 0.0f,0.0f,0.0f,0.0f });
+}
+
+void SplitScreenManager::UpdateDefaultShader(const int _index)
+{
+}
+
+void SplitScreenManager::UpdateMonoShader(const int _index)
+{
+}
+
+void SplitScreenManager::UpdateScanLineShader(const int _index)
+{
+	//デルタタイム
+	float delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//シェーダー関係
+	auto& shader = splitViews_[_index].shader;
+
+	//カウンタ
+	shader.cnt += delta;
+
+	//定数バッファ用
+	int constBufIndex = 0;
+
+	splitViews_[_index].material->SetConstBuf(constBufIndex,)
 }
