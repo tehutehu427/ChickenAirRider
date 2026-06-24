@@ -3,6 +3,7 @@
 #include "../Utility/Utility.h"
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/SceneManager.h"
+#include "../Manager/System/SplitScreenManager.h"
 #include "../Manager/System/Camera.h"
 #include "../Manager/System/SoundManager.h"
 #include "../Manager/Game/AnimationManager.h"
@@ -42,6 +43,7 @@ void SceneResult::Init(void)
 	auto& scnMng = SceneManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& res = ResourceManager::GetInstance();
+	auto& split = SplitScreenManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
 	const auto& mainCamera = scnMng.GetCamera(0).lock();
 
@@ -51,8 +53,8 @@ void SceneResult::Init(void)
 	//アニメーション番号
 	const auto& animNums = AnimationManager::GetInstance().GetAnimationData("chicken");
 
-	//分割なし
-	scnMng.SetIsSplitMode(false);
+	//リザルトは画面一つ
+	split.CreateSplitViews(1, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 
 	//モデルの生成
 	for (int i = 0; i < plNum; i++)

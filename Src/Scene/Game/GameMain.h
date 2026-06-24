@@ -21,7 +21,7 @@ public:
 	void Update(void)override;
 
 	//•`‰æ
-	void Draw(void)override;
+	void Draw(const Camera& _camera)override;
 
 	//‰ð•ú
 	void Release(void)override;
@@ -51,7 +51,7 @@ private:
 	std::unordered_map<STATE, std::function<void(void)>> update_;
 
 	//•`‰æ
-	std::unordered_map<STATE, std::function<void(void)>> draw_;
+	std::unordered_map<STATE, std::function<void(const Camera& _camera)>> draw_;
 
 	//ƒfƒoƒbƒO•`‰æ
 	void DebugDraw(void)override;
@@ -61,7 +61,7 @@ private:
 	void UpdateFinish(void);
 
 	//•`‰æ
-	void DrawGame(void);
-	void DrawFinish(void);
+	void DrawGame(const Camera& _camera);
+	void DrawFinish(const Camera& _camera);
 };
 

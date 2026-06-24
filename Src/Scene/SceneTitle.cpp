@@ -43,8 +43,8 @@ void SceneTitle::Load(void)
 	//ユーザー数
 	int userNum = GameSetting::GetInstance().GetUserNum();
 
-	//画面ごとのUI情報
-	SplitScreenManager::GetInstance().CreateSplitViews(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+	//タイトルは画面一つ
+	SplitScreenManager::GetInstance().CreateSplitViews(1, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 
 	//画像の読み込み
 	backImg_ = res.Load(ResourceManager::SRC::TITLE_BACK).handleId_;

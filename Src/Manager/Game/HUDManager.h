@@ -2,10 +2,10 @@
 #include<array>
 #include "../Common/Singleton.h"
 #include "../Common/Vector2F.h"
+#include "../../Renderer/PixelRenderer.h"
 #include "GameSetting.h"
 
 class PixelMaterial;
-class PixelRenderer;
 class Player;
 
 class HUDManager : public Singleton<HUDManager>

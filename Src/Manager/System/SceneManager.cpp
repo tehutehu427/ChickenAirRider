@@ -167,6 +167,9 @@ void SceneManager::Draw(void)
 
 	for (int i = 0; i < split.GetActiveViewCount(); i++)
 	{
+		//シェーダー関係の更新
+		split.UpdateShader(i);
+
 		//分割スクリーン描画開始
 		split.BeginView(i);
 
@@ -176,6 +179,9 @@ void SceneManager::Draw(void)
 			//シーンが空じゃないなら描画
 			if(s != nullptr) s->Draw(*cameras_[i]);
 		}
+
+		//Effekseerにより再生中のエフェクトを描画する。
+		DrawEffekseer3D();
 	}
 
 	//分割スクリーン合成
@@ -183,9 +189,6 @@ void SceneManager::Draw(void)
 
 	//全体UIの描画
 	GlobalUIManager::GetInstance().Draw();
-
-	//Effekseerにより再生中のエフェクトを描画する。
-	DrawEffekseer3D();
 
 	//フェードの描画
 	fader_->Draw();

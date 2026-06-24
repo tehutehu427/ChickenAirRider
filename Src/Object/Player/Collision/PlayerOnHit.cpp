@@ -100,9 +100,9 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	player_.SetMovedPos(VAdd(player_.GetMovedPos(), VScale(slide, remain)));
 
 	//Ú’n‚µ‚Ä‚¢‚é‚©
-	if (groundPreCol->IsHit() && player_.GetAction().lock()->IsHit())
+	if (groundPreCol->IsHit() && player_.GetAction().IsHit())
 	{
-		player_.GetAction().lock()->ResetAxisX();
+		player_.GetAction().ResetAxisX();
 		player_.SetIsGrounded(true);
 	}
 }
@@ -162,7 +162,7 @@ void PlayerOnHit::GroundOnHit(const std::weak_ptr<Collider> _hitCol)
 			groundedThisFrame = true;
 
 			// ‰ñ“]‚ðŒ³‚É–ß‚·
-			player_.GetAction().lock()->ResetAxisX();
+			player_.GetAction().ResetAxisX();
 		}
 	}
 

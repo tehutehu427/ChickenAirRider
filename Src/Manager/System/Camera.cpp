@@ -35,7 +35,6 @@ Camera::Camera(int _userNum)
 	updateFunc_[static_cast<int>(MODE::FREE_CONTROLL)] = &Camera::UpdateFreeControll;
 	updateFunc_[static_cast<int>(MODE::FIXED_UP)] = &Camera::UpdateFixedUp;
 	updateFunc_[static_cast<int>(MODE::FIXED_DIAGONAL)] = &Camera::UpdateFixedDiagonal;
-	updateFunc_[static_cast<int>(MODE::MAX)] = nullptr;
 }
 
 Camera::~Camera(void)

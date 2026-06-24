@@ -26,8 +26,8 @@ GameMain::GameMain(SceneGame& _parent)
 	update_.emplace(STATE::FIN, [this](void) {UpdateFinish(); });
 
 	//描画
-	draw_.emplace(STATE::GAME, [this](void) {DrawGame(); });
-	draw_.emplace(STATE::FIN, [this](void) {DrawFinish(); });
+	draw_.emplace(STATE::GAME, [this](const Camera& _camera) {DrawGame(_camera); });
+	draw_.emplace(STATE::FIN, [this](const Camera& _camera) {DrawFinish(_camera); });
 }
 
 GameMain::~GameMain(void)
@@ -64,7 +64,7 @@ void GameMain::Init(void)
 	plMng.Init();
 
 	//スカイドーム
-	sky_ = std::make_unique<SkyDome>();
+	sky_ = std::make_shared<SkyDome>();
 	sky_->Load();
 	sky_->Init();
 
@@ -97,10 +97,10 @@ void GameMain::Update(void)
 	update_[state_]();
 }
 
-void GameMain::Draw(void)
+void GameMain::Draw(const Camera& _camera)
 {
 	//各描画
-	draw_[state_]();
+	draw_[state_](_camera);
 }
 
 void GameMain::Release(void)
@@ -126,10 +126,10 @@ void GameMain::Release(void)
 
 void GameMain::DebugDraw(void)
 {
-	//シーン名
-	DrawString(0, 0, L"MainGame", 0xffffff);
+	////シーン名
+	//DrawString(0, 0, L"MainGame", 0xffffff);
 
-	DrawBox(100, 100, 924, 540, 0x0000ff, true);
+	//DrawBox(100, 100, 924, 540, 0x0000ff, true);
 }
 
 void GameMain::UpdateGame(void)
@@ -220,7 +220,7 @@ void GameMain::UpdateFinish(void)
 	}
 }
 
-void GameMain::DrawGame(void)
+void GameMain::DrawGame(const Camera& _camera)
 {
 #ifdef _DEBUG
 
@@ -237,7 +237,7 @@ void GameMain::DrawGame(void)
 	auto& itemMng = ItemManager::GetInstance();
 
 	//ステージの描画
-	stgMng.Draw();
+	stgMng.Draw(_camera);
 
 	//機体の描画
 	machineMng.Draw();
@@ -249,8 +249,8 @@ void GameMain::DrawGame(void)
 	plMng.Draw();
 }
 
-void GameMain::DrawFinish(void)
+void GameMain::DrawFinish(const Camera& _camera)
 {
 	//通常描画
-	DrawGame();
+	DrawGame(_camera);
 }

@@ -4,8 +4,8 @@
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/SoundManager.h"
 #include"../Manager/Game/GameSetting.h"
+#include"../Manager/Game/HUDManager.h"
 #include"../Manager/Game/CollisionManager.h"
-#include"../Manager/Game/SplitScreenManager.h"
 #include"../Manager/Game/GravityManager.h"
 #include"../Manager/Game/StageManager.h"
 #include"../Manager/Game/MachineManager.h"
@@ -39,13 +39,6 @@ SceneGame::~SceneGame(void)
 	CollisionManager::GetInstance().Destroy();
 	SoundManager::GetInstance().StopAll();
 	SingletonRegistry::GetInstance().Delete(SingletonRegistry::DESTROY_TIMING::GAME_END);
-
-	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
-	{
-		SplitScreenManager::GetInstance().SubDraw(SplitScreenManager::DRAW_TYPE::CHARGE_GAUGE,i);
-		SplitScreenManager::GetInstance().SubDraw(SplitScreenManager::DRAW_TYPE::HEALTH,i);
-		SplitScreenManager::GetInstance().SubDraw(SplitScreenManager::DRAW_TYPE::CHECK_PARAM,i);
-	}
 }
 
 void SceneGame::Load(void)
@@ -58,6 +51,9 @@ void SceneGame::Load(void)
 
 void SceneGame::Init(void)
 {
+	//画面UIの生成
+	HUDManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
+
 	//当たり判定管理の生成
 	CollisionManager::CreateInstance();
 
@@ -93,9 +89,6 @@ void SceneGame::Update(void)
 {
 	//基本更新
 	game_->Update();
-
-	//UI状態の更新
-	SplitScreenManager::GetInstance().Update();
 }
 
 void SceneGame::Draw(const Camera& _camera)

@@ -32,7 +32,7 @@ void LastGameBase::Init(void)
 	const int plNum = GameSetting::GetInstance().GetPlayerNum();
 
 	//スカイドーム
-	sky_ = std::make_unique<SkyDome>();
+	sky_ = std::make_shared<SkyDome>();
 	sky_->Load();
 	sky_->Init();
 

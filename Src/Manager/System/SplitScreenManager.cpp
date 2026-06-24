@@ -16,6 +16,10 @@ void SplitScreenManager::LoadOutSide(void)
 	setShader_[static_cast<int>(SHADER_TYPE::MONO)] = &SplitScreenManager::SetMonoShader;
 	setShader_[static_cast<int>(SHADER_TYPE::SCAN_LINE)] = &SplitScreenManager::SetScanLineShader;
 
+	updateShader_[static_cast<int>(SHADER_TYPE::DEFAULT)] = &SplitScreenManager::UpdateDefaultShader;
+	updateShader_[static_cast<int>(SHADER_TYPE::MONO)] = &SplitScreenManager::UpdateMonoShader;
+	updateShader_[static_cast<int>(SHADER_TYPE::SCAN_LINE)] = &SplitScreenManager::UpdateScanLineShader;
+
 	//レンダーの作成
 	pixelRenderer_ = std::make_unique<PixelRenderer>();
 }
@@ -29,13 +33,14 @@ void SplitScreenManager::Init(void)
 	activeViewCount_ = 0;
 }
 
-void SplitScreenManager::Update(void)
+void SplitScreenManager::UpdateShader(const int _index)
 {
+	(this->*updateShader_[static_cast<int>(splitViews_[_index].shader.type)])(_index);
 }
 
 void SplitScreenManager::Destroy(void)
 {
-	//描画スクリーンの削除
+	//分割スクリーンの破棄
 	for (auto& view : splitViews_)
 	{
 		//スクリーンがあるなら
@@ -45,16 +50,19 @@ void SplitScreenManager::Destroy(void)
 			DeleteGraph(view.renderScreen);
 			view.renderScreen = -1;
 		}
-	}
 
-	//描画情報の初期化
-	splitViews_.fill({});
+		//その他要素の破棄
+		view.camera.reset();
+		view.viewport = {};
+		view.material.reset();
+		view.shader = {};
+	}
 }
 
-void SplitScreenManager::BeginView(const int _playerIndex)
+void SplitScreenManager::BeginView(const int _index)
 {
 	//描画情報
-	auto& view = splitViews_[_playerIndex];
+	auto& view = splitViews_[_index];
 
 	//スクリーンがないなら
 	if (view.renderScreen == -1)return;
@@ -81,6 +89,9 @@ void SplitScreenManager::Composite(void)
 	//通常スクリーン
 	SetDrawScreen(DX_SCREEN_BACK);
 
+	//スクリーンのクリア
+	ClearDrawScreen();
+
 	//分割スクリーンの合成
 	for (int i = 0; i < activeViewCount_; ++i)
 	{
@@ -97,6 +108,9 @@ void SplitScreenManager::Composite(void)
 
 void SplitScreenManager::CreateSplitViews(const int _playerCnt, const int _screenW, const int _screenH)
 {
+	//元の数と同じなら何もしない
+	if (activeViewCount_ == _playerCnt)return;
+
 	//初期化
 	Init();
 
@@ -132,22 +146,23 @@ void SplitScreenManager::CreateSplitViews(const int _playerCnt, const int _scree
 	}
 }
 
-void SplitScreenManager::SetCamera(const int _playerIndex, const std::shared_ptr<Camera>& _camera)
+void SplitScreenManager::SetCamera(const int _index, const std::shared_ptr<Camera>& _camera)
 {
 	//カメラの設定
-	splitViews_[_playerIndex].camera = _camera;
+	splitViews_[_index].camera = _camera;
 }
 
-const SplitScreenManager::Viewport& SplitScreenManager::GetViewport(const int _playerIndex)const
+const SplitScreenManager::Viewport& SplitScreenManager::GetViewport(const int _index)const
 {
 	//ビューポートの取得
-	return splitViews_[_playerIndex].viewport;
+	return splitViews_[_index].viewport;
 }
 
-void SplitScreenManager::SetShader(const int _playerIndex, const SHADER_TYPE& _type)
+void SplitScreenManager::SetShader(const int _index, const SHADER_TYPE& _type)
 {
 	//シェーダ生成
-	(this->*setShader_[static_cast<int>(_type)])(_playerIndex);
+	splitViews_[_index].shader.type = _type;
+	(this->*setShader_[static_cast<int>(_type)])(_index);
 }
 
 SplitScreenManager::SplitScreenManager(void)
@@ -208,6 +223,7 @@ void SplitScreenManager::UpdateScanLineShader(const int _index)
 
 	//定数バッファ用
 	int constBufIndex = 0;
+	FLOAT4 constBuf = { shader.cnt,0.0f,0.0f,0.0f };
 
-	splitViews_[_index].material->SetConstBuf(constBufIndex,)
+	splitViews_[_index].material->SetConstBuf(constBufIndex, constBuf);
 }

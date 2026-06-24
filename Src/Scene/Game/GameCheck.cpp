@@ -6,6 +6,7 @@
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/SoundManager.h"
 #include "../Manager/System/SplitScreenManager.h"
+#include "../Manager/Game/HUDManager.h"
 #include "../Manager/Game/Timer.h"
 #include "../Manager/Game/GameSetting.h"
 #include "GameCheck.h"
@@ -43,10 +44,10 @@ void GameCheck::Init(void)
 	//初期化
 	state_ = CHECK_STATE::PLAYER_PARAM;
 
-	//パラメーター確認
+	//パラメーター確認を表示
 	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
 	{
-		SplitScreenManager::GetInstance().AddDraw(SplitScreenManager::DRAW_TYPE::CHECK_PARAM,i);
+		HUDManager::GetInstance().SetVisible(i, HUDManager::HUD_TYPE::PARAMETER, true);
 	}
 
 	//画像
@@ -98,10 +99,10 @@ void GameCheck::UpdatePlayerParam(void)
 		//最終ゲーム確認へ
 		state_ = CHECK_STATE::LAST_GAME;
 
-		//パラメーター確認
+		//パラメーター確認を非表示
 		for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
 		{
-			SplitScreenManager::GetInstance().SubDraw(SplitScreenManager::DRAW_TYPE::CHECK_PARAM, i);
+			HUDManager::GetInstance().SetVisible(i, HUDManager::HUD_TYPE::PARAMETER, false);
 		}
 	}
 }

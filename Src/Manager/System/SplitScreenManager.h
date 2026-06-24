@@ -41,10 +41,10 @@ public:
 	void Init(void)override;
 
 	//更新
-	void Update(void);
+	void UpdateShader(const int _index);
 
 	//描画始め処理
-	void BeginView(const int _playerIndex);
+	void BeginView(const int _index);
 
 	//分割スクリーン合成
 	void Composite(void);
@@ -56,13 +56,13 @@ public:
 	const int GetActiveViewCount(void)const { return activeViewCount_; }
 
 	//カメラの設定
-	void SetCamera(const int _playerIndex, const std::shared_ptr<Camera>& _camera);
+	void SetCamera(const int _index, const std::shared_ptr<Camera>& _camera);
 
 	//ビューポートの取得
-	const Viewport& GetViewport(const int _playerIndex)const;
+	const Viewport& GetViewport(const int _index)const;
 
 	//シェーダーの設定
-	void SetShader(const int _playerIndex, const SHADER_TYPE& _type);
+	void SetShader(const int _index, const SHADER_TYPE& _type);
 
 private:
 

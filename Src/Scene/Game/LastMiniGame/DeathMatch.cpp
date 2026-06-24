@@ -81,10 +81,10 @@ void DeathMatch::Update(void)
 		const auto& pl = plMng.GetPlayer(i);
 
 		//機体から降りたら
-		if (pl.GetState() != Player::STATE::RIDE_MACHINE)
+		if (pl->GetState() != Player::STATE::RIDE_MACHINE)
 		{
 			//順位決定
-			ConfirmRank(pl.GetPlayerIndex());
+			ConfirmRank(pl->GetPlayerIndex());
 		}
 	}
 
@@ -101,7 +101,7 @@ void DeathMatch::Draw(const Camera& _camera)
 	auto& itemMng = ItemManager::GetInstance();
 
 	//ステージの描画
-	stgMng.Draw();
+	stgMng.Draw(_camera);
 
 	//アイテムの描画
 	itemMng.Draw();
