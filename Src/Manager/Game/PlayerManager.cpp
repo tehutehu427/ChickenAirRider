@@ -3,6 +3,7 @@
 #include"GameSetting.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
+#include"../Manager/System/SplitScreenManager.h"
 #include"../Object/Player/Player.h"
 #include "PlayerManager.h"
 
@@ -20,6 +21,7 @@ void PlayerManager::CreateInstance(void)
 void PlayerManager::Init(void)
 {
 	//インスタンス
+	auto& split = SplitScreenManager::GetInstance();
 	const auto& setting = GameSetting::GetInstance();
 	const int userNum = setting.GetUserNum();
 	const int plNum = setting.GetPlayerNum();
@@ -31,6 +33,7 @@ void PlayerManager::Init(void)
 		if (i < userNum)
 		{
 			CreateUserPlayer(i);
+			split.SetShader(i, static_cast<SplitScreenManager::SHADER_TYPE>(i));
 		}
 		//ユーザーが終わったらNPCを生成
 		else

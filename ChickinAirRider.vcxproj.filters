@@ -225,9 +225,6 @@
     <ClCompile Include="Src\Scene\Game\LastMiniGame\LastGameBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\Game\SplitScreenManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Object\Item\BattleItem\BattleItemBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -259,6 +256,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Manager\Game\HUDManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Manager\System\SplitScreenManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -710,9 +710,6 @@
     <ClInclude Include="Src\Scene\Game\LastMiniGame\LastGameBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\Game\SplitScreenManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Object\Item\BattleItem\BattleItemBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -747,6 +744,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Manager\Game\HUDManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Manager\System\SplitScreenManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -785,5 +785,7 @@
     <FxCompile Include="Src\Shader\PostEffect\Title.hlsl" />
     <FxCompile Include="Src\Shader\PostEffect\TitleUi.hlsl" />
     <FxCompile Include="Src\Shader\PostEffect\Number.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\Default.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\Sepia.hlsl" />
   </ItemGroup>
 </Project>

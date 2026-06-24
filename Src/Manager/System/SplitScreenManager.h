@@ -20,6 +20,7 @@ public:
 	{
 		DEFAULT,	//通常
 		MONO,		//モノトーン
+		SEPIA,		//セピア
 		SCAN_LINE,	//スキャンライン
 		MAX
 	};
@@ -116,10 +117,12 @@ private:
 	//ピクセルシェーダ生成
 	void SetDefaultShader(const int _index);
 	void SetMonoShader(const int _index);
+	void SetSepiaShader(const int _index);
 	void SetScanLineShader(const int _index);
 
 	//更新
 	void UpdateDefaultShader(const int _index);
 	void UpdateMonoShader(const int _index);
+	void UpdateSepiaShader(const int _index);
 	void UpdateScanLineShader(const int _index);
 };

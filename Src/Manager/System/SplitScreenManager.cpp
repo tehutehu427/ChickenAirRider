@@ -14,10 +14,12 @@ void SplitScreenManager::LoadOutSide(void)
 	//関数設定
 	setShader_[static_cast<int>(SHADER_TYPE::DEFAULT)] = &SplitScreenManager::SetDefaultShader;
 	setShader_[static_cast<int>(SHADER_TYPE::MONO)] = &SplitScreenManager::SetMonoShader;
+	setShader_[static_cast<int>(SHADER_TYPE::SEPIA)] = &SplitScreenManager::SetSepiaShader;
 	setShader_[static_cast<int>(SHADER_TYPE::SCAN_LINE)] = &SplitScreenManager::SetScanLineShader;
 
 	updateShader_[static_cast<int>(SHADER_TYPE::DEFAULT)] = &SplitScreenManager::UpdateDefaultShader;
 	updateShader_[static_cast<int>(SHADER_TYPE::MONO)] = &SplitScreenManager::UpdateMonoShader;
+	updateShader_[static_cast<int>(SHADER_TYPE::SEPIA)] = &SplitScreenManager::UpdateSepiaShader;
 	updateShader_[static_cast<int>(SHADER_TYPE::SCAN_LINE)] = &SplitScreenManager::UpdateScanLineShader;
 
 	//レンダーの作成
@@ -101,8 +103,15 @@ void SplitScreenManager::Composite(void)
 		//スクリーンがないなら
 		if (view.renderScreen == -1)continue;
 
+		//レンダー用
+		Vector2 renderPos = { view.viewport.x ,view.viewport.y};
+		Vector2 renderSize = { view.viewport.width,view.viewport.height};
+
+		//シェーダー描画
+		pixelRenderer_->Draw(*view.material, renderPos, renderSize);
+
 		//分割スクリーンの描画
-		DrawGraph(view.viewport.x, view.viewport.y, view.renderScreen, true);
+		//DrawGraph(view.viewport.x, view.viewport.y, view.renderScreen, true);
 	}
 }
 
@@ -160,9 +169,13 @@ const SplitScreenManager::Viewport& SplitScreenManager::GetViewport(const int _i
 
 void SplitScreenManager::SetShader(const int _index, const SHADER_TYPE& _type)
 {
+	//描画情報
+	auto& view = splitViews_[_index];
+
 	//シェーダ生成
-	splitViews_[_index].shader.type = _type;
+	view.shader.type = _type;
 	(this->*setShader_[static_cast<int>(_type)])(_index);
+	view.material->AddTextureBuf(view.renderScreen);
 }
 
 SplitScreenManager::SplitScreenManager(void)
@@ -181,7 +194,7 @@ void SplitScreenManager::CreateView(const int _index, const int _x, const int _y
 	//描画情報の作成
 	splitViews_[_index].viewport = { _x,_y,_width,_height };
 	splitViews_[_index].renderScreen = MakeScreen(_width, _height, true);
-	SetShader(_index, SHADER_TYPE::DEFAULT);
+	SetShader(_index, SHADER_TYPE::SEPIA);
 }
 
 void SplitScreenManager::SetDefaultShader(const int _index)
@@ -193,7 +206,13 @@ void SplitScreenManager::SetDefaultShader(const int _index)
 void SplitScreenManager::SetMonoShader(const int _index)
 {
 	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"Monotone.cso", 1);
-	splitViews_[_index].material->AddConstBuf({ 0.0f,0.0f,0.0f,0.0f });
+	splitViews_[_index].material->AddConstBuf({ 1.0f,1.0f,1.0f,1.0f });
+}
+
+void SplitScreenManager::SetSepiaShader(const int _index)
+{
+	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"Sepia.cso", 1);
+	splitViews_[_index].material->AddConstBuf({ 1.0f,1.0f,1.0f,1.0f });
 }
 
 void SplitScreenManager::SetScanLineShader(const int _index)
@@ -207,6 +226,10 @@ void SplitScreenManager::UpdateDefaultShader(const int _index)
 }
 
 void SplitScreenManager::UpdateMonoShader(const int _index)
+{
+}
+
+void SplitScreenManager::UpdateSepiaShader(const int _index)
 {
 }
 
