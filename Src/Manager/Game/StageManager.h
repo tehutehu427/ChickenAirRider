@@ -6,12 +6,16 @@
 #include"../Object/Common/Collider.h"
 #include"../Object/Stage/StageImportData.h"
 #include"../System/Camera.h"
+#include"../../Common/Singleton.h"
 
 class Geometry;
 class StageObject;
 
-class StageManager
+class StageManager : public Singleton<StageManager>
 {
+	//継承元のコンストラクタ等にアクセスするため
+	friend class Singleton<StageManager>;
+
 public:
 
 	//ゲームモードごとのステージ
@@ -23,16 +27,11 @@ public:
 		MAX
 	};
 
-	//インスタンス生成
-	static void CreateInstance(void);
-
-	//インスタンス取得
-	static StageManager& GetInstance(void) { return *instance_; }
-
 	//読み込み
-	void Load(void);
+	void LoadOutSide(void)override;
 
 	//初期化
+	void Init(void)override;
 	void Init(const MODE _mode, int _createNum = 1);
 
 	//更新
@@ -60,9 +59,6 @@ private:
 	std::unordered_map<std::string, std::function<int(void)>> modelId_;
 	std::unordered_map<std::string, Collider::TAG> tag_;
 
-	//静的インスタンス
-	static StageManager* instance_;
-
 	//ステージ
     std::vector<std::unique_ptr<StageObject>> stages_;
 
@@ -72,12 +68,8 @@ private:
 	//コンストラクタ
 	StageManager(void);
 
-	//コピー禁止
-	StageManager(const StageManager& _copy) = delete;
-	StageManager& operator= (const StageManager& _copy) = delete;
-
 	//デストラクタ
-	~StageManager(void);
+	~StageManager(void)override;
 
 	//更新
 	void UpdateNormal(void);

@@ -4,19 +4,9 @@
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
 #include"../Manager/System/SplitScreenManager.h"
+#include"../Manager/Game/HUDManager.h"
 #include"../Object/Player/Player.h"
 #include "PlayerManager.h"
-
-//静的インスタンスの初期化
-PlayerManager* PlayerManager::instance_ = nullptr;
-
-void PlayerManager::CreateInstance(void)
-{
-	if (instance_ == nullptr)
-	{
-		instance_ = new PlayerManager();
-	}
-}
 
 void PlayerManager::Init(void)
 {
@@ -26,6 +16,9 @@ void PlayerManager::Init(void)
 	const int userNum = setting.GetUserNum();
 	const int plNum = setting.GetPlayerNum();
 
+	//プレイヤーをクリアする
+	players_.clear();
+
 	//プレイヤーの生成
 	for (int i = 0; i < plNum; i++)
 	{
@@ -33,7 +26,7 @@ void PlayerManager::Init(void)
 		if (i < userNum)
 		{
 			CreateUserPlayer(i);
-			split.SetShader(i, static_cast<SplitScreenManager::SHADER_TYPE>(i));
+			split.SetShader(i, SplitScreenManager::SHADER_TYPE::GOD_RAY);
 		}
 		//ユーザーが終わったらNPCを生成
 		else
@@ -111,6 +104,7 @@ void PlayerManager::CreateUserPlayer(const int _playerIndex)
 {
 	//インスタンス
 	auto& scnMng = SceneManager::GetInstance();
+	auto& hud = HUDManager::GetInstance();
 
 	//プレイヤー
 	std::unique_ptr<Player> player = std::make_unique<Player>
@@ -120,12 +114,16 @@ void PlayerManager::CreateUserPlayer(const int _playerIndex)
 			static_cast<KeyConfig::JOYPAD_NO>(_playerIndex + 1 ),
 			static_cast<Collider::TAG>(_playerIndex)
 		);
-	players_.emplace_back(std::move(player));
 
 	//カメラ設定
 	auto camera = scnMng.GetCamera(_playerIndex).lock();
-	camera->SetFollow(&GetPlayer(_playerIndex)->GetTrans());
+	camera->SetFollow(&player->GetTrans());
 	camera->ChangeMode(Camera::MODE::FOLLOW_LEAP);
+
+	//HUDに設定
+	hud.SetPlayer(player.get(),_playerIndex);
+
+	players_.emplace_back(std::move(player));
 }
 
 void PlayerManager::CreateNpcPlayer(const int _playerIndex)

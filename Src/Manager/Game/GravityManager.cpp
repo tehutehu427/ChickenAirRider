@@ -2,36 +2,6 @@
 #include"../Utility/Utility.h"
 #include "GravityManager.h"
 
-//静的インスタンスの初期化
-GravityManager* GravityManager::instance_ = nullptr;
-
-GravityManager::GravityManager(void)
-{
-	slerpPow_ = 0.0f;
-}
-
-GravityManager::~GravityManager(void)
-{
-}
-
-void GravityManager::CreateInstance(void)
-{
-	if (instance_ == nullptr)
-	{
-		instance_ = new GravityManager();
-	}
-	instance_->Init();
-}
-
-GravityManager& GravityManager::GetInstance(void)
-{
-	if (instance_ == nullptr)
-	{
-		GravityManager::CreateInstance();
-	}
-	return *instance_;
-}
-
 void GravityManager::Destroy(void)
 {
 	if (instance_ != nullptr)
@@ -87,4 +57,13 @@ void GravityManager::Calculate(void)
 
 	// 求めた回転量で、現在の重力制御を回転させる(差が埋まる)
 	trans_.quaRot = Quaternion::Slerp(trans_.quaRot, rot.Mult(trans_.quaRot), slerpPow_);
+}
+
+GravityManager::GravityManager(void)
+{
+	slerpPow_ = 0.0f;
+}
+
+GravityManager::~GravityManager(void)
+{
 }

@@ -100,8 +100,8 @@ const Vector2F UserLogic::TurnValue(void)
 		//スティックの傾き
         ret.x -= static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_RIGHT)) / TURN_STICK;
         ret.x += static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_LEFT)) / TURN_STICK;
-        ret.y -= static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_UP)) / TURN_STICK;
-        ret.y += static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_DOWN)) / TURN_STICK;
+        ret.y += static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_UP)) / TURN_STICK;
+        ret.y -= static_cast<float>(key.PadStickOverSize(padNo_, KeyConfig::JOYPAD_STICK::L_STICK_DOWN)) / TURN_STICK;
     }
 
     return ret;

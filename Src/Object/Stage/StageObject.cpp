@@ -30,8 +30,6 @@ StageObject::StageObject(const StageImportData& _data,const int _modelId, const 
 	//ÉRÉâÉCÉ_ê∂ê¨
 	std::unique_ptr<Geometry> geo = createGeo_[data_.geometry]();
 	MakeCollider(_tag, std::move(geo), { Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT, _tag });
-
-	color_ = 0;
 }
 
 StageObject::~StageObject(void)
@@ -58,16 +56,11 @@ void StageObject::Update(void)
 
 void StageObject::Draw(void)
 {
-	//collider_[0]->GetGeometry().Draw(color_);
-
 	MV1DrawModel(trans_.modelId);
-
-	color_ = 0;
 }
 
 void StageObject::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
-	color_ = 0xff0000;
 }
 
 std::unique_ptr<Geometry> StageObject::MakeSphere(void)

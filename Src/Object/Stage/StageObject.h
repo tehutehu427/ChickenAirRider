@@ -44,9 +44,6 @@ private:
 	//“–‚½‚è”»’èŒ`ó
 	std::unordered_map<std::string, std::function<std::unique_ptr<Geometry>(void)>> createGeo_;
 
-	//F
-	unsigned int color_;
-
 	//Œ`ó¶¬
 	std::unique_ptr<Geometry> MakeSphere(void);
 	std::unique_ptr<Geometry> MakeCapsule(void);

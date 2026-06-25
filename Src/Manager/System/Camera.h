@@ -7,7 +7,6 @@
 class Transform;
 class PixelMaterial;
 class PixelRenderer;
-class SkyDome;
 
 class Camera
 {
@@ -112,14 +111,8 @@ public:
 	void Update(void);
 	
 	//DxLibにカメラの設定を反映
-	void Apply(void);
+	void Apply(void)const;
 	
-	//描画
-	void Draw(const int _index = 0);
-
-	//スカイドームの描画
-	void DrawSkyDome(void);
-
 	// カメラ位置の取得
 	VECTOR GetPos(void) const;
 
@@ -139,13 +132,13 @@ public:
 	VECTOR GetForward(void) const;
 
 	// カメラの設定
-	void CameraSetting(void);
+	void CameraSetting(void)const;
 
 	// カメラモードの取得
-	MODE GetMode(void) { return mode_; }
+	const MODE& GetMode(void)const { return mode_; }
 
 	// カメラモードの設定
-	void ChangeMode(MODE mode);
+	void ChangeMode(const MODE& mode);
 
 	// 追従対象の設定
 	void SetFollow(const Transform* follow);
@@ -161,12 +154,6 @@ public:
 
 	//回転力設定
 	void SetRotPow(const float _rotPow) { rotPow_ = _rotPow; }
-
-	//カメラのポストエフェクト用スクリーンのサイズを変更
-	void SetPostEffectScreenSize(const int _sizeX, const int _sizeY, const int _index);
-
-	//スカイドームの設定
-	void SetSkyDome(const std::weak_ptr<SkyDome> _sky) { sky_ = _sky; }
 
 private:
 
@@ -208,9 +195,6 @@ private:
 
 	//カメラ速度
 	VECTOR vel_;
-
-	//シェーダー
-	std::weak_ptr<SkyDome> sky_;
 
 	//カメラ状態関数ポインタ用
 	using UpdateFunc = void (Camera::*)(void);

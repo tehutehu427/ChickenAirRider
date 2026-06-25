@@ -1,21 +1,19 @@
 #pragma once
 #include<vector>
 #include<memory>
+#include"../../Common/Singleton.h"
 
 class Player;
 
-class PlayerManager
+class PlayerManager : public Singleton<PlayerManager>
 {
+	//継承元のコンストラクタ等にアクセスするため
+	friend class Singleton<PlayerManager>;
+
 public:
 
-	//インスタンス生成
-	static void CreateInstance(void);
-
-	//インスタンス取得
-	static PlayerManager& GetInstance(void) { return *instance_; }
-
 	//初期化
-	void Init(void);
+	void Init(void)override;
 
 	//更新
 	void Update(void);
@@ -30,7 +28,7 @@ public:
 	const Player* GetPlayer(const int _playerIndex) { return players_[_playerIndex].get(); }
 
 	//プレイヤーの数の取得
-	const int GetPlayerSize(void) { return players_.size(); }
+	const int GetPlayerSize(void) { return static_cast<int>(players_.size()); }
 
 	//プレイヤーの状態の初期化
 	void ResetPlayer(const VECTOR _pos = {0.0f,0.0f,0.0f});
@@ -46,9 +44,6 @@ public:
 
 private:
 
-	//静的インスタンス
-	static PlayerManager* instance_;
-
 	//プレイヤー
 	std::vector<std::unique_ptr<Player>> players_;
 
@@ -58,12 +53,8 @@ private:
 	//コンストラクタ
 	PlayerManager(void);
 
-	//コピー禁止
-	PlayerManager(const PlayerManager& _copy) = delete;
-	PlayerManager& operator= (const PlayerManager& _copy) = delete;
-
 	//デストラクタ
-	~PlayerManager(void);
+	~PlayerManager(void)override;
 
 	/// @brief プレイヤーの生成
 	/// @param _playerIndex プレイヤー番号

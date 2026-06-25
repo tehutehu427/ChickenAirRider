@@ -1,16 +1,19 @@
 #pragma once
-
 #include<vector>
 #include<memory>
 #include<map>
 #include<functional>
 #include"../../Object/Common/Collider.h"
 #include"../../Object/ObjectBase.h"
+#include"../../Common/Singleton.h"
 
 class Geometry;
 
-class CollisionManager
+class CollisionManager : public Singleton<CollisionManager>
 {
+	//継承元のコンストラクタ等にアクセスするため
+	friend class Singleton<CollisionManager>;
+
 public:
 
 	//当たり判定をする範囲
@@ -21,12 +24,6 @@ public:
 	//更新用
 	static constexpr int COL_UPDATE_FRAME = 0;		//更新ディレイフレーム
 	
-	//インスタンス生成
-	static void CreateInstance(void);
-
-	//インスタンスの取得
-	static CollisionManager& GetInstance(void) { return *instance_; }
-
 	//コライダの追加
 	void AddCollider(const std::shared_ptr<Collider> _collider);
 
@@ -37,12 +34,9 @@ public:
 	void Update(void);
 
 	//削除
-	void Destroy(void);
+	void Destroy(void)override;
 
 private:
-
-	//静的インスタンス
-	static CollisionManager* instance_;
 
 	//当たり判定格納
 	std::vector<std::shared_ptr<Collider>>colliders_;
@@ -53,12 +47,8 @@ private:
 	//コンストラクタ
 	CollisionManager(void);
 
-	//コピーの禁止
-	CollisionManager(const CollisionManager& _copy) = delete;
-	CollisionManager& operator= (const CollisionManager& _copy) = delete;
-
 	//デストラクタ
-	~CollisionManager(void);
+	~CollisionManager(void)override;
 
 	/// @brief オブジェクトの距離による当たり判定前の判定
 	/// @param _obj1 オブジェクト1

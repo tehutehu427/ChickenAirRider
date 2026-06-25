@@ -21,7 +21,7 @@ public:
 		//¶¬
 		instance_ = new T();
 
-		//“Ç‚Ýž‚Ý‚Æ‰Šú‰»
+		//“Ç‚Ýž‚Ý
 		instance_->LoadOutSide();
 		instance_->Init();
 

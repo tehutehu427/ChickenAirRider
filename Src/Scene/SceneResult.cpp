@@ -41,9 +41,9 @@ void SceneResult::Init(void)
 {
 	//インスタンス
 	auto& scnMng = SceneManager::GetInstance();
-	auto& plMng = PlayerManager::GetInstance();
 	auto& res = ResourceManager::GetInstance();
 	auto& split = SplitScreenManager::GetInstance();
+	auto& plMng = PlayerManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
 	const auto& mainCamera = scnMng.GetCamera(0).lock();
 

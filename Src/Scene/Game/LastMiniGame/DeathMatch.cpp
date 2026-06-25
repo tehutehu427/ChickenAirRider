@@ -1,5 +1,6 @@
 #include "../pch.h"
 #include "../Application.h"
+#include "../Manager/Game/HUDManager.h"
 #include "../Manager/Game/CollisionManager.h"
 #include "../Manager/Game/GameSetting.h"
 #include "../Manager/Game/StageManager.h"
@@ -99,6 +100,9 @@ void DeathMatch::Draw(const Camera& _camera)
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
+
+	//スカイドームを描画
+	sky_->Draw(_camera.GetPos());
 
 	//ステージの描画
 	stgMng.Draw(_camera);

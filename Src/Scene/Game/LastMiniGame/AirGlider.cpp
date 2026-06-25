@@ -4,6 +4,7 @@
 #include "../Manager/Game/GameSetting.h"
 #include "../Manager/Game/StageManager.h"
 #include "../Manager/Game/PlayerManager.h"
+#include "../../../Object/SkyDome/SkyDome.h"
 #include "../Object/Player/Player.h"
 #include "AirGlider.h"
 
@@ -99,6 +100,9 @@ void AirGlider::Draw(const Camera& _camera)
 	auto& setting = GameSetting::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
+
+	//スカイドームを描画
+	sky_->Draw(_camera.GetPos());
 
 	//ステージの描画
 	stgMng.Draw(_camera);

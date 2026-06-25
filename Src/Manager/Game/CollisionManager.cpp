@@ -6,18 +6,6 @@
 #include"../Utility/Utility.h"
 #include "CollisionManager.h"
 
-//静的インスタンスの初期化
-CollisionManager* CollisionManager::instance_ = nullptr;
-
-void CollisionManager::CreateInstance(void)
-{
-	//インスタンスの初期生成
-	if (instance_ == nullptr)
-	{
-		instance_ = new CollisionManager();
-	}
-}
-
 void CollisionManager::AddCollider(const std::shared_ptr<Collider> _collider)
 {
 	//コライダの追加

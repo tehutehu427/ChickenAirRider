@@ -1,17 +1,18 @@
-#include"../pch.h"
-#include "Camera.h"
+#include "../pch.h"
+#include "../Application.h"
 #include "../FpsControl/FpsControl.h"
 #include "../Scene/SceneTitle.h"
 #include "../Scene/Select/SceneSelect.h"
 #include "../Scene/Select/SceneOption.h"
 #include "../Scene/Game/SceneGame.h"
 #include "../Scene/SceneResult.h"
+#include "../Game/HUDManager.h"
 #include "../Game/GameSetting.h"
 #include "../Game/GlobalUIManager.h"
 #include "../Game/Timer.h"
-#include"../Application.h"
-#include"SplitScreenManager.h"
-#include"SceneManager.h"
+#include "SplitScreenManager.h"
+#include "Camera.h"
+#include "SceneManager.h"
 
 SceneManager::SceneManager(void)
 {
@@ -58,6 +59,9 @@ void SceneManager::Init(void)
 
 	//分割スクリーン
 	SplitScreenManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
+
+	//画面UIの生成
+	HUDManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//初期シーン
 	sceneId_ = SCENE_ID::TITLE;
@@ -186,6 +190,9 @@ void SceneManager::Draw(void)
 
 	//分割スクリーン合成
 	split.Composite();
+
+	//HUDの描画
+	HUDManager::GetInstance().Draw();
 
 	//全体UIの描画
 	GlobalUIManager::GetInstance().Draw();

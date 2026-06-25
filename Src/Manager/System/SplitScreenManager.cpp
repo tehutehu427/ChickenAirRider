@@ -12,15 +12,17 @@ void SplitScreenManager::LoadOutSide(void)
 	//pixelMaterials_[static_cast<int>(SHADER_TYPE::MONO)] = std::make_unique<PixelMaterial>(L"Monotone.cso", 1);
 
 	//関数設定
-	setShader_[static_cast<int>(SHADER_TYPE::DEFAULT)] = &SplitScreenManager::SetDefaultShader;
-	setShader_[static_cast<int>(SHADER_TYPE::MONO)] = &SplitScreenManager::SetMonoShader;
-	setShader_[static_cast<int>(SHADER_TYPE::SEPIA)] = &SplitScreenManager::SetSepiaShader;
-	setShader_[static_cast<int>(SHADER_TYPE::SCAN_LINE)] = &SplitScreenManager::SetScanLineShader;
+	setShader_[static_cast<int>(SHADER_TYPE::DEFAULT)] = &SplitScreenManager::SetDefault;
+	setShader_[static_cast<int>(SHADER_TYPE::MONO)] = &SplitScreenManager::SetMono;
+	setShader_[static_cast<int>(SHADER_TYPE::SEPIA)] = &SplitScreenManager::SetSepia;
+	setShader_[static_cast<int>(SHADER_TYPE::SCAN_LINE)] = &SplitScreenManager::SetScanLine;
+	setShader_[static_cast<int>(SHADER_TYPE::GOD_RAY)] = &SplitScreenManager::SetGodRay;
 
-	updateShader_[static_cast<int>(SHADER_TYPE::DEFAULT)] = &SplitScreenManager::UpdateDefaultShader;
-	updateShader_[static_cast<int>(SHADER_TYPE::MONO)] = &SplitScreenManager::UpdateMonoShader;
-	updateShader_[static_cast<int>(SHADER_TYPE::SEPIA)] = &SplitScreenManager::UpdateSepiaShader;
-	updateShader_[static_cast<int>(SHADER_TYPE::SCAN_LINE)] = &SplitScreenManager::UpdateScanLineShader;
+	updateShader_[static_cast<int>(SHADER_TYPE::DEFAULT)] = &SplitScreenManager::UpdateDefault;
+	updateShader_[static_cast<int>(SHADER_TYPE::MONO)] = &SplitScreenManager::UpdateMono;
+	updateShader_[static_cast<int>(SHADER_TYPE::SEPIA)] = &SplitScreenManager::UpdateSepia;
+	updateShader_[static_cast<int>(SHADER_TYPE::SCAN_LINE)] = &SplitScreenManager::UpdateScanLine;
+	updateShader_[static_cast<int>(SHADER_TYPE::GOD_RAY)] = &SplitScreenManager::UpdateGodRay;
 
 	//レンダーの作成
 	pixelRenderer_ = std::make_unique<PixelRenderer>();
@@ -194,46 +196,52 @@ void SplitScreenManager::CreateView(const int _index, const int _x, const int _y
 	//描画情報の作成
 	splitViews_[_index].viewport = { _x,_y,_width,_height };
 	splitViews_[_index].renderScreen = MakeScreen(_width, _height, true);
-	SetShader(_index, SHADER_TYPE::SEPIA);
+	SetShader(_index, SHADER_TYPE::DEFAULT);
 }
 
-void SplitScreenManager::SetDefaultShader(const int _index)
+void SplitScreenManager::SetDefault(const int _index)
 {
 	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"Default.cso", 1);
 	splitViews_[_index].material->AddConstBuf({ 0.0f,0.0f,0.0f,0.0f });
 }
 
-void SplitScreenManager::SetMonoShader(const int _index)
+void SplitScreenManager::SetMono(const int _index)
 {
 	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"Monotone.cso", 1);
 	splitViews_[_index].material->AddConstBuf({ 1.0f,1.0f,1.0f,1.0f });
 }
 
-void SplitScreenManager::SetSepiaShader(const int _index)
+void SplitScreenManager::SetSepia(const int _index)
 {
 	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"Sepia.cso", 1);
 	splitViews_[_index].material->AddConstBuf({ 1.0f,1.0f,1.0f,1.0f });
 }
 
-void SplitScreenManager::SetScanLineShader(const int _index)
+void SplitScreenManager::SetScanLine(const int _index)
 {
 	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"ScanLine.cso", 1);
 	splitViews_[_index].material->AddConstBuf({ 0.0f,0.0f,0.0f,0.0f });
 }
 
-void SplitScreenManager::UpdateDefaultShader(const int _index)
+void SplitScreenManager::SetGodRay(const int _index)
+{
+	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"GodRay.cso", 1);
+	splitViews_[_index].material->AddConstBuf({ 0.1f, 0.0f,0.95f, 0.7f });
+}
+
+void SplitScreenManager::UpdateDefault(const int _index)
 {
 }
 
-void SplitScreenManager::UpdateMonoShader(const int _index)
+void SplitScreenManager::UpdateMono(const int _index)
 {
 }
 
-void SplitScreenManager::UpdateSepiaShader(const int _index)
+void SplitScreenManager::UpdateSepia(const int _index)
 {
 }
 
-void SplitScreenManager::UpdateScanLineShader(const int _index)
+void SplitScreenManager::UpdateScanLine(const int _index)
 {
 	//デルタタイム
 	float delta = SceneManager::GetInstance().GetDeltaTime();
@@ -249,4 +257,8 @@ void SplitScreenManager::UpdateScanLineShader(const int _index)
 	FLOAT4 constBuf = { shader.cnt,0.0f,0.0f,0.0f };
 
 	splitViews_[_index].material->SetConstBuf(constBufIndex, constBuf);
+}
+
+void SplitScreenManager::UpdateGodRay(const int _index)
+{
 }

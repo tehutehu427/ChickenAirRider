@@ -3,6 +3,7 @@
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/KeyConfig.h"
 #include "../Manager/System/Camera.h"
+#include "../Manager/Game/HUDManager.h"
 #include "../Manager/Game/GameSetting.h"
 #include "../Manager/Game/PlayerManager.h"
 #include "../Manager/System/SoundManager.h"
@@ -27,19 +28,21 @@ void LastGameBase::Init(void)
 	auto& res = ResourceManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
+	auto& hud = HUDManager::GetInstance();
 
 	//プレイヤーの人数
 	const int plNum = GameSetting::GetInstance().GetPlayerNum();
 
 	//スカイドーム
-	sky_ = std::make_shared<SkyDome>();
+	sky_ = std::make_unique<SkyDome>();
 	sky_->Load();
 	sky_->Init();
 
-	//スカイドームの設定
-	for (int i = 0; i < plNum; i++)
+	//HPとチャージゲージを表示
+	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
 	{
-		plMng.GetPlayer(i)->GetCamera().lock()->SetSkyDome(sky_);
+		hud.SetVisible(i, HUDManager::HUD_TYPE::CHARGE_GAUGE, true);
+		hud.SetVisible(i, HUDManager::HUD_TYPE::HEALTH, true);
 	}
 
 	//順位用
@@ -57,7 +60,6 @@ void LastGameBase::Init(void)
 
 	//BGM再生
 	snd.Play(SoundManager::SOUND_NAME::LAST_GAME_BGM, SoundManager::PLAYTYPE::LOOP);
-
 }
 
 void LastGameBase::Update(void)
@@ -107,11 +109,22 @@ void LastGameBase::Draw(const Camera& _camera)
 
 void LastGameBase::Release(void)
 {
+	//インスタンス
+	auto& setting = GameSetting::GetInstance();
+	auto& hud = HUDManager::GetInstance();
+	auto& snd = SoundManager::GetInstance();
+
 	//プレイヤーの数リセット
-	GameSetting::GetInstance().ResetPlayerNum();
+	setting.ResetPlayerNum();
+
+	//HPとチャージゲージを非表示
+	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
+	{
+		hud.SetVisible(i, HUDManager::HUD_TYPE::CHARGE_GAUGE, false);
+		hud.SetVisible(i, HUDManager::HUD_TYPE::HEALTH, false);
+	}
 
 	//BGMストップ
-	auto& snd = SoundManager::GetInstance();
 	snd.Stop(SoundManager::SOUND_NAME::LAST_GAME_BGM);
 }
 

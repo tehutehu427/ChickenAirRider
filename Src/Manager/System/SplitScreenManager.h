@@ -22,6 +22,7 @@ public:
 		MONO,		//モノトーン
 		SEPIA,		//セピア
 		SCAN_LINE,	//スキャンライン
+		GOD_RAY,	//ゴッドレイ
 		MAX
 	};
 
@@ -71,8 +72,8 @@ private:
 	struct ShaderData
 	{
 		SHADER_TYPE type = SHADER_TYPE::DEFAULT;	//シェーダーの種類
-		float cnt;									//カウンタ
-		std::vector<FLOAT4> constBuffers;			//定数バッファ
+		float cnt = 0.0f;							//カウンタ
+		std::vector<FLOAT4> constBuffers = {};		//定数バッファ
 	};
 
 	//分割描画情報
@@ -115,14 +116,16 @@ private:
 	void CreateView(const int _index, const int _x, const int _y, const int _width, const int _height);
 
 	//ピクセルシェーダ生成
-	void SetDefaultShader(const int _index);
-	void SetMonoShader(const int _index);
-	void SetSepiaShader(const int _index);
-	void SetScanLineShader(const int _index);
+	void SetDefault(const int _index);
+	void SetMono(const int _index);
+	void SetSepia(const int _index);
+	void SetScanLine(const int _index);
+	void SetGodRay(const int _index);
 
 	//更新
-	void UpdateDefaultShader(const int _index);
-	void UpdateMonoShader(const int _index);
-	void UpdateSepiaShader(const int _index);
-	void UpdateScanLineShader(const int _index);
+	void UpdateDefault(const int _index);
+	void UpdateMono(const int _index);
+	void UpdateSepia(const int _index);
+	void UpdateScanLine(const int _index);
+	void UpdateGodRay(const int _index);
 };

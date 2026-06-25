@@ -6,24 +6,17 @@
 #include "../Object/Stage/StageObject.h"
 #include "StageManager.h"
 
-//静的インスタンスの初期化
-StageManager* StageManager::instance_ = nullptr;
-
-void StageManager::CreateInstance(void)
-{
-	if (instance_ == nullptr)
-	{
-		instance_ = new StageManager();
-	}
-}
-
-void StageManager::Load(void)
+void StageManager::LoadOutSide(void)
 {
 	//ステージ情報
 	importData_.emplace(MODE::MAIN, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"MainStage.json")));
 	importData_.emplace(MODE::BATTLE, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"BattleStage.json")));
 	importData_.emplace(MODE::AIR_GLIDER, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"AirGliderStage.json")));
 	gliderStartStageData_ = (LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"AirGliderStartStage.json")));
+}
+
+void StageManager::Init(void)
+{
 }
 
 void StageManager::Init(const MODE _mode, int _createNum)

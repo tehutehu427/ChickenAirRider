@@ -14,6 +14,7 @@
 #include"../Manager/Game/PlayerManager.h"
 #include"../Manager/Game/ItemManager.h"
 #include"../Manager/Game/GlobalUIManager.h"
+#include"../Manager/Game/HUDManager.h"
 #include"../Object/SkyDome/SkyDome.h"
 #include"../Object/Player/Player.h"
 #include "GameMain.h"
@@ -37,7 +38,6 @@ GameMain::~GameMain(void)
 void GameMain::Init(void)
 {
 	//インスタンス
-	auto& scnMng = SceneManager::GetInstance();
 	auto& setMng = GameSetting::GetInstance();
 	auto& grvMng = GravityManager::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
@@ -46,6 +46,7 @@ void GameMain::Init(void)
 	auto& res = ResourceManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
 	auto& gloUi = GlobalUIManager::GetInstance();
+	auto& hud = HUDManager::GetInstance();
 
 	//タイマーの開始
 	gloUi.GetTimer().SetCountValid(true);
@@ -57,24 +58,27 @@ void GameMain::Init(void)
 	grvMng.Init();
 
 	//ステージ管理
-	stgMng.Load();
 	stgMng.Init(StageManager::MODE::MAIN);
 
 	//プレイヤーの初期化
 	plMng.Init();
 
+	//アイテムの初期化
+	itemMng.Init();
+
 	//スカイドーム
-	sky_ = std::make_shared<SkyDome>();
+	sky_ = std::make_unique<SkyDome>();
 	sky_->Load();
 	sky_->Init();
 
 	//プレイヤー人数
 	const int plNum = GameSetting::GetInstance().GetUserNum();
 
-	//スカイドームの設定
+	//HPとチャージゲージを表示
 	for (int i = 0; i < plNum; i++)
 	{
-		plMng.GetPlayer(i)->GetCamera().lock()->SetSkyDome(sky_);
+		hud.SetVisible(i, HUDManager::HUD_TYPE::CHARGE_GAUGE, true);
+		hud.SetVisible(i, HUDManager::HUD_TYPE::HEALTH, true);
 	}
 
 	//BGM読み込み
@@ -110,12 +114,23 @@ void GameMain::Release(void)
 	auto& setMng = GameSetting::GetInstance();
 	auto& gloUi = GlobalUIManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
+	auto& hud = HUDManager::GetInstance();
 
 	//タイマーの削除
 	gloUi.GetTimer().SetCountValid(false);
 	gloUi.GetTimer().SetCountView(false);
 	gloUi.GetTimer().SetTimeLimit(setMng.GetTimeLimit());
 	gloUi.SubDraw(GlobalUIManager::DRAW_TYPE::TIMER);
+
+	//プレイヤー人数
+	const int plNum = GameSetting::GetInstance().GetUserNum();
+
+	//HPとチャージゲージを非表示
+	for (int i = 0; i < plNum; i++)
+	{
+		hud.SetVisible(i, HUDManager::HUD_TYPE::CHARGE_GAUGE, false);
+		hud.SetVisible(i, HUDManager::HUD_TYPE::HEALTH, false);
+	}
 
 	//フィニッシュUIの削除
 	gloUi.SubDraw(GlobalUIManager::DRAW_TYPE::FINISH);
@@ -235,6 +250,9 @@ void GameMain::DrawGame(const Camera& _camera)
 	auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
+
+	//スカイドームを描画
+	sky_->Draw(_camera.GetPos());
 
 	//ステージの描画
 	stgMng.Draw(_camera);

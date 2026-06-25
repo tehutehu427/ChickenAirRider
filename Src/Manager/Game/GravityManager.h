@@ -2,30 +2,23 @@
 #include <DxLib.h>
 #include <memory>
 #include"../Object/Common/Transform.h"
-class GravityManager
+#include"../../Common/Singleton.h"
+
+class GravityManager : public Singleton<GravityManager>
 {
+	//継承元のコンストラクタ等にアクセスするため
+	friend class Singleton<GravityManager>;
+
 public:
 
 	//重力
 	static constexpr float GRAVITY_POW = 3.0f;
 
-	//コンストラクタ
-	GravityManager(void);
-	
-	//デストラクタ
-	~GravityManager(void);	
-
-	//静的にインスタンス生成
-	static void CreateInstance(void);
-
-	//静的にインスタンスを取得する
-	static GravityManager& GetInstance(void);
-
 	//解放
-	static void Destroy(void);
+	void Destroy(void)override;
 
 	//初期化
-	void Init(void);
+	void Init(void)override;
 
 	/// @brief 重力計算(ジャンプ行動など)
 	/// @param _dir 重力方向
@@ -38,8 +31,11 @@ public:
 
 private:
 
-	//インスタンス
-	static GravityManager* instance_;
+	//コンストラクタ
+	GravityManager(void);
+
+	//デストラクタ
+	~GravityManager(void)override;
 
 	//回転用
 	Transform trans_;

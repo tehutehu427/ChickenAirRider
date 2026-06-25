@@ -9,6 +9,7 @@
 #include "../Manager/Game/HUDManager.h"
 #include "../Manager/Game/Timer.h"
 #include "../Manager/Game/GameSetting.h"
+#include "../Object/SkyDome/SkyDome.h"
 #include "GameCheck.h"
 
 GameCheck::GameCheck(SceneGame& _parent)
@@ -99,6 +100,10 @@ void GameCheck::UpdatePlayerParam(void)
 		//最終ゲーム確認へ
 		state_ = CHECK_STATE::LAST_GAME;
 
+		//分割画面を一つに
+		auto& split = SplitScreenManager::GetInstance();
+		split.CreateSplitViews(1, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+
 		//パラメーター確認を非表示
 		for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
 		{
@@ -115,6 +120,17 @@ void GameCheck::UpdateLastGame(void)
 	//時間制限を過ぎたか
 	if (timer_->IsTimeOver())
 	{
+		//分割画面を人数分に
+		auto& scnMng = SceneManager::GetInstance();
+		auto& split = SplitScreenManager::GetInstance();
+		const int plNum = GameSetting::GetInstance().GetUserNum();
+		split.CreateSplitViews(plNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+		
+		for (int i = 0; i < plNum; i++)
+		{
+			split.SetCamera(i, scnMng.GetCamera(i).lock());
+		}
+
 		//最終ゲームへ
 		parent_.ChangeGameState(SceneGame::GAME_STATE::LAST);
 	}

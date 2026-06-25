@@ -41,6 +41,9 @@ void HUDManager::LoadOutSide(void)
 	defenceImg_ = res.Load(ResourceManager::SRC::DEFENCE).handleId_;
 	maxHealthImg_ = res.Load(ResourceManager::SRC::MAX_HEALTH).handleId_;
 
+	//チャージゲージカウント
+	gaugeCnt_ = 0.0f;
+
 	//マテリアル
 	material_ = std::make_unique<PixelMaterial>(L"GaugeMask.cso", 1);
 	material_->AddConstBuf({ 0.5f,0.5f,0.0f,gaugeCnt_ });
@@ -49,6 +52,19 @@ void HUDManager::LoadOutSide(void)
 
 void HUDManager::Init(void)
 {
+	//分割スクリーン
+	auto& split = SplitScreenManager::GetInstance();
+	int activeViewCnt = split.GetActiveViewCount();
+	int plNum = static_cast<int>(GameSetting::PLAYER_MAX_NUM) - 1;
+
+	for (int i = 0; i < activeViewCnt; i++)
+	{
+		for (int j = 0; j < plNum; j++)
+		{
+			//全描画を非表示
+			SetVisible(i, static_cast<HUD_TYPE>(j), false);
+		}
+	}
 }
 
 void HUDManager::Update(void)
@@ -143,8 +159,8 @@ void HUDManager::DrawChargeGauge(const int _playerIndex)
 	//中央位置
 	Vector2 gaugeCenter =
 	{
-		static_cast<int>(CHARGE_POS.x * view.width) - GAUGE_LOCAL_POS * scale,
-		static_cast<int>(CHARGE_POS.y * view.height) - GAUGE_LOCAL_POS * scale
+		view.x + static_cast<int>(CHARGE_POS.x * view.width) - GAUGE_LOCAL_POS * scale,
+		view.y + static_cast<int>(CHARGE_POS.y * view.height) - GAUGE_LOCAL_POS * scale
 	};
 
 	//合計サイズ
@@ -190,28 +206,30 @@ void HUDManager::DrawHealth(const int _playerIndex)
 
 	//割合
 	float rate = health / maxHealth;
+	float barWidth = HEALTH_BAR_WIDTH * scale;
+	float barHeight = HEALTH_BAR_HEIGHT * scale;
 
 	//位置
 	Vector2 pos = {};
-	pos.x = view.x + static_cast<int>(view.width + HEALTH_POS.x);
-	pos.y = view.y + static_cast<int>(view.height + HEALTH_POS.y);
-	float height = static_cast<int>(HEALTH_BAR_HEIGHT * rate);
-	float top = pos.y + (HEALTH_BAR_HEIGHT - height);
+	pos.x = view.x + static_cast<int>(view.width * HEALTH_POS.x);
+	pos.y = view.y + static_cast<int>(view.height * HEALTH_POS.y - barHeight);
+	float hpHeight = static_cast<int>(barHeight * rate);
+	float top = pos.y + (barHeight - hpHeight);
 	int frame = FRAME_SIZE * scale;
 
 	//枠
 	DrawBox(pos.x - frame,
-		top - frame,
-		pos.x + HEALTH_BAR_WIDTH + frame,
-		pos.y + HEALTH_BAR_HEIGHT + frame,
+		pos.y - frame,
+		pos.x + barWidth + frame,
+		pos.y + barHeight + frame,
 		Utility::GRAY, true);
 	//HPバー
 	if (health > 0.0f)
 	{
 		DrawBox(pos.x,
 			top,
-			pos.x + HEALTH_BAR_WIDTH, 
-			pos.y + HEALTH_BAR_HEIGHT, 
+			pos.x + barWidth,
+			pos.y + barHeight,
 			Utility::RED, true);
 	}
 }
@@ -227,6 +245,9 @@ void HUDManager::DrawParam(const int _playerIndex)
 	//分割
 	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
 	
+	//サイズ比率(XYほぼ同一なので統一)
+	float scale = static_cast<float>(view.width) / Application::SCREEN_SIZE_X;
+
 	//パラメーター
 	const auto& param = player->GetParam();
 
@@ -246,15 +267,19 @@ void HUDManager::DrawParam(const int _playerIndex)
 
 	//開始座標
 	Vector2 start = {};
-	start.x = view.x + static_cast<int>(view.width + PARAM_BOX_START_POS.x);
-	start.y = view.y + static_cast<int>(view.height + PARAM_BOX_START_POS.y);
+	start.x = view.x + static_cast<int>(view.width * PARAM_BOX_START_POS.x);
+	start.y = view.y + static_cast<int>(view.height * PARAM_BOX_START_POS.y);
 
 	//座標
 	int x;
 	int y;
 
 	//数値関係
-	int numberLocal = PARAM_NUMBER_LOCAL_POS - NUMBER_INTERVAL / 2;
+	int numberLocal = (PARAM_NUMBER_LOCAL_POS - NUMBER_INTERVAL / 2) * scale;
+	int powerUpInterval = POWER_UP_INTERVAL * scale;
+	int boxSize = PARAM_BOX_SIZE * scale;
+	int numberInterval = NUMBER_INTERVAL * scale;
+	int paramBoxInterval = PARAM_BOX_INTERVAL * scale;
 	int tens;
 	int one;
 	
@@ -264,24 +289,24 @@ void HUDManager::DrawParam(const int _playerIndex)
 	{
 		//座標の調整
 		x = start.x;
-		y = start.y + i * POWER_UP_INTERVAL;
+		y = start.y + i * powerUpInterval;
 
 		//アイコン
-		DrawRotaGraph(x, y, 1.0, 0.0, params[i].icon, true);
+		DrawRotaGraph(x, y, scale, 0.0, params[i].icon, true);
 
 		//数値
 		tens = params[i].value / 10;
 		one = params[i].value % 10;
 		x += numberLocal;
-		DrawRotaGraph(x, y, 1.0, 0.0, numImgs_[tens], true);
-		DrawRotaGraph(x + NUMBER_INTERVAL, y, 1.0, 0.0, numImgs_[one], true);
+		DrawRotaGraph(x, y, scale, 0.0, numImgs_[tens], true);
+		DrawRotaGraph(x + numberInterval, y, scale, 0.0, numImgs_[one], true);
 
 		//バー
-		x += PARAM_BOX_INTERVAL;
+		x += paramBoxInterval;
 		DrawBox(x,
-			y - PARAM_BOX_SIZE / 2,
-			x + PARAM_BOX_SIZE * params[i].value,
-			y + PARAM_BOX_SIZE / 2,
+			y - boxSize / 2,
+			x + boxSize * params[i].value,
+			y + boxSize / 2,
 			params[i].color,
 			true);
 	}

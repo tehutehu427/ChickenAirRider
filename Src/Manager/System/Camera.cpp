@@ -67,7 +67,7 @@ void Camera::Update(void)
 	}
 }
 
-void Camera::Apply(void)
+void Camera::Apply(void)const
 {
 	// クリップ距離を設定する(SetDrawScreenでリセットされる)
 	SetCameraNearFar(CAMERA_NEAR, CAMERA_FAR);
@@ -79,7 +79,7 @@ void Camera::Apply(void)
 	Effekseer_Sync3DSetting();
 }
 
-void Camera::CameraSetting()
+void Camera::CameraSetting(void)const
 {
 	// カメラの設定(位置と注視点による制御)
 	SetCameraPositionAndTargetAndUpVec(
@@ -89,60 +89,9 @@ void Camera::CameraSetting()
 	);
 }
 
-void Camera::Draw(const int _index)
-{
-	// ポストエフェクトの描画
-	//SetDrawScreen(postEffectScreen_);
-	//ClearDrawScreen();
-
-	////一人やゲームシーン以外ならメインスクリーン
-	//if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME || GameSetting::GetInstance().GetUserNum() <= 1)
-	//	material_->SetTextureBuf(0, SceneManager::GetInstance().GetMainScreen());
-	//else
-	//	material_->SetTextureBuf(0, SceneManager::GetInstance().GetScreen(_index));
-
-	////シェーダー描画
-	//renderer_->Draw();
-
-	////一人やゲームシーン以外ならメインスクリーン
-	//if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME || GameSetting::GetInstance().GetUserNum() <= 1)
-	//	SetDrawScreen(SceneManager::GetInstance().GetMainScreen());
-	//else
-	//	SetDrawScreen(SceneManager::GetInstance().GetScreen(_index));
-
-	//スクリーンに描画
-	//DrawGraph(0, 0, postEffectScreen_, true);
-}
-
-void Camera::DrawSkyDome(void)
-{
-	//スカイドーム
-	if (sky_.lock() == nullptr)return;
-	
-	sky_.lock()->Draw(followTransform_->pos);
-}
-
 void Camera::SetFollow(const Transform* follow)
 {
 	followTransform_ = follow;
-}
-
-void Camera::SetPostEffectScreenSize(const int _sizeX, const int _sizeY, const int _index)
-{
-	//一人なら再設定しない
-	if (GameSetting::GetInstance().GetUserNum() <= 1)return;
-
-	//material_.reset();
-	//renderer_.reset();
-
-	//material_ = std::make_unique<PixelMaterial>(L"GodRay.cso", 1);
-	//renderer_ = std::make_unique<PixelRenderer>(*material_);
-
-	////初期化
-	//material_->AddConstBuf(FLOAT4{ 0.1f, 0.0f,0.95f, 0.7f });
-	//material_->AddTextureBuf(SceneManager::GetInstance().GetScreen(_index));
-	//renderer_->MakeSquareVertex({ 0,0 }, { _sizeX, _sizeY });
-	//postEffectScreen_ = MakeScreen(_sizeX, _sizeY, true);
 }
 
 VECTOR Camera::GetPos(void) const
@@ -175,7 +124,7 @@ VECTOR Camera::GetForward(void) const
 	return VNorm(VSub(targetPos_, pos_));
 }
 
-void Camera::ChangeMode(MODE mode)
+void Camera::ChangeMode(const MODE& mode)
 {
 	// カメラの初期設定
 	SetDefault();
@@ -329,7 +278,7 @@ void Camera::SyncFollowLeap(void)
 
 void Camera::SyncFollowFPS(void)
 {
-	auto gIns = GravityManager::GetInstance();
+	auto& gIns = GravityManager::GetInstance();
 
 	// 同期先の位置
 	VECTOR pos = followTransform_->pos;
@@ -533,7 +482,7 @@ void Camera::UpdateFollowRotation(void)
 
 void Camera::UpdateSelfShot(void)
 {
-	auto gIns = GravityManager::GetInstance();
+	auto& gIns = GravityManager::GetInstance();
 
 	// 同期先の位置
 	VECTOR pos = followTransform_->pos;

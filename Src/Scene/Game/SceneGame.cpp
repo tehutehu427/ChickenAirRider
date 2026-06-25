@@ -33,10 +33,10 @@ SceneGame::SceneGame(void)
 
 SceneGame::~SceneGame(void)
 {
-	PlayerManager::GetInstance().Destroy();
-	StageManager::GetInstance().Destroy();
-	GravityManager::GetInstance().Destroy();
-	CollisionManager::GetInstance().Destroy();
+	//HUDの初期化
+	auto& hud = HUDManager::GetInstance();
+	hud.Init();
+
 	SoundManager::GetInstance().StopAll();
 	SingletonRegistry::GetInstance().Delete(SingletonRegistry::DESTROY_TIMING::GAME_END);
 }
@@ -51,35 +51,32 @@ void SceneGame::Load(void)
 
 void SceneGame::Init(void)
 {
-	//画面UIの生成
-	HUDManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
+	//インスタンス削除タイミング
+	auto timing = SingletonRegistry::DESTROY_TIMING::GAME_END;
+
+	//HUDの初期化
+	HUDManager::GetInstance().Init();
 
 	//当たり判定管理の生成
-	CollisionManager::CreateInstance();
+	CollisionManager::CreateInstance(timing);
 
 	//重力制御
-	GravityManager::CreateInstance();
+	GravityManager::CreateInstance(timing);
 
 	//ステージ管理の生成
-	StageManager::CreateInstance();
+	StageManager::CreateInstance(timing);
 
 	//機体管理の生成
-	MachineManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
+	MachineManager::CreateInstance(timing);
 
 	//キャラクター情報管理の生成
-	AnimationManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
+	AnimationManager::CreateInstance(timing);
 
 	//プレイヤー管理の生成
-	PlayerManager::CreateInstance();
+	PlayerManager::CreateInstance(timing);
 
 	//アイテム管理の生成
-	ItemManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::GAME_END);
-
-	////ユーザー数
-	//int userNum = GameSetting::GetInstance().GetUserNum();
-
-	////画面ごとのUI情報
-	//UIManager::GetInstance().CreateViewports(userNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+	ItemManager::CreateInstance(timing);
 
 	//ゲームの状態変更
 	ChangeGameState(GAME_STATE::MAIN);
@@ -89,6 +86,9 @@ void SceneGame::Update(void)
 {
 	//基本更新
 	game_->Update();
+
+	//HUD更新
+	HUDManager::GetInstance().Update();
 }
 
 void SceneGame::Draw(const Camera& _camera)

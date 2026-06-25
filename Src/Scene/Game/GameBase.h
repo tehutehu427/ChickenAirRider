@@ -34,6 +34,6 @@ protected:
 	SceneGame& parent_;
 
 	//スカイドーム
-	std::shared_ptr<SkyDome> sky_;
+	std::unique_ptr<SkyDome> sky_;
 };
 
