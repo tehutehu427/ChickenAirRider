@@ -419,6 +419,61 @@ bool KeyConfig::IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _ho
 	return false;
 }
 
+float KeyConfig::GetKeyTrgHoldCnt(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, TYPE type)
+{
+	if (type == TYPE::KEYBOARD_MOUSE || type == TYPE::ALL)
+	{
+		for (auto& key : keyInput_)
+		{
+			if (key.first != cType)
+			{
+				continue;
+			}
+			for (auto keyI : key.second)
+			{
+				return inputManager_->GetTrgHoldCnt(keyI);
+			}
+		}
+		for (auto& mouse : mouseInput_)
+		{
+			if (mouse.first != cType)
+			{
+				continue;
+			}
+			for (auto mouseI : mouse.second)
+			{
+				return inputManager_->GetMouseTrgHoldCnt(mouseI);
+			}
+		}
+	}
+	if (type == TYPE::PAD || type == TYPE::ALL)
+	{
+		for (auto& con : conInput_)
+		{
+			if (con.first != cType)
+			{
+				continue;
+			}
+			for (auto conI : con.second)
+			{
+				inputManager_->GetPadBtnTrgHoldCnt(no, conI);
+			}
+		}
+		for (auto& stick : stickInput_)
+		{
+			if (stick.first != cType)
+			{
+				continue;
+			}
+			for (auto stickI : stick.second)
+			{
+				return inputManager_->GetStickHoldCnt(no, stickI);
+			}
+		}
+	}
+	return 0.0f;
+}
+
 void KeyConfig::Add(CONTROL_TYPE type,int key )
 {
 	for (auto &keys : keyInput_)

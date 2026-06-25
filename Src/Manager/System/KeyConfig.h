@@ -170,6 +170,15 @@ public:
 	/// @return true:押されている
 	bool IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _holdTime, bool _isReset = false, TYPE type = TYPE::ALL);
 
+	/// <summary>
+	/// ボタンのホールド時間取得
+	/// </summary>
+	/// <param name="cType">操作名</param>
+	/// <param name="no">コントローラー番号</param>
+	/// @param type 入力タイプ
+	/// <returns>入力時間</returns>
+	float GetKeyTrgHoldCnt(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, TYPE type = TYPE::ALL);
+
 	/// @brief 対応キーを追加
 	/// @param type キーの種類
 	/// @param key 追加したい入力(キーボード)

@@ -210,6 +210,11 @@ bool InputManager::IsTrgHold(int key, float _holdTime, bool _isReset)
 	return false;
 }
 
+float InputManager::GetTrgHoldCnt(int key) const
+{
+	return Find(key).keyTrgHoldCnt;
+}
+
 Vector2 InputManager::GetMousePos(void) const
 {
 	return mousePos_;
@@ -490,6 +495,11 @@ bool InputManager::IsPadBtnTrgHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BT
 	return false;
 }
 
+float InputManager::GetPadBtnTrgHoldCnt(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN btn)const
+{
+	return padInfos_[static_cast<int>(no)].IsTrgHoldCnt[static_cast<int>(btn)];
+}
+
 bool InputManager::IsStickNew(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick) const
 {
 	for (auto& stickInfo : stickInfos_)
@@ -578,6 +588,27 @@ bool InputManager::IsStickHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK 
 	return false;
 }
 
+float InputManager::GetStickHoldCnt(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick)const
+{
+	for (auto& stickInfo : stickInfos_)
+	{
+		if (stickInfo.first != no)
+		{
+			continue;
+		}
+
+		for (auto& stickI : stickInfo.second)
+		{
+			if (stickI.key != stick)
+			{
+				continue;
+			}
+
+			return stickI.keyTrgHoldCnt;
+		}
+	}
+}
+
 bool InputManager::IsMouseNew(KeyConfig::MOUSE mouse)
 {
 	return FindMouse(mouse).keyNew;
@@ -605,4 +636,7 @@ bool InputManager::IsMouseTrgHold(KeyConfig::MOUSE mouse, float _holdTime, bool 
 	return false;
 }
 
-
+float InputManager::GetMouseTrgHoldCnt(KeyConfig::MOUSE mouse)
+{
+	return 0.0f;
+}

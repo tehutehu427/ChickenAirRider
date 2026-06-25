@@ -45,9 +45,9 @@ void HUDManager::LoadOutSide(void)
 	gaugeCnt_ = 0.0f;
 
 	//マテリアル
-	material_ = std::make_unique<PixelMaterial>(L"GaugeMask.cso", 1);
-	material_->AddConstBuf({ 0.5f,0.5f,0.0f,gaugeCnt_ });
-	material_->AddTextureBuf(gaugeMaskImg_);
+	chargeGaugeMaterial_ = std::make_unique<PixelMaterial>(L"GaugeMask.cso", 1);
+	chargeGaugeMaterial_->AddConstBuf({ 0.5f,0.5f,0.0f,gaugeCnt_ });
+	chargeGaugeMaterial_->AddTextureBuf(gaugeMaskImg_);
 }
 
 void HUDManager::Init(void)
@@ -171,9 +171,9 @@ void HUDManager::DrawChargeGauge(const int _playerIndex)
 	DrawRotaGraph(gaugeCenter.x, gaugeCenter.y, totalScale, 0.0, gaugeImg_, true);
 
 	//メーターの描画
-	material_->SetConstBuf(0, { 0.5f,0.5f,chargeCnt,gaugeCnt_ });
+	chargeGaugeMaterial_->SetConstBuf(0, { 0.5f,0.5f,chargeCnt,gaugeCnt_ });
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
-	renderer_.Draw(*material_, gaugeCenter - gaugeSize / 2, gaugeSize);
+	renderer_.Draw(*chargeGaugeMaterial_, gaugeCenter - gaugeSize / 2, gaugeSize);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
 	//速度計の描画(3桁までの描画)

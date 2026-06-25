@@ -122,7 +122,7 @@ private:
 	int maxHealthImg_;
 
 	//シェーダー
-	std::unique_ptr<PixelMaterial> material_;
+	std::unique_ptr<PixelMaterial> chargeGaugeMaterial_;
 	PixelRenderer renderer_;
 	float gaugeCnt_;
 

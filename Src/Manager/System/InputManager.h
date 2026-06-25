@@ -76,6 +76,9 @@ public:
 	// キーの押しっぱなし判定
 	bool IsTrgHold(int key, float _holdTime, bool _isReset = false);
 
+	//キーの押したカウント
+	float GetTrgHoldCnt(int key)const;
+
 	// マウス座標の取得
 	Vector2 GetMousePos(void) const;
 
@@ -98,19 +101,21 @@ public:
 	bool IsPadBtnTrgDown(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN btn) const;
 	bool IsPadBtnTrgUp(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN btn) const;
 	bool IsPadBtnTrgHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN btn, float _holdTime, bool _isReset);
+	float GetPadBtnTrgHoldCnt(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_BTN btn)const;
 
 	// スティックが倒されたか
 	bool IsStickNew(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick) const;
 	bool IsStickDown(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick) const;
 	bool IsStickUp(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick) const;
 	bool IsStickHold(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick, float _holdTime, bool _isReset);
+	float GetStickHoldCnt(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick)const;
 
 	//マウスが入力された
 	bool IsMouseNew(KeyConfig::MOUSE mouse);
 	bool IsMouseTrgUp(KeyConfig::MOUSE mouse);
 	bool IsMouseTrgDown(KeyConfig::MOUSE mouse);
 	bool IsMouseTrgHold(KeyConfig::MOUSE mouse, float _holdTime, bool _isReset);
-
+	float GetMouseTrgHoldCnt(KeyConfig::MOUSE mouse);
 
 private:
 
