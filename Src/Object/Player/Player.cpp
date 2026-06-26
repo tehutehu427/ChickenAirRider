@@ -71,15 +71,10 @@ Player::~Player(void)
 void Player::Load(void)
 {
 	//キャラのシャドウマップ
-	shadowMaterial_ = std::make_unique<ModelMaterial>(L"StdModelPS.cso", 3, L"StdModelVS", 0);
-	shadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
-	shadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
-	shadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
-	//キャラのシャドウマップ
-	charaShadowMaterial_ = std::make_unique<ModelMaterial>(L"StdModelPS.cso", 3, L"StdModelVS", 0);
-	charaShadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
-	charaShadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
-	charaShadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
+	stdMaterial_ = std::make_unique<ModelMaterial>(L"StdModelPS.cso", 3, L"StdModelVS", 0);
+	stdMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
+	stdMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
+	stdMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
 
 	//キャラクター
 	chara_ = std::make_unique<Character>();
@@ -464,13 +459,13 @@ void Player::DrawNormal(void)
 void Player::DrawRide(void)
 {
 	//キャラの描画
-	//modelRenderer_->Draw(chara_->GetModelId(), *charaShadowMaterial_);
+	modelRenderer_->Draw(chara_->GetModelId(), *stdMaterial_);
 
 	//機体の描画
-	//modelRenderer_->Draw(machine_->GetModelId(), *shadowMaterial_);
+	modelRenderer_->Draw(machine_->GetModelId(), *stdMaterial_);
 
-	chara_->Draw();
-	machine_->Draw();
+	//chara_->Draw();
+	//machine_->Draw();
 }
 
 void Player::SynchronizeChara(void)
