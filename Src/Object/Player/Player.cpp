@@ -339,6 +339,7 @@ void Player::ChangeActionNormal(void)
 	//マシン限定のアクションUIを非表示
 	hud.SetVisible(playerIndex_, HUDManager::HUD_TYPE::CHARGE_GAUGE, false);
 	hud.SetVisible(playerIndex_, HUDManager::HUD_TYPE::HEALTH, false);
+	hud.SetVisible(playerIndex_, HUDManager::HUD_TYPE::GET_OFF, false);
 
 	//キャラクターの行動に変更
 	action_ = std::make_unique<CharacterAction>(*this, *chara_, *logic_);
@@ -371,6 +372,7 @@ void Player::ChangeActionRide(void)
 	//マシン限定のアクションUIを表示
 	hud.SetVisible(playerIndex_, HUDManager::HUD_TYPE::CHARGE_GAUGE, true);
 	hud.SetVisible(playerIndex_, HUDManager::HUD_TYPE::HEALTH, true);
+	hud.SetVisible(playerIndex_, HUDManager::HUD_TYPE::GET_OFF, true);
 
 	//機体の行動に変更
 	action_ = std::make_unique<MachineAction>(*this, *machine_, *logic_);

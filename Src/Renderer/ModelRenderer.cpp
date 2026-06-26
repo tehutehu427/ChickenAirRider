@@ -1,8 +1,7 @@
 #include"../pch.h"
 #include "ModelRenderer.h"
 
-ModelRenderer::ModelRenderer(int modelId, ModelMaterial& modelMaterial)
-	: modelId_(modelId), modelMaterial_(modelMaterial)
+ModelRenderer::ModelRenderer(void)
 {
 }
 
@@ -10,27 +9,26 @@ ModelRenderer::~ModelRenderer(void)
 {
 }
 
-void ModelRenderer::Draw(void)
+void ModelRenderer::Draw(const int _modelId, const ModelMaterial& _modelMaterial)
 {
-
 	// オリジナルシェーダ設定(ON)
 	MV1SetUseOrigShader(true);
 
 	// シェーダ設定(頂点)
-	SetReserveVS();
+	SetReserveVS(_modelMaterial);
 
 	// シェーダ設定(ピクセル)
-	SetReservePS();
+	SetReservePS(_modelMaterial);
 
 	// テクスチャアドレスタイプの取得
-	auto texA = modelMaterial_.GetTextureAddress();
+	auto texA = _modelMaterial.GetTextureAddress();
 	int texAType = static_cast<int>(texA);
 
 	// テクスチャアドレスタイプを変更
 	SetTextureAddressModeUV(texAType, texAType);
 
 	// 描画
-	MV1DrawModel(modelId_);
+	MV1DrawModel(_modelId);
 
 	// テクスチャアドレスタイプを元に戻す
 	SetTextureAddressModeUV(DX_TEXADDRESS_CLAMP, DX_TEXADDRESS_CLAMP);
@@ -39,7 +37,7 @@ void ModelRenderer::Draw(void)
 	//-----------------------------------------
 
 	// テクスチャ解除
-	const auto& textures = modelMaterial_.GetTextures();
+	const auto& textures = _modelMaterial.GetTextures();
 	size_t size = textures.size();
 	if (size == 0)
 	{
@@ -66,21 +64,21 @@ void ModelRenderer::Draw(void)
 
 }
 
-void ModelRenderer::DrawMeshes(void)
+void ModelRenderer::DrawMeshes(const int _modelId, const ModelMaterial& _modelMaterial)
 {
 	// オリジナルシェーダ設定(ON)
 	MV1SetUseOrigShader(true);
 
 	// シェーダ設定(頂点)
-	SetReserveVS();
+	SetReserveVS(_modelMaterial);
 
 	//ピクセルシェーダの設定
 	// --------------------------------------------------------------
 	// 定数バッファハンドル
-	int constBuf = modelMaterial_.GetConstBufPS();
+	int constBuf = _modelMaterial.GetConstBufPS();
 
 	FLOAT4* constBufsPtr = (FLOAT4*)GetBufferShaderConstantBuffer(constBuf);
-	const auto& constBufs = modelMaterial_.GetConstBufsPS();
+	const auto& constBufs = _modelMaterial.GetConstBufsPS();
 
 	size_t size = constBufs.size();
 	for (int i = 0; i < size; i++)
@@ -103,30 +101,30 @@ void ModelRenderer::DrawMeshes(void)
 		constBuf, DX_SHADERTYPE_PIXEL, CONSTANT_BUF_SLOT_BEGIN_PS);
 
 	// ピクセルシェーダー設定
-	SetUsePixelShader(modelMaterial_.GetShaderPS());
+	SetUsePixelShader(_modelMaterial.GetShaderPS());
 	// --------------------------------------------------------------
 
 	// テクスチャアドレスタイプの取得
-	auto texA = modelMaterial_.GetTextureAddress();
+	auto texA = _modelMaterial.GetTextureAddress();
 	int texAType = static_cast<int>(texA);
 
 	// テクスチャアドレスタイプを変更
 	SetTextureAddressModeUV(texAType, texAType);
 
-	int meshNum = MV1GetMeshNum(modelId_);
+	int meshNum = MV1GetMeshNum(_modelId);
 	for (int i = 0; i < meshNum; ++i)
 	{
 		//マテリアル番号取得
-		int materialIndex = MV1GetMeshMaterial(modelId_, i);
+		int materialIndex = MV1GetMeshMaterial(_modelId, i);
 
 		// テクスチャ取得
-		int texHandle = MV1GetTextureGraphHandle(modelId_, materialIndex);
+		int texHandle = MV1GetTextureGraphHandle(_modelId, materialIndex);
 
 		//テクスチャの設定
 		SetUseTextureToShader(0, texHandle);
 
 		// 対象メッシュを描画（自作描画処理でバッファを設定して DrawPrimitive などを呼ぶ）
-		MV1DrawMesh(modelId_, i);
+		MV1DrawMesh(_modelId, i);
 	}
 
 	// テクスチャアドレスタイプを元に戻す
@@ -136,7 +134,7 @@ void ModelRenderer::DrawMeshes(void)
 	//-----------------------------------------
 
 	// テクスチャ解除
-	const auto& textures = modelMaterial_.GetTextures();
+	const auto& textures = _modelMaterial.GetTextures();
 	size = textures.size();
 	if (size == 0)
 	{
@@ -163,14 +161,13 @@ void ModelRenderer::DrawMeshes(void)
 
 }
 
-void ModelRenderer::SetReserveVS(void)
+void ModelRenderer::SetReserveVS(const ModelMaterial& _modelMaterial)
 {
-
 	// 定数バッファハンドル
-	int constBuf = modelMaterial_.GetConstBufVS();
+	int constBuf = _modelMaterial.GetConstBufVS();
 
 	FLOAT4* constBufsPtr = (FLOAT4*)GetBufferShaderConstantBuffer(constBuf);
-	const auto& constBufs = modelMaterial_.GetConstBufsVS();
+	const auto& constBufs = _modelMaterial.GetConstBufsVS();
 
 	size_t size = constBufs.size();
 	for (int i = 0; i < size; i++)
@@ -193,15 +190,15 @@ void ModelRenderer::SetReserveVS(void)
 		constBuf, DX_SHADERTYPE_VERTEX, CONSTANT_BUF_SLOT_BEGIN_VS);
 
 	// 頂点シェーダー設定
-	SetUseVertexShader(modelMaterial_.GetShaderVS());
+	SetUseVertexShader(_modelMaterial.GetShaderVS());
 
 }
 
-void ModelRenderer::SetReservePS(void)
+void ModelRenderer::SetReservePS(const ModelMaterial& _modelMaterial)
 {
 
 	// ピクセルシェーダーにテクスチャを転送
-	const auto& textures = modelMaterial_.GetTextures();
+	const auto& textures = _modelMaterial.GetTextures();
 	size_t size = textures.size();
 	if (size == 0)
 	{
@@ -217,10 +214,10 @@ void ModelRenderer::SetReservePS(void)
 	}
 
 	// 定数バッファハンドル
-	int constBuf = modelMaterial_.GetConstBufPS();
+	int constBuf = _modelMaterial.GetConstBufPS();
 
 	FLOAT4* constBufsPtr = (FLOAT4*)GetBufferShaderConstantBuffer(constBuf);
-	const auto& constBufs = modelMaterial_.GetConstBufsPS();
+	const auto& constBufs = _modelMaterial.GetConstBufsPS();
 
 	size = constBufs.size();
 	for (int i = 0; i < size; i++)
@@ -243,6 +240,6 @@ void ModelRenderer::SetReservePS(void)
 		constBuf, DX_SHADERTYPE_PIXEL, CONSTANT_BUF_SLOT_BEGIN_PS);
 
 	// ピクセルシェーダー設定
-	SetUsePixelShader(modelMaterial_.GetShaderPS());
+	SetUsePixelShader(_modelMaterial.GetShaderPS());
 
 }

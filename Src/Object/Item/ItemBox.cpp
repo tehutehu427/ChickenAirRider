@@ -66,7 +66,7 @@ void ItemBox::Load(void)
 	material_->SetTextureBuf(CRACK_IMG_BUFF, crackImg_);
 
 	//ƒŒƒ“ƒ_ƒ‰[
-	renderer_ = std::make_unique<ModelRenderer>(trans_.modelId, *material_);
+	renderer_ = std::make_unique<ModelRenderer>();
 }
 
 void ItemBox::Init(void)
@@ -130,7 +130,7 @@ void ItemBox::Draw(void)
 
 	//ƒ‚ƒfƒ‹•`‰æ
 	//MV1DrawModel(trans_.modelId);
-	renderer_->Draw();
+	renderer_->Draw(trans_.modelId, *material_);
 }
 
 void ItemBox::OnHit(const std::weak_ptr<Collider> _hitCol)

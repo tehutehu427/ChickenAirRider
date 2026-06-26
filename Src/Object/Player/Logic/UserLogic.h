@@ -6,6 +6,9 @@ class UserLogic : public LogicBase
 {
 public:
 
+	//機体を降りるまでのスペシャルボタン押下時間
+	static constexpr float GETOFF_PUSH_TIME = 1.5f;
+
 	//コンストラクタ
 	UserLogic(KeyConfig::JOYPAD_NO _padNo);
 
@@ -79,9 +82,6 @@ private:
 
 	//チャージまでのプッシュ時間
 	static constexpr float CHARGE_START_PUSH_TIME = 0.1f;
-
-	//機体を降りるまでのスペシャルボタン押下時間
-	static constexpr float GETOFF_PUSH_TIME = 1.0f;
 
 	//移動量
 	static constexpr float MOVE_POW = 1.0f;

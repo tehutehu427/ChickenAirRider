@@ -4,11 +4,13 @@
 #include "../../Common/Vector2.h"
 #include "../System/SceneManager.h"
 #include "../System/ResourceManager.h"
+#include "../System/KeyConfig.h"
 #include "../System/SplitScreenManager.h"
 #include "../Renderer/PixelMaterial.h"
 #include "../Renderer/PixelRenderer.h"
 #include "../../Object/Player/Player.h"
 #include "../../Object/Player/Action/MachineAction.h"
+#include "../../Object/Player/Logic/UserLogic.h"
 #include "HUDManager.h"
 
 void HUDManager::LoadOutSide(void)
@@ -23,6 +25,7 @@ void HUDManager::LoadOutSide(void)
 		playerHud.hudData[static_cast<int>(HUD_TYPE::CHARGE_GAUGE)] = { &HUDManager::DrawChargeGauge,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::HEALTH)] = { &HUDManager::DrawHealth,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::PARAMETER)] = { &HUDManager::DrawParam,false };
+		playerHud.hudData[static_cast<int>(HUD_TYPE::GET_OFF)] = { &HUDManager::DrawGetOff,false };
 	}
 
 	//画像
@@ -48,6 +51,10 @@ void HUDManager::LoadOutSide(void)
 	chargeGaugeMaterial_ = std::make_unique<PixelMaterial>(L"GaugeMask.cso", 1);
 	chargeGaugeMaterial_->AddConstBuf({ 0.5f,0.5f,0.0f,gaugeCnt_ });
 	chargeGaugeMaterial_->AddTextureBuf(gaugeMaskImg_);
+
+	getOffMaterial_ = std::make_unique<PixelMaterial>(L"CircleGauge.cso", 2);
+	getOffMaterial_->AddConstBuf({ 0.5f,0.5f,0.0f,0.0f });
+	getOffMaterial_->AddConstBuf({ GET_OFF_RADIUS,0.0f,0.0f,0.0f });
 }
 
 void HUDManager::Init(void)
@@ -154,7 +161,7 @@ void HUDManager::DrawChargeGauge(const int _playerIndex)
 	const float speed = mAction->GetSpeed();
 
 	//サイズ比率(XYほぼ同一なので統一)
-	float scale = static_cast<float>(view.width) / Application::SCREEN_SIZE_X;
+	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
 
 	//中央位置
 	Vector2 gaugeCenter =
@@ -198,7 +205,7 @@ void HUDManager::DrawHealth(const int _playerIndex)
 	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
 
 	//サイズ比率(XYほぼ同一なので統一)
-	float scale = static_cast<float>(view.width) / Application::SCREEN_SIZE_X;
+	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
 
 	//HP
 	float health = player->GetNowHealth();
@@ -246,7 +253,7 @@ void HUDManager::DrawParam(const int _playerIndex)
 	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
 	
 	//サイズ比率(XYほぼ同一なので統一)
-	float scale = static_cast<float>(view.width) / Application::SCREEN_SIZE_X;
+	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
 
 	//パラメーター
 	const auto& param = player->GetParam();
@@ -310,4 +317,48 @@ void HUDManager::DrawParam(const int _playerIndex)
 			params[i].color,
 			true);
 	}
+}
+
+void HUDManager::DrawGetOff(const int _playerIndex)
+{
+	//プレイヤー参照
+	const Player* player = playerHUD_[_playerIndex].player;
+
+	//降車(スペシャル)ボタンを押した時間
+	const float getOffCnt = KeyConfig::GetInstance().GetKeyTrgHoldCnt(KeyConfig::CONTROL_TYPE::SPECIAL_BUTTON, static_cast<KeyConfig::JOYPAD_NO>(_playerIndex + 1));
+
+	//0なら表示しない
+	if (getOffCnt <= 0.0f)return;
+
+	//降りるまでの時間
+	float getOffTime = UserLogic::GETOFF_PUSH_TIME;
+
+	//割合(0.0～1.0)
+	float gaugePercent = std::clamp(getOffCnt / getOffTime, 0.0f, 1.0f);
+
+	//分割
+	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
+
+	//サイズ比率(XYほぼ同一なので統一)
+	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
+
+	//中央位置
+	Vector2 gaugeCenter =
+	{
+		view.x + static_cast<int>(GET_OFF_POS.x * view.width),
+		view.y + static_cast<int>(GET_OFF_POS.y * view.height)
+	};
+
+	//サイズ比率反映
+	float size = GET_OFF_SIZE * scale;
+	float frame = GET_OFF_FRAME_SIZE * scale;
+	Vector2 sizeVec = Vector2(size, size);
+
+	//枠の円
+	DrawCircle(gaugeCenter.x + size / 2, gaugeCenter.y + size / 2, size * GET_OFF_RADIUS + frame, 0x0);
+
+	getOffMaterial_->SetConstBuf(0, { 0.5f,0.5f,gaugePercent,gaugeCnt_ });
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	renderer_.Draw(*getOffMaterial_, gaugeCenter, sizeVec);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }

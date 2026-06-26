@@ -21,6 +21,7 @@ public:
 		CHARGE_GAUGE,	//チャージゲージ
 		HEALTH,			//体力
 		PARAMETER,		//パラメーター
+		GET_OFF,		//降車
 		MAX
 	};
 
@@ -76,7 +77,7 @@ private:
 	
 	//パラメーター
 	static constexpr int PARAM_BOX_SIZE = 40;						//箱サイズ
-	static constexpr int PARAM_BOX_INTERVAL = 20;					//箱の間隔
+	static constexpr int PARAM_BOX_INTERVAL = 80;					//箱の間隔
 	static constexpr int POWER_UP_INTERVAL = 60;					//パワーアップ画像の間隔
 	static constexpr int PARAM_NUMBER_LOCAL_POS = 100;				//パラメーター確認用数字の間隔
 	static constexpr int NUMBER_INTERVAL = 35;						//数字間の間
@@ -90,14 +91,20 @@ private:
 	//UIの位置(Normalize)
 	static constexpr Vector2F HEALTH_POS = { 0.95f,0.6f };
 	static constexpr Vector2F CHARGE_POS = { 0.85f,0.8f };
+	static constexpr Vector2F GET_OFF_POS = { 0.3f,0.6f };
 
-	//ゲージの大きさ
+	//チャージゲージの大きさ
 	static constexpr float GAUGE_SIZE = 512.0f;
 	static constexpr float GAUGE_SIZE_MULTI = 0.8f;
 
-	//ゲージの位置補正
+	//チャージゲージの位置補正
 	static constexpr int GAUGE_LOCAL_POS = 5;
 	static constexpr int NUMBER_LOCAL_POS = 30;
+
+	//降車ゲージの半径
+	static constexpr float GET_OFF_RADIUS = 0.3f;
+	static constexpr int GET_OFF_SIZE = 128;
+	static constexpr int GET_OFF_FRAME_SIZE = 10;
 
 	//コンストラクタ
 	HUDManager(void);
@@ -121,10 +128,15 @@ private:
 	int defenceImg_;
 	int maxHealthImg_;
 
-	//シェーダー
+	//チャージゲージ
 	std::unique_ptr<PixelMaterial> chargeGaugeMaterial_;
-	PixelRenderer renderer_;
 	float gaugeCnt_;
+
+	//降車ゲージ
+	std::unique_ptr<PixelMaterial> getOffMaterial_;
+
+	//レンダー
+	PixelRenderer renderer_;
 
 	//プレイヤー参照
 	std::array<PlayerHUD, static_cast<int>(GameSetting::PLAYER_MAX_NUM)> playerHUD_;
@@ -136,5 +148,6 @@ private:
 	void DrawChargeGauge(const int _playerIndex);
 	void DrawHealth(const int _playerIndex);
 	void DrawParam(const int _playerIndex);
+	void DrawGetOff(const int _playerIndex);
 };
 

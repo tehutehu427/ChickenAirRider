@@ -14,29 +14,23 @@ public:
 	static constexpr int CONSTANT_BUF_SLOT_BEGIN_PS = 4;
 
 	// コンストラクタ
-	ModelRenderer(int modelId_, ModelMaterial& modelMaterial);
+	ModelRenderer(void);
 
 	// デストラクタ
 	~ModelRenderer(void);
 
 	// 描画
-	void Draw(void);
+	void Draw(const int _modelId, const ModelMaterial& _modelMaterial);
 
 	//メッシュごとに描画
-	void DrawMeshes(void);
+	void DrawMeshes(const int _modelId, const ModelMaterial& _modelMaterial);
 
 private:
 
-	// モデルのハンドルID
-	int modelId_;
-
-	// モデルマテリアル
-	ModelMaterial& modelMaterial_;
-
 	// シェーダ設定(頂点)
-	void SetReserveVS(void);
+	void SetReserveVS(const ModelMaterial& _modelMaterial);
 
 	// シェーダ設定(ピクセル)
-	void SetReservePS(void);
+	void SetReservePS(const ModelMaterial& _modelMaterial);
 
 };

@@ -431,7 +431,8 @@ float KeyConfig::GetKeyTrgHoldCnt(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, T
 			}
 			for (auto keyI : key.second)
 			{
-				return inputManager_->GetTrgHoldCnt(keyI);
+				float hold = inputManager_->GetTrgHoldCnt(keyI);
+				if(hold > 0.0f)return hold;
 			}
 		}
 		for (auto& mouse : mouseInput_)
@@ -442,7 +443,8 @@ float KeyConfig::GetKeyTrgHoldCnt(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, T
 			}
 			for (auto mouseI : mouse.second)
 			{
-				return inputManager_->GetMouseTrgHoldCnt(mouseI);
+				float hold = inputManager_->GetMouseTrgHoldCnt(mouseI);
+				if (hold > 0.0f)return hold;
 			}
 		}
 	}
@@ -456,7 +458,8 @@ float KeyConfig::GetKeyTrgHoldCnt(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, T
 			}
 			for (auto conI : con.second)
 			{
-				inputManager_->GetPadBtnTrgHoldCnt(no, conI);
+				float hold = inputManager_->GetPadBtnTrgHoldCnt(no, conI);
+				if (hold > 0.0f)return hold;
 			}
 		}
 		for (auto& stick : stickInput_)
@@ -467,7 +470,8 @@ float KeyConfig::GetKeyTrgHoldCnt(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, T
 			}
 			for (auto stickI : stick.second)
 			{
-				return inputManager_->GetStickHoldCnt(no, stickI);
+				float hold = inputManager_->GetStickHoldCnt(no, stickI);
+				if (hold > 0.0f)return hold;
 			}
 		}
 	}

@@ -72,7 +72,6 @@ private:
 	// ピクセルシェーダ
 	int shaderPS_;
 
-
 	// 頂点定数バッファの確保サイズ(FLOAT4をいくつ作るか)
 	int constBufFloat4SizeVS_;
 
@@ -84,7 +83,6 @@ private:
 
 	// ピクセル定数バッファハンドル
 	int constBufPS_;
-
 
 	// テクスチャアドレス
 	TEXADDRESS texAddress_;
