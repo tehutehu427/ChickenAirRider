@@ -2,6 +2,7 @@
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/Game/CollisionManager.h"
+#include "../Renderer/ModelRenderer.h"
 #include "Common/EffectController.h"
 #include "ObjectBase.h"
 
@@ -11,6 +12,9 @@ ObjectBase::ObjectBase(void)
 {
 	//エフェクト
 	effect_ = std::make_unique<EffectController>();
+
+	//モデル用頂点シェーダー
+	modelRenderer_ = std::make_unique<ModelRenderer>();
 
 	//半径
 	broudRadius_ = 0.0f;

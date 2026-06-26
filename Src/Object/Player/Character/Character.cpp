@@ -76,5 +76,4 @@ void Character::Draw(void)
 {
 	//ƒ‚ƒfƒ‹•`‰æ
 	MV1DrawModel(trans_.modelId);
-	//DrawSphere3D(trans_.pos, 10.0f, 20, 0xffff00, 0xffff00, true);
 }

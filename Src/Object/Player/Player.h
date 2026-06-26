@@ -202,6 +202,10 @@ private:
 	std::unique_ptr<ActionBase> action_;	//行動
 	std::unique_ptr<PlayerOnHit> onHit_;	//当たり判定
 
+	//シャドウマップ用
+	std::unique_ptr<ModelMaterial> charaShadowMaterial_;
+	std::unique_ptr<ModelMaterial> shadowMaterial_;
+	
 	//プレイヤー番号
 	const int playerIndex_;
 

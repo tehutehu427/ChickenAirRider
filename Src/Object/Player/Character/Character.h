@@ -38,6 +38,9 @@ public:
 	//•`‰æ
 	void Draw(void);
 
+	//ƒ‚ƒfƒ‹‚Ìæ“¾
+	const int GetModelId(void)const { return trans_.modelId; }
+
 	//À•W‚Ìİ’è
 	void SetPos(const VECTOR& _pos) { trans_.pos = _pos; }
 

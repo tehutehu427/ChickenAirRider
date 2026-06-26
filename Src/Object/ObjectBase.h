@@ -10,6 +10,8 @@ class ResourceManager;
 class SceneManager;
 class Geometry;
 class EffectController;
+class ModelMaterial;
+class ModelRenderer;
 
 class ObjectBase
 {
@@ -57,6 +59,9 @@ protected:
 
 	// モデル制御の基本情報
 	Transform trans_;
+
+	//モデルの頂点シェーダー
+	std::unique_ptr<ModelRenderer> modelRenderer_;
 
 	//当たり判定関係
 	std::vector<std::shared_ptr<Collider>> collider_;	//全体の当たり判定情報

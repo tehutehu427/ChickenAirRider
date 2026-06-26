@@ -7,6 +7,8 @@
 #include "../Manager/Game/HUDManager.h"
 #include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/GravityManager.h"
+#include "../Renderer/ModelMaterial.h"
+#include "../Renderer/ModelRenderer.h"
 #include "../Common/Geometry/Sphere.h"
 #include "../Common/Geometry/Line.h"
 #include "Character/Character.h"
@@ -68,6 +70,17 @@ Player::~Player(void)
 
 void Player::Load(void)
 {
+	//キャラのシャドウマップ
+	shadowMaterial_ = std::make_unique<ModelMaterial>(L"StdModelPS.cso", 3, L"StdModelVS", 0);
+	shadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
+	shadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
+	shadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
+	//キャラのシャドウマップ
+	charaShadowMaterial_ = std::make_unique<ModelMaterial>(L"StdModelPS.cso", 3, L"StdModelVS", 0);
+	charaShadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
+	charaShadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
+	charaShadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
+
 	//キャラクター
 	chara_ = std::make_unique<Character>();
 	chara_->Load();
@@ -451,9 +464,12 @@ void Player::DrawNormal(void)
 void Player::DrawRide(void)
 {
 	//キャラの描画
-	chara_->Draw();
+	//modelRenderer_->Draw(chara_->GetModelId(), *charaShadowMaterial_);
 
 	//機体の描画
+	//modelRenderer_->Draw(machine_->GetModelId(), *shadowMaterial_);
+
+	chara_->Draw();
 	machine_->Draw();
 }
 
