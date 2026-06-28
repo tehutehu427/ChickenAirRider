@@ -71,7 +71,7 @@ Player::~Player(void)
 void Player::Load(void)
 {
 	//キャラのシャドウマップ
-	stdMaterial_ = std::make_unique<ModelMaterial>(L"StdModelPS.cso", 3, L"StdModelVS", 0);
+	stdMaterial_ = std::make_unique<ModelMaterial>(L"StdModelVS.cso", 0, L"StdModelPS.cso", 3);
 	stdMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
 	stdMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
 	stdMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
@@ -453,7 +453,10 @@ void Player::UpdateRide(void)
 void Player::DrawNormal(void)
 {
 	//キャラの描画
-	chara_->Draw();
+	modelRenderer_->Draw(chara_->GetModelId(), *stdMaterial_);
+
+	//キャラの描画
+	//chara_->Draw();
 }
 
 void Player::DrawRide(void)

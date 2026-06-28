@@ -46,7 +46,7 @@ VS_OUTPUT main(VS_INPUT VSInput)
 		mul(VSInput.norm, (float3x3)g_base.localWorldMatrix));
 
 	// ディフューズカラー
-	ret.diffuse = VSInput.diffuse * (ret.normal,1.0f);
+	ret.diffuse = VSInput.diffuse;
 	
 	// ライト方向(ローカル)
 	ret.lightDir = float3(0.0f, 0.0f, 0.0f);

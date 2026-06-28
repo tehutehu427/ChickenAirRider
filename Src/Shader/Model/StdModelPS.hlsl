@@ -28,11 +28,18 @@ float4 main(PS_INPUT PSInput) : SV_TARGET0
 	}
 
 	//光
-	float3 light = dot(-g_light_dir, PSInput.normal);
+	//float3 light = dot(-g_light_dir, PSInput.normal);
+	
+    float NdotL = saturate(dot(
+    normalize(-g_light_dir),
+    normalize(PSInput.normal)));
 
-	float3 rgb = color.rgb * light;
-
+    float3 rgb =
+    color.rgb *
+    g_color.rgb *
+    (g_ambient_color.rgb + NdotL);
+	
 	//関数の戻り値がラスタライザされる
 	//return color * g_color * float4(light,1.0f) + g_ambient_color;
-	return float4(rgb, color.a) + g_ambient_color;
+    return float4(rgb, color.a);
 }

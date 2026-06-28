@@ -788,5 +788,6 @@
     <FxCompile Include="Src\Shader\PostEffect\Default.hlsl" />
     <FxCompile Include="Src\Shader\PostEffect\Sepia.hlsl" />
     <FxCompile Include="Src\Shader\PostEffect\CircleGauge.hlsl" />
+    <FxCompile Include="Src\Shader\Model\SkinnedMeshVS.hlsl" />
   </ItemGroup>
 </Project>
