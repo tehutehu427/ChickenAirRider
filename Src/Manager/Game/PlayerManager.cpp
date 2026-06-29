@@ -76,7 +76,7 @@ void PlayerManager::ResetPlayer(const VECTOR _pos)
 	for (auto& player : players_)
 	{
 		player->Init();
-		pos.x += 100.0f;
+		VAdd(pos, Player::LOCAL_POS);
 		player->SetMovedPos(pos);
 	}
 }

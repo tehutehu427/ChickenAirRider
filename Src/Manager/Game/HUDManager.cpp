@@ -57,11 +57,15 @@ void HUDManager::LoadOutSide(void)
 	maxHealthImg_ = res.Load(ResourceManager::SRC::MAX_HEALTH).handleId_;
 
 	//チャージゲージカウント
-	gaugeCnt_ = 0.0f;
+	cnt_ = 0.0f;
 
 	//マテリアル
+	pushButtonMaterial_ = std::make_unique<PixelMaterial>(L"Blinking.cso", 1);
+	pushButtonMaterial_->AddConstBuf({ cnt_,BLINKING_SPEED ,0.0f,0.0f });
+	pushButtonMaterial_->AddTextureBuf(pushImg_);
+
 	chargeGaugeMaterial_ = std::make_unique<PixelMaterial>(L"GaugeMask.cso", 1);
-	chargeGaugeMaterial_->AddConstBuf({ 0.5f,0.5f,0.0f,gaugeCnt_ });
+	chargeGaugeMaterial_->AddConstBuf({ 0.5f,0.5f,0.0f,cnt_ });
 	chargeGaugeMaterial_->AddTextureBuf(gaugeMaskImg_);
 
 	getOffMaterial_ = std::make_unique<PixelMaterial>(L"CircleGauge.cso", 2);
@@ -92,7 +96,7 @@ void HUDManager::Update(void)
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
 	//カウンタ
-	gaugeCnt_ += delta;
+	cnt_ += delta;
 }
 
 void HUDManager::Draw(void)
@@ -167,12 +171,19 @@ void HUDManager::DrawPushButton(const int _playerIndex)
 	//座標
 	Vector2 pos = { Application::SCREEN_HALF_X * scale,Application::SCREEN_HALF_Y * scale };
 	int localPosX = PUSH_LOCAL_POS_X * scale;
+	Vector2 pushSize = { PUSH_SIZE_X * scale,PUSH_SIZE_Y * scale };
 
 	//Push画像
-	DrawRotaGraph(pos.x - localPosX, pos.y, scale, 0.0, pushImg_, true);
-	
-	//ボタン画像
-	DrawRotaGraph(pos.x + localPosX, pos.y, scale, 0.0, bButtonImg_, true);
+	pushButtonMaterial_->SetConstBuf(0, { cnt_,BLINKING_SPEED,0.0f,0.0f });
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	pushButtonMaterial_->SetTextureBuf(0, pushImg_);
+	renderer_.Draw(*pushButtonMaterial_, Vector2(pos.x - localPosX - pushSize.x / 2, pos.y - pushSize.y / 2), pushSize);
+
+	//ボタン
+	Vector2 buttonSize = { BUTTON_SIZE * scale,BUTTON_SIZE * scale };
+	pushButtonMaterial_->SetTextureBuf(0, aButtonImg_);
+	renderer_.Draw(*pushButtonMaterial_, Vector2(pos.x + localPosX - buttonSize.x / 2, pos.y - buttonSize.y / 2), buttonSize);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
 
 void HUDManager::DrawChargeGauge(const int _playerIndex)
@@ -215,7 +226,7 @@ void HUDManager::DrawChargeGauge(const int _playerIndex)
 	DrawRotaGraph(gaugeCenter.x, gaugeCenter.y, totalScale, 0.0, gaugeImg_, true);
 
 	//メーターの描画
-	chargeGaugeMaterial_->SetConstBuf(0, { 0.5f,0.5f,chargeCnt,gaugeCnt_ });
+	chargeGaugeMaterial_->SetConstBuf(0, { 0.5f,0.5f,chargeCnt,cnt_ });
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	renderer_.Draw(*chargeGaugeMaterial_, gaugeCenter - gaugeSize / 2, gaugeSize);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
@@ -394,7 +405,7 @@ void HUDManager::DrawGetOff(const int _playerIndex)
 	//枠の円
 	DrawCircle(gaugeCenter.x + size / 2, gaugeCenter.y + size / 2, size * GET_OFF_RADIUS + frame, 0x0);
 
-	getOffMaterial_->SetConstBuf(0, { 0.5f,0.5f,gaugePercent,gaugeCnt_ });
+	getOffMaterial_->SetConstBuf(0, { 0.5f,0.5f,gaugePercent,cnt_ });
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	renderer_.Draw(*getOffMaterial_, gaugeCenter, sizeVec);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);

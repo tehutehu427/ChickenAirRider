@@ -79,6 +79,10 @@ private:
 
 	//入力
 	static constexpr int PUSH_LOCAL_POS_X = 70;
+	static constexpr int PUSH_SIZE_X = 64 * 4;
+	static constexpr int PUSH_SIZE_Y = 64;
+	static constexpr int BUTTON_SIZE = 64;
+	static constexpr float BLINKING_SPEED = 1.0f;
 	
 	//パラメーター
 	static constexpr int PARAM_BOX_SIZE = 40;						//箱サイズ
@@ -144,9 +148,14 @@ private:
 	int defenceImg_;
 	int maxHealthImg_;
 
+	//カウンタ
+	float cnt_;
+
+	//入力UI
+	std::unique_ptr<PixelMaterial> pushButtonMaterial_;
+
 	//チャージゲージ
 	std::unique_ptr<PixelMaterial> chargeGaugeMaterial_;
-	float gaugeCnt_;
 
 	//降車ゲージ
 	std::unique_ptr<PixelMaterial> getOffMaterial_;

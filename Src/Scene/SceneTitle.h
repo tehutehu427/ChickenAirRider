@@ -38,6 +38,7 @@ private:
 	static constexpr int PUSH_POS_Y = Application::SCREEN_HALF_Y + Application::SCREEN_HALF_Y / 2;
 	static constexpr int PUSH_SIZE_X = 600;
 	static constexpr int PUSH_SIZE_Y = 80;
+	static constexpr float BLINKING_SPEED = 2.0f;
 
 	//Ž•ŽÔ‚ÌˆÊ’u
 	static constexpr int GEAR_LOCAL_POS_X = 500;

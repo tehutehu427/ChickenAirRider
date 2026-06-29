@@ -63,8 +63,8 @@ void SceneTitle::Load(void)
 	//snd.Play(SoundManager::SOUND_NAME::TITLE_SE, SoundManager::PLAYTYPE::LOOP);
 
 	//UIのシェーディング
-	uiMaterial_ = std::make_unique<PixelMaterial>(L"TitleUi.cso", 1);
-	uiMaterial_->AddConstBuf({ cnt_, 0.0f, 0.0f, 0.0f });
+	uiMaterial_ = std::make_unique<PixelMaterial>(L"Blinking.cso", 1);
+	uiMaterial_->AddConstBuf({ cnt_, BLINKING_SPEED, 0.0f, 0.0f });
 	uiMaterial_->AddTextureBuf(pushAnyButtonImg_);
 	uiRenderer_ = std::make_unique<PixelRenderer>();
 	uiRenderer_->SetPos({ PUSH_POS_X - PUSH_SIZE_X / 2, PUSH_POS_Y });
@@ -133,7 +133,7 @@ void SceneTitle::Draw(const Camera& _camera)
 	DrawExtendGraph(LOGO_POS_X_1, LOGO_POS_Y_1, LOGO_POS_X_2, LOGO_POS_Y_2, logoImg_, true);
 
 	//プッシュボタン
-	uiMaterial_->SetConstBuf(0, { cnt_, 0.0f, 0.0f, 0.0f });
+	uiMaterial_->SetConstBuf(0, { cnt_, BLINKING_SPEED, 0.0f, 0.0f });
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	uiRenderer_->Draw(*uiMaterial_);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);

@@ -40,6 +40,9 @@ public:
 		MAX
 	};
 
+	//相対座標
+	static constexpr VECTOR LOCAL_POS = { 100.0f,0.0f,0.0f };
+
 	//コンストラクタ
 	Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo, Collider::TAG _playerTag);
 	//デストラクタ
@@ -181,9 +184,6 @@ public:
 	void SetModelRot(const Quaternion& _quaRot) { modelQuaRot_ = _quaRot; }
 
 private:
-
-	//相対座標
-	static constexpr VECTOR LOCAL_POS = { 100.0f,0.0f,0.0f };
 
 	//範囲
 	static constexpr float UNDER_BORDER = -500.0f;												//下の境界
