@@ -453,22 +453,25 @@ void Player::UpdateRide(void)
 void Player::DrawNormal(void)
 {
 	//ƒLƒƒƒ‰‚Ì•`‰æ
-	modelRenderer_->Draw(chara_->GetModelId(), *stdMaterial_);
+	//modelRenderer_->Draw(chara_->GetModelId(), *stdMaterial_);
 
 	//ƒLƒƒƒ‰‚Ì•`‰æ
-	//chara_->Draw();
+	chara_->Draw();
 }
 
 void Player::DrawRide(void)
 {
 	//ƒLƒƒƒ‰‚Ì•`‰æ
-	modelRenderer_->Draw(chara_->GetModelId(), *stdMaterial_);
+	//modelRenderer_->Draw(chara_->GetModelId(), *stdMaterial_);
 
 	//‹@‘Ì‚Ì•`‰æ
-	modelRenderer_->Draw(machine_->GetModelId(), *stdMaterial_);
+	//modelRenderer_->Draw(machine_->GetModelId(), *stdMaterial_);
 
-	//chara_->Draw();
-	//machine_->Draw();
+	//ƒLƒƒƒ‰‚Ì•`‰æ
+	chara_->Draw();
+	
+	//‹@‘Ì‚Ì•`‰æ
+	machine_->Draw();
 }
 
 void Player::SynchronizeChara(void)
