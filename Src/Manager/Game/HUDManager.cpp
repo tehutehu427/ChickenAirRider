@@ -22,13 +22,25 @@ void HUDManager::LoadOutSide(void)
 	//描画
 	for (auto& playerHud : playerHUD_)
 	{
+		playerHud.hudData[static_cast<int>(HUD_TYPE::PUSH_BUTTON)] = { &HUDManager::DrawPushButton,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::CHARGE_GAUGE)] = { &HUDManager::DrawChargeGauge,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::HEALTH)] = { &HUDManager::DrawHealth,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::PARAMETER)] = { &HUDManager::DrawParam,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::GET_OFF)] = { &HUDManager::DrawGetOff,false };
 	}
 
-	//画像
+	//入力画像
+	pushImg_ = res.Load(ResourceManager::SRC::PUSH).handleId_;
+	mouseImg_ = res.Load(ResourceManager::SRC::MOUSE).handleId_;
+	mouseLeftImg_ = res.Load(ResourceManager::SRC::MOUSE_LEFT).handleId_;
+	mouseRightImg_ = res.Load(ResourceManager::SRC::MOUSE_RIGHT).handleId_;
+	mouseMoveImg_ = res.Load(ResourceManager::SRC::MOUSE_MOVE).handleId_;
+	aButtonImg_ = res.Load(ResourceManager::SRC::A_BUTTON).handleId_;
+	bButtonImg_ = res.Load(ResourceManager::SRC::B_BUTTON).handleId_;
+	xButtonImg_ = res.Load(ResourceManager::SRC::X_BUTTON).handleId_;
+	yButtonImg_ = res.Load(ResourceManager::SRC::Y_BUTTON).handleId_;
+
+	//ゲージ画像
 	gaugeImg_ = res.Load(ResourceManager::SRC::CHARGE_GAUGE).handleId_;
 	gaugeMaskImg_ = res.Load(ResourceManager::SRC::CHARGE_GAUGE_MASK).handleId_;
 	numImgs_ = res.Load(ResourceManager::SRC::NUMBER).handleIds_;
@@ -136,6 +148,31 @@ void HUDManager::DrawPlayerHUD(const int _playerIndex)
 		//描画
 		(this->*hud.func)(_playerIndex);
 	}
+}
+
+void HUDManager::DrawPushButton(const int _playerIndex)
+{
+	//プレイヤー
+	const auto* player = playerHUD_[_playerIndex].player;
+
+	//存在しないなら何もしない
+	if (!player)return;
+
+	//分割
+	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
+
+	//サイズ比率(XYほぼ同一なので統一)
+	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
+
+	//座標
+	Vector2 pos = { Application::SCREEN_HALF_X * scale,Application::SCREEN_HALF_Y * scale };
+	int localPosX = PUSH_LOCAL_POS_X * scale;
+
+	//Push画像
+	DrawRotaGraph(pos.x - localPosX, pos.y, scale, 0.0, pushImg_, true);
+	
+	//ボタン画像
+	DrawRotaGraph(pos.x + localPosX, pos.y, scale, 0.0, bButtonImg_, true);
 }
 
 void HUDManager::DrawChargeGauge(const int _playerIndex)

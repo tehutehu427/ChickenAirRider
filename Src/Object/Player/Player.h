@@ -21,15 +21,15 @@ public:
 	{
 		USER,	//人
 		NPC,	//コンピューター
+		MAX
 	};
 
 	//現在の状態
 	enum class STATE
 	{
-		NONE = -1,
-
 		NORMAL,			//生身
 		RIDE_MACHINE,	//機体乗車中
+		MAX
 	};
 
 	//当たり判定添え字
@@ -37,6 +37,7 @@ public:
 	{
 		MAIN,		//本体
 		GROUNDED,	//接地
+		MAX
 	};
 
 	//コンストラクタ
@@ -262,16 +263,21 @@ private:
 	bool canMove_;
 
 	//関数ポインタ
-	std::map<OPERATION_TYPE, std::function<void(void)>> createLogic_;	//操作
-	std::map<STATE, std::function<void(void)>> changeAction_;			//行動切り替え
-	std::map<STATE, std::function<void(void)>> update_;					//状態ごとの更新
-	std::map<STATE, std::function<void(void)>> draw_;					//状態ごとの描画
+	using Func = void(Player::*)(void);
+	std::array<Func, static_cast<int>(OPERATION_TYPE::MAX)> createLogic_;	//操作
+	std::array<Func, static_cast<int>(STATE::MAX)> changeAction_;			//行動切り替え
+	std::array<Func, static_cast<int>(STATE::MAX)> update_;					//状態ごとの更新
+	std::array<Func, static_cast<int>(STATE::MAX)> draw_;					//状態ごとの描画
 
 	//奈落判定
 	void CheckUnder(void);
 
 	//移動と状態更新
 	void MoveAndUpdateState(void);
+
+	//生成
+	void CreateUserLogic(void);
+	void CreateNpcLogic(void);
 
 	//状態ごとのアクションの変更
 	void ChangeActionNormal(void);

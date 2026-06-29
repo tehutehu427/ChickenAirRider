@@ -16,6 +16,7 @@ public:
 		TIMER,				//タイマー
 		LAST_COUNT_DOWN,	//最後のカウントダウン
 		FINISH,				//終了表示
+		MAX
 	};
 
 	//初期化
@@ -30,16 +31,23 @@ public:
 	//描画
 	void Draw(void);
 
-	//描画するUIの追加
-	void AddDraw(const DRAW_TYPE _type);
-
-	//描画するUIの削除
-	void SubDraw(const DRAW_TYPE _type);
+	//表示設定
+	void SetVisible(const DRAW_TYPE _type, const bool _visible);
 
 	//全体タイマーの取得
 	Timer& GetTimer(void) { return *timer_; }
 
 private:
+
+	//描画用関数ポインタ
+	using DrawFunc = void(GlobalUIManager::*)(void);
+
+	//描画情報
+	struct DrawData
+	{
+		DrawFunc func;	//描画
+		bool visible;	//表示の有無
+	};
 
 	//フィニッシュUIの拡大率
 	static constexpr float FINISH_UI_SCALE = 1.0f;
@@ -54,8 +62,7 @@ private:
 	int finishImg_;
 
 	//描画
-	std::unordered_map<DRAW_TYPE, std::function<void(void)>> drawList_;
-	std::unordered_map<DRAW_TYPE, std::function<void(void)>> drawView_;
+	std::array<DrawData,static_cast<int>(DRAW_TYPE::MAX)> draws_;
 
 	//コンストラクタ
 	GlobalUIManager(void);

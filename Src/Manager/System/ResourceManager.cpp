@@ -141,6 +141,42 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, selectImage + L"End.png");
 	resourcesMap_.emplace(SRC::END_TEXT, std::move(res));
 
+	//Push画像
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"Push.png");
+	resourcesMap_.emplace(SRC::PUSH, std::move(res));
+
+	//マウス
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"Mouse.png");
+	resourcesMap_.emplace(SRC::MOUSE, std::move(res));
+
+	//マウス左クリック
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"MouseLeft.png");
+	resourcesMap_.emplace(SRC::MOUSE_LEFT, std::move(res));
+
+	//マウス右クリック
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"MouseRight.png");
+	resourcesMap_.emplace(SRC::MOUSE_RIGHT, std::move(res));
+
+	//マウス左右移動
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"MouseMove.png");
+	resourcesMap_.emplace(SRC::MOUSE_MOVE, std::move(res));
+
+	//Aボタン
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"AButton.png");
+	resourcesMap_.emplace(SRC::A_BUTTON, std::move(res));
+
+	//Bボタン
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"BButton.png");
+	resourcesMap_.emplace(SRC::B_BUTTON, std::move(res));
+
+	//Xボタン
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"XButton.png");
+	resourcesMap_.emplace(SRC::X_BUTTON, std::move(res));
+
+	//Yボタン
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"YButton.png");
+	resourcesMap_.emplace(SRC::Y_BUTTON, std::move(res));
+
 	//UIのチャージゲージ画像
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"ChargeGauge.png");
 	resourcesMap_.emplace(SRC::CHARGE_GAUGE, std::move(res));

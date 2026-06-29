@@ -3,6 +3,7 @@
 #include"../Common/SingletonRegistry.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/ResourceManager.h"
+#include"../Manager/System/SplitScreenManager.h"
 #include"../Manager/System/SoundManager.h"
 #include"../Manager/System/Camera.h"
 #include"../Manager/Game/CollisionManager.h"
@@ -23,10 +24,12 @@ GameMain::GameMain(SceneGame& _parent)
 	: GameBase(_parent)
 {
 	//更新
+	update_.emplace(STATE::START, [this](void) {UpdateStart(); });
 	update_.emplace(STATE::GAME, [this](void) {UpdateGame(); });
 	update_.emplace(STATE::FIN, [this](void) {UpdateFinish(); });
 
 	//描画
+	draw_.emplace(STATE::START, [this](const Camera& _camera) {DrawStart(_camera); });
 	draw_.emplace(STATE::GAME, [this](const Camera& _camera) {DrawGame(_camera); });
 	draw_.emplace(STATE::FIN, [this](const Camera& _camera) {DrawFinish(_camera); });
 }
@@ -38,7 +41,7 @@ GameMain::~GameMain(void)
 void GameMain::Init(void)
 {
 	//インスタンス
-	auto& setMng = GameSetting::GetInstance();
+	auto& split = SplitScreenManager::GetInstance();
 	auto& grvMng = GravityManager::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
@@ -49,10 +52,10 @@ void GameMain::Init(void)
 	auto& hud = HUDManager::GetInstance();
 
 	//タイマーの開始
+	gloUi.GetTimer().Init(COUNT_DOWN);
 	gloUi.GetTimer().SetCountValid(true);
-	gloUi.GetTimer().SetCountView(true);
-	gloUi.GetTimer().SetTimeLimit(setMng.GetTimeLimit());
-	gloUi.AddDraw(GlobalUIManager::DRAW_TYPE::TIMER);
+	gloUi.GetTimer().SetCountView(false);
+	gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::TIMER, true);
 
 	//重力
 	grvMng.Init();
@@ -79,6 +82,8 @@ void GameMain::Init(void)
 	{
 		hud.SetVisible(i, HUDManager::HUD_TYPE::CHARGE_GAUGE, true);
 		hud.SetVisible(i, HUDManager::HUD_TYPE::HEALTH, true);
+		hud.SetVisible(i, HUDManager::HUD_TYPE::PUSH_BUTTON, true);
+		split.SetShader(i, SplitScreenManager::SHADER_TYPE::GOD_RAY);
 	}
 
 	//BGM読み込み
@@ -93,6 +98,9 @@ void GameMain::Init(void)
 
 	//BGM再生
 	snd.Play(SoundManager::SOUND_NAME::MAIN_GAME_BGM, SoundManager::PLAYTYPE::LOOP);
+
+	//変数の初期化
+	state_ = STATE::START;
 }
 
 void GameMain::Update(void)
@@ -110,6 +118,7 @@ void GameMain::Draw(const Camera& _camera)
 void GameMain::Release(void)
 {
 	//インスタンス
+	auto& split = SplitScreenManager::GetInstance();
 	auto& scnMng = SceneManager::GetInstance();
 	auto& setMng = GameSetting::GetInstance();
 	auto& gloUi = GlobalUIManager::GetInstance();
@@ -120,7 +129,7 @@ void GameMain::Release(void)
 	gloUi.GetTimer().SetCountValid(false);
 	gloUi.GetTimer().SetCountView(false);
 	gloUi.GetTimer().SetTimeLimit(setMng.GetTimeLimit());
-	gloUi.SubDraw(GlobalUIManager::DRAW_TYPE::TIMER);
+	gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::TIMER, false);
 
 	//プレイヤー人数
 	const int plNum = GameSetting::GetInstance().GetUserNum();
@@ -130,10 +139,12 @@ void GameMain::Release(void)
 	{
 		hud.SetVisible(i, HUDManager::HUD_TYPE::CHARGE_GAUGE, false);
 		hud.SetVisible(i, HUDManager::HUD_TYPE::HEALTH, false);
+		hud.SetVisible(i, HUDManager::HUD_TYPE::GET_OFF, false);
+		split.SetShader(i, SplitScreenManager::SHADER_TYPE::DEFAULT);
 	}
 
 	//フィニッシュUIの削除
-	gloUi.SubDraw(GlobalUIManager::DRAW_TYPE::FINISH);
+	gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::FINISH, false);
 
 	//BGMストップ
 	snd.Stop(SoundManager::SOUND_NAME::MAIN_GAME_BGM);
@@ -145,6 +156,41 @@ void GameMain::DebugDraw(void)
 	//DrawString(0, 0, L"MainGame", 0xffffff);
 
 	//DrawBox(100, 100, 924, 540, 0x0000ff, true);
+}
+
+void GameMain::UpdateStart(void)
+{
+	//インスタンス
+	auto& setting = GameSetting::GetInstance();
+	auto& gloUi = GlobalUIManager::GetInstance();
+	auto& hud = HUDManager::GetInstance();
+	auto& snd = SoundManager::GetInstance();
+
+	//タイムリミットになったならゲーム開始
+	if (gloUi.GetTimer().IsTimeOver())
+	{
+		//プレイヤー人数
+		const int plNum = setting.GetUserNum();
+
+		//タイマーのリセット
+		gloUi.GetTimer().Init(setting.GetTimeLimit());
+		gloUi.GetTimer().SetCountValid(true);
+		gloUi.GetTimer().SetCountView(true);
+
+		for (int i = 0; i < plNum; i++)
+		{
+			//入力表示を非表示
+			hud.SetVisible(i, HUDManager::HUD_TYPE::PUSH_BUTTON, false);
+		}
+
+		//ゲーム開始
+		state_ = STATE::GAME;
+	}
+	//カウントダウンSEの再生
+	else if (gloUi.GetTimer().IsChanged())
+	{
+		snd.Play(SoundManager::SOUND_NAME::COUNT_DOWN_SE, SoundManager::PLAYTYPE::BACK);
+	}
 }
 
 void GameMain::UpdateGame(void)
@@ -161,17 +207,17 @@ void GameMain::UpdateGame(void)
 		state_ = STATE::FIN;
 
 		//カウントダウンの削除
-		gloUi.SubDraw(GlobalUIManager::DRAW_TYPE::LAST_COUNT_DOWN);
+		gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::LAST_COUNT_DOWN, false);
 
 		//タイムアップSEの再生
 		snd.Play(SoundManager::SOUND_NAME::TIME_UP_SE, SoundManager::PLAYTYPE::BACK);
 
 		//タイムアップUIの描画
-		gloUi.AddDraw(GlobalUIManager::DRAW_TYPE::FINISH);
+		gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::FINISH, true);
 
 		return;
 	}
-	else if(gloUi.GetTimer().IsUnderSeconds(LAST_COUNT_DOWN))
+	else if(gloUi.GetTimer().IsUnderSeconds(COUNT_DOWN))
 	{
 		//カウントダウンSEの再生
 		if (gloUi.GetTimer().IsChanged())
@@ -180,7 +226,7 @@ void GameMain::UpdateGame(void)
 		}
 
 		//カウントダウンの描画
-		gloUi.AddDraw(GlobalUIManager::DRAW_TYPE::LAST_COUNT_DOWN);
+		gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::LAST_COUNT_DOWN, true);
 	}
 
 	//インスタンス
@@ -233,6 +279,11 @@ void GameMain::UpdateFinish(void)
 		parent_.ChangeGameState(SceneGame::GAME_STATE::CHECK);
 		return;
 	}
+}
+
+void GameMain::DrawStart(const Camera& _camera)
+{
+	DrawGame(_camera);
 }
 
 void GameMain::DrawGame(const Camera& _camera)

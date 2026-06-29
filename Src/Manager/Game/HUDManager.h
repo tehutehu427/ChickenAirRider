@@ -1,4 +1,5 @@
 #pragma once
+#include<memory>
 #include<array>
 #include "../Common/Singleton.h"
 #include "../Common/Vector2F.h"
@@ -18,6 +19,7 @@ public:
 	//UI情報
 	enum class HUD_TYPE
 	{
+		PUSH_BUTTON,	//プッシュ表示
 		CHARGE_GAUGE,	//チャージゲージ
 		HEALTH,			//体力
 		PARAMETER,		//パラメーター
@@ -74,6 +76,9 @@ private:
 		//色
 		int color = 0;
 	};
+
+	//入力
+	static constexpr int PUSH_LOCAL_POS_X = 70;
 	
 	//パラメーター
 	static constexpr int PARAM_BOX_SIZE = 40;						//箱サイズ
@@ -112,6 +117,17 @@ private:
 	//デストラクタ
 	~HUDManager(void)override;
 
+	//入力UI
+	int pushImg_;
+	int mouseImg_;
+	int mouseLeftImg_;
+	int mouseRightImg_;
+	int mouseMoveImg_;
+	int aButtonImg_;
+	int bButtonImg_;
+	int xButtonImg_;
+	int yButtonImg_;
+
 	//ゲージ画像
 	int gaugeImg_;
 	int gaugeMaskImg_;
@@ -145,6 +161,7 @@ private:
 	void DrawPlayerHUD(const int _playerIndex);
 
 	//各描画
+	void DrawPushButton(const int _playerIndex);
 	void DrawChargeGauge(const int _playerIndex);
 	void DrawHealth(const int _playerIndex);
 	void DrawParam(const int _playerIndex);

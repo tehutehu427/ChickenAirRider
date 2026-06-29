@@ -30,7 +30,7 @@ Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE
 	//初期化
 	operation_ = _operation;
 	padNo_ = _padNo;
-	state_ = STATE::NONE;
+	state_ = STATE::NORMAL;
 	prePos_ = Utility::VECTOR_ZERO;
 	movedPos_ = Utility::VECTOR_ZERO;
 	flontPos_ = Utility::VECTOR_ZERO;
@@ -44,23 +44,20 @@ Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE
 	canMove_ = false;
 
 	//操作タイプ
-	createLogic_[OPERATION_TYPE::USER] = [this](void) {	logic_ = std::make_unique<UserLogic>(padNo_); };
-	createLogic_[OPERATION_TYPE::NPC] = [this](void) {logic_ = std::make_unique<NpcLogic>(*this); };
+	createLogic_[static_cast<int>(OPERATION_TYPE::USER)] = &Player::CreateUserLogic;
+	createLogic_[static_cast<int>(OPERATION_TYPE::NPC)] = &Player::CreateNpcLogic;
 
 	//行動切り替え
-	changeAction_[STATE::NONE] = [this](void) {};
-	changeAction_[STATE::NORMAL] = [this](void) {ChangeActionNormal(); };
-	changeAction_[STATE::RIDE_MACHINE] = [this](void) {ChangeActionRide(); };
+	changeAction_[static_cast<int>(STATE::NORMAL)] = &Player::ChangeActionNormal;
+	changeAction_[static_cast<int>(STATE::RIDE_MACHINE)] = &Player::ChangeActionRide;
 
 	//描画
-	update_[STATE::NONE] = [this](void) {};
-	update_[STATE::NORMAL] = [this](void) {UpdateNormal(); };
-	update_[STATE::RIDE_MACHINE] = [this](void) {UpdateRide(); };
+	update_[static_cast<int>(STATE::NORMAL)] = &Player::UpdateNormal;
+	update_[static_cast<int>(STATE::RIDE_MACHINE)] = &Player::UpdateRide;
 
 	//描画
-	draw_[STATE::NONE] = [this](void) {};
-	draw_[STATE::NORMAL] = [this](void) {DrawNormal(); };
-	draw_[STATE::RIDE_MACHINE] = [this](void) {DrawRide(); };
+	draw_[static_cast<int>(STATE::NORMAL)] = &Player::DrawNormal;
+	draw_[static_cast<int>(STATE::RIDE_MACHINE)] = &Player::DrawRide;
 }
 
 Player::~Player(void)
@@ -101,7 +98,7 @@ void Player::Load(void)
 	MakeCollider(Collider::TAG::FOOT, std::move(geo), { playerTag_,Collider::TAG::FOOT });
 
 	//行動基準
-	createLogic_[operation_]();
+	(this->*createLogic_[static_cast<int>(operation_)])();
 	logic_->Init();
 
 	//当たり判定後処理
@@ -183,7 +180,7 @@ void Player::Update(void)
 void Player::Draw(void)
 {
 	//描画
-	draw_[state_]();
+	(this->*draw_[static_cast<int>(state_)])();
 }
 
 void Player::OnHit(const std::weak_ptr<Collider> _hitCol)
@@ -243,7 +240,7 @@ void Player::ChangeState(const STATE& _state)
 	state_ = _state;
 
 	//アクション状態遷移
-	changeAction_[state_]();
+	(this->*changeAction_[static_cast<int>(state_)])();
 
 	//初期化
 	action_->Init();
@@ -334,11 +331,21 @@ void Player::MoveAndUpdateState(void)
 	if (canMove_)
 	{
 		//状態ごとの更新
-		update_[state_]();
+		(this->*update_[static_cast<int>(state_)])();
 
 		//移動
 		movedPos_ = VAdd(movedPos_, movePow_);
 	}
+}
+
+void Player::CreateUserLogic(void)
+{
+	logic_ = std::make_unique<UserLogic>(padNo_);
+}
+
+void Player::CreateNpcLogic(void)
+{
+	logic_ = std::make_unique<NpcLogic>(*this);
 }
 
 void Player::ChangeActionNormal(void)

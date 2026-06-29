@@ -35,30 +35,28 @@ void GlobalUIManager::Update(void)
 void GlobalUIManager::Draw(void)
 {
 	//描画
-	for (auto& draw : drawView_)
+	for (const auto& draw : draws_)
 	{
-		draw.second();
+		//非表示判定
+		if (!draw.visible)continue;
+
+		//描画
+		(this->*draw.func)();
 	}
 }
 
-void GlobalUIManager::AddDraw(const DRAW_TYPE _type)
+void GlobalUIManager::SetVisible(const DRAW_TYPE _type, const bool _visible)
 {
-	//追加
-	drawView_.emplace(_type, drawList_[_type]);
-}
-
-void GlobalUIManager::SubDraw(const DRAW_TYPE _type)
-{
-	//削除
-	drawView_.erase(_type);
+	//表示状況の変更
+	draws_[static_cast<int>(_type)].visible = _visible;
 }
 
 GlobalUIManager::GlobalUIManager(void)
 {
 	//描画リスト
-	drawList_.emplace(DRAW_TYPE::TIMER, [this](void) {DrawTimer(); });
-	drawList_.emplace(DRAW_TYPE::LAST_COUNT_DOWN, [this](void) {DrawCountDown(); });
-	drawList_.emplace(DRAW_TYPE::FINISH, [this](void) {DrawFinish(); });
+	draws_[static_cast<int>(DRAW_TYPE::TIMER)] = { &GlobalUIManager::DrawTimer,false };
+	draws_[static_cast<int>(DRAW_TYPE::LAST_COUNT_DOWN)] = { &GlobalUIManager::DrawCountDown,false };
+	draws_[static_cast<int>(DRAW_TYPE::FINISH)] = { &GlobalUIManager::DrawFinish,false };
 }
 
 GlobalUIManager::~GlobalUIManager(void)

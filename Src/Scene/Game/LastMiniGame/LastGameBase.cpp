@@ -2,6 +2,7 @@
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/KeyConfig.h"
+#include "../Manager/System/SplitScreenManager.h"
 #include "../Manager/System/Camera.h"
 #include "../Manager/Game/HUDManager.h"
 #include "../Manager/Game/GameSetting.h"
@@ -29,6 +30,7 @@ void LastGameBase::Init(void)
 	auto& plMng = PlayerManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
 	auto& hud = HUDManager::GetInstance();
+	auto& split = SplitScreenManager::GetInstance();
 
 	//プレイヤーの人数
 	const int plNum = GameSetting::GetInstance().GetPlayerNum();
@@ -43,6 +45,7 @@ void LastGameBase::Init(void)
 	{
 		hud.SetVisible(i, HUDManager::HUD_TYPE::CHARGE_GAUGE, true);
 		hud.SetVisible(i, HUDManager::HUD_TYPE::HEALTH, true);
+		split.SetShader(i, SplitScreenManager::SHADER_TYPE::GOD_RAY);
 	}
 
 	//順位用
@@ -113,6 +116,7 @@ void LastGameBase::Release(void)
 	auto& setting = GameSetting::GetInstance();
 	auto& hud = HUDManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
+	auto& split = SplitScreenManager::GetInstance();
 
 	//プレイヤーの数リセット
 	setting.ResetPlayerNum();
@@ -122,6 +126,7 @@ void LastGameBase::Release(void)
 	{
 		hud.SetVisible(i, HUDManager::HUD_TYPE::CHARGE_GAUGE, false);
 		hud.SetVisible(i, HUDManager::HUD_TYPE::HEALTH, false);
+		split.SetShader(i, SplitScreenManager::SHADER_TYPE::DEFAULT);
 	}
 
 	//BGMストップ

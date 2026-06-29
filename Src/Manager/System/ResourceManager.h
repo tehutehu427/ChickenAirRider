@@ -86,6 +86,17 @@ public:
 		KEY_CONFIG_TEXT,	//キーコンフィグテキスト
 		END_TEXT,			//終了テキスト
 
+		//入力UI
+		PUSH,					//Push画像
+		MOUSE,					//マウス
+		MOUSE_LEFT,				//マウス左クリック
+		MOUSE_RIGHT,			//マウス右クリック
+		MOUSE_MOVE,				//マウス左右移動
+		A_BUTTON,				//Aボタン
+		B_BUTTON,				//Bボタン
+		X_BUTTON,				//Xボタン
+		Y_BUTTON,				//Yボタン
+
 		//UI
 		CHARGE_GAUGE,			//チャージゲージ
 		CHARGE_GAUGE_MASK,		//チャージゲージマスク

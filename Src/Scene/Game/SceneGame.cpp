@@ -33,6 +33,9 @@ SceneGame::SceneGame(void)
 
 SceneGame::~SceneGame(void)
 {
+	//ÅIƒQ[ƒ€‚Ì‰ğ•ú
+	game_->Release();
+
 	//HUD‚Ì‰Šú‰»
 	auto& hud = HUDManager::GetInstance();
 	hud.Init();
