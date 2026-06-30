@@ -11,27 +11,24 @@ cbuffer cbParam : register(b4)
 
 float4 main(PS_INPUT PSInput) : SV_TARGET
 {
-    //=========================
     // ブラー
-    //=========================
-
     float blur = (1.0f - progress) * 0.008f;
-
     float2 uv = PSInput.uv;
 
+    //分割画像用のUV変換
     uv *= g_uvScale;
     uv += g_uvOffset;
 
-    float4 srcCol = tex.Sample(texSampler, uv);
-    
+    //周囲をサンプリングして平均をとる
+    float4 srcCol = 0;
     srcCol += tex.Sample(texSampler, uv);
     srcCol += tex.Sample(texSampler, uv + float2(blur, 0));
     srcCol += tex.Sample(texSampler, uv + float2(-blur, 0));
     srcCol += tex.Sample(texSampler, uv + float2(0, blur));
     srcCol += tex.Sample(texSampler, uv + float2(0, -blur));
-    
     srcCol /= 5.0f;
-
+    
+    //透明なら描画しない
     if (srcCol.a < 0.01f)
     {
         discard;
@@ -39,24 +36,17 @@ float4 main(PS_INPUT PSInput) : SV_TARGET
 
     float4 dstCol = srcCol;
 
-    //=========================
-    // モノクロ
-    //=========================
-
+    //彩度補間(最初はモノクロ)
+    float saturation = lerp(0.3f, 1.0f, progress);
     float gray = (dstCol.r + dstCol.g + dstCol.b) / 3.0f;
-    dstCol.rgb = gray.xxx;
+    float3 grayColor = gray.xxx;
+    dstCol.rgb = lerp(grayColor, dstCol.rgb, saturation);
 
-    //=========================
-    // 最初だけ少し白く
-    //=========================
-
+    //発光(最初のみ少し白く)    
     float glow = 1.0f - progress;
     dstCol.rgb += glow * 0.3f;
 
-    //=========================
-    // アルファ
-    //=========================
-
+    //フェード
     dstCol.a *= lerp(0.2f, 1.0f, progress);
 
     return dstCol;

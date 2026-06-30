@@ -102,8 +102,17 @@ void GlobalUIManager::DrawCountDown(void)
 	float timeDecimel = time - std::floorf(time);
 	float progress = 1.0f - timeDecimel;
 
-	Vector2 pos = { 0.0f,0.0f };
-	Vector2 size = { Application::SCREEN_SIZE_X * timeDecimel,Application::SCREEN_SIZE_Y * timeDecimel };
+	Vector2 size =
+	{
+		Application::SCREEN_SIZE_X * timeDecimel,
+		Application::SCREEN_SIZE_Y * timeDecimel
+	};
+
+	Vector2 pos =
+	{
+		(Application::SCREEN_SIZE_X - size.x) * 0.5f,
+		(Application::SCREEN_SIZE_Y - size.y) * 0.5f
+	};
 
 	//•`‰æ
 	countDownMaterial_->SetConstBuf(0, { progress,0.0f,0.0f,0.0f });
