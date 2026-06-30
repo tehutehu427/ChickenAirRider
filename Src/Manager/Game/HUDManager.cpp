@@ -169,7 +169,7 @@ void HUDManager::DrawPushButton(const int _playerIndex)
 	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
 
 	//座標
-	Vector2 pos = { Application::SCREEN_HALF_X * scale,Application::SCREEN_HALF_Y * scale };
+	Vector2 pos = { view.x + Application::SCREEN_HALF_X * scale,view.y + Application::SCREEN_HALF_Y * scale };
 	int localPosX = PUSH_LOCAL_POS_X * scale;
 	Vector2 pushSize = { PUSH_SIZE_X * scale,PUSH_SIZE_Y * scale };
 

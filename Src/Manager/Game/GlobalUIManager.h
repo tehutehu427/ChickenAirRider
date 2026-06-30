@@ -1,6 +1,8 @@
 #pragma once
 #include "../Common/Singleton.h"
+#include "../../Renderer/PixelRenderer.h"
 
+class PixelMaterial;
 class Timer;
 
 class GlobalUIManager : public Singleton<GlobalUIManager>
@@ -14,7 +16,7 @@ public:
 	enum class DRAW_TYPE
 	{
 		TIMER,				//タイマー
-		LAST_COUNT_DOWN,	//最後のカウントダウン
+		COUNT_DOWN,			//カウントダウン
 		FINISH,				//終了表示
 		MAX
 	};
@@ -60,6 +62,13 @@ private:
 
 	//フィニッシュUI
 	int finishImg_;
+
+	//カウントダウン
+	int* countDownImg_;
+	std::unique_ptr<PixelMaterial> countDownMaterial_;
+	
+	//レンダラー
+	PixelRenderer renderer_;
 
 	//描画
 	std::array<DrawData,static_cast<int>(DRAW_TYPE::MAX)> draws_;

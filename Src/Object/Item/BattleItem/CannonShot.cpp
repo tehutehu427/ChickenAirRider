@@ -99,6 +99,9 @@ void CannonShot::Draw(void)
 
 void CannonShot::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
+	//‚·‚Å‚É”š”­‚µ‚Ä‚¢‚é‚È‚ç
+	if (state_ == STATE::BLAST)return;
+
 	//ŠÒ
 	const auto& holder = holder_.lock();
 	const auto& hiter = _hitCol.lock();
@@ -115,9 +118,6 @@ void CannonShot::OnHit(const std::weak_ptr<Collider> _hitCol)
 		}
 		else
 		{
-			//‚·‚Å‚É”š”­‚µ‚Ä‚¢‚é‚È‚ç
-			if (state_== STATE::BLAST)return;
-
 			//”š”­
 			changeState_[STATE::BLAST]();
 		}

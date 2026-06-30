@@ -2,14 +2,27 @@
 #include"../../Application.h"
 #include"../Utility/Utility.h"
 #include"../Manager/System/ResourceManager.h"
+#include"../Manager/System/SceneManager.h"
 #include"../Manager/Game/Timer.h"
 #include"../Manager/Game/GameSetting.h"
+#include"../../Renderer/PixelMaterial.h"
+#include"../../Renderer/PixelRenderer.h"
 #include "GlobalUIManager.h"
 
 void GlobalUIManager::LoadOutSide(void)
 {
+	//インスタンス
+	auto& res = ResourceManager::GetInstance();
+
 	//画像の読み込み
-	finishImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::FINISH_UI).handleId_;
+	finishImg_ = res.Load(ResourceManager::SRC::FINISH_UI).handleId_;
+	countDownImg_ = res.Load(ResourceManager::SRC::FINISH_NUMBER).handleIds_;
+
+	//マテリアル
+	countDownMaterial_ = std::make_unique<PixelMaterial>(L"CountDown.cso", 2);
+	countDownMaterial_->AddConstBuf({ 0.0f,0.0f,0.0f,0.0f });
+	countDownMaterial_->AddConstBuf({ 0.0f,0.0f,0.0f,0.0f });
+	countDownMaterial_->AddTextureBuf(-1);
 }
 
 void GlobalUIManager::Init(void)
@@ -55,7 +68,7 @@ GlobalUIManager::GlobalUIManager(void)
 {
 	//描画リスト
 	draws_[static_cast<int>(DRAW_TYPE::TIMER)] = { &GlobalUIManager::DrawTimer,false };
-	draws_[static_cast<int>(DRAW_TYPE::LAST_COUNT_DOWN)] = { &GlobalUIManager::DrawCountDown,false };
+	draws_[static_cast<int>(DRAW_TYPE::COUNT_DOWN)] = { &GlobalUIManager::DrawCountDown,false };
 	draws_[static_cast<int>(DRAW_TYPE::FINISH)] = { &GlobalUIManager::DrawFinish,false };
 }
 
@@ -71,6 +84,34 @@ void GlobalUIManager::DrawTimer(void)
 
 void GlobalUIManager::DrawCountDown(void)
 {
+	//影響度
+	float time = timer_->GetRemainingTime();
+	int number = static_cast<int>(time) % 10 + 1;
+	int numberImg = countDownImg_[number];
+
+	float cellWidth = 1.0f / 5.0f;
+	float cellHeight = 1.0f / 2.0f;
+
+	int col = number % 5;
+	int row = number / 5;
+
+	Vector2F uvScale = { cellWidth, cellHeight };
+	Vector2F uvOffset = { col * cellWidth, row * cellHeight };
+
+	//小数点のみ
+	float timeDecimel = time - std::floorf(time);
+	float progress = 1.0f - timeDecimel;
+
+	Vector2 pos = { 0.0f,0.0f };
+	Vector2 size = { Application::SCREEN_SIZE_X * timeDecimel,Application::SCREEN_SIZE_Y * timeDecimel };
+
+	//描画
+	countDownMaterial_->SetConstBuf(0, { progress,0.0f,0.0f,0.0f });
+	countDownMaterial_->SetConstBuf(1, { uvScale.x,uvScale.y,uvOffset.x,uvOffset.y });
+	countDownMaterial_->SetTextureBuf(0, numberImg);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	renderer_.Draw(*countDownMaterial_, pos, size);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
 
 void GlobalUIManager::DrawFinish(void)

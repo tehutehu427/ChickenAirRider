@@ -75,8 +75,8 @@ void Timer::Draw(void)
 	//éûä‘êßå¿Ç†ÇË
 	if (IsTimeLimit())
 	{
-		minute = Minute(RemainingTime());
-		second = Second(RemainingTime());
+		minute = Minute(GetRemainingTime());
+		second = Second(GetRemainingTime());
 	}
 	//éûä‘êßå¿Ç»Çµ
 	else
@@ -110,7 +110,7 @@ const bool Timer::IsTimeOver(void)const
 	}
 }
 
-const float Timer::RemainingTime(void)const
+const float Timer::GetRemainingTime(void)const
 {
 	//ï‘Ç∑íl
 	float ret;

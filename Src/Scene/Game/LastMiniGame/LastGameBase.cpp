@@ -118,9 +118,6 @@ void LastGameBase::Release(void)
 	auto& snd = SoundManager::GetInstance();
 	auto& split = SplitScreenManager::GetInstance();
 
-	//プレイヤーの数リセット
-	setting.ResetPlayerNum();
-
 	//HPとチャージゲージを非表示
 	for (int i = 0; i < GameSetting::GetInstance().GetUserNum(); i++)
 	{

@@ -55,6 +55,7 @@ void GameMain::Init(void)
 	gloUi.GetTimer().Init(COUNT_DOWN);
 	gloUi.GetTimer().SetCountValid(true);
 	gloUi.GetTimer().SetCountView(false);
+	gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::COUNT_DOWN, true);
 	gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::TIMER, true);
 
 	//重力
@@ -177,6 +178,9 @@ void GameMain::UpdateStart(void)
 		gloUi.GetTimer().SetCountValid(true);
 		gloUi.GetTimer().SetCountView(true);
 
+		//カウントダウンの削除
+		gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::COUNT_DOWN, false);
+
 		for (int i = 0; i < plNum; i++)
 		{
 			//入力表示を非表示
@@ -207,7 +211,7 @@ void GameMain::UpdateGame(void)
 		state_ = STATE::FIN;
 
 		//カウントダウンの削除
-		gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::LAST_COUNT_DOWN, false);
+		gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::COUNT_DOWN, false);
 
 		//タイムアップSEの再生
 		snd.Play(SoundManager::SOUND_NAME::TIME_UP_SE, SoundManager::PLAYTYPE::BACK);
@@ -226,7 +230,7 @@ void GameMain::UpdateGame(void)
 		}
 
 		//カウントダウンの描画
-		gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::LAST_COUNT_DOWN, true);
+		gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::COUNT_DOWN, true);
 	}
 
 	//インスタンス
