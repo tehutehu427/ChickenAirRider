@@ -190,8 +190,9 @@ void GameMain::UpdateStart(void)
 		//ゲーム開始
 		state_ = STATE::GAME;
 	}
+
 	//カウントダウンSEの再生
-	else if (gloUi.GetTimer().IsChanged())
+	if (gloUi.GetTimer().IsChanged())
 	{
 		snd.Play(SoundManager::SOUND_NAME::COUNT_DOWN_SE, SoundManager::PLAYTYPE::BACK);
 	}

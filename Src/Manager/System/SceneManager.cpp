@@ -144,8 +144,12 @@ void SceneManager::Update(void)
 	//フェーダー更新
 	fader_->Update();
 
+	//フェード中ではない
 	if (fader_->GetState() == Fader::STATE::NONE)
 	{
+		//全体UIの更新
+		GlobalUIManager::GetInstance().Update();
+
 		if(scene_.back() != nullptr)
 		//先頭シーンの更新
 		scene_.back()->Update();
@@ -156,9 +160,6 @@ void SceneManager::Update(void)
 	{
 		c->Update();
 	}
-
-	//全体UIの更新
-	GlobalUIManager::GetInstance().Update();
 }
 
 void SceneManager::Draw(void)
