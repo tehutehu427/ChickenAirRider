@@ -2,15 +2,6 @@
 #include"../Utility/Utility.h"
 #include "GravityManager.h"
 
-void GravityManager::Destroy(void)
-{
-	if (instance_ != nullptr)
-	{
-		delete instance_;
-		instance_ = nullptr;
-	}
-}
-
 void GravityManager::Init(void)
 {
 	slerpPow_ = 0.0f;

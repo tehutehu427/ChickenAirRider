@@ -26,7 +26,7 @@ public:
 		instance_->Init();
 
 		//レジスタに格納
-		SingletonRegistry::GetInstance().RegistryDestroyer(_timing, [](void) { instance_->Destroy(); });
+		SingletonRegistry::GetInstance().RegistryDestroyer(_timing, [](void) { instance_->DestroyInstance(); });
 	}
 
 	//インスタンスの取得

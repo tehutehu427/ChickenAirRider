@@ -462,7 +462,6 @@ void ResourceManager::Destroy(void)
 {
 	Release();
 	resourcesMap_.clear();
-	delete instance_;
 }
 
 const Resource& ResourceManager::Load(SRC src)

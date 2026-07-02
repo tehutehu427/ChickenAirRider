@@ -14,9 +14,6 @@ public:
 	//d—Í
 	static constexpr float GRAVITY_POW = 3.0f;
 
-	//‰ğ•ú
-	void Destroy(void)override;
-
 	//‰Šú‰»
 	void Init(void)override;
 
