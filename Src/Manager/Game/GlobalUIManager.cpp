@@ -89,12 +89,15 @@ void GlobalUIManager::DrawCountDown(void)
 	int number = static_cast<int>(time) % 10 + 1;
 	int numberImg = countDownImg_[number];
 
+	//‰æ‘œ•ªŠ„
 	float cellWidth = 1.0f / 5.0f;
 	float cellHeight = 1.0f / 2.0f;
 
+	//•ªŠ„‚²‚Æ‚Ì”š
 	int col = number % 5;
 	int row = number / 5;
 
+	//UVÀ•W
 	Vector2F uvScale = { cellWidth, cellHeight };
 	Vector2F uvOffset = { col * cellWidth, row * cellHeight };
 
