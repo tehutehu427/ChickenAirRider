@@ -163,6 +163,12 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Event\NoChargeEvent.cpp" />
+    <ClCompile Include="Src\Event\SpeedUpEvent.cpp" />
+    <ClCompile Include="Src\Event\MonoEvent.cpp" />
+    <ClCompile Include="Src\Event\EventBase.cpp" />
+    <ClCompile Include="Src\Event\EventFactory.cpp" />
+    <ClCompile Include="Src\Manager\Game\EventManager.cpp" />
     <ClCompile Include="Src\Manager\Game\HUDManager.cpp" />
     <ClCompile Include="Src\Object\Player\Logic\Npc\NpcBrain.cpp" />
     <ClCompile Include="Src\Scene\SceneResult.cpp" />
@@ -250,6 +256,13 @@
     <ClCompile Include="Src\Manager\System\SplitScreenManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Event\EventType.h" />
+    <ClInclude Include="Src\Event\NoChargeEvent.h" />
+    <ClInclude Include="Src\Event\SpeedUpEvent.h" />
+    <ClInclude Include="Src\Event\MonoEvent.h" />
+    <ClInclude Include="Src\Event\EventBase.h" />
+    <ClInclude Include="Src\Event\EventFactory.h" />
+    <ClInclude Include="Src\Manager\Game\EventManager.h" />
     <ClInclude Include="Src\Manager\Game\HUDManager.h" />
     <ClInclude Include="Src\Object\Player\Logic\Npc\NpcBrain.h" />
     <ClInclude Include="Src\Object\Player\Logic\Npc\SimulationResult.h" />

@@ -16,6 +16,7 @@
 #include"../Manager/Game/ItemManager.h"
 #include"../Manager/Game/GlobalUIManager.h"
 #include"../Manager/Game/HUDManager.h"
+#include"../Manager/Game/EventManager.h"
 #include"../Object/SkyDome/SkyDome.h"
 #include"../Object/Player/Player.h"
 #include "GameMain.h"
