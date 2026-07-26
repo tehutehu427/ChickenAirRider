@@ -1,4 +1,5 @@
 #pragma once
+#include"EventType.h"
 
 class EventBase
 {
@@ -22,10 +23,13 @@ public:
 	//終了判定
 	const bool IsEnd(void)const { return isEnd_; }
 
+	//現在イベント
+	virtual const EVENT_TYPE& GetType(void)const = 0;
+
 protected:
 
 	//制限時間
-	static constexpr float LIMIT_TIME = 30.0f;
+	static constexpr float LIMIT_TIME = 20.0f;
 
 	//カウンタ
 	float cnt_;

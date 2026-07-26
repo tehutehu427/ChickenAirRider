@@ -2,7 +2,6 @@
 #include"../../Application.h"
 #include"../Utility/Utility.h"
 #include"../Manager/System/ResourceManager.h"
-#include"../Manager/System/SceneManager.h"
 #include"../Manager/Game/Timer.h"
 #include"../Manager/Game/GameSetting.h"
 #include"../../Renderer/PixelMaterial.h"
@@ -70,6 +69,7 @@ GlobalUIManager::GlobalUIManager(void)
 	draws_[static_cast<int>(DRAW_TYPE::TIMER)] = { &GlobalUIManager::DrawTimer,false };
 	draws_[static_cast<int>(DRAW_TYPE::COUNT_DOWN)] = { &GlobalUIManager::DrawCountDown,false };
 	draws_[static_cast<int>(DRAW_TYPE::FINISH)] = { &GlobalUIManager::DrawFinish,false };
+	draws_[static_cast<int>(DRAW_TYPE::EVENT)] = { &GlobalUIManager::DrawEvent,false };
 }
 
 GlobalUIManager::~GlobalUIManager(void)
@@ -132,5 +132,17 @@ void GlobalUIManager::DrawFinish(void)
 	DrawBox(0, Application::SCREEN_HALF_Y - FINISH_FRAME_HEIGHT, Application::SCREEN_SIZE_X, Application::SCREEN_HALF_Y + FINISH_FRAME_HEIGHT, Utility::GRAY, true);
 
 	//フィニッシュUI描画
-	DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, FINISH_UI_SCALE, 0.0f, finishImg_, true);
+	DrawRotaGraph(Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y, FINISH_UI_SCALE, 0.0, finishImg_, true);
+}
+
+void GlobalUIManager::DrawEvent(void)
+{
+	//座標
+	int posY = Application::SCREEN_SIZE_Y + EVENT_LOCAL_POS_Y;
+
+	//枠
+	DrawBox(0, posY - EVENT_FRAME_HEIGHT, Application::SCREEN_SIZE_X, posY + EVENT_FRAME_HEIGHT, 0x000000, true);
+
+	//イベントUI描画
+	DrawRotaGraph(Application::SCREEN_HALF_X, posY, EVENT_UI_SCALE, 0.0, eventImg_, true);
 }

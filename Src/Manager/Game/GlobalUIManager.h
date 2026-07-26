@@ -1,4 +1,5 @@
 #pragma once
+#include<array>
 #include "../Common/Singleton.h"
 #include "../../Renderer/PixelRenderer.h"
 
@@ -18,6 +19,7 @@ public:
 		TIMER,				//タイマー
 		COUNT_DOWN,			//カウントダウン
 		FINISH,				//終了表示
+		EVENT,
 		MAX
 	};
 
@@ -39,6 +41,9 @@ public:
 	//全体タイマーの取得
 	Timer& GetTimer(void) { return *timer_; }
 
+	//イベントUIの設定
+	void SetEventUI(const int _imgId) { eventImg_ = _imgId; };
+
 private:
 
 	//描画用関数ポインタ
@@ -56,6 +61,11 @@ private:
 	
 	//枠の高さ
 	static constexpr int FINISH_FRAME_HEIGHT = 100;
+	
+	//イベント
+	static constexpr float EVENT_UI_SCALE = 0.5f;
+	static constexpr int EVENT_LOCAL_POS_Y = -50;
+	static constexpr int EVENT_FRAME_HEIGHT = 30;
 
 	//タイマー
 	std::unique_ptr<Timer> timer_;					
@@ -66,6 +76,9 @@ private:
 	//カウントダウン
 	int* countDownImg_;
 	std::unique_ptr<PixelMaterial> countDownMaterial_;
+
+	//イベント
+	int eventImg_;
 	
 	//レンダラー
 	PixelRenderer renderer_;
@@ -83,5 +96,6 @@ private:
 	void DrawTimer(void);
 	void DrawCountDown(void);
 	void DrawFinish(void);
+	void DrawEvent(void);
 };
 

@@ -29,6 +29,9 @@ void ResourceManager::Init(void)
 	//UI画像のパス
 	std::wstring uiImage = PATH_IMG + L"UI/";
 
+	//イベントのUI画像のパス
+	std::wstring eventImage = uiImage + L"Event/";
+
 	//箱ひび画像
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"BoxCrack.png");
 	resourcesMap_.emplace(SRC::BOX_CRACK, std::move(res));
@@ -216,6 +219,10 @@ void ResourceManager::Init(void)
 	//エアグライダーの確認見出し
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"AirGliderExplanText.png");
 	resourcesMap_.emplace(SRC::AIR_GLIDER_CHECK_TITLE, std::move(res));
+
+	//モノクロイベントのUI
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, eventImage + L"MonoEvent.png");
+	resourcesMap_.emplace(SRC::MONO_EVENT_UI, std::move(res));
 
 	//リザルトの1位画像
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, resultImage + L"1stImage.png");

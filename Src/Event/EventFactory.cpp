@@ -6,16 +6,16 @@
 
 EventFactory::EventFactory(void)
 {
-	createEventFuncs_[static_cast<int>(EventManager::EVENT_TYPE::MONO)] = &EventFactory::CreateMonoEvent;
-	createEventFuncs_[static_cast<int>(EventManager::EVENT_TYPE::SPEED_UP)] = &EventFactory::CreateSpeedUpEvent;
-	createEventFuncs_[static_cast<int>(EventManager::EVENT_TYPE::NONE_CHARGE)] = &EventFactory::CreateNoneChargeEvent;
+	createEventFuncs_[static_cast<int>(EVENT_TYPE::MONO)] = &EventFactory::CreateMonoEvent;
+	createEventFuncs_[static_cast<int>(EVENT_TYPE::SPEED_UP)] = &EventFactory::CreateSpeedUpEvent;
+	createEventFuncs_[static_cast<int>(EVENT_TYPE::NONE_CHARGE)] = &EventFactory::CreateNoneChargeEvent;
 }
 
 EventFactory::~EventFactory(void)
 {
 }
 
-std::unique_ptr<EventBase> EventFactory::CreateGameEvent(const EventManager::EVENT_TYPE& _type)
+std::unique_ptr<EventBase> EventFactory::CreateGameEvent(const EVENT_TYPE& _type)
 {
 	return (this->*createEventFuncs_[static_cast<int>(_type)])();
 }

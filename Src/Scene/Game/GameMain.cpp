@@ -1,6 +1,5 @@
 #include "../pch.h"
 #include "../Application.h"
-#include"../Common/SingletonRegistry.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/ResourceManager.h"
 #include"../Manager/System/SplitScreenManager.h"
@@ -18,7 +17,6 @@
 #include"../Manager/Game/HUDManager.h"
 #include"../Manager/Game/EventManager.h"
 #include"../Object/SkyDome/SkyDome.h"
-#include"../Object/Player/Player.h"
 #include "GameMain.h"
 
 GameMain::GameMain(SceneGame& _parent)
@@ -167,7 +165,7 @@ void GameMain::UpdateStart(void)
 	auto& gloUi = GlobalUIManager::GetInstance();
 	auto& hud = HUDManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
-
+	
 	//タイムリミットになったならゲーム開始
 	if (gloUi.GetTimer().IsTimeOver())
 	{
@@ -205,12 +203,16 @@ void GameMain::UpdateGame(void)
 	auto& scnMng = SceneManager::GetInstance();
 	auto& gloUi = GlobalUIManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
+	auto& event = EventManager::GetInstance();
 
 	//タイムリミットになったなら終了表示
 	if (gloUi.GetTimer().IsTimeOver())
 	{
 		//状態遷移
 		state_ = STATE::FIN;
+
+		//イベントのストップ
+		event.End();
 
 		//カウントダウンの削除
 		gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::COUNT_DOWN, false);
@@ -242,6 +244,9 @@ void GameMain::UpdateGame(void)
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
 	auto& key = KeyConfig::GetInstance();
+
+	//イベントの更新
+	event.Update();
 
 	//スカイドームの更新
 	sky_->Update();

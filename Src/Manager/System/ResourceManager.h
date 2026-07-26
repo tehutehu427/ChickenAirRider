@@ -106,6 +106,11 @@ public:
 		FINISH_NUMBER,			//終了用の数字
 		FINISH_UI,				//終了UI
 
+		//イベントUI
+		MONO_EVENT_UI,			//モノクロイベントのUI
+		SPEED_UP_EVENT_UI,		//スピードアップイベントのUI
+		NO_CHARGE_EVENT_UI,		//チャージなしイベントのUI
+
 		//最終ゲーム確認
 		DEATH_MATCH_CHECK_IMAGE,	//デスマッチの確認画像
 		DEATH_MATCH_CHECK_TITLE,	//デスマッチの確認見出し
