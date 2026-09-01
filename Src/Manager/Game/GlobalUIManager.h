@@ -16,10 +16,10 @@ public:
 	//描画種類
 	enum class DRAW_TYPE
 	{
-		TIMER,				//タイマー
-		COUNT_DOWN,			//カウントダウン
-		FINISH,				//終了表示
-		EVENT,
+		TIMER,		//タイマー
+		COUNT_DOWN,	//カウントダウン
+		FINISH,		//終了表示
+		EVENT,		//イベント表示
 		MAX
 	};
 

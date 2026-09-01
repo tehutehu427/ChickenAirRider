@@ -20,17 +20,17 @@ int Utility::RoundDown(float v)
 
 std::vector<std::string> Utility::Split(std::string& line, char delimiter)
 {
-
+	// 文字列を指定した区切り文字で分割する
     std::istringstream stream(line);
     std::string field;
     std::vector<std::string> result;
     
+	// 区切り文字で分割してベクターに格納
     while (getline(stream, field, delimiter)) {
         result.push_back(field);
     }
 
     return result;
-
 }
 
 double Utility::Rad2DegD(double rad)
@@ -85,16 +85,16 @@ double Utility::RadIn2PI(double rad)
 
 int Utility::DirNearAroundRad(float from, float to)
 {
-
+	// 回転が少ない方の回転向きを取得する(時計回り:1、反時計回り:-1)
     float ret = 1.0f;
 
+	// 差分を求める
     float diff = to - from;
 
+	// 差分が正の値なら時計回り、負の値なら反時計回り
     if (diff >= 0.0f)
     {
-
         // 比較元よりも時計回りに位置する
-
         if (diff > DX_PI_F)
         {
             // でも、180度以上離れているので、反時計回りの方が近い
@@ -105,13 +105,10 @@ int Utility::DirNearAroundRad(float from, float to)
             // 時計回り
             ret = 1.0f;
         }
-
     }
     else
     {
-
         // 比較元よりも反時計回りに位置する
-
         if (diff < -DX_PI_F)
         {
             // でも、180度以上離れているので、時計回りの方が近い
@@ -122,25 +119,23 @@ int Utility::DirNearAroundRad(float from, float to)
             // 反時計回り
             ret = -1.0f;
         }
-
     }
 
     return static_cast<int>(ret);
-
 }
 
 int Utility::DirNearAroundDeg(float from, float to)
 {
-
+	// 回転が少ない方の回転向きを取得する(時計回り:1、反時計回り:-1)
     float ret = 1.0f;
 
+	// 差分を求める
     float diff = to - from;
 
+	// 差分が正の値なら時計回り、負の値なら反時計回り
     if (diff >= 0.0f)
     {
-
         // 比較元よりも時計回りに位置する
-
         if (diff > 180.0f)
         {
             // でも、180度以上離れているので、反時計回りの方が近い
@@ -151,13 +146,10 @@ int Utility::DirNearAroundDeg(float from, float to)
             // 時計回り
             ret = 1.0f;
         }
-
     }
     else
     {
-
         // 比較元よりも反時計回りに位置する
-
         if (diff < -180.0f)
         {
             // でも、180度以上離れているので、時計回りの方が近い
@@ -168,11 +160,9 @@ int Utility::DirNearAroundDeg(float from, float to)
             // 反時計回り
             ret = -1.0f;
         }
-
     }
 
     return static_cast<int>(ret);
-
 }
 
 int Utility::Lerp(int start, int end, float t)
@@ -246,12 +236,14 @@ VECTOR Utility::Lerp(const VECTOR& start, const VECTOR& end, float t)
 
 double Utility::LerpDeg(double start, double end, double t)
 {
-
+	// 線形補間
     double ret;
-
     double diff = end - start;
+    
+	// 差分が180度以上離れている場合は、360度を加減して補間する
     if (diff < -180.0)
     {
+		// 反時計回りに回転する方が近いので、360度を加えて補間する
         end += 360.0;
         ret = Lerp(start, end, t);
         if (ret >= 360.0)
@@ -261,6 +253,7 @@ double Utility::LerpDeg(double start, double end, double t)
     }
     else if (diff > 180.0)
     {
+		// 時計回りに回転する方が近いので、360度を減算して補間する
         end -= 360.0;
         ret = Lerp(start, end, t);
         if (ret < 0.0)
@@ -270,11 +263,11 @@ double Utility::LerpDeg(double start, double end, double t)
     }
     else
     {
+		// 通常の線形補間
         ret = Lerp(start, end, t);
     }
 
     return ret;
-
 }
 
 COLOR_F Utility::Lerp(const COLOR_F& start, const COLOR_F& end, float t)
@@ -405,17 +398,18 @@ VECTOR Utility::VNormalize(const VECTOR& v)
 
 double Utility::AngleDeg(const VECTOR& from, const VECTOR& to)
 {
-    // sqrt(a) * sqrt(b) = sqrt(a * b) -- valid for real numbers
+	// 2つのベクトルの角度を求める
     auto fLen = SqrMagnitude(from);
     auto tLen = SqrMagnitude(to);
     auto denominator = sqrt(fLen * tLen);
-    if (denominator < kEpsilonNormalSqrt)
+
+	// 0除算を防ぐためのチェック
+    if (denominator < EPSILON)
     {
         return 0.0f;
     }
 
-    //float dot = std::clamp(Dot(from, to) / denominator, -1.0f, 1.0f);
-    //auto dot = Dot(from, to) / denominator;
+	// 内積を求める
     auto dot = VDot(from, to) / denominator;
     if (dot < -1.0f)
     {
@@ -793,6 +787,7 @@ int Utility::GetDigitCount(const int _value)
     // マイナス値は絶対値に変換
     int ret = std::abs(_value);
 
+    //桁数を数える
     int digit = 0;
     while (ret > 0)
     {
@@ -803,65 +798,31 @@ int Utility::GetDigitCount(const int _value)
     return digit;
 }
 
-std::string Utility::ShowSaveJsonDialog()
-{
-    // --- 現在のカレントディレクトリを保存 ---
-      // GetCurrentDirectoryA で必要なバッファサイズを取得
-    DWORD buffer_size = GetCurrentDirectoryA(0, nullptr);
-    std::string original_cwd;
-    if (buffer_size != 0) {
-        std::vector<char> current_dir_buffer(buffer_size);
-        if (GetCurrentDirectoryA(buffer_size, current_dir_buffer.data()) != 0) {
-            original_cwd = current_dir_buffer.data();
-        }
-    }
-    // ここでエラーチェックを省略していますが、実際のアプリケーションではエラーハンドリングをしっかり行うことを推奨します。
-
-    // 構造体をゼロ初期化
-    OPENFILENAMEA ofn = {}; // Aサフィックスの構造体を使用
-
-    // ファイル名バッファをマルチバイト文字 (char) に変更
-    char fileName[MAX_PATH] = "";
-
-    ofn.lStructSize = sizeof(OPENFILENAMEA);
-    ofn.lpstrFilter = "JSONファイル (*.json)\0*.json\0すべてのファイル (*.*)\0*.*\0";
-    ofn.lpstrFile = fileName;
-    ofn.nMaxFile = MAX_PATH;
-    ofn.Flags = OFN_OVERWRITEPROMPT;
-    ofn.lpstrDefExt = "json"; // 既定の拡張子もマルチバイト文字
-
-    std::string selected_path = ""; // 選択されたパスを保持する変数
-
-    if (GetSaveFileNameA(&ofn)) // Aサフィックスの関数を使用
-    {
-        // 取得したパスは、システムの現在のANSIコードページ (通常はSJIS) でエンコードされています。
-        // そのまま std::string に変換して返します。
-        selected_path = std::string(fileName);
-    }
-
-    // --- 元のカレントディレクトリに戻す ---
-    if (!original_cwd.empty()) {
-        SetCurrentDirectoryA(original_cwd.c_str());
-    }
-    // ここでもエラーチェックを省略していますが、SetCurrentDirectoryA が失敗する可能性も考慮してください。
-
-    return selected_path; // キャンセルされたときには空文字列が返る
-}
-
 std::string Utility::WStrToStr(const std::wstring& wstr)
 {
+	//変換するために必要なバッファサイズを取得
     int size = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+
+	// 変換後の文字列を格納するためのバッファを確保
     std::string result(size, 0);
+
+	// ワイド文字列をマルチバイト文字列に変換
     WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &result[0], size, nullptr, nullptr);
     return result;
 }
 
 std::wstring Utility::StrToWStr(const std::string& str)
 {
+    //変換するために必要なバッファサイズを取得
     int size = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, nullptr, 0);
-    std::wstring wstr(size, L'\0');
-    MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, &wstr[0], size);
-    return wstr;
+    
+    // 変換後の文字列を格納するためのバッファを確保
+    std::wstring result(size, L'\0');
+    
+	// マルチバイト文字列をワイド文字列に変換
+    MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, &result[0], size);
+
+    return result;
 }
 
 float Utility::PingPongUpdate(const float _value, const float _step, const float _max, const float _min, int& _dir)

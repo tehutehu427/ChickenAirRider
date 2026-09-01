@@ -23,6 +23,8 @@ public:
 		SEPIA,		//セピア
 		SCAN_LINE,	//スキャンライン
 		GOD_RAY,	//ゴッドレイ
+		GLITCH,		//グリッチ
+		WIND,		//風
 		MAX
 	};
 
@@ -121,6 +123,8 @@ private:
 	void SetSepia(const int _index);
 	void SetScanLine(const int _index);
 	void SetGodRay(const int _index);
+	void SetGlitch(const int _index);
+	void SetWind(const int _index);
 
 	//更新
 	void UpdateDefault(const int _index);
@@ -128,4 +132,6 @@ private:
 	void UpdateSepia(const int _index);
 	void UpdateScanLine(const int _index);
 	void UpdateGodRay(const int _index);
+	void UpdateGlitch(const int _index);
+	void UpdateWind(const int _index);
 };

@@ -10,20 +10,23 @@ class FpsControl
 {
 public:
 
-	FpsControl();	// コンストラクタ
-	~FpsControl();	// デストラクタ
+	//コンストラクタ
+	FpsControl(void);	
+
+	//デストラクタ
+	~FpsControl(void);	
 
 	//初期化
-	void Init();
+	void Init(void);
 
 	//フレームレート更新
-	bool UpdateFrameRate();
+	bool UpdateFrameRate(void);
 
 	//フレームレート計算
-	void CalcFrameRate();
+	void CalcFrameRate(void);
 
 	//フレームレート表示(デバッグ表示)
-	void DrawFrameRate();
+	void DrawFrameRate(void)const;
 
 private:
 
@@ -41,6 +44,4 @@ private:
 
 	//フレームレート(表示用)
 	float frameRate_;
-
 };
-

@@ -11,17 +11,22 @@ public:
 
 	//コンストラクタ
 	SceneTitle(void);
+
 	//デストラクタ
 	~SceneTitle(void)override;
 
 	//読み込み
 	void Load(void)override;
+
 	//初期化
 	void Init(void)override;
+
 	//更新
 	void Update(void)override;
+
 	//描画
 	void Draw(const Camera& _camera)override;
+
 	//解放
 	void Release(void)override;
 
@@ -64,6 +69,7 @@ private:
 	//プッシュボタンUI画像
 	int pushAnyButtonImg_;
 
+	//ポストエフェクト用スクリーン
 	int postEffectScreen_;
 	std::unique_ptr<PixelMaterial> material_;
 	std::unique_ptr<PixelRenderer> renderer_;

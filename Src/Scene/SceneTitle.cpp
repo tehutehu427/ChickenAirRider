@@ -13,14 +13,13 @@
 #include "SceneTitle.h"
 
 SceneTitle::SceneTitle(void)
+	: backImg_(-1)
+	, backFrameImg_(-1)
+	, gearImg_(-1)
+	, logoImg_(-1)
+	, pushAnyButtonImg_(-1)
+	, cnt_(0.0f)
 {
-	backImg_ = -1;
-	backFrameImg_ = -1;
-	gearImg_ = -1;
-	logoImg_ = -1;
-	pushAnyButtonImg_ = -1;
-	postEffectScreen_ = -1;
-	cnt_ = 0.0f;
 }
 
 SceneTitle::~SceneTitle(void)
@@ -39,12 +38,13 @@ void SceneTitle::Load(void)
 
 	//UIの生成
 	SplitScreenManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
+	auto& split = SplitScreenManager::GetInstance();
 
 	//ユーザー数
 	int userNum = GameSetting::GetInstance().GetUserNum();
 
 	//タイトルは画面一つ
-	SplitScreenManager::GetInstance().CreateSplitViews(1, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+	split.CreateSplitViews(1, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 
 	//画像の読み込み
 	backImg_ = res.Load(ResourceManager::SRC::TITLE_BACK).handleId_;
@@ -58,11 +58,12 @@ void SceneTitle::Load(void)
 	int id = res.Load(ResourceManager::SRC::ENTER_SE).handleId_;
 	snd.Add(SoundManager::SOUND_NAME::ENTER, id, SoundManager::TYPE::SE, SE_VOLUME);
 
-	//id = res.Load(ResourceManager::SRC::TITLE_SE).handleId_;
-	//snd.Add(SoundManager::SOUND_NAME::TITLE_SE, id, SoundManager::TYPE::SE, 80);
-	//snd.Play(SoundManager::SOUND_NAME::TITLE_SE, SoundManager::PLAYTYPE::LOOP);
+	//タイトルSEの追加と再生
+	id = res.Load(ResourceManager::SRC::TITLE_SE).handleId_;
+	snd.Add(SoundManager::SOUND_NAME::TITLE_SE, id, SoundManager::TYPE::SE, SE_VOLUME);
+	snd.Play(SoundManager::SOUND_NAME::TITLE_SE, SoundManager::PLAYTYPE::LOOP);
 
-	//UIのシェーディング
+	//UIの点滅シェーダー
 	uiMaterial_ = std::make_unique<PixelMaterial>(L"Blinking.cso", 1);
 	uiMaterial_->AddConstBuf({ cnt_, BLINKING_SPEED, 0.0f, 0.0f });
 	uiMaterial_->AddTextureBuf(pushAnyButtonImg_);
@@ -70,14 +71,14 @@ void SceneTitle::Load(void)
 	uiRenderer_->SetPos({ PUSH_POS_X - PUSH_SIZE_X / 2, PUSH_POS_Y });
 	uiRenderer_->SetSize({ PUSH_SIZE_X, PUSH_SIZE_Y });
 	uiRenderer_->MakeSquareVertex();
+
+	//ポストエフェクト
+	split.SetShader(0, SplitScreenManager::SHADER_TYPE::WIND);
 }
 
 void SceneTitle::Init(void)
 {
-	//分割なし
-	//SceneManager::GetInstance().SetIsSplitMode(false);
-
-	//プレイヤー人数リセット
+	//プレイヤー人数リセット(画面分割リセット)
 	GameSetting::GetInstance().ResetPlayerNum();
 
 	//カウンタ
@@ -91,7 +92,7 @@ void SceneTitle::Update(void)
 	auto& key = KeyConfig::GetInstance();
 	auto& scn = SceneManager::GetInstance();
 
-	//シーン遷移デバッグ
+	//シーン遷移
 	if (key.IsTrgDownAny())
 	{
 		//決定音
@@ -138,13 +139,6 @@ void SceneTitle::Draw(const Camera& _camera)
 	uiRenderer_->Draw(*uiMaterial_);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
-	// ポストエフェクトの描画
-	//SetDrawScreen(postEffectScreen_);
-	//ClearDrawScreen();
-	//material_->SetTextureBuf(0, SceneManager::GetInstance().GetMainScreen());
-	//renderer_->Draw();
-	//SetDrawScreen(SceneManager::GetInstance().GetMainScreen());
-	//DrawGraph(0, 0, postEffectScreen_, true);
 }
 
 void SceneTitle::Release(void)

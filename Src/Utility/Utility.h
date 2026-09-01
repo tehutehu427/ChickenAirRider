@@ -10,9 +10,9 @@
 #include "../Common/IntVector3.h"
 #include "../Common/Quaternion.h"
 #include "../Object/Common/Transform.h"
+
 class Utility
 {
-
 public:
 
 	enum class STRING_PLACE	//文字列を揃える位置
@@ -61,13 +61,18 @@ public:
 	static constexpr int GRAY = 0xBBBBBB;	//灰色
 	static constexpr int BROWN = 0x8B4513;	//茶色
 
-	static constexpr float kEpsilonNormalSqrt = 1e-15F;
+	//正規化の際の誤差を吸収するための極めて小さい値
+	static constexpr float EPSILON = 1e-15F;
 
 	//値を反転させる溜めのスケール
 	static constexpr float REVERSE_SCALE = -1.0f;
 
 	//アルファ最大値
 	static constexpr int ALPHA_MAX = 255;
+
+	//揺れのデフォルト値
+	static constexpr float DEFAULT_SHAKE_SPEED = 5.0f;		//揺れの振幅
+	static constexpr float DEFAULT_SHAKE_AMPLITUDE = 10.0f;	//揺れの速さ
 
 	// 四捨五入
 	static int Round(float v);
@@ -253,9 +258,6 @@ public:
 	/// @return 変化量
 	static float EaseInOutBack(float _time, const float _totalTime, const float _start, const float _end);
 
-	static constexpr float DEFAULT_SHAKE_SPEED = 5.0f;		//揺れの振幅
-	static constexpr float DEFAULT_SHAKE_AMPLITUDE = 10.0f;	//揺れの速さ
-
 	/// @brief 揺らす計算した値を返す
 	/// @param _value 揺らしたい値
 	/// @param _time 時間
@@ -274,10 +276,6 @@ public:
 	/// @param _value 桁数を調べる値
 	/// @return 桁数
 	static int GetDigitCount(const int _value);
-
-	/// @brief JSON保存ダイアログを表示し、パスをUTF-8文字列で返す
-	/// @return UTF-8文字列で書いたパス
-	static std::string ShowSaveJsonDialog();
 
 	//wstring(Unicode文字列)をstring(UTF-8)に変換する
 	static std::string WStrToStr(const std::wstring& wstr);

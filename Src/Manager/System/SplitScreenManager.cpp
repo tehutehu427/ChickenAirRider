@@ -7,22 +7,22 @@
 
 void SplitScreenManager::LoadOutSide(void)
 {
-	//ピクセルシェーダーの作成
-	//pixelMaterials_[static_cast<int>(SHADER_TYPE::DEFAULT)] = std::make_unique<PixelMaterial>(L"Default.cso", 1);
-	//pixelMaterials_[static_cast<int>(SHADER_TYPE::MONO)] = std::make_unique<PixelMaterial>(L"Monotone.cso", 1);
-
 	//関数設定
 	setShader_[static_cast<int>(SHADER_TYPE::DEFAULT)] = &SplitScreenManager::SetDefault;
 	setShader_[static_cast<int>(SHADER_TYPE::MONO)] = &SplitScreenManager::SetMono;
 	setShader_[static_cast<int>(SHADER_TYPE::SEPIA)] = &SplitScreenManager::SetSepia;
 	setShader_[static_cast<int>(SHADER_TYPE::SCAN_LINE)] = &SplitScreenManager::SetScanLine;
 	setShader_[static_cast<int>(SHADER_TYPE::GOD_RAY)] = &SplitScreenManager::SetGodRay;
+	setShader_[static_cast<int>(SHADER_TYPE::GLITCH)] = &SplitScreenManager::SetGlitch;
+	setShader_[static_cast<int>(SHADER_TYPE::WIND)] = &SplitScreenManager::SetWind;
 
 	updateShader_[static_cast<int>(SHADER_TYPE::DEFAULT)] = &SplitScreenManager::UpdateDefault;
 	updateShader_[static_cast<int>(SHADER_TYPE::MONO)] = &SplitScreenManager::UpdateMono;
 	updateShader_[static_cast<int>(SHADER_TYPE::SEPIA)] = &SplitScreenManager::UpdateSepia;
 	updateShader_[static_cast<int>(SHADER_TYPE::SCAN_LINE)] = &SplitScreenManager::UpdateScanLine;
 	updateShader_[static_cast<int>(SHADER_TYPE::GOD_RAY)] = &SplitScreenManager::UpdateGodRay;
+	updateShader_[static_cast<int>(SHADER_TYPE::GLITCH)] = &SplitScreenManager::UpdateGlitch;
+	updateShader_[static_cast<int>(SHADER_TYPE::WIND)] = &SplitScreenManager::UpdateWind;
 
 	//レンダーの作成
 	pixelRenderer_ = std::make_unique<PixelRenderer>();
@@ -111,9 +111,6 @@ void SplitScreenManager::Composite(void)
 
 		//シェーダー描画
 		pixelRenderer_->Draw(*view.material, renderPos, renderSize);
-
-		//分割スクリーンの描画
-		//DrawGraph(view.viewport.x, view.viewport.y, view.renderScreen, true);
 	}
 }
 
@@ -229,6 +226,20 @@ void SplitScreenManager::SetGodRay(const int _index)
 	splitViews_[_index].material->AddConstBuf({ 0.1f, 0.0f,0.95f, 0.7f });
 }
 
+void SplitScreenManager::SetGlitch(const int _index)
+{
+	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"Glitch.cso", 1);
+	splitViews_[_index].material->AddConstBuf({ 0.0f,0.0f,0.0f,0.0f });
+}
+
+void SplitScreenManager::SetWind(const int _index)
+{
+	splitViews_[_index].material = std::make_unique<PixelMaterial>(L"Wind.cso", 3);
+	splitViews_[_index].material->AddConstBuf({ 1.0f,1.0f,1.0f,1.0f });
+	splitViews_[_index].material->AddConstBuf({ 0.0f,0.0f,0.0f,0.0f });
+	splitViews_[_index].material->AddConstBuf({ 0.08f,0.3f,0.0f,0.0f });
+}
+
 void SplitScreenManager::UpdateDefault(const int _index)
 {
 }
@@ -261,4 +272,44 @@ void SplitScreenManager::UpdateScanLine(const int _index)
 
 void SplitScreenManager::UpdateGodRay(const int _index)
 {
+}
+
+void SplitScreenManager::UpdateGlitch(const int _index)
+{
+	//デルタタイム
+	float delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//描画情報
+	auto& view = splitViews_[_index];
+
+	//シェーダー関係
+	auto& shader = view.shader;
+
+	//カウンタ
+	shader.cnt += delta;
+
+	//グリッチの強さ
+	static float glitchStrength = 0.2f;
+
+	//定数バッファ用
+	int constBufIndex = 0;
+	FLOAT4 constBuf = { glitchStrength,shader.cnt,view.viewport.width,view.viewport.height };
+	view.material->SetConstBuf(constBufIndex, constBuf);
+}
+
+void SplitScreenManager::UpdateWind(const int _index)
+{
+	//デルタタイム
+	float delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//シェーダー関係
+	auto& shader = splitViews_[_index].shader;
+
+	//カウンタ
+	shader.cnt += delta;
+
+	//定数バッファ用
+	int constBufIndex = 1;
+	FLOAT4 constBuf = { shader.cnt,1.5f,0.5f,30.0f};
+	splitViews_[_index].material->SetConstBuf(constBufIndex, constBuf);
 }

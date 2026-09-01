@@ -9,36 +9,121 @@ cbuffer cbParam : register(b4)
 
 float4 main(PS_INPUT PSInput) : SV_TARGET
 {
+    float2 uv = PSInput.uv;
 
-	float2 uv = PSInput.uv;
+    // 元画像
+    float4 srcCol = tex.Sample(texSampler, uv);
 
-	// UV座標とテクスチャを参照して、最適な色を取得する
-	float4 srcCol = tex.Sample(texSampler, uv);
-	
-	// 縦の大きさと時間で-1.0～1.0の値を作る
-	float area = sin(uv.y * 2.0f - g_time * 0.5f);
+    if (srcCol.a < 0.01f)
+    {
+        discard;
+    }
 
-	// 縦に特定範囲を作る
-	// 1 or 0 …… 1 <= 2 = 1、2 <= 1 = 0 
-	float isArea = step(0.996f, area * area);
+    // ============================================================
+    // 走査線
+    // ============================================================
 
-	srcCol.rgb -= abs(sin(uv.y * 60.0f + g_time * 1.0f)) * 0.05f;
-	srcCol.rgb -= abs(sin(uv.y * 100.0f - g_time * 2.0f)) * 0.15f;
+    float scanLine = sin(uv.y * 100.0f - g_time * 5.0f);
 
-	// 一定エリア処理
-	// ------------------------------------------------------------------------------
-	// 一定エリア以外、間隔を空けて、縞々模様(下地)を作る(色の減算で色を暗くする)
-	//srcCol.rgb -= (1.0f - isArea) * abs(sin(uv.y *  60.0f + g_time * 1.0f)) * 0.05f;
-	//srcCol.rgb -= (1.0f - isArea) * abs(sin(uv.y * 100.0f - g_time * 2.0f)) * 0.15f;
+    // -1～1 → 0～1
+    scanLine = scanLine * 0.5f + 0.5f;
 
-	// 特定範囲だけ明るくする(色の加算で明るくする)
-	//srcCol.rgb += isArea * 0.5f;
-	// ------------------------------------------------------------------------------
+    // 元画像をほとんど暗くしない
+    srcCol.rgb += scanLine * 0.02f;
 
-	// 下地だけ
-	//srcCol.rgb -= abs(sin(uv.y *  60.0f + g_time * 1.0f)) * 0.10f;
-	//srcCol.rgb -= abs(sin(uv.y * 100.0f - g_time * 2.0f)) * 0.15f;
 
-	return srcCol;
+    // ============================================================
+    // スキャン位置
+    // ============================================================
 
+    // 上から下まで移動する時間
+    float moveTime = 5.0f;
+
+    // 下端に到達してから待つ時間
+    float waitTime = 0.5f;
+
+    // 1ループにかかる時間
+    float cycleTime = moveTime + waitTime;
+
+    // 現在のループ内時間
+    float currentTime = fmod(g_time, cycleTime);
+
+    float scanPos = 0.0f;
+    float scan = 0.0f;
+
+    // ============================================================
+    // スキャン移動中
+    // ============================================================
+
+    if (currentTime < moveTime)
+    {
+        // 0.0 → 1.0
+        scanPos = currentTime / moveTime;
+
+        // スキャン位置との距離
+        float distance = abs(uv.y - scanPos);
+
+        // スキャン本体の幅
+        float scanWidth = 0.015f;
+
+        // スキャン本体
+        scan = 1.0f -
+               smoothstep(0.0f, scanWidth, distance);
+
+        // --------------------------------------------------------
+        // 下端に近づいたらフェードアウト
+        // --------------------------------------------------------
+
+        float fadeStart = 0.9f;
+
+        float fade = 1.0f -
+                     smoothstep(fadeStart, 1.0f, scanPos);
+
+        scan *= fade;
+    }
+    else
+    {
+        // ========================================================
+        // 下端で待機中
+        // ========================================================
+
+        // スキャンは完全に消す
+        scan = 0.0f;
+    }
+
+
+    // ============================================================
+    // スキャン本体を明るくする
+    // ============================================================
+
+    srcCol.rgb += scan * 0.25f;
+
+
+    // ============================================================
+    // スキャン周辺の光
+    // ============================================================
+
+    if (currentTime < moveTime)
+    {
+        float distance = abs(uv.y - scanPos);
+
+        // 本体より広い範囲
+        float glowWidth = 0.08f;
+
+        float glow = 1.0f -
+                     smoothstep(0.0f, glowWidth, distance);
+
+        // 下端に近づいたらこちらもフェード
+        float fadeStart = 0.9f;
+
+        float fade = 1.0f -
+                     smoothstep(fadeStart, 1.0f, scanPos);
+
+        glow *= fade;
+
+        srcCol.rgb += glow * 0.05f;
+    }
+
+
+    return srcCol;
 }

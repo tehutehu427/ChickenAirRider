@@ -71,11 +71,6 @@ public:
 	/// </summary>
 	/// <param name="_sceneId">積むシーンID</param>
 	/// <param name="_isFade">フェードの有無(true:フェードあり)</param>
-
-	/// @brief シーンをプッシュする。スタックの数が増える
-	/// 一番上のシーンのUpdateしか呼ばれません。
-	/// @param _sceneId 
-	/// @param _isFade 
 	void PushScene(const SCENE_ID _sceneId, const bool _isFade = false);
 
 	//スタックの頭のシーンを削除する。
@@ -84,12 +79,6 @@ public:
 
 	//シーンをリセットする
 	void ResetScene(void);
-
-	/// <summary>
-	/// シーンの状態遷移
-	/// </summary>
-	/// <param name="nextId">遷移先のシーン</param>
-	//void ChangeScene(SCENE_ID nextId);
 	
 	//フェード開始
 	void StartFadeIn(void);
@@ -106,7 +95,7 @@ public:
 	/// @brief カメラの取得
 	/// @param _playerIndex プレイヤー番号
 	/// @return 指定したプレイヤー番号のカメラ
-	std::weak_ptr<Camera> GetCamera(const int _playerIndex) const;
+	std::weak_ptr<Camera> GetCamera(const int _playerIndex = 0) const;
 
 private:
 

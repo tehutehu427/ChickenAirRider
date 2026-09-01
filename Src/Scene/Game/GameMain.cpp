@@ -152,10 +152,6 @@ void GameMain::Release(void)
 
 void GameMain::DebugDraw(void)
 {
-	////ÉVÅ[Éìñº
-	//DrawString(0, 0, L"MainGame", 0xffffff);
-
-	//DrawBox(100, 100, 924, 540, 0x0000ff, true);
 }
 
 void GameMain::UpdateStart(void)

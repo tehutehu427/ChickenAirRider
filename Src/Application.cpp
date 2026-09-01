@@ -14,6 +14,7 @@
 
 Application* Application::instance_ = nullptr;
 
+//データパスの定数
 const std::wstring Application::PATH_IMAGE = L"Data/Image/";
 const std::wstring Application::PATH_MODEL = L"Data/Model/";
 const std::wstring Application::PATH_EFFECT = L"Data/Effect/";
@@ -154,10 +155,11 @@ bool Application::IsReleaseFail(void) const
 }
 
 Application::Application(void)
+	:isInitFail_(false)
+	, isReleaseFail_(false)
+	, isGameEnd_(false)
+	, fps_(nullptr)
 {
-	isInitFail_ = false;
-	isReleaseFail_ = false;
-	fps_ = nullptr;
 }
 
 Application::~Application(void)
@@ -167,12 +169,16 @@ Application::~Application(void)
 
 void Application::InitEffekseer(void)
 {
+	//エフェクシアの初期化
 	if (Effekseer_Init(8000) == -1)
 	{
+		//初期化失敗
 		DxLib_End();
 	}
 
+	//グラフィックスのリセットを行わないようにする
 	SetChangeScreenModeGraphicsSystemResetFlag(FALSE);
 
+	//グラフィックスデバイスが失われた時のコールバック関数を設定する
 	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
 }
