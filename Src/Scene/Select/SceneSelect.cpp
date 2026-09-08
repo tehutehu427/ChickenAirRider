@@ -236,7 +236,7 @@ void SceneSelect::UpdateGameStart(void)
 		set.SetNpcNum(playerNum_[PLAYER_NUM_SELECT::NPC]);
 		
 		//タイマーの初期化
-		gloUi.GetTimer().Init(set.GetTimeLimit());
+		gloUi.GetTimer().Init(static_cast<float>(set.GetTimeLimit()));
 
 		//シーンの削除
 		scnMng.ChangeScene(SceneManager::SCENE_ID::GAME, true, true);

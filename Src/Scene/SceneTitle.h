@@ -1,5 +1,4 @@
 #pragma once
-#include "../Application.h"
 #include "SceneBase.h"
 
 class PixelMaterial;
@@ -33,14 +32,12 @@ public:
 private:
 
 	//タイトルロゴ位置
-	static constexpr float LOGO_POS_X_1 = Application::SCREEN_HALF_X - 350.0f;
-	static constexpr float LOGO_POS_X_2 = Application::SCREEN_HALF_X + 350.0f;
-	static constexpr float LOGO_POS_Y_1 = Application::SCREEN_HALF_Y - 250.0f;
-	static constexpr float LOGO_POS_Y_2 = Application::SCREEN_HALF_Y + 50.0f;
+	static constexpr int LOGO_LOCAL_POS_X_1 = -350;
+	static constexpr int LOGO_LOCAL_POS_X_2 = 350;
+	static constexpr int LOGO_LOCAL_POS_Y_1 = -250;
+	static constexpr int LOGO_LOCAL_POS_Y_2 = 50;
 
 	//プッシュボタンUIの位置
-	static constexpr int PUSH_POS_X = Application::SCREEN_HALF_X;
-	static constexpr int PUSH_POS_Y = Application::SCREEN_HALF_Y + Application::SCREEN_HALF_Y / 2;
 	static constexpr int PUSH_SIZE_X = 600;
 	static constexpr int PUSH_SIZE_Y = 80;
 	static constexpr float BLINKING_SPEED = 2.0f;

@@ -18,31 +18,17 @@ public:
 	SingletonRegistry& operator=(const SingletonRegistry& _copy) = delete;
 
 	//静的インスタンスの取得
-	static SingletonRegistry& GetInstance(void)
-	{
-		static SingletonRegistry instance;
-		return instance;
-	}
-
-	/// @brief 破棄関数格納
-	/// @param _func 破棄関数
-	void RegistryDestroyer(const DESTROY_TIMING _timing, const std::function<void(void)>& _func)
-	{
-		destroyer_[_timing].push_back(_func);
-	}
+	static SingletonRegistry& GetInstance(void);
+	
+	/// <summary>
+	/// 破棄関数格納
+	/// </summary>
+	/// <param name="_timing">破棄タイミング</param>
+	/// <param name="_func">破棄関数</param>
+	void RegistryDestroyer(const DESTROY_TIMING _timing, const std::function<void(void)>& _func);
 
 	//シングルトンの破棄
-	void Delete(const DESTROY_TIMING _timing)
-	{
-		// 登録の逆順で破棄（依存関係を考慮）
-		for (auto it = destroyer_[_timing].rbegin(); it != destroyer_[_timing].rend(); ++it) {
-			if (*it == nullptr) continue;
-			(*it)();
-		}
-
-		//配列初期化
-		destroyer_[_timing].clear();
-	}
+	void Delete(const DESTROY_TIMING _timing);
 
 private:
 
@@ -50,9 +36,9 @@ private:
 	std::unordered_map<DESTROY_TIMING, std::vector<std::function<void(void)>>> destroyer_;
 
 	//コンストラクタ
-	SingletonRegistry(void) = default;
+	SingletonRegistry(void);
 	
 	//デストラクタ
-	~SingletonRegistry(void) = default;
+	~SingletonRegistry(void);
 };
 

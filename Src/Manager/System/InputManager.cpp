@@ -607,6 +607,9 @@ float InputManager::GetStickHoldCnt(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_S
 			return stickI.keyTrgHoldCnt;
 		}
 	}
+
+	//Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚Í0‚ğ•Ô‚·
+	return 0.0f;
 }
 
 bool InputManager::IsMouseNew(KeyConfig::MOUSE mouse)

@@ -169,9 +169,9 @@ void HUDManager::DrawPushButton(const int _playerIndex)
 	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
 
 	//座標
-	Vector2 pos = { view.x + Application::SCREEN_HALF_X * scale,view.y + Application::SCREEN_HALF_Y * scale };
-	int localPosX = PUSH_LOCAL_POS_X * scale;
-	Vector2 pushSize = { PUSH_SIZE_X * scale,PUSH_SIZE_Y * scale };
+	Vector2 pos = { view.x + static_cast<int>(Application::SCREEN_HALF_X * scale),view.y + static_cast<int>(Application::SCREEN_HALF_Y * scale) };
+	int localPosX = static_cast<int>(PUSH_LOCAL_POS_X * scale);
+	Vector2 pushSize = { static_cast<int>(PUSH_SIZE_X * scale),static_cast<int>(PUSH_SIZE_Y * scale) };
 
 	//Push画像
 	pushButtonMaterial_->SetConstBuf(0, { cnt_,BLINKING_SPEED,0.0f,0.0f });
@@ -180,7 +180,7 @@ void HUDManager::DrawPushButton(const int _playerIndex)
 	renderer_.Draw(*pushButtonMaterial_, Vector2(pos.x - localPosX - pushSize.x / 2, pos.y - pushSize.y / 2), pushSize);
 
 	//ボタン
-	Vector2 buttonSize = { BUTTON_SIZE * scale,BUTTON_SIZE * scale };
+	Vector2 buttonSize = { static_cast<int>(BUTTON_SIZE * scale),static_cast<int>(BUTTON_SIZE * scale) };
 	pushButtonMaterial_->SetTextureBuf(0, aButtonImg_);
 	renderer_.Draw(*pushButtonMaterial_, Vector2(pos.x + localPosX - buttonSize.x / 2, pos.y - buttonSize.y / 2), buttonSize);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
@@ -214,13 +214,13 @@ void HUDManager::DrawChargeGauge(const int _playerIndex)
 	//中央位置
 	Vector2 gaugeCenter =
 	{
-		view.x + static_cast<int>(CHARGE_POS.x * view.width) - GAUGE_LOCAL_POS * scale,
-		view.y + static_cast<int>(CHARGE_POS.y * view.height) - GAUGE_LOCAL_POS * scale
+		view.x + static_cast<int>(CHARGE_POS.x * view.width) - static_cast<int>(GAUGE_LOCAL_POS * scale),
+		view.y + static_cast<int>(CHARGE_POS.y * view.height) - static_cast<int>(GAUGE_LOCAL_POS * scale)
 	};
 
 	//合計サイズ
 	float totalScale = scale * GAUGE_SIZE_MULTI;
-	Vector2 gaugeSize = { GAUGE_SIZE * totalScale, GAUGE_SIZE * totalScale };
+	Vector2 gaugeSize = { static_cast<int>(GAUGE_SIZE * totalScale), static_cast<int>(GAUGE_SIZE * totalScale) };
 
 	//外枠の描画
 	DrawRotaGraph(gaugeCenter.x, gaugeCenter.y, totalScale, 0.0, gaugeImg_, true);
@@ -236,9 +236,9 @@ void HUDManager::DrawChargeGauge(const int _playerIndex)
 	std::array<int, 3>digits = { (speedInt / 100),(speedInt / 10) % 10, speedInt % 10 };
 	float offset = NUMBER_LOCAL_POS * scale;
 
-	DrawRotaGraph(gaugeCenter.x - offset, gaugeCenter.y, totalScale, 0.0, numImgs_[digits[0]], true);
+	DrawRotaGraph(gaugeCenter.x - static_cast<int>(offset), gaugeCenter.y, totalScale, 0.0, numImgs_[digits[0]], true);
 	DrawRotaGraph(gaugeCenter.x, gaugeCenter.y, totalScale, 0.0, numImgs_[digits[1]], true);
-	DrawRotaGraph(gaugeCenter.x + offset, gaugeCenter.y, totalScale, 0.0, numImgs_[digits[2]], true);
+	DrawRotaGraph(gaugeCenter.x + static_cast<int>(offset), gaugeCenter.y, totalScale, 0.0, numImgs_[digits[2]], true);
 }
 
 void HUDManager::DrawHealth(const int _playerIndex)
@@ -270,21 +270,21 @@ void HUDManager::DrawHealth(const int _playerIndex)
 	pos.y = view.y + static_cast<int>(view.height * HEALTH_POS.y - barHeight);
 	float hpHeight = static_cast<int>(barHeight * rate);
 	float top = pos.y + (barHeight - hpHeight);
-	int frame = FRAME_SIZE * scale;
+	int frame = static_cast<int>(FRAME_SIZE * scale);
 
 	//枠
 	DrawBox(pos.x - frame,
 		pos.y - frame,
-		pos.x + barWidth + frame,
-		pos.y + barHeight + frame,
+		pos.x + static_cast<int>(barWidth) + frame,
+		pos.y + static_cast<int>(barHeight) + frame,
 		Utility::GRAY, true);
 	//HPバー
 	if (health > 0.0f)
 	{
 		DrawBox(pos.x,
-			top,
-			pos.x + barWidth,
-			pos.y + barHeight,
+			static_cast<int>(top),
+			pos.x + static_cast<int>(barWidth),
+			pos.y + static_cast<int>(barHeight),
 			Utility::RED, true);
 	}
 }
@@ -309,15 +309,15 @@ void HUDManager::DrawParam(const int _playerIndex)
 	//パラメーター情報まとめ
 	ParamInfo params[] =
 	{
-		{param.maxSpeed, maxSpeedImg_, Utility::CYAN},
-		{param.acceleration, acceleImg_, Utility::PURPLE},
-		{param.turning, turnImg_, Utility::GREEN},
-		{param.charge, chargeImg_, Utility::YELLOW},
-		{param.flight, flightImg_, Utility::WHITE},
-		{param.weight, weightImg_, Utility::BROWN},
-		{param.attack, attackImg_, Utility::ORANGE},
-		{param.defence, defenceImg_, Utility::BLUE},
-		{param.maxHealth, maxHealthImg_, Utility::RED}
+		{static_cast<int>(param.maxSpeed), maxSpeedImg_, Utility::CYAN},
+		{static_cast<int>(param.acceleration), acceleImg_, Utility::PURPLE},
+		{static_cast<int>(param.turning), turnImg_, Utility::GREEN},
+		{static_cast<int>(param.charge), chargeImg_, Utility::YELLOW},
+		{static_cast<int>(param.flight), flightImg_, Utility::WHITE},
+		{static_cast<int>(param.weight), weightImg_, Utility::BROWN},
+		{static_cast<int>(param.attack), attackImg_, Utility::ORANGE},
+		{static_cast<int>(param.defence), defenceImg_, Utility::BLUE},
+		{static_cast<int>(param.maxHealth), maxHealthImg_, Utility::RED}
 	};
 
 	//開始座標
@@ -330,16 +330,16 @@ void HUDManager::DrawParam(const int _playerIndex)
 	int y;
 
 	//数値関係
-	int numberLocal = (PARAM_NUMBER_LOCAL_POS - NUMBER_INTERVAL / 2) * scale;
-	int powerUpInterval = POWER_UP_INTERVAL * scale;
-	int boxSize = PARAM_BOX_SIZE * scale;
-	int numberInterval = NUMBER_INTERVAL * scale;
-	int paramBoxInterval = PARAM_BOX_INTERVAL * scale;
+	int numberLocal = static_cast<int>((PARAM_NUMBER_LOCAL_POS - NUMBER_INTERVAL / 2) * scale);
+	int powerUpInterval = static_cast<int>(POWER_UP_INTERVAL * scale);
+	int boxSize = static_cast<int>(PARAM_BOX_SIZE * scale);
+	int numberInterval = static_cast<int>(NUMBER_INTERVAL * scale);
+	int paramBoxInterval = static_cast<int>(PARAM_BOX_INTERVAL * scale);
 	int tens;
 	int one;
 	
 	//パラメーターの個数
-	int size = std::size(params);
+	int size = static_cast<int>(std::size(params));
 	for (int i = 0; i < size; i++)
 	{
 		//座標の調整
@@ -400,10 +400,10 @@ void HUDManager::DrawGetOff(const int _playerIndex)
 	//サイズ比率反映
 	float size = GET_OFF_SIZE * scale;
 	float frame = GET_OFF_FRAME_SIZE * scale;
-	Vector2 sizeVec = Vector2(size, size);
+	Vector2 sizeVec = Vector2(static_cast<int>(size), static_cast<int>(size));
 
 	//枠の円
-	DrawCircle(gaugeCenter.x + size / 2, gaugeCenter.y + size / 2, size * GET_OFF_RADIUS + frame, 0x0);
+	DrawCircle(gaugeCenter.x + static_cast<int>(size / 2), gaugeCenter.y + static_cast<int>(size / 2), static_cast<int>(size * GET_OFF_RADIUS + frame), 0x0);
 
 	getOffMaterial_->SetConstBuf(0, { 0.5f,0.5f,gaugePercent,cnt_ });
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);

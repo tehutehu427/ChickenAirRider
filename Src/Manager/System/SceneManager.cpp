@@ -18,12 +18,9 @@ SceneManager::SceneManager(void)
 {
 	sceneId_ = SCENE_ID::NONE;
 	waitSceneId_ = SCENE_ID::NONE;
-	changeSceneState_ = CHANGE_SCENE_STATE::NONE;
-
+	changeSceneState_ = CHANGE_SCENE_STATE::MAX;
 	fader_ = nullptr;
-
 	isSceneChanging_ = false;
-
 	cameras_.clear();
 
 	// デルタタイム
@@ -31,21 +28,21 @@ SceneManager::SceneManager(void)
 	totalTime_ = -1.0f;
 
 	//シーン生成用関数ポインタ
-	createScene_[SCENE_ID::TITLE] = [this](void) {return CreateSceneTitle(); };
-	createScene_[SCENE_ID::SELECT] = [this](void) {return CreateSceneSelect(); };
-	createScene_[SCENE_ID::OPTION] = [this](void) {return CreateSceneOption(); };
-	createScene_[SCENE_ID::GAME] = [this](void) {return CreateSceneGame(); };
-	createScene_[SCENE_ID::RESULT] = [this](void) {return CreateSceneResult(); };
+	createScene_[static_cast<int>(SCENE_ID::TITLE)] = &SceneManager::CreateSceneTitle;
+	createScene_[static_cast<int>(SCENE_ID::SELECT)] = &SceneManager::CreateSceneSelect;
+	createScene_[static_cast<int>(SCENE_ID::OPTION)] = &SceneManager::CreateSceneOption;
+	createScene_[static_cast<int>(SCENE_ID::GAME)] = &SceneManager::CreateSceneGame;
+	createScene_[static_cast<int>(SCENE_ID::RESULT)] = &SceneManager::CreateSceneResult;
 
 	//シーン変更
-	changeScene_[CHANGE_SCENE_STATE::PUSH_BACK] = [this](void) {ChangeScenePushBack(); };
-	changeScene_[CHANGE_SCENE_STATE::POP_BACK] = [this](void) {ChangeScenePopBack(); };
-	changeScene_[CHANGE_SCENE_STATE::CHANGE_BACK] = [this](void) {ChangeSceneChangeBack(); };
+	changeScene_[static_cast<int>(CHANGE_SCENE_STATE::PUSH_BACK)] = &SceneManager::ChangeScenePushBack;
+	changeScene_[static_cast<int>(CHANGE_SCENE_STATE::POP_BACK)] = &SceneManager::ChangeScenePopBack;
+	changeScene_[static_cast<int>(CHANGE_SCENE_STATE::CHANGE_BACK)] = &SceneManager::ChangeSceneChangeBack;
 
 	//フェード用関数ポインタ
-	fadeState_[Fader::STATE::NONE] = [this](void) {FadeNone(); };
-	fadeState_[Fader::STATE::FADE_IN] = [this](void) {FadeIn(); };
-	fadeState_[Fader::STATE::FADE_OUT] = [this](void) {FadeOut(); };
+	fadeState_[static_cast<int>(Fader::STATE::NONE)] = &SceneManager::FadeNone;
+	fadeState_[static_cast<int>(Fader::STATE::FADE_IN)] = &SceneManager::FadeIn;
+	fadeState_[static_cast<int>(Fader::STATE::FADE_OUT)] = &SceneManager::FadeOut;
 }
 
 SceneManager::~SceneManager(void)
@@ -88,7 +85,7 @@ void SceneManager::Init(void)
 	Init3D();
 
 	//初期シーンの挿入
-	changeScene_[CHANGE_SCENE_STATE::PUSH_BACK]();
+	(this->*changeScene_[static_cast<int>(CHANGE_SCENE_STATE::PUSH_BACK)])();
 
 	//初期カメラ
 	CreateCameraAndSplitScreens(1);
@@ -128,9 +125,9 @@ void SceneManager::Update(void)
 
 	// デルタタイム
 	auto nowTime = std::chrono::system_clock::now();
-	//deltaTime_ = static_cast<float>(
-	//	std::chrono::duration_cast<std::chrono::nanoseconds>(nowTime - preTime_).count() / 1000000000.0);
-	deltaTime_ = 1.0f / FPS;
+	deltaTime_ = static_cast<float>(
+		std::chrono::duration_cast<std::chrono::nanoseconds>(nowTime - preTime_).count() / 1000000000.0);
+	//deltaTime_ = 1.0f / FPS;
 	preTime_ = nowTime;
 	totalTime_ += deltaTime_;
 
@@ -349,65 +346,8 @@ void SceneManager::ResetDeltaTime(void)
 	preTime_ = std::chrono::system_clock::now();
 }
 
-void SceneManager::DoChangeScene(SCENE_ID sceneId)
-{
-	//// リソースの解放
-	//ResourceManager::GetInstance().Release();	
-	//SoundManager::GetInstance().Release();	
-
-	//// シーンを変更する
- //	sceneId_ = sceneId;
-	//
-	////初期化
-	//screenIndex_ = 0;		
-
-	//// 現在のシーンを解放
-	//if (scene_ != nullptr)
-	//{
-	//	scene_.reset();
-	//}
-
-	////シーンに合わせて生成数を設定
-	////const int createNum = (sceneId == SCENE_ID::MULTI) ? DateBank::GetInstance().GetPlayerNum() : 1;
-
-	////カメラ生成
-	////CreateCameras(createNum);
-
-	////分割スクリーン生成
-	////CreateSplitScreen(createNum);
-
-	////シーンを生成
-	//switch (sceneId_)
-	//{
-	//case SCENE_ID::TITLE:
-	//	scene_ = std::make_unique<SceneTitle>();
-	//	break;
-
-	//case SCENE_ID::SELECT:
-	//	scene_ = std::make_unique<SceneTitle>();
-	//	break;
-
-	//case SCENE_ID::GAME:
-	//	scene_ = std::make_unique<SceneTitle>();
-	//	break;
-	//}
-
-	////読み込み
-	//scene_->Load();
-
-	////デルタタイムリセット
-	//ResetDeltaTime();
-
-	////シーンID初期化
-	//waitSceneId_ = SCENE_ID::NONE;
-}
-
 void SceneManager::ResetChangeScene(const bool _isFade)
 {
-	// リソースの解放
-	//ResourceManager::GetInstance().Release();	
-	//SoundManager::GetInstance().Release();	
-
 	//デルタタイムリセット
 	ResetDeltaTime();
 
@@ -426,7 +366,7 @@ void SceneManager::Fade(void)
 	Fader::STATE fState = fader_->GetState();
 
 	//フェード処理
-	fadeState_[fState]();
+	(this->*fadeState_[static_cast<int>(fState)])();
 }
 
 std::unique_ptr<SceneBase> SceneManager::CreateSceneTitle(void)
@@ -461,7 +401,7 @@ std::unique_ptr<SceneBase> SceneManager::CreateSceneResult(void)
 void SceneManager::ChangeScenePushBack(void)
 {
 	//シーンの末尾追加
-	scene_.push_back(std::move(createScene_[sceneId_]()));
+	scene_.push_back(std::move((this->*createScene_[static_cast<int>(sceneId_)])()));
 
 	//初期化
 	scene_.back()->Load();
@@ -478,7 +418,7 @@ void SceneManager::ChangeSceneChangeBack(void)
 {
 	//シーンの先頭変更
 	scene_.pop_back();
-	scene_.push_back(std::move(createScene_[sceneId_]()));
+	scene_.push_back(std::move((this->*createScene_[static_cast<int>(sceneId_)])()));
 
 	//初期化
 	scene_.back()->Load();
@@ -491,7 +431,7 @@ void SceneManager::FadeNone(void)
 	sceneId_ = waitSceneId_;
 
 	//シーン遷移
-	changeScene_[changeSceneState_]();
+	(this->*changeScene_[static_cast<int>(changeSceneState_)])();
 
 	//待機シーンIDの初期化
 	waitSceneId_ = SCENE_ID::NONE;
@@ -534,7 +474,7 @@ void SceneManager::FadeOut(void)
 		CreateCameraAndSplitScreens(createNum);
 
 		//シーンの遷移
-		changeScene_[changeSceneState_]();
+		(this->*changeScene_[static_cast<int>(changeSceneState_)])();
 
 		//待機シーンIDの初期化
 		waitSceneId_ = SCENE_ID::NONE;

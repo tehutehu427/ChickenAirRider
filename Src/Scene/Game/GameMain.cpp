@@ -128,7 +128,7 @@ void GameMain::Release(void)
 	//タイマーの削除
 	gloUi.GetTimer().SetCountValid(false);
 	gloUi.GetTimer().SetCountView(false);
-	gloUi.GetTimer().SetTimeLimit(setMng.GetTimeLimit());
+	gloUi.GetTimer().SetTimeLimit(static_cast<float>(setMng.GetTimeLimit()));
 	gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::TIMER, false);
 
 	//プレイヤー人数
@@ -169,7 +169,7 @@ void GameMain::UpdateStart(void)
 		const int plNum = setting.GetUserNum();
 
 		//タイマーのリセット
-		gloUi.GetTimer().Init(setting.GetTimeLimit());
+		gloUi.GetTimer().Init(static_cast<float>(setting.GetTimeLimit()));
 		gloUi.GetTimer().SetCountValid(true);
 		gloUi.GetTimer().SetCountView(true);
 

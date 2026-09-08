@@ -85,7 +85,7 @@ void MachineAction::Update(void)
 		//音量制限
 		float speedRate = speed_ / (param.maxSpeed * BASE_MAX_SPEED);
 		float vol = (speedRate > 1.0f ? 1.0f : speedRate) * ENGINE_SE_VOL;
-		snd.SetVolume(SoundManager::SOUND_NAME::ENGINE, vol);
+		snd.SetVolume(SoundManager::SOUND_NAME::ENGINE, static_cast<int>(vol));
 	}
 
 	//プレイヤー情報
@@ -329,8 +329,17 @@ void MachineAction::DisCharge(void)
 	const auto& param = player_.GetAllParam();
 	const auto& unitParam = player_.GetUnitParam();
 
+	//最高速
+	float maxSpeed = param.maxSpeed * BASE_MAX_SPEED;
+	
+	//チャージの倍率(基本速度が1倍なので+1)
+	float chargeRate = 1 + unitParam.boostRate * static_cast<float>(std::pow(chargeCnt_, unitParam.boostPower));
+	
+	//チャージの影響度
+	float chargeDamp = static_cast<float>(std::pow(chargeCnt_, unitParam.chargeDamp));
+	
 	//チャージの割合で初速度を決める
-	float velocity = (param.maxSpeed * BASE_MAX_SPEED) * (1 + unitParam.boostRate * std::pow(chargeCnt_,unitParam.boostPower)) * std::pow(chargeCnt_,unitParam.chargeDamp);
+	float velocity = maxSpeed * chargeRate * chargeDamp;
 
 	//速度
 	if (speed_ < velocity)

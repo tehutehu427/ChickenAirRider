@@ -53,7 +53,7 @@ float4 main(PS_INPUT PSInput) : SV_TARGET0
 	float refDotEx = pow(refDot, g_specular_pow);
 
 	//ŠgŽUŒõ
-	float3 diffuse = (color.rgb * g_color * lightDot);
+	float3 diffuse = (color.rgb * g_color.rgb * lightDot);
 
 	//”½ŽËŒõ
 	float3 specular = refDotEx * g_specular_color;

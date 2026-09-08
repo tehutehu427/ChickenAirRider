@@ -16,6 +16,7 @@ public:
 	/// <param name="_timing">解放タイミング</param>
 	static void CreateInstance(SingletonRegistry::DESTROY_TIMING _timing)
 	{
+		//生成済みなら何もしない
 		if (instance_ != nullptr)return;
 		
 		//生成

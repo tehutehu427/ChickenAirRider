@@ -147,7 +147,8 @@ void AirGlider::CompDistance(void)
 	}
 
 	//‡ˆÊ‚ÌÝ’è
-	for (int i = decideRank.size() ; i > 0 ; i--)
+	int size = static_cast<int>(decideRank.size());
+	for (int i = size; i > 0 ; i--)
 	{
 		ConfirmRank(decideRank[i]);
 	}

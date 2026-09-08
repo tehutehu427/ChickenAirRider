@@ -34,10 +34,10 @@ public:
 	//シーン変更管理用
 	enum class CHANGE_SCENE_STATE
 	{
-		NONE = -1,
 		PUSH_BACK,		//末尾追加
 		POP_BACK,		//末尾削除
 		CHANGE_BACK,	//末尾変更
+		MAX
 	};
 	
 	//初期化
@@ -55,19 +55,23 @@ public:
 	//リソースの破棄
 	void Destroy(void)override;
 
-	/// @brief 先頭の（Updateが呼ばれる）シーンを切り替える
-	/// @param _sceneId 切り替え先のシーンID
-	/// @param _isReset シーンをリセットするか(true:リセットする)
-	/// @param _isFade フェードの有無(true:フェードあり)
+	/// <summary>
+	/// 先頭の（Updateが呼ばれる）シーンを切り替える
+	/// </summary>
+	/// <param name="_sceneId">切り替え先のシーンID</param>
+	/// <param name="_isReset">シーンをリセットするか(true:リセットする)</param>
+	/// <param name="_isFade">フェードの有無(true:フェードあり)</param>
 	void ChangeScene(const SCENE_ID _sceneId, const bool _isReset, const bool _isFade = false);
 
-	/// @brief すべてのシーンを切り替える
-	/// @param _sceneId 切り替え先のシーンID
+	/// <summary>
+	/// すべてのシーンを切り替える
+	/// </summary>
+	/// <param name="_sceneId">切り替え先のシーンID</param>
 	void ChangeAllScene(const SCENE_ID _sceneId);
 
 	/// <summary>
 	/// シーンをプッシュする。スタックの数が増える
-	/// 一番上のシーンのUpdateしか呼ばれません。
+	/// ※一番上のシーンのUpdateしか呼ばれません。
 	/// </summary>
 	/// <param name="_sceneId">積むシーンID</param>
 	/// <param name="_isFade">フェードの有無(true:フェードあり)</param>
@@ -92,9 +96,7 @@ public:
 	//経過時間の所得
 	const float GetTotalTime(void) const { return totalTime_; }
 
-	/// @brief カメラの取得
-	/// @param _playerIndex プレイヤー番号
-	/// @return 指定したプレイヤー番号のカメラ
+	//カメラの取得
 	std::weak_ptr<Camera> GetCamera(const int _playerIndex = 0) const;
 
 private:
@@ -120,9 +122,13 @@ private:
 	float totalTime_;									//経過時間
 
 	//関数ポインタ
-	std::map<SCENE_ID, std::function<std::unique_ptr<SceneBase>(void)>> createScene_;	//シーン生成用
-	std::map<CHANGE_SCENE_STATE, std::function<void(void)>> changeScene_;				//シーン変更用
-	std::map<Fader::STATE, std::function<void(void)>> fadeState_;						//フェード用
+	using CreateFunc = std::unique_ptr<SceneBase>(SceneManager::*)(void);
+	using Func = void(SceneManager::*)(void);
+
+	//関数ポインタの配列
+	std::array<CreateFunc, static_cast<int>(SCENE_ID::MAX)> createScene_;		//シーン生成用
+	std::array<Func, static_cast<int>(CHANGE_SCENE_STATE::MAX)> changeScene_;	//シーン変更用
+	std::array<Func, static_cast<int>(Fader::STATE::MAX)> fadeState_;			//フェード用
 
 	//シーン生成
 	std::unique_ptr<SceneBase> CreateSceneTitle(void);
@@ -152,9 +158,6 @@ private:
 
 	// デルタタイムをリセットする
 	void ResetDeltaTime(void);
-
-	// シーン遷移
-	void DoChangeScene(SCENE_ID sceneId);
 
 	/// <summary>
 	/// シーン変更時のリセット等

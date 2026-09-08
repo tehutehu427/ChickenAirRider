@@ -60,7 +60,7 @@ const bool SoundManager::Add(const SOUND_NAME _name, const int _id, const TYPE _
     //ç≈ëÂâπó 
     constexpr int VOLUME_MAX = 255;  
     float soundPer = static_cast<float>(soundInfo.volumePercent) / static_cast<float>(PERCENT_MAX);
-    int soundPal = VOLUME_MAX * volume_[static_cast<int>(_soundType)] * soundPer;
+    int soundPal = static_cast<int>(VOLUME_MAX * volume_[static_cast<int>(_soundType)] * soundPer);
     soundPal /= PERCENT_MAX;
 
     //âπó ÇÃê›íË
@@ -119,7 +119,7 @@ void SoundManager::SetVolume(const SOUND_NAME _name, const int _volumePercent)
     info_[_name].volumePercent = _volumePercent;
 
     float soundPer = static_cast<float>(info_[_name].volumePercent) / static_cast<float>(PERCENT_MAX);
-    int soundPal = VOLUME_MAX * volume_[static_cast<int>(info_[_name].type)] * soundPer;
+    int soundPal = static_cast<int>(VOLUME_MAX * volume_[static_cast<int>(info_[_name].type)] * soundPer);
     ChangeVolumeSoundMem(soundPal / PERCENT_MAX, info_[_name].handleId);
 }
 
@@ -137,7 +137,7 @@ void SoundManager::SetSystemVolume(const int _volumePercent, const int _type)
 			continue;
 		}
         float soundPer = static_cast<float>(pair.second.volumePercent) / static_cast<float>(PERCENT_MAX);
-        int soundPal = VOLUME_MAX * volume_[_type] * soundPer;
+        int soundPal = static_cast<int>(VOLUME_MAX * volume_[_type] * soundPer);
 
         ChangeVolumeSoundMem(soundPal / PERCENT_MAX, pair.second.handleId);
 	}

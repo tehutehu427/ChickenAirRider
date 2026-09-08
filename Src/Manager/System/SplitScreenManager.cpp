@@ -293,7 +293,7 @@ void SplitScreenManager::UpdateGlitch(const int _index)
 
 	//定数バッファ用
 	int constBufIndex = 0;
-	FLOAT4 constBuf = { glitchStrength,shader.cnt,view.viewport.width,view.viewport.height };
+	FLOAT4 constBuf = { glitchStrength,shader.cnt,static_cast<float>(view.viewport.width),static_cast<float>(view.viewport.height) };
 	view.material->SetConstBuf(constBufIndex, constBuf);
 }
 

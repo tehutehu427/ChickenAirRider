@@ -99,17 +99,17 @@ void MachineManager::Draw(void)
 void MachineManager::CreateMachine(void)
 {
 	//機体の種類数
-	int size = importData_.size();
+	int size = static_cast<int>(importData_.size());
 	
 	//ランダム
 	int rand = Utility::GetRandomValue(0, size - 1);
 
 	//機体の種類
 	int modelId = getModelId_.at(importData_[rand].name)();
-	VECTOR pos;
-	pos.x = static_cast<float>(Utility::GetRandomValue(-CREATE_RANGE, CREATE_RANGE));
-	pos.y = static_cast<float>(Utility::GetRandomValue(-CREATE_RANGE, CREATE_RANGE));
-	pos.z = static_cast<float>(Utility::GetRandomValue(-CREATE_RANGE, CREATE_RANGE));
+	VECTOR pos = Utility::VECTOR_ZERO;
+	pos.x = static_cast<float>(Utility::GetRandomValue(static_cast<int>(-CREATE_RANGE), static_cast<int>(CREATE_RANGE)));
+	pos.y = static_cast<float>(Utility::GetRandomValue(static_cast<int>(-CREATE_RANGE), static_cast<int>(CREATE_RANGE)));
+	pos.z = static_cast<float>(Utility::GetRandomValue(static_cast<int>(-CREATE_RANGE), static_cast<int>(CREATE_RANGE)));
 
 	//機体
 	std::unique_ptr<Machine> machine = std::make_unique<Machine>(importData_[rand], modelId, pos);
@@ -168,6 +168,8 @@ std::unique_ptr<Machine> MachineManager::GetMachine(const Machine& _machine)
 			return std::move(machine);
 		}
 	}
+
+	return nullptr;
 }
 
 std::unique_ptr<Machine> MachineManager::GetCreateMachine(const MACHINE_TYPE _machineName)const 

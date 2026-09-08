@@ -111,7 +111,7 @@ inline void FromJson(const nlohmann::json& _j, MachineImportData& _data)
 		_data.param.chargeCapacity = _j["parameter"].value("chargeCapacity",0.0f);
 		_data.param.chargeDamp = _j["parameter"].value("chargeDamp",0.0f);
 		_data.param.boostRate = _j["parameter"].value("boostRate",0.0f);
-		_data.param.boostPower = _j["parameter"].value("boostPower",0.0f);
+		_data.param.boostPower = _j["parameter"].value("boostPower",0);
 		_data.param.rateOfConvergence = _j["parameter"].value("rateOfConvergence",0.0f);
 
 		//‘¬“x

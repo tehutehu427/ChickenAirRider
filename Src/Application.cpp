@@ -77,14 +77,14 @@ void Application::Init(void)
 	//サウンド関係の初期化
 	SoundManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
-	// シーン管理初期化
-	SceneManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
-
 	//ゲーム設定の初期化
 	GameSetting::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//全体UIの初期化
 	GlobalUIManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
+
+	// シーン管理初期化
+	SceneManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	// FPS初期化
 	fps_ = std::make_unique<FpsControl>();

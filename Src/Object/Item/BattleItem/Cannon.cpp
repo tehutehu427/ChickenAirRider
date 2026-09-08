@@ -71,7 +71,7 @@ void Cannon::CreateShot(void)
 	
 	//‘¬“x
 	VECTOR hiterPos = hiter->GetOwner().GetTrans().pos;
-	float speed = Utility::Distance(VGet(hiterPos.x, hiterPos.y + LOCAL_POS_Y, hiterPos.z), trans_.pos);
+	float speed = static_cast<float>(Utility::Distance(VGet(hiterPos.x, hiterPos.y + LOCAL_POS_Y, hiterPos.z), trans_.pos));
 	VECTOR localPos = VSub(VGet(hiterPos.x, hiterPos.y + LOCAL_POS_Y, hiterPos.z), trans_.pos);
 	VECTOR createPos = trans_.pos; 
 

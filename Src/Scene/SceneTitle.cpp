@@ -64,6 +64,9 @@ void SceneTitle::Load(void)
 	snd.Play(SoundManager::SOUND_NAME::TITLE_SE, SoundManager::PLAYTYPE::LOOP);
 
 	//UIの点滅シェーダー
+	const int PUSH_POS_X = Application::SCREEN_HALF_X;
+	const int PUSH_POS_Y = Application::SCREEN_HALF_Y + Application::SCREEN_HALF_Y / 2;
+
 	uiMaterial_ = std::make_unique<PixelMaterial>(L"Blinking.cso", 1);
 	uiMaterial_->AddConstBuf({ cnt_, BLINKING_SPEED, 0.0f, 0.0f });
 	uiMaterial_->AddTextureBuf(pushAnyButtonImg_);
@@ -131,14 +134,17 @@ void SceneTitle::Draw(const Camera& _camera)
 	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backFrameImg_, true);
 
 	//ロゴ
-	DrawExtendGraph(LOGO_POS_X_1, LOGO_POS_Y_1, LOGO_POS_X_2, LOGO_POS_Y_2, logoImg_, true);
+	int logoPosX1 = Application::SCREEN_HALF_X + LOGO_LOCAL_POS_X_1;
+	int logoPosX2 = Application::SCREEN_HALF_X + LOGO_LOCAL_POS_X_2;
+	int logoPosY1 = Application::SCREEN_HALF_Y + LOGO_LOCAL_POS_Y_1;
+	int logoPosY2 = Application::SCREEN_HALF_Y + LOGO_LOCAL_POS_Y_2;
+	DrawExtendGraph(logoPosX1, logoPosY1, logoPosX2, logoPosY2, logoImg_, true);
 
 	//プッシュボタン
 	uiMaterial_->SetConstBuf(0, { cnt_, BLINKING_SPEED, 0.0f, 0.0f });
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	uiRenderer_->Draw(*uiMaterial_);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-
 }
 
 void SceneTitle::Release(void)

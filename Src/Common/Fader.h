@@ -12,7 +12,8 @@ public:
 	{
 		NONE, 
 		FADE_OUT,	// 徐々に暗転
-		FADE_IN		// 徐々に明転
+		FADE_IN,	// 徐々に明転
+		MAX
 	};
 
 	//コンストラクタ

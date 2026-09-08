@@ -48,7 +48,7 @@ void NpcBrain::Update(void)
 void NpcBrain::UpdateThink(void)
 {
 	//サイズ
-	int size = priorityJudge_.size();
+	int size = static_cast<int>(priorityJudge_.size());
 
 	//行動決め
 	for (int i = 0; i < JUDGE_NUM; i++)
@@ -73,7 +73,7 @@ void NpcBrain::JudgeItemBox(int _num)
 	const VECTOR parentPos = parent_.GetTrans().pos;
 
 	//大きさ
-	int size = poses.size();
+	int size = static_cast<int>(poses.size());
 	if (size < 1)
 	{
 		//アイテムに移す
@@ -108,7 +108,7 @@ void NpcBrain::JudgeItemBox(int _num)
 	for (int i = 0; i < plNum; i++)
 	{
 		//相手側のボックスとの距離
-		float enemyDist = Utility::Distance(plMng.GetPlayer(i)->GetTrans().pos,poses[rand]);
+		float enemyDist = static_cast<float>(Utility::Distance(plMng.GetPlayer(i)->GetTrans().pos,poses[rand]));
 
 		//相手より遠いなら優先度を下げる
 		if (randDist < enemyDist)priority -= ENEMY_WEIGHT;

@@ -1,13 +1,11 @@
+#ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
+#define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
 
 #include"pch.h"
 #include "Application.h"
-
-
-#ifdef _DEBUG
-#define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
-#endif
 
 // WinMainä÷êî
 //---------------------------------
@@ -20,7 +18,7 @@ int WINAPI WinMain(
 	// ÉÅÉÇÉäÉäÅ[ÉNåüèo
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	//_CrtSetBreakAlloc(17241);
+	_CrtSetBreakAlloc(18622);
 
 #endif // _DEBUG
 
