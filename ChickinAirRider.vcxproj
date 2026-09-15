@@ -163,7 +163,6 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Common\SingletonRegistry.cpp" />
     <ClCompile Include="Src\Event\NoChargeEvent.cpp" />
     <ClCompile Include="Src\Event\SpeedUpEvent.cpp" />
     <ClCompile Include="Src\Event\MonoEvent.cpp" />

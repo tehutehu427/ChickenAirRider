@@ -131,6 +131,9 @@ void Application::Destroy(void)
 	//シングルトンインスタンスの一括解放
 	SingletonRegistry::GetInstance().Delete(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
+	//シングルトンレジストリ自身の解放
+	SingletonRegistry::GetInstance().DeleteSelfInstance();
+
 	// Effekseerを終了する。
 	Effkseer_End();
 

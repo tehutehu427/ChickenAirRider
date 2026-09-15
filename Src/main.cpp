@@ -18,7 +18,8 @@ int WINAPI WinMain(
 	// メモリリーク検出
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	_CrtSetBreakAlloc(18622);
+	// メモリリーク検出のためのブレークポイントを設定
+	_CrtSetBreakAlloc(103);
 
 #endif // _DEBUG
 
@@ -42,13 +43,5 @@ int WINAPI WinMain(
 	// 解放
 	instance.Destroy();
 
-#ifdef _DEBUG
-
-	//明示的にメモリーリークをダンプ
-	_CrtDumpMemoryLeaks();
-
-#endif // _DEBUG
-
 	return 0;
-
 }

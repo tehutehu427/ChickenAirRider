@@ -118,6 +118,7 @@ void Resource::Release(void)
 			DeleteGraph(handleIds_[i]);
 		}
 		delete[] handleIds_;
+		handleIds_ = nullptr;
 	}
 		break;
 
@@ -128,11 +129,11 @@ void Resource::Release(void)
 	case Resource::TYPE::MODEL:
 	{
 		MV1DeleteModel(handleId_);
-		auto ids = duplicateModelIds_;
-		for (auto id : ids)
+		for (auto id : duplicateModelIds_)
 		{
 			MV1DeleteModel(id);
 		}
+		duplicateModelIds_.clear();
 	}
 		break;
 
