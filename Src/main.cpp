@@ -23,8 +23,6 @@ int WINAPI WinMain(
 
 #endif // _DEBUG
 
-
-
 	// インスタンスの生成
 	Application::CreateInstance();
 

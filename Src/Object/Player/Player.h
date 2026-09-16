@@ -45,6 +45,7 @@ public:
 
 	//コンストラクタ
 	Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE _operation, KeyConfig::JOYPAD_NO _padNo, Collider::TAG _playerTag);
+
 	//デストラクタ
 	~Player(void);
 

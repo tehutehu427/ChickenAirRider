@@ -10,7 +10,6 @@ class PixelRenderer;
 
 class Camera
 {
-
 public:
 
 	// カメラスピード(度)
