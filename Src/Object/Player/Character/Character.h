@@ -4,6 +4,8 @@
 #include"../Object/Common/AnimationController.h"
 #include"../Parameter/UnitParameter.h"
 
+class CharacterImportData;
+
 class Character
 {
 public:
@@ -26,8 +28,12 @@ public:
 	//デストラクタ
 	~Character(void);
 
-	//読み込み
-	void Load(void);
+	/// <summary>
+	/// 読み込み
+	/// </summary>
+	/// <param name="_data">キャラクターの情報</param>
+	/// <param name="_modelId">モデルID</param>
+	void Load(const CharacterImportData& _data, const int _modelId);
 
 	//初期化
 	void Init(void);

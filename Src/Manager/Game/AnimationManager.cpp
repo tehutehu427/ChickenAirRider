@@ -16,7 +16,7 @@ void AnimationManager::Destroy(void)
 	instance_ = nullptr;
 }
 
-const std::unordered_map<std::string, int>& AnimationManager::GetAnimationData(const std::string _name)
+const std::unordered_map<std::string, AnimationImportData::AnimationData>& AnimationManager::GetAnimationData(const std::string _name)
 {
 	return anim_[_name];
 }
@@ -29,14 +29,14 @@ AnimationManager::AnimationManager(void)
 	//アニメーション格納
 	for (const auto& data : importData)
 	{
-		std::unordered_map<std::string, int> animNum;
+		std::unordered_map<std::string, AnimationImportData::AnimationData> animData;
 		
 		for (const auto& animation : data.animation)
 		{
-			animNum.emplace(animation.first,animation.second);
+			animData.emplace(animation.first,animation.second);
 		}
 
-		anim_.emplace(data.name, animNum);
+		anim_.emplace(data.name, animData);
 	}
 }
 

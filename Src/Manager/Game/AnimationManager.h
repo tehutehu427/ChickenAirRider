@@ -1,5 +1,6 @@
 #pragma once
 #include "../Common/Singleton.h"
+#include "../Object/Player/AnimationImportData.h"
 
 class AnimationManager : public Singleton<AnimationManager>
 {
@@ -17,12 +18,12 @@ public:
 	/// @brief アニメーションの番号を取得
 	/// @param _name キャラクター名
 	/// @return キャラクターのアニメーション番号
-	const std::unordered_map<std::string, int>& GetAnimationData(const std::string _name);
+	const std::unordered_map<std::string, AnimationImportData::AnimationData>& GetAnimationData(const std::string _name);
 
 private:
 
 	//アニメーション名に
-	std::unordered_map<std::string, std::unordered_map<std::string, int>> anim_;
+	std::unordered_map<std::string, std::unordered_map<std::string, AnimationImportData::AnimationData>> anim_;
 
 	//コンストラクタ
 	AnimationManager(void);

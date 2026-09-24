@@ -13,9 +13,8 @@
 #include "../Action/ActionBase.h"
 #include "PlayerOnHit.h"
 
-PlayerOnHit::PlayerOnHit(Player& _player, Transform& _trans)
-	: player_(_player),
-	playerTrans_(_trans)
+PlayerOnHit::PlayerOnHit(Player& _player)
+	: player_(_player)
 {
 	//タグごとのヒット処理格納
 	onHit_[Collider::TAG::PLAYER1] = [this](const std::weak_ptr<Collider> _hitCol) {};
@@ -83,7 +82,7 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	const auto& hit = mainCol->GetGeometry().GetHitResult();
 
 	//移動量
-	VECTOR movePow = VSub(player_.GetMovedPos(), playerTrans_.pos);
+	VECTOR movePow = VSub(player_.GetMovedPos(), player_.GetTrans().pos);
 
 	//接触地点にまで戻す
 	player_.SetMovedPos(VAdd(player_.GetMovedPos(),VScale(movePow, hit.t)));

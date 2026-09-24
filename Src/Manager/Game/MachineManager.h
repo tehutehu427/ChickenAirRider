@@ -68,7 +68,6 @@ private:
 
 	//–¼‘OŠÇ—
 	std::unordered_map<std::string, std::function<int(void)>> getModelId_;
-	std::unordered_map<std::string, MACHINE_TYPE> number_;
 
 	//‹@‘Ì‚ÌŠi”[
 	std::vector<std::unique_ptr<Machine>> machines_;

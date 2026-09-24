@@ -1,8 +1,11 @@
 #include"../pch.h"
+#include"../Application.h"
 #include"../Utility/Utility.h"
 #include"../../Manager/System/SceneManager.h"
 #include"../../Manager/Game/AnimationManager.h"
 #include"../../Manager/System/ResourceManager.h"
+#include "CharacterImportData.h"
+#include "../AnimationImportData.h"
 #include "Character.h"
 
 Character::Character(void)
@@ -15,47 +18,24 @@ Character::~Character(void)
 
 }
 
-void Character::Load(void)
+void Character::Load(const CharacterImportData& _data, const int _modelId)
 {
-	//キャラクターのステータスを外部から持ってくる
-	unitParam_.fixedMaxSpeed = PARAM_NORMAL;
-	unitParam_.fixedAcceleration = PARAM_NORMAL;
-	unitParam_.fixedTurning = PARAM_NORMAL;
-	unitParam_.fixedCharge = PARAM_NORMAL;
-	unitParam_.fixedFlight = PARAM_NORMAL;
-	unitParam_.fixedWeight = PARAM_NORMAL;
-	unitParam_.fixedAttack = PARAM_NORMAL;
-	unitParam_.fixedDefence = PARAM_NORMAL;
-	unitParam_.fixedMaxHealth = PARAM_NORMAL;
+	//パラメータ情報
+	unitParam_ = _data.param;
 
-	unitParam_.affectMaxSpeed = 0.5f;
-	unitParam_.affectAcceleration = 0.5f;
-	unitParam_.affectTurning = 0.5f;
-	unitParam_.affectCharge = 0.5f;
-	unitParam_.affectFlight = 0.5f;
-	unitParam_.affectWeight = 0.5f;
-	unitParam_.affectAttack = 0.5f;
-	unitParam_.affectDefence = 0.5f;
-	unitParam_.affectMaxHealth = 0.5f;
+	//モデルID
+	trans_.modelId = _modelId;
 
-	unitParam_.chargeBraking = 0.2f;
-	unitParam_.chargeCapacity = 100.0f;
-
-	//モデル
-	trans_.quaRotLocal = Quaternion::AngleAxis(Utility::Deg2RadF(180.0f), Utility::AXIS_Y);
-	trans_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::CHICKEN));
-	
 	//アニメーション
 	anim_ = std::make_unique<AnimationController>(trans_.modelId);
 
 	//アニメーション番号
-	const auto& animNums = AnimationManager::GetInstance().GetAnimationData("chicken");
-	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
+	const auto& animNums = AnimationManager::GetInstance().GetAnimationData(_data.name);
 
 	//アニメーション割り当て
 	for (const auto& animNum : animNums)
 	{
-		anim_->Add(animNum.first, animNum.second, 60.0f);
+		anim_->Add(animNum.first, animNum.second.number, animNum.second.speed);
 	}
 }
 

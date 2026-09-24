@@ -2,6 +2,7 @@
 #include"LoaderManager.h"
 #include"../Manager/Game/StageManager.h"
 #include"../Object/Stage/StageImportData.h"
+#include"../Object/Player/Character/CharacterImportData.h"
 #include"../Object/Player/AnimationImportData.h"
 #include"../Object/Player/Machine/MachineImportData.h"
 #include"../Object/Item/ItemImportData.h"
@@ -12,6 +13,9 @@ void DataRegistry::CreateAll(void)
 {	
 	//ステージの情報
 	LoaderManager<StageImportData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
+
+	//キャラクター情報
+	LoaderManager<CharacterImportData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//アニメーション情報
 	LoaderManager<AnimationImportData>::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);

@@ -5,6 +5,7 @@
 #include"../Manager/System/Camera.h"
 #include "../Manager/System/SplitScreenManager.h"
 #include "../Manager/Game/HUDManager.h"
+#include "../Manager/Game/CharacterManager.h"
 #include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/GravityManager.h"
 #include "../Renderer/ModelMaterial.h"
@@ -79,8 +80,8 @@ void Player::Load(void)
 	charaShadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
 
 	//キャラクター
-	chara_ = std::make_unique<Character>();
-	chara_->Load();
+	const auto& charaMng = CharacterManager::GetInstance();
+	chara_ = charaMng.GetCharacter("chicken");
 
 	//初期機体情報
 	const auto& machineMng = MachineManager::GetInstance();
@@ -102,7 +103,7 @@ void Player::Load(void)
 	logic_->Init();
 
 	//当たり判定後処理
-	onHit_ = std::make_unique<PlayerOnHit>(*this, trans_);
+	onHit_ = std::make_unique<PlayerOnHit>(*this);
 	onHit_->Load();
 
 	canGetOff_ = true;
@@ -116,9 +117,6 @@ void Player::Init(void)
 	//座標
 	movedPos_ = VAdd(Utility::VECTOR_ZERO, VScale(LOCAL_POS, static_cast<float>(playerIndex_)));
 	trans_.pos = movedPos_;
-
-	//初期化
-	chara_->Init();
 
 	//初期機体情報
 	const auto& machineMng = MachineManager::GetInstance();

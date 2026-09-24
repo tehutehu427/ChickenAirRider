@@ -4,27 +4,33 @@
     "animation": [
       {
         "animName": "idle",
-        "number": 0
+        "number": 0,
+        "speed": 60.0
       },
       {
         "animName": "walk",
-        "number": 1
+        "number": 1,
+        "speed": 60.0
       },
       {
         "animName": "run",
-        "number": 2
+        "number": 2,
+        "speed": 60.0
       },
       {
         "animName": "jump",
-        "number": 3
+        "number": 3,
+        "speed": 60.0
       },
       {
         "animName": "landing",
-        "number": 4
+        "number": 4,
+        "speed": 60.0
       },
       {
         "animName": "ride",
-        "number": 5
+        "number": 5,
+        "speed": 60.0
       }
     ]
   }

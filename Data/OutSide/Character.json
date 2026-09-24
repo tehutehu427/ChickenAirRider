@@ -1,0 +1,47 @@
+[
+  {
+    "name": "chicken",
+    "radius": 60.0,
+    "localPos": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "scale": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0
+    },
+    "parameter": {
+      "fixedMaxSpeed": 2.5,
+      "fixedAcceleration": 2.5,
+      "fixedTurning": 2.5,
+      "fixedCharge": 2.5,
+      "fixedFlight": 2.5,
+      "fixedWeight": 2.5,
+      "fixedAttack": 2.5,
+      "fixedDefence": 2.5,
+      "fixedMaxHealth": 2.5,
+
+      "affectMaxSpeed": 0.5,
+      "affectAcceleration": 0.5,
+      "affectTurning": 0.5,
+      "affectCharge": 0.5,
+      "affectFlight": 0.5,
+      "affectWeight": 0.5,
+      "affectAttack": 0.5,
+      "affectDefence": 0.5,
+      "affectMaxHealth": 0.5,
+
+      "chargeBraking": 0.2,
+      "chargeCapacity": 100.0,
+      "chargeDamp": 1.0,
+      "boostRate": 1.0,
+      "boostPower": 4,
+      "rateOfConvergence": 1.0,
+
+      "groundSpeed": 1.0,
+      "flightSpeed": 1.0
+    }
+  }
+]

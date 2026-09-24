@@ -77,7 +77,7 @@ void SceneResult::Init(void)
 		//アニメーション割り当て
 		for (const auto& animNum : animNums)
 		{
-			anim->Add(animNum.first, animNum.second, 60.0f);
+			anim->Add(animNum.first, animNum.second.number, animNum.second.speed);
 		}
 
 		//立ち状態

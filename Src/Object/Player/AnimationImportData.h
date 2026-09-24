@@ -6,11 +6,18 @@
 
 struct AnimationImportData
 {
+	//アニメーションデータ
+	struct AnimationData
+	{
+		int number = 0;		//アニメーション番号
+		float speed = 0.0f;	//アニメーション速度
+	};
+
 	//名前
 	std::string name;
 
 	//アニメーション
-	std::unordered_map<std::string, int> animation;
+	std::unordered_map<std::string, AnimationData> animation;
 };
 
 //Json呼び出し
@@ -31,13 +38,14 @@ inline void FromJson(const nlohmann::json& _j, AnimationImportData& _data)
 	if (_j.contains("animation"))
 	{
 		std::string animName;
-		int animNum;
+		AnimationImportData::AnimationData animData;
 
 		for (const auto& anim : _j["animation"])
 		{
 			animName = anim.value("animName", "");
-			animNum = anim.value("number", -1);
-			_data.animation.emplace(animName, animNum);
+			animData.number = anim.value("number", -1);
+			animData.speed = anim.value("speed", 0.0f);
+			_data.animation.emplace(animName, animData);
 		}
 	}
 }

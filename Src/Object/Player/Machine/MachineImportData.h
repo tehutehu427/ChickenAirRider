@@ -9,25 +9,25 @@
 struct MachineImportData
 {
 	//機体名
-	std::string name;
+	std::string name = "";
 
 	//アニメーションの有無
-	bool isAnim;
+	bool isAnim = false;
 
 	//当たり判定半径
-	float hitRadius;
+	float hitRadius = 0.0f;
 
 	//乗車者の相対座標
-	VECTOR riderLocalPos;
+	VECTOR riderLocalPos = {0.0f, 0.0f, 0.0f};
 
 	//モデルの大きさ
-	VECTOR scale;
+	VECTOR scale = {1.0f, 1.0f, 1.0f};
 
 	//足元座標
-	VECTOR footPos;
+	VECTOR footPos = {0.0f, 0.0f, 0.0f};
 
 	//固定パラメーター
-	UnitParameter param;
+	UnitParameter param = {};
 };
 
 //Json呼び出し

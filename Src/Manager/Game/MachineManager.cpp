@@ -1,4 +1,3 @@
-#include "MachineManager.h"
 #include "../pch.h"
 #include"../Application.h"
 #include"../Utility/Utility.h"
@@ -34,11 +33,6 @@ MachineManager::MachineManager(void)
 		auto& res = ResourceManager::GetInstance();
 		return res.LoadModelDuplicate(ResourceManager::SRC::BOTTLE_STAR);
 	};
-
-	number_["wakaba"] = MACHINE_TYPE::WAKABA;
-	number_["earth"] = MACHINE_TYPE::EARTH;
-	number_["battle"] = MACHINE_TYPE::BATTLE;
-	number_["bottle"] = MACHINE_TYPE::BOTTLE;
 }
 
 MachineManager::~MachineManager(void)
@@ -153,7 +147,7 @@ const int MachineManager::GetModelId(const MACHINE_TYPE _machineName)
 
 const float MachineManager::GetRadius(const MACHINE_TYPE _machineName)
 {
-	return importData_[static_cast<int>(_machineName)].hitRadius;;
+	return importData_[static_cast<int>(_machineName)].hitRadius;
 }
 
 std::unique_ptr<Machine> MachineManager::GetMachine(const Machine& _machine)
