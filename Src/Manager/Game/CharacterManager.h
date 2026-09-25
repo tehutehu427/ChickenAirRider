@@ -22,7 +22,7 @@ public:
 	};
 
 	//キャラクターの取得
-	std::unique_ptr<Character> GetCharacter(const std::string& _name)const;
+	std::unique_ptr<Character> CreateCharacter(const std::string& _name)const;
 
 private:
 
@@ -41,9 +41,6 @@ private:
 
 	//読み込み
 	void LoadOutSide(void)override;
-
-	//キャラクターの生成
-	void CreateCharacter(void);
 
 	//モデルIDの取得
 	const int GetChickenModelId(void);

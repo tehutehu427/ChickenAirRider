@@ -81,7 +81,7 @@ void Player::Load(void)
 
 	//キャラクター
 	const auto& charaMng = CharacterManager::GetInstance();
-	chara_ = charaMng.GetCharacter("chicken");
+	chara_ = charaMng.CreateCharacter("chicken");
 
 	//初期機体情報
 	const auto& machineMng = MachineManager::GetInstance();

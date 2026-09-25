@@ -13,10 +13,17 @@ void CharacterManager::LoadOutSide(void)
 	importData_ = LoaderManager<CharacterImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Character.json"));
 }
 
-std::unique_ptr<Character> CharacterManager::GetCharacter(const std::string& _name) const
+std::unique_ptr<Character> CharacterManager::CreateCharacter(const std::string& _name) const
 {
+	//名前が存在するか
+	if (getModelId_.find(_name) == getModelId_.end())
+	{
+		return nullptr;
+	}
+
 	//モデルIDの取得
-	const int modelId = (this->*getModelId_[_name])();
+	auto func = getModelId_[_name];
+	const int modelId = (this->*func)();
 
 	//キャラクターの生成
 	for (auto& data : importData_)
