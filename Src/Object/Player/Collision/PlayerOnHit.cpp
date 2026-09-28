@@ -43,17 +43,6 @@ PlayerOnHit::~PlayerOnHit(void)
 
 void PlayerOnHit::Load(void)
 {
-	//インスタンス
-	auto& res = ResourceManager::GetInstance();
-	auto& snd = SoundManager::GetInstance();
-
-	//アイテムゲット
-	int id = res.Load(ResourceManager::SRC::GET_ITEM_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::GET_ITEM, id, SoundManager::TYPE::SE);
-
-	//ダメージ
-	id = res.Load(ResourceManager::SRC::DAMAGE_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::DAMAGE, id, SoundManager::TYPE::SE);
 }
 
 void PlayerOnHit::OnHit(const std::weak_ptr<Collider> _hitCol)

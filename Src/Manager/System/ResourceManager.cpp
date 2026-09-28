@@ -364,6 +364,10 @@ void ResourceManager::Init(void)
 	//BGMのパス
 	std::wstring bgmPath = PATH_SOUND + L"BGM/";
 
+	//タイトルBGM
+	res = std::make_unique<Resource>(Resource::TYPE::SOUND, bgmPath + L"Title.mp3");
+	resourcesMap_.emplace(SRC::TITLE_BGM, std::move(res));
+
 	//セレクトBGM
 	res = std::make_unique<Resource>(Resource::TYPE::SOUND, bgmPath + L"SelectBGM.mp3");
 	resourcesMap_.emplace(SRC::SELECT_BGM, std::move(res));
@@ -382,10 +386,6 @@ void ResourceManager::Init(void)
 
 	//SEのパス
 	std::wstring sePath = PATH_SOUND + L"SE/";
-
-	//タイトルSE
-	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Title.mp3");
-	resourcesMap_.emplace(SRC::TITLE_SE, std::move(res));
 
 	//決定音
 	res = std::make_unique<Resource>(Resource::TYPE::SOUND, sePath + L"Enter.mp3");

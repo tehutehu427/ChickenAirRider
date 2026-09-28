@@ -86,21 +86,14 @@ void GameMain::Init(void)
 		split.SetShader(i, SplitScreenManager::SHADER_TYPE::GOD_RAY);
 	}
 
-	//BGM読み込み
-	int id = res.Load(ResourceManager::SRC::MAIN_GAME_BGM).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::MAIN_GAME_BGM, id, SoundManager::TYPE::BGM);
-
-	//SE読み込み
-	id = res.Load(ResourceManager::SRC::COUNT_DOWN_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::COUNT_DOWN_SE, id, SoundManager::TYPE::SE);
-	id = res.Load(ResourceManager::SRC::TIME_UP_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::TIME_UP_SE, id, SoundManager::TYPE::SE);
-
 	//BGM再生
 	snd.Play(SoundManager::SOUND_NAME::MAIN_GAME_BGM, SoundManager::PLAYTYPE::LOOP);
 
 	//変数の初期化
 	state_ = STATE::START;
+
+	//プレイヤー達の初期更新
+	plMng.Update();
 }
 
 void GameMain::Update(void)

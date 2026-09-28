@@ -128,13 +128,13 @@ public:
 		//サウンド
 
 		//BGM
+		TITLE_BGM,		//タイトルBGM
 		SELECT_BGM,		//セレクトBGM
 		MAIN_GAME_BGM,	//メインゲームBGM
 		LAST_GAME_BGM,	//最終ミニゲームBGM
 		RESULT_BGM,		//リザルトBGM
 
 		//SE
-		TITLE_SE,		//タイトル
 		ENTER_SE,		//決定音
 		SELECT_SE,		//選択音
 		CANCEL_SE,		//キャンセル音

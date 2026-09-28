@@ -44,18 +44,6 @@ Camera::~Camera(void)
 void Camera::Init(void)
 {
 	ChangeMode(MODE::FIXED_POINT);
-
-	auto& ui = SplitScreenManager::GetInstance();
-	auto& view = ui.GetViewport(static_cast<int>(padNo_) - 1);
-
-	//material_ = std::make_unique<PixelMaterial>(L"GodRay.cso", 1);
-	//renderer_ = std::make_unique<PixelRenderer>();
-
-	//material_->AddConstBuf(FLOAT4{ 0.1f, 0.0f,0.95f, 0.7f });
-	//material_->AddTextureBuf(SceneManager::GetInstance().GetMainScreen());
-	//renderer_->MakeSquareVertex({ view.x,view.y }, { view.width, view.height });
-
-	//postEffectScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
 }
 
 void Camera::Update(void)
@@ -455,9 +443,6 @@ void Camera::UpdateFollowLeap(void)
 {
 	// カメラ操作
 	ProcessRotMachine();
-
-	//速度によるズーム
-	//ProcessSpeedZoom();
 
 	//追従対象を遅れて追尾
 	SyncFollowLeap();

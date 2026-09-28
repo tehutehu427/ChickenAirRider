@@ -52,9 +52,6 @@ private:
 	//歯車の速度の差異
 	static constexpr float GEAR_SPEED_MULTI = 2.0f;
 
-	//SEの音量
-	static constexpr int SE_VOLUME = 80;
-
 	//タイトル背景
 	int backImg_;
 	int backFrameImg_;

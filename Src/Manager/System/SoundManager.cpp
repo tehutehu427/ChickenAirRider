@@ -1,21 +1,108 @@
 #include"../pch.h"
+#include"../System/ResourceManager.h"
 #include "SoundManager.h"
-#include "../../Application.h"
 
-SoundManager::SoundManager()
+SoundManager::SoundManager(void)
 {  
 	// 音量の初期化
-	for (int i = 0; i < TYPE_MAX; ++i)
+	for (int i = 0; i < static_cast<int>(TYPE::MAX); ++i)
 	{
 		volume_[i] = DEFAULT_VOLUME;
 	}
 }
 
-SoundManager::~SoundManager()
+SoundManager::~SoundManager(void)
 {
 }
 
-void SoundManager::Destroy()
+void SoundManager::LoadOutSide(void)
+{
+    //リソース
+    ResourceManager& resMng = ResourceManager::GetInstance();
+
+#pragma region BGM
+
+    //タイトルBGM
+    int id = resMng.Load(ResourceManager::SRC::TITLE_BGM).handleId_;
+    Add(SOUND_NAME::TITLE_BGM, id, TYPE::BGM, TITLE_BGM_VOL);
+
+    //セレクトBGM
+    id = resMng.Load(ResourceManager::SRC::SELECT_BGM).handleId_;
+    Add(SOUND_NAME::SELECT_BGM, id, TYPE::BGM);
+
+    //ゲームBGM
+    id = resMng.Load(ResourceManager::SRC::MAIN_GAME_BGM).handleId_;
+    Add(SOUND_NAME::MAIN_GAME_BGM, id, TYPE::BGM);
+
+	//最終ゲームBGM
+    id = resMng.Load(ResourceManager::SRC::LAST_GAME_BGM).handleId_;
+    Add(SOUND_NAME::LAST_GAME_BGM, id, TYPE::BGM);
+
+    //リザルトBGM
+    id = resMng.Load(ResourceManager::SRC::RESULT_BGM).handleId_;
+    Add(SOUND_NAME::RESULT_BGM, id, TYPE::BGM);
+
+#pragma endregion BGM
+
+#pragma region SE
+
+    //決定音
+    id = resMng.Load(ResourceManager::SRC::ENTER_SE).handleId_;
+    Add(SOUND_NAME::ENTER, id, TYPE::SE, OPTION_SE_VOL);
+
+	//選択音
+    id = resMng.Load(ResourceManager::SRC::SELECT_SE).handleId_;
+    Add(SOUND_NAME::SELECT_SE, id, TYPE::SE, OPTION_SE_VOL);
+
+	//キャンセル音
+    id = resMng.Load(ResourceManager::SRC::CANCEL_SE).handleId_;
+    Add(SOUND_NAME::CANCEL, id, TYPE::SE, OPTION_SE_VOL);
+
+    //エンジン音
+    id = resMng.Load(ResourceManager::SRC::ENGINE_SE).handleId_;
+    Add(SOUND_NAME::ENGINE, id, TYPE::SE, ENGINE_SE_VOL);
+
+    //チャージ
+    id = resMng.Load(ResourceManager::SRC::CHARGE_SE).handleId_;
+    Add(SOUND_NAME::CHARGE, id, TYPE::SE, CHARGE_SE_VOL);
+
+    //チャージ完了
+    id = resMng.Load(ResourceManager::SRC::CHARGE_MAX_SE).handleId_;
+    Add(SOUND_NAME::CHARGE_MAX, id, TYPE::SE, CHARGE_MAX_SE_VOL);
+
+    //ブースト
+    id = resMng.Load(ResourceManager::SRC::BOOST_SE).handleId_;
+    Add(SOUND_NAME::BOOST, id, TYPE::SE, BOOST_SE_VOL);
+
+    //スピン
+    id = resMng.Load(ResourceManager::SRC::SPIN_SE).handleId_;
+    Add(SOUND_NAME::SPIN, id, TYPE::SE, SPIN_SE_VOL);
+
+    //ジャンプ
+    id = resMng.Load(ResourceManager::SRC::JUMP_SE).handleId_;
+    Add(SOUND_NAME::JUMP, id, TYPE::SE);
+
+    //アイテムゲット
+    id = resMng.Load(ResourceManager::SRC::GET_ITEM_SE).handleId_;
+    Add(SOUND_NAME::GET_ITEM, id, TYPE::SE);
+
+    //ダメージ
+    id = resMng.Load(ResourceManager::SRC::DAMAGE_SE).handleId_;
+    Add(SOUND_NAME::DAMAGE, id, TYPE::SE);
+
+    //カウントダウン
+    id = resMng.Load(ResourceManager::SRC::COUNT_DOWN_SE).handleId_;
+    Add(SOUND_NAME::COUNT_DOWN_SE, id, TYPE::SE);
+    
+	//タイムアップ
+    id = resMng.Load(ResourceManager::SRC::TIME_UP_SE).handleId_;
+    Add(SOUND_NAME::TIME_UP_SE, id, TYPE::SE);
+
+#pragma endregion SE
+
+}
+
+void SoundManager::Destroy(void)
 {
     for (auto& p : info_)
     {
@@ -29,10 +116,6 @@ void SoundManager::Destroy()
         delete instance_;
         instance_ = nullptr;
     }
-}
-
-void SoundManager::Init()
-{
 }
 
 const bool SoundManager::Add(const SOUND_NAME _name, const int _id, const TYPE _soundType, const int _volumePercent)

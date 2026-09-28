@@ -8,11 +8,12 @@ class MachineAction : public ActionBase
 {
 public:
 
-	/// @brief コンストラクタ
-	/// @param _player 親情報
-	/// @param _machine 機体の情報
-	/// @param _logic 行動情報
-	MachineAction(Player& _player, const Machine& _machine, LogicBase& _logic);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="_player">プレイヤー情報</param>
+	/// <param name="_logic">操作者情報</param>
+	MachineAction(Player& _player, LogicBase& _logic);
 
 	//デストラクタ
 	~MachineAction(void)override;
@@ -75,20 +76,10 @@ private:
 	static constexpr float SPIN_TIME = 0.7f;
 	static constexpr float SPIN_SPEED = 40.0f;
 
-	//サウンド関係
-	static constexpr int ENGINE_SE_VOL = 140;
-	static constexpr int CHARGE_SE_VOL = 80;
-	static constexpr int CHARGE_MAX_SE_VOL = 80;
-	static constexpr int SPIN_SE_VOL = 130;
-	static constexpr int BOOST_SE_VOL = 180;
-
 	//エフェクト関係
 	static constexpr VECTOR BOOST_EFF_SCL = {5.0f, 5.0f, 5.0f};
 	static constexpr VECTOR CHARGE_EFF_SCL = {20.0f, 20.0f, 20.0f};
 	static constexpr VECTOR SPIN_EFF_SCL = {1.0f, 1.0f, 1.0f };
-
-	//機体
-	const Machine& machine_;
 
 	//エフェクト
 	std::unique_ptr<EffectController> effectController_;

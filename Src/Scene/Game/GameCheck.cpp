@@ -57,10 +57,6 @@ void GameCheck::Init(void)
 	lastGameTitle_.emplace(static_cast<int>(SceneGame::LAST_GAME_TYPE::DEATH_MATCH), res.Load(ResourceManager::SRC::DEATH_MATCH_CHECK_TITLE).handleId_);
 	lastGameTitle_.emplace(static_cast<int>(SceneGame::LAST_GAME_TYPE::AIR_GLIDER), res.Load(ResourceManager::SRC::AIR_GLIDER_CHECK_TITLE).handleId_);
 
-	//BGMì«Ç›çûÇ›
-	int id = res.Load(ResourceManager::SRC::SELECT_BGM).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::SELECT_BGM, id, SoundManager::TYPE::BGM);
-
 	//BGMçƒê∂
 	snd.Play(SoundManager::SOUND_NAME::SELECT_BGM, SoundManager::PLAYTYPE::LOOP);
 }

@@ -26,7 +26,7 @@ public:
 	static const std::wstring PATH_SOUND;
 	static const std::wstring PATH_FONT;
 	static const std::wstring PATH_SHADER;
-	static const std::wstring PATH_OUTSIDE;
+	static const std::wstring PATH_JSON;
 	//-------------------------------------------
 
 	// 明示的にインステンスを生成する

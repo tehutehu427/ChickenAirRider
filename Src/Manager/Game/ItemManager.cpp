@@ -14,9 +14,9 @@
 void ItemManager::LoadOutSide(void)
 {
 	//インポートデータ
-	powerUpItemData_ = LoaderManager<PowerUpItemImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"PowerUpItem.json"));
-	battleItemData_ = LoaderManager<BattleItemImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"BattleItem.json"));
-	boxPosData_ = LoaderManager<BoxCreatePositionData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"BoxCreatePositionData.json"));
+	powerUpItemData_ = LoaderManager<PowerUpItemImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_JSON + L"PowerUpItem.json"));
+	battleItemData_ = LoaderManager<BattleItemImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_JSON + L"BattleItem.json"));
+	boxPosData_ = LoaderManager<BoxCreatePositionData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_JSON + L"BoxCreatePositionData.json"));
 }
 
 void ItemManager::Init(void)

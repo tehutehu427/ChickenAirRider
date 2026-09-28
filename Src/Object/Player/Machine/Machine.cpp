@@ -48,8 +48,11 @@ void Machine::Init(void)
 void Machine::Update(void)
 {
 	//デルタタイム
-	const float delta = SceneManager::GetInstance().GetDeltaTime();
-	invincible_ -= delta;
+	if (invincible_ > 0.0f)
+	{
+		const float delta = SceneManager::GetInstance().GetDeltaTime();
+		invincible_ -= delta;
+	}
 
 	//アニメーション
 	Animation();
@@ -107,7 +110,7 @@ void Machine::CreateCol(void)
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, radius_);
 	MakeCollider(Collider::TAG::MACHINE, std::move(geo), { Collider::TAG::MACHINE_RIDE });
 
-	//乗り判定コライダ
+	//乗車判定コライダ
 	geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, RIDE_COL_RADIUS);
 	MakeCollider(Collider::TAG::MACHINE_RIDE, std::move(geo), { Collider::TAG::MACHINE,Collider::TAG::MACHINE_RIDE });
 }

@@ -26,9 +26,6 @@ CharacterAction::~CharacterAction(void)
 
 void CharacterAction::Init(void)
 {
-	int id = ResourceManager::GetInstance().Load(ResourceManager::SRC::JUMP_SE).handleId_;
-	SoundManager::GetInstance().Add(SoundManager::SOUND_NAME::JUMP, id, SoundManager::TYPE::SE);
-
 	//—§‚¿ó‘Ô
 	chara_.GetAnim().Play("idle");
 

@@ -68,20 +68,9 @@ Player::~Player(void)
 
 void Player::Load(void)
 {
-	//キャラのシャドウマップ
-	shadowMaterial_ = std::make_unique<ModelMaterial>(L"StdModelPS.cso", 3, L"StdModelVS", 0);
-	shadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
-	shadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
-	shadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
-	//キャラのシャドウマップ
-	charaShadowMaterial_ = std::make_unique<ModelMaterial>(L"StdModelPS.cso", 3, L"StdModelVS", 0);
-	charaShadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
-	charaShadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
-	charaShadowMaterial_->AddConstBufPS({ 1.0f,1.0f,1.0f,1.0f });
-
 	//キャラクター
-	const auto& charaMng = CharacterManager::GetInstance();
-	chara_ = charaMng.CreateCharacter("chicken");
+	auto& charaMng = CharacterManager::GetInstance();
+	chara_ = std::move(charaMng.CreateCharacter("chicken"));
 
 	//初期機体情報
 	const auto& machineMng = MachineManager::GetInstance();
@@ -127,7 +116,6 @@ void Player::Init(void)
 		machine_ = std::move(machineMng.GetCreateMachine(MachineManager::MACHINE_TYPE::WAKABA));
 		machine_->Load();
 	}
-
 	machine_->Init();
 
 	//行動基準
@@ -393,7 +381,7 @@ void Player::ChangeActionRide(void)
 	hud.SetVisible(playerIndex_, HUDManager::HUD_TYPE::GET_OFF, true);
 
 	//機体の行動に変更
-	action_ = std::make_unique<MachineAction>(*this, *machine_, *logic_);
+	action_ = std::make_unique<MachineAction>(*this, *logic_);
 	action_->Init();
 
 	//相対座標の反映
@@ -468,14 +456,9 @@ void Player::DrawNormal(void)
 
 void Player::DrawRide(void)
 {
-	//キャラの描画
-	//modelRenderer_->Draw(chara_->GetModelId(), *charaShadowMaterial_);
-
-	//機体の描画
-	//modelRenderer_->Draw(machine_->GetModelId(), *shadowMaterial_);
-
+	//キャラと機体の描画
 	chara_->Draw();
-	machine_->Draw();
+	if(machine_) machine_->Draw();
 }
 
 void Player::SynchronizeChara(void)
@@ -489,9 +472,12 @@ void Player::SynchronizeChara(void)
 
 void Player::SynchronizeMachine(void)
 {
+	//機体がないならスキップ
+	if (!machine_)return;
+
 	//座標と回転の同期
 	machine_->SetPos(trans_.pos);
-	//machine_->SetScale(trans_.scl);
+	machine_->SetScale(trans_.scl);
 	machine_->SetQuaRot(modelQuaRot_);
 	machine_->Update();
 }

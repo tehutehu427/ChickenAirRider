@@ -44,7 +44,7 @@ MachineManager::~MachineManager(void)
 void MachineManager::LoadOutSide(void)
 {
 	//ステージ情報
-	importData_ = LoaderManager<MachineImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Machine.json"));
+	importData_ = LoaderManager<MachineImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_JSON + L"Machine.json"));
 }
 
 void MachineManager::Init(void)

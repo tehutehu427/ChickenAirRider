@@ -39,7 +39,7 @@ public :
 	/// @param endStep 再生終了フレーム
 	/// @param isStop アニメーションを止める
 	/// @param isForce 同じアニメーションを再生したい場合はtrue
-	void Play(const std::string _name, const bool _isLoop = true, 
+	void Play(const std::string& _name, const bool _isLoop = true, 
 		const float _startStep = 0.0f, const float _endStep = -1.0f, const bool _isStop = false, const bool _isForce = false);
 
 	//更新
@@ -49,7 +49,7 @@ public :
 	void SetEndLoop(float startStep, float endStep, float speed);
 
 	// 再生中のアニメーション
-	const std::string GetPlayName(void) const;
+	const std::string& GetPlayName(void) const;
 
 	//アニメーションステップゲッタ
 	const float GetAnimStep(void)const;

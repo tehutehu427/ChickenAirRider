@@ -68,19 +68,6 @@ void SceneOption::Load(void)
 	menuImg_.emplace(OPTION_TYPE::END, res.Load(ResourceManager::SRC::END_TEXT).handleId_);
 	onOffImg_.emplace(false, res.Load(ResourceManager::SRC::ON_TEXT).handleId_);
 	onOffImg_.emplace(true, res.Load(ResourceManager::SRC::OFF_TEXT).handleId_);
-
-	//’Ç‰Á
-	int id = res.Load(ResourceManager::SRC::SELECT_BGM).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::SELECT_BGM, id, SoundManager::TYPE::BGM);
-
-	id = res.Load(ResourceManager::SRC::ENTER_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::ENTER, id, SoundManager::TYPE::SE, SE_VOLUME);
-
-	id = res.Load(ResourceManager::SRC::SELECT_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::SELECT_SE, id, SoundManager::TYPE::SE, SE_VOLUME);
-
-	id = res.Load(ResourceManager::SRC::CANCEL_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::CANCEL, id, SoundManager::TYPE::SE, SE_VOLUME);
 }
 
 void SceneOption::Init(void)

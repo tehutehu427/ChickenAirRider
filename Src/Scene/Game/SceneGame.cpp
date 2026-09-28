@@ -41,7 +41,10 @@ SceneGame::~SceneGame(void)
 	auto& hud = HUDManager::GetInstance();
 	hud.Init();
 
+	//サウンドの停止
 	SoundManager::GetInstance().StopAll();
+	
+	//ゲーム関連のインスタンスの削除
 	SingletonRegistry::GetInstance().Delete(SingletonRegistry::DESTROY_TIMING::GAME_END);
 }
 

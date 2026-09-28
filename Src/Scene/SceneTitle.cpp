@@ -54,14 +54,8 @@ void SceneTitle::Load(void)
 	logoImg_ = res.Load(ResourceManager::SRC::TITLE_LOGO).handleId_;
 	pushAnyButtonImg_ = res.Load(ResourceManager::SRC::PUSH_ANY_BUTTON).handleId_;
 
-	//サウンドの追加
-	int id = res.Load(ResourceManager::SRC::ENTER_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::ENTER, id, SoundManager::TYPE::SE, SE_VOLUME);
-
-	//タイトルSEの追加と再生
-	id = res.Load(ResourceManager::SRC::TITLE_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::TITLE_SE, id, SoundManager::TYPE::SE, SE_VOLUME);
-	snd.Play(SoundManager::SOUND_NAME::TITLE_SE, SoundManager::PLAYTYPE::LOOP);
+	//BGMの再生
+	snd.Play(SoundManager::SOUND_NAME::TITLE_BGM, SoundManager::PLAYTYPE::LOOP);
 
 	//UIの点滅シェーダー
 	const int PUSH_POS_X = Application::SCREEN_HALF_X;

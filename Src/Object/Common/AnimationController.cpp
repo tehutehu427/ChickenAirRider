@@ -55,7 +55,7 @@ void AnimationController::Add(const std::string _name, const int _animNum, const
 }
 
 
-void AnimationController::Play(const std::string _name, const bool _isLoop,
+void AnimationController::Play(const std::string& _name, const bool _isLoop,
 const float _startStep, const float _endStep, const bool _isStop, const bool _isForce)
 {
 	//アニメーションが存在するか
@@ -191,7 +191,7 @@ void AnimationController::SetEndLoop(float startStep, float endStep, float speed
 	endLoopSpeed_ = speed;
 }
 
-const std::string AnimationController::GetPlayName(void) const
+const std::string& AnimationController::GetPlayName(void) const
 {
 	return playName_;
 }

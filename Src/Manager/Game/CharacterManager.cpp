@@ -10,10 +10,10 @@
 void CharacterManager::LoadOutSide(void)
 {
 	//情報取得
-	importData_ = LoaderManager<CharacterImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"Character.json"));
+	importData_ = LoaderManager<CharacterImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_JSON + L"Character.json"));
 }
 
-std::unique_ptr<Character> CharacterManager::CreateCharacter(const std::string& _name) const
+std::unique_ptr<Character> CharacterManager::CreateCharacter(const std::string& _name)
 {
 	//名前が存在するか
 	if (getModelId_.find(_name) == getModelId_.end())
@@ -25,24 +25,21 @@ std::unique_ptr<Character> CharacterManager::CreateCharacter(const std::string& 
 	auto func = getModelId_[_name];
 	const int modelId = (this->*func)();
 
-	//キャラクターの生成
-	for (auto& data : importData_)
-	{
-		//モデルIDの取得
-		const int modelId = (this->*getModelId_[data.name])();
+	//キャラクター作成
+	std::unique_ptr<Character> character = std::make_unique<Character>();
+	character->Load(importData_[static_cast<int>(charaType_[_name])], modelId);
 
-		std::unique_ptr<Character> character = std::make_unique<Character>();
-		character->Load(data, modelId);
-		characters_[data.name] = std::move(character);
-	}
-
-	return ;
+	//作成したキャラクターを返す
+	return character;
 }
 
 CharacterManager::CharacterManager(void)
 {
 	//リソース
 	getModelId_["chicken"] = &CharacterManager::GetChickenModelId;
+
+	//キャラクターの種類
+	charaType_["chicken"] = CHARA_TYPE::CHICKEN;
 }
 
 CharacterManager::~CharacterManager(void)

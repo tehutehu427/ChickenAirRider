@@ -22,7 +22,7 @@ public:
 	};
 
 	//キャラクターの取得
-	std::unique_ptr<Character> CreateCharacter(const std::string& _name)const;
+	std::unique_ptr<Character> CreateCharacter(const std::string& _name);
 
 private:
 
@@ -32,6 +32,7 @@ private:
 	//名前管理
 	using Func = const int(CharacterManager::*)(void);
 	std::unordered_map<std::string, Func> getModelId_;
+	std::unordered_map<std::string, CHARA_TYPE> charaType_;
 
 	//コンストラクタ
 	CharacterManager(void);

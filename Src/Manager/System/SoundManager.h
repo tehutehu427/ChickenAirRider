@@ -16,13 +16,13 @@ public:
 		NONE = 1,		//なし
 
 		//BGM
+		TITLE_BGM,		//タイトルBGM	
 		SELECT_BGM,		//セレクトシーン
 		MAIN_GAME_BGM,	//メインゲーム
 		LAST_GAME_BGM,	//最終ミニゲーム
 		RESULT_BGM,		//リザルトシーン
 
 		//SE
-		TITLE_SE,	//タイトル
 		ENTER,		//決定音
 		SELECT_SE,	//選択音
 		CANCEL,		//キャンセル音
@@ -64,8 +64,14 @@ public:
 	//デフォルトの音量
 	static constexpr int DEFAULT_VOLUME = 70;
 
-	//音源種類最大数
-	static constexpr int TYPE_MAX = static_cast<int>(TYPE::MAX);
+	//音量関係
+	static constexpr int TITLE_BGM_VOL = 80;
+	static constexpr int OPTION_SE_VOL = 80;
+	static constexpr int ENGINE_SE_VOL = 140;
+	static constexpr int CHARGE_SE_VOL = 80;
+	static constexpr int CHARGE_MAX_SE_VOL = 80;
+	static constexpr int SPIN_SE_VOL = 130;
+	static constexpr int BOOST_SE_VOL = 180;
 
 	//システムの最大音量
 	static constexpr int VOLUME_MAX = 255;  
@@ -75,9 +81,6 @@ public:
 
 	//解放
 	void Destroy(void)override;
-
-	//初期化
-	void Init(void)override;
 
 	/// @brief サウンドの追加
 	/// @param _name サウンド名
@@ -109,7 +112,7 @@ public:
 	void SetVolume(const SOUND_NAME _name, const int _volumePercent);
 
 	//読み込んだ音量を設定する
-	void SetLoadedSoundsVolume(void) { for (int i = 0; i < TYPE_MAX; i++) { SetSystemVolume(volume_[i], i); } };
+	void SetLoadedSoundsVolume(void) { for (int i = 0; i < static_cast<int>(TYPE::MAX); i++) { SetSystemVolume(volume_[i], i); } };
 
 	/// @brief 音量の設定
 	/// @param _volumePercent 音量パーセント
@@ -132,7 +135,7 @@ private:
 	};		
 		
 	//ボリューム
-	int volume_[TYPE_MAX];
+	int volume_[static_cast<int>(TYPE::MAX)];
 
 	//管理対象
 	std::unordered_map<SOUND_NAME, SoundInfo> info_;
@@ -142,6 +145,9 @@ private:
 
 	//デストラクタ
 	~SoundManager(void)override;
+
+	//読み込み
+	void LoadOutSide(void)override;
 
 	//再生種類を取得
 	int GetPlayType(const PLAYTYPE _playType);

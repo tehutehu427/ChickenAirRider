@@ -9,10 +9,10 @@
 void StageManager::LoadOutSide(void)
 {
 	//ステージ情報
-	importData_.emplace(MODE::MAIN, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"MainStage.json")));
-	importData_.emplace(MODE::BATTLE, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"BattleStage.json")));
-	importData_.emplace(MODE::AIR_GLIDER, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"AirGliderStage.json")));
-	gliderStartStageData_ = (LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_OUTSIDE + L"AirGliderStartStage.json")));
+	importData_.emplace(MODE::MAIN, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_JSON + L"MainStage.json")));
+	importData_.emplace(MODE::BATTLE, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_JSON + L"BattleStage.json")));
+	importData_.emplace(MODE::AIR_GLIDER, LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_JSON + L"AirGliderStage.json")));
+	gliderStartStageData_ = (LoaderManager<StageImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_JSON + L"AirGliderStartStage.json")));
 }
 
 void StageManager::Init(void)

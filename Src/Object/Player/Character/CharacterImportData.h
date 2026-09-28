@@ -11,6 +11,9 @@ struct CharacterImportData
 	//キャラクター名
 	std::string name = "";
 
+	//モデルが反転しているか
+	bool isModelReverse = false;
+
 	//当たり判定半径
 	float hitRadius = 0.0f;
 
@@ -37,6 +40,12 @@ inline void FromJson(const nlohmann::json& _j, CharacterImportData& _data)
 	{
 		std::cerr << "CharacterのJsonファイルにnameが存在しません" << "\n";
 		return;
+	}
+
+	//半径
+	if (_j.contains("isModelReverse"))
+	{
+		_data.isModelReverse = _j.value("isModelReverse", false);
 	}
 
 	//半径

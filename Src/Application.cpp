@@ -21,7 +21,7 @@ const std::wstring Application::PATH_EFFECT = L"Data/Effect/";
 const std::wstring Application::PATH_SOUND = L"Data/Sound/";
 const std::wstring Application::PATH_FONT = L"Data/Font/";
 const std::wstring Application::PATH_SHADER = L"Data/Shader/";
-const std::wstring Application::PATH_OUTSIDE = L"Data/OutSide/";
+const std::wstring Application::PATH_JSON = L"Data/Json/";
 
 void Application::CreateInstance(void)
 {

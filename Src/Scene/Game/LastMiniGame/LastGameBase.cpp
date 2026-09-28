@@ -57,10 +57,6 @@ void LastGameBase::Init(void)
 	//プレイヤーが機体から降りれなくする
 	plMng.PlayerCanGetOff(false);
 
-	//BGM読み込み
-	int id = res.Load(ResourceManager::SRC::LAST_GAME_BGM).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::LAST_GAME_BGM, id, SoundManager::TYPE::BGM);
-
 	//BGM再生
 	snd.Play(SoundManager::SOUND_NAME::LAST_GAME_BGM, SoundManager::PLAYTYPE::LOOP);
 }

@@ -18,6 +18,7 @@ SceneResult::SceneResult(void)
 
 SceneResult::~SceneResult(void)
 {
+	//サウンド停止
 	SoundManager::GetInstance().StopAll();
 }
 
@@ -90,13 +91,6 @@ void SceneResult::Init(void)
 	//カメラの固定化
 	mainCamera->ChangeMode(Camera::MODE::FIXED_POINT);
 	mainCamera->SetPos(CAMERA_POS);
-
-	//BGM読み込み
-	int id = res.Load(ResourceManager::SRC::RESULT_BGM).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::RESULT_BGM, id, SoundManager::TYPE::BGM);
-
-	id = res.Load(ResourceManager::SRC::ENTER_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::ENTER, id, SoundManager::TYPE::SE);
 
 	//BGM再生
 	snd.Play(SoundManager::SOUND_NAME::RESULT_BGM, SoundManager::PLAYTYPE::LOOP);

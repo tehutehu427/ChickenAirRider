@@ -1,6 +1,7 @@
 [
   {
     "name": "chicken",
+    "isModelReverse" :  true,
     "radius": 60.0,
     "localPos": {
       "x": 0.0,

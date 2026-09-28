@@ -9,9 +9,8 @@
 #include "../Logic/LogicBase.h"
 #include "MachineAction.h"
 
-MachineAction::MachineAction(Player& _player, const Machine& _machine, LogicBase& _logic)
-	: ActionBase(_player,_logic),
-	machine_(_machine)
+MachineAction::MachineAction(Player& _player, LogicBase& _logic)
+	: ActionBase(_player,_logic)
 {
 	driveCnt_ = 0.0f;
 	chargeCnt_ = 0.0f;
@@ -36,30 +35,11 @@ MachineAction::~MachineAction(void)
 
 void MachineAction::Init(void)
 {
+	//リソース
 	ResourceManager& resMng = ResourceManager::GetInstance();
-	const SceneManager& scnMng = SceneManager::GetInstance();
 
 	//SE
 	auto& snd = SoundManager::GetInstance();
-
-	//エンジン音
-	int id = resMng.Load(ResourceManager::SRC::ENGINE_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::ENGINE, id, SoundManager::TYPE::SE, ENGINE_SE_VOL);
-	
-	//チャージ
-	id = resMng.Load(ResourceManager::SRC::CHARGE_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::CHARGE, id, SoundManager::TYPE::SE, CHARGE_SE_VOL);
-	//チャージ完了
-	id = resMng.Load(ResourceManager::SRC::CHARGE_MAX_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::CHARGE_MAX, id, SoundManager::TYPE::SE, CHARGE_MAX_SE_VOL);
-
-	//ブースト
-	id = resMng.Load(ResourceManager::SRC::BOOST_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::BOOST, id, SoundManager::TYPE::SE, BOOST_SE_VOL);
-
-	//スピン
-	id = resMng.Load(ResourceManager::SRC::SPIN_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::SPIN, id, SoundManager::TYPE::SE, SPIN_SE_VOL);
 
 	//エフェクト
 	effectController_ = std::make_unique<EffectController>();
@@ -84,7 +64,7 @@ void MachineAction::Update(void)
 	{
 		//音量制限
 		float speedRate = speed_ / (param.maxSpeed * BASE_MAX_SPEED);
-		float vol = (speedRate > 1.0f ? 1.0f : speedRate) * ENGINE_SE_VOL;
+		float vol = (speedRate > 1.0f ? 1.0f : speedRate) * SoundManager::ENGINE_SE_VOL;
 		snd.SetVolume(SoundManager::SOUND_NAME::ENGINE, static_cast<int>(vol));
 	}
 
@@ -123,8 +103,10 @@ void MachineAction::Update(void)
 	effectController_->Update();
 	for (auto& eff : effNum_)
 	{
+		//エフェクトが存在するなら
 		if (eff.second != -1)
 		{
+			//各情報をプレイヤーに合わせる
 			effectController_->SetPos(eff.first, eff.second, playerTrans.pos);
 			effectController_->SetQuaRot(eff.first, eff.second, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(180.0f), 0.0f)));
 			effectController_->SetScale(eff.first, eff.second, BOOST_EFF_SCL);
@@ -333,7 +315,8 @@ void MachineAction::DisCharge(void)
 	float maxSpeed = param.maxSpeed * BASE_MAX_SPEED;
 	
 	//チャージの倍率(基本速度が1倍なので+1)
-	float chargeRate = 1 + unitParam.boostRate * static_cast<float>(std::pow(chargeCnt_, unitParam.boostPower));
+	float defaultRate = 1.0f;
+	float chargeRate = defaultRate + unitParam.boostRate * static_cast<float>(std::pow(chargeCnt_, unitParam.boostPower));
 	
 	//チャージの影響度
 	float chargeDamp = static_cast<float>(std::pow(chargeCnt_, unitParam.chargeDamp));

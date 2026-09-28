@@ -95,19 +95,6 @@ void SceneSelect::Load(void)
 	menuImg_.emplace(MENU_TYPE::OPTION, res.Load(ResourceManager::SRC::OPTION_TEXT).handleId_);
 	menuImg_.emplace(MENU_TYPE::TITLE, res.Load(ResourceManager::SRC::GO_TITLE_TEXT).handleId_);
 	menuImg_.emplace(MENU_TYPE::GAME_END, res.Load(ResourceManager::SRC::GAME_END_TEXT).handleId_);
-
-	//ƒTƒEƒ“ƒh
-	int id = res.Load(ResourceManager::SRC::SELECT_BGM).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::SELECT_BGM, id, SoundManager::TYPE::BGM);
-
-	id = res.Load(ResourceManager::SRC::ENTER_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::ENTER, id, SoundManager::TYPE::SE, SE_VOLUME);
-
-	id = res.Load(ResourceManager::SRC::SELECT_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::SELECT_SE, id, SoundManager::TYPE::SE, SE_VOLUME);
-
-	id = res.Load(ResourceManager::SRC::CANCEL_SE).handleId_;
-	snd.Add(SoundManager::SOUND_NAME::CANCEL, id, SoundManager::TYPE::SE, SE_VOLUME);
 }
 
 void SceneSelect::Init(void)

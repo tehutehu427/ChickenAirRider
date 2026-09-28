@@ -53,7 +53,7 @@ public:
 		if (it == destroyer_.end())
 			return;
 
-		//”jŠüŠÖ”‚ÌŽÀs
+		//”jŠüŠÖ”‚ÌŽÀs(ŽQÆ‚ÌŠÖŒW‚ðl—¶‚µA‹t‡‚Å”jŠü‚·‚é)
 		for (auto func = it->second.rbegin();
 			func != it->second.rend();
 			++func)
