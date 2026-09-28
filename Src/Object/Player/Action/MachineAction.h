@@ -56,9 +56,6 @@ private:
 	//チャージ時の回転しやすさ
 	static constexpr float CHARGE_TURN = 2.0f;
 
-	//チャージ時のモデル変形補正
-	static constexpr float CHARGE_MODEL_TRANS = 100.0f;
-
 	//X回転の上下限値
 	static constexpr float AXIS_X_LIMIT = 45.0f;
 
