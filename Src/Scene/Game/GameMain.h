@@ -34,6 +34,7 @@ private:
 		START,	//開始
 		GAME,	//ゲーム中
 		FIN,	//終了
+		MAX
 	};
 
 	//終了表示時間
@@ -49,12 +50,12 @@ private:
 	STATE state_;
 
 	//更新
-	using Func = void(Player::*)(void);
-	std::unordered_map<STATE, std::function<void(void)>> update_;
+	using Func = void(GameMain::*)(void);
+	std::array<Func, static_cast<int>(STATE::MAX)> update_;
 
 	//描画
-	using DrawFunc = void(Player::*)(const Camera& _camera);
-	std::unordered_map<STATE, std::function<void(const Camera& _camera)>> draw_;
+	using DrawFunc = void(GameMain::*)(const Camera& _camera);
+	std::array<DrawFunc, static_cast<int>(STATE::MAX)> draw_;
 
 	//デバッグ描画
 	void DebugDraw(void)override;

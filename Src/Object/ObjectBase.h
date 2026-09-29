@@ -25,18 +25,23 @@ public:
 
 	//読み込み
 	virtual void Load(void) = 0;
+
 	//初期化
 	virtual void Init(void) = 0;
+
 	//更新
 	virtual void Update(void) = 0;
+
 	//描画
 	virtual void Draw(void) = 0;
 
 	//当たり判定の削除
 	void Sweep(void);
 
-	/// @brief それぞれの当たり判定後の処理
-	/// @param _hitCol 相手側の当たり判定タグ
+	/// <summary>
+	/// それぞれの当たり判定後の処理
+	/// </summary>
+	/// <param name="_hitCol">相手側の当たり判定タグ</param>
 	virtual void OnHit(const std::weak_ptr<Collider> _hitCol) = 0;
 
 	//モデル情報の取得
@@ -72,10 +77,12 @@ protected:
 	//当たり判定前用半径
 	float broudRadius_;
 
-	/// @brief 当たり判定作成(形状情報作成後)
-	/// @param _tag 自身の当たり判定タグ
-	/// @param _geometry 自身の形状情報
-	/// @param _notHitTags 衝突させないタグ
+	/// <summary>
+	/// 当たり判定作成(形状情報作成後)
+	/// </summary>
+	/// <param name="_tag">自身の当たり判定タグ</param>
+	/// <param name="_geometry">自身の形状情報</param>
+	/// <param name="_notHitTags">衝突させないタグ</param>
 	void MakeCollider(const Collider::TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags = {});
 
 	//該当タグで当たり判定削除

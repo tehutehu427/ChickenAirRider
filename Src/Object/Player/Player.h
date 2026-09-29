@@ -151,7 +151,8 @@ public:
 	//基本機能を返す
 	ActionBase& GetAction(void)const { return *action_; }
 	LogicBase& GetLogic(void)const { return *logic_; }
-	Character& GetChara(void)const { return *chara_; }
+	const Character& GetChara(void)const { return *chara_; }
+	const Machine* GetMachine(void)const { return machine_.get(); }
 
 	//機体に乗る
 	void RideMachine(std::unique_ptr<Machine> _machine);

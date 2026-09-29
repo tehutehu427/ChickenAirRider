@@ -154,7 +154,7 @@ void SplitScreenManager::CreateSplitViews(const int _playerCnt, const int _scree
 	}
 }
 
-void SplitScreenManager::SetCamera(const int _index, const std::shared_ptr<Camera>& _camera)
+void SplitScreenManager::SetCamera(const int _index, const std::weak_ptr<Camera> _camera)
 {
 	//ƒJƒƒ‰‚Ìİ’è
 	splitViews_[_index].camera = _camera;

@@ -23,14 +23,14 @@ GameMain::GameMain(SceneGame& _parent)
 	: GameBase(_parent)
 {
 	//更新
-	update_.emplace(STATE::START, [this](void) {UpdateStart(); });
-	update_.emplace(STATE::GAME, [this](void) {UpdateGame(); });
-	update_.emplace(STATE::FIN, [this](void) {UpdateFinish(); });
+	update_[static_cast<int>(STATE::START)] = &GameMain::UpdateStart;
+	update_[static_cast<int>(STATE::GAME)] = &GameMain::UpdateGame;
+	update_[static_cast<int>(STATE::FIN)] = &GameMain::UpdateFinish;
 
 	//描画
-	draw_.emplace(STATE::START, [this](const Camera& _camera) {DrawStart(_camera); });
-	draw_.emplace(STATE::GAME, [this](const Camera& _camera) {DrawGame(_camera); });
-	draw_.emplace(STATE::FIN, [this](const Camera& _camera) {DrawFinish(_camera); });
+	draw_[static_cast<int>(STATE::START)] = &GameMain::DrawStart;
+	draw_[static_cast<int>(STATE::GAME)] = &GameMain::DrawGame;
+	draw_[static_cast<int>(STATE::FIN)] = &GameMain::DrawFinish;
 }
 
 GameMain::~GameMain(void)
@@ -99,13 +99,13 @@ void GameMain::Init(void)
 void GameMain::Update(void)
 {
 	//各更新
-	update_[state_]();
+	(this->*update_[static_cast<int>(state_)])();
 }
 
 void GameMain::Draw(const Camera& _camera)
 {
 	//各描画
-	draw_[state_](_camera);
+	(this->*draw_[static_cast<int>(state_)])(_camera);
 }
 
 void GameMain::Release(void)

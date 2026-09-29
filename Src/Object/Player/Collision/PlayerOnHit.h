@@ -32,7 +32,8 @@ private:
 	Player& player_;
 
 	//コライダごとのヒット処理
-	std::unordered_map<Collider::TAG, std::function<void(const std::weak_ptr<Collider> _hitCol)>> onHit_;
+	using HitFunc = void(PlayerOnHit::*)(const std::weak_ptr<Collider> _hitCol);
+	std::array<HitFunc, static_cast<int>(Collider::TAG::MAX)> onHit_;
 
 	//ヒット処理
 	void NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol);

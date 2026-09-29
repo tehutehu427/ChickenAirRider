@@ -13,12 +13,16 @@ public:
 
 	//読み込み
 	void Load(void)override;
+
 	//初期化
 	void Init(void)override;
+
 	//更新
 	void Update(void)override;
+
 	//描画
 	void Draw(const Camera& _camera)override;
+
 	//解放
 	void Release(void)override;
 
@@ -88,11 +92,13 @@ private:
 
 	//プレイヤー人数
 	PLAYER_NUM_SELECT playerNumSelect_;
-	std::unordered_map<PLAYER_NUM_SELECT, int> playerNum_;
+	std::array<int, static_cast<int>(PLAYER_NUM_SELECT::MAX)> playerNum_;
 
-	//関数
-	std::unordered_map<MENU_TYPE, std::function<void(void)>> update_;
-	std::unordered_map<MENU_TYPE, std::function<void(void)>> draw_;
+	//関数ポインタ
+	using Func = void(SceneSelect::*)(void);
+
+	std::unordered_map<MENU_TYPE, Func> update_;
+	std::unordered_map<MENU_TYPE, Func> draw_;
 
 	//デバッグ描画
 	void DebugDraw(void)override;

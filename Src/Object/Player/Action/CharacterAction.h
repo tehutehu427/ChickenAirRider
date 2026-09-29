@@ -27,7 +27,7 @@ public:
 	void Draw(void)override;
 
 	//“–‚½‚è”»’è
-	const bool IsHit(void)override;
+	const bool IsHit(void)const override;
 
 private:
 

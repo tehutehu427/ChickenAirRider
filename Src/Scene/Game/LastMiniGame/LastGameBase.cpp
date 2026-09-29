@@ -75,7 +75,7 @@ void LastGameBase::Update(void)
 	sky_->Update();
 
 	//プレイヤーが二人以上で　かつ　順位が確定した
-	if (plNum > 1 && nowRank_ < 2)
+	if (plNum > 1 && IsRankConfirmed())
 	{
 		isEnd_ = true;
 	}
@@ -94,8 +94,8 @@ void LastGameBase::Update(void)
 			ConfirmRank(pl->GetPlayerIndex());
 		}
 		
-		//プレイヤーマネージャーに送る
-		plMng.SetRanks(ranks_);
+		//ゲーム管理に送る
+		setting.SetRank(ranks_);
 
 		//タイトルへ
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT, true, true);

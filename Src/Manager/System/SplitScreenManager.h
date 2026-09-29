@@ -60,7 +60,7 @@ public:
 	const int GetActiveViewCount(void)const { return activeViewCount_; }
 
 	//カメラの設定
-	void SetCamera(const int _index, const std::shared_ptr<Camera>& _camera);
+	void SetCamera(const int _index, const std::weak_ptr<Camera> _camera);
 
 	//ビューポートの取得
 	const Viewport& GetViewport(const int _index)const;

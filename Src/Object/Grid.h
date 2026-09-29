@@ -1,17 +1,14 @@
 #pragma once
 class Grid
 {
-
 public:
+
 	// コンストラクタ
 	Grid(void);
 
 	// デストラクタ
 	~Grid(void);
 
-	void Init(void);
-	void Update(void);
+	// 描画
 	void Draw(void);
-	void Release(void);
-
 };

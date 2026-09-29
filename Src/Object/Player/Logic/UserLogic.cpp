@@ -30,7 +30,7 @@ void UserLogic::Update(void)
 {
 }
 
-const bool UserLogic::IsPush(void)
+const bool UserLogic::IsPush(void)const
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -45,7 +45,7 @@ const bool UserLogic::IsPush(void)
     return false;
 }
 
-const bool UserLogic::StartCharge(void)
+const bool UserLogic::StartCharge(void)const
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -61,7 +61,7 @@ const bool UserLogic::StartCharge(void)
     return false;
 }
 
-const bool UserLogic::DisCharge(void)
+const bool UserLogic::DisCharge(void)const
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -78,7 +78,7 @@ const bool UserLogic::DisCharge(void)
     return false;
 }
 
-const Vector2F UserLogic::TurnValue(void)
+const Vector2F UserLogic::TurnValue(void)const
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -107,7 +107,7 @@ const Vector2F UserLogic::TurnValue(void)
     return ret;
 }
 
-const bool UserLogic::IsSpecial(void)
+const bool UserLogic::IsSpecial(void)const
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -124,7 +124,7 @@ const bool UserLogic::IsSpecial(void)
     return false;
 }
 
-const bool UserLogic::IsGetOff(void)
+const bool UserLogic::IsGetOff(void)const
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -192,7 +192,7 @@ const bool UserLogic::IsButtonMeshing(void)
     return false;
 }
 
-const Vector2F UserLogic::WalkValue(void)
+const Vector2F UserLogic::WalkValue(void)const
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();
@@ -240,7 +240,7 @@ const Vector2F UserLogic::WalkValue(void)
     return movePow;
 }
 
-const bool UserLogic::IsJump(void)
+const bool UserLogic::IsJump(void)const
 {
     //インスタンス
     auto& key = KeyConfig::GetInstance();

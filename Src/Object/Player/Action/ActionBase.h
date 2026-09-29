@@ -28,7 +28,7 @@ public:
 	void ResetAxisX(void);
 
 	//“–‚½‚è”»’è‚Ì—L–³
-	virtual const bool IsHit(void) { return true; };
+	virtual const bool IsHit(void)const { return true; };
 
 protected:
 

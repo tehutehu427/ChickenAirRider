@@ -23,54 +23,36 @@ public:
 
 #pragma region 機体
 
-	/// @brief プッシュしたか
-	/// @param  
-	/// @return プッシュの有無(true:プッシュした)
-	const bool IsPush(void) override;
+	//プッシュしたか
+	const bool IsPush(void)const override;
 
-	/// @brief チャージ開始
-	/// @param  
-	/// @return チャージ開始の有無(true:チャージ開始)
-	const bool StartCharge(void) override;
+	//チャージ開始したか
+	const bool StartCharge(void)const override;
 
-	/// @brief チャージ解放
-	/// @param  
-	/// @return チャージ解放の有無(true:チャージ解放)
-	const bool DisCharge(void) override;
+	//チャージ解放したか
+	const bool DisCharge(void)const override;
 
-	/// @brief ターンの値
-	/// @param  
-	/// @return 回転量(-値:左回転, +値:右回転)
-	const Vector2F TurnValue(void) override;
+	//ターンの値(-値:左回転, +値:右回転)
+	const Vector2F TurnValue(void)const override;
 
-	/// @brief スペシャルボタンを押した
-	/// @param  
-	/// @return スペシャルの有無(true:スペシャルを押した)
-	const bool IsSpecial(void) override;
+	//スペシャルボタンを押したか
+	const bool IsSpecial(void)const override;
 
-	/// @brief 機体から降りたか
-	/// @param  
-	/// @return 機体からの降下の有無(true:降りた)
-	const bool IsGetOff(void) override;
+	//機体から降りたか
+	const bool IsGetOff(void)const override;
 
-	/// @brief レバガチャ判定
-	/// @param  
-	/// @return レバガチャ(true:レバガチャした)
+	//レバガチャ判定
 	const bool IsButtonMeshing(void)override;
 
 #pragma endregion 機体
 
 #pragma region キャラクター
 
-	/// @brief 歩く
-	/// @param  
-	/// @return 歩きの値
-	const Vector2F WalkValue(void)override;
+	//歩きの値
+	const Vector2F WalkValue(void)const override;
 
-	/// @brief ジャンプの有無
-	/// @param  
-	/// @return true:ジャンプした
-	const bool IsJump(void)override;
+	//ジャンプしたか
+	const bool IsJump(void)const override;
 
 #pragma endregion キャラクター
 

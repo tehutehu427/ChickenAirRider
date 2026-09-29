@@ -5,6 +5,7 @@
 #include"../Manager/System/KeyConfig.h"
 #include"../Manager/System/SoundManager.h"
 #include"../Manager/System/SceneManager.h"
+#include"../Manager/System/SplitScreenManager.h"
 #include"../Manager/Game/GameSetting.h"
 #include"../Manager/Game/GlobalUIManager.h"
 #include"../Manager/Game/Timer.h"
@@ -18,55 +19,23 @@ SceneSelect::SceneSelect(void)
 	selectTypeNum_ = static_cast<int>(MENU_TYPE::GAME_START);
 	nowSelectType_ = MENU_TYPE::HOME;
 	selectType_ = MENU_TYPE::GAME_START;
-	playerNum_[PLAYER_NUM_SELECT::USER] = 0;
-	playerNum_[PLAYER_NUM_SELECT::NPC] = 0;
+	playerNum_[static_cast<int>(PLAYER_NUM_SELECT::USER)] = 0;
+	playerNum_[static_cast<int>(PLAYER_NUM_SELECT::NPC)] = 0;
 	playerNumSelect_ = PLAYER_NUM_SELECT::USER;
 
 	//更新
-	update_[MENU_TYPE::HOME] = [this](void)
-	{
-		UpdateHome();
-	};
-	update_[MENU_TYPE::GAME_START] = [this](void)
-	{
-		UpdateGameStart();
-	};
-	update_[MENU_TYPE::OPTION] = [this](void)
-	{
-		UpdateOption();
-	};
-	update_[MENU_TYPE::TITLE] = [this](void)
-	{
-		UpdateTitle();
-	};
-	update_[MENU_TYPE::GAME_END] = [this](void)
-	{
-		UpdateGameEnd();
-	};
-	update_[MENU_TYPE::MAX] = [this](void){};
+	update_[MENU_TYPE::HOME] = &SceneSelect::UpdateHome;
+	update_[MENU_TYPE::GAME_START] = &SceneSelect::UpdateGameStart;	
+	update_[MENU_TYPE::OPTION] = &SceneSelect::UpdateOption;
+	update_[MENU_TYPE::TITLE] = &SceneSelect::UpdateTitle;
+	update_[MENU_TYPE::GAME_END] = &SceneSelect::UpdateGameEnd;	
 
 	//描画
-	draw_[MENU_TYPE::HOME] = [this](void)
-	{
-		DrawHome();
-	};
-	draw_[MENU_TYPE::GAME_START] = [this](void)
-	{
-		DrawGameStart();
-	};
-	draw_[MENU_TYPE::OPTION] = [this](void)
-	{
-		DrawOption();
-	};
-	draw_[MENU_TYPE::TITLE] = [this](void)
-	{
-		DrawTitle();
-	};
-	draw_[MENU_TYPE::GAME_END] = [this](void)
-	{
-		DrawGameEnd();
-	};
-	draw_[MENU_TYPE::MAX] = [this](void){};
+	draw_[MENU_TYPE::HOME] = &SceneSelect::DrawHome;
+	draw_[MENU_TYPE::GAME_START] = &SceneSelect::DrawGameStart;
+	draw_[MENU_TYPE::OPTION] = &SceneSelect::DrawOption;
+	draw_[MENU_TYPE::TITLE] = &SceneSelect::DrawTitle;
+	draw_[MENU_TYPE::GAME_END] = &SceneSelect::DrawGameEnd;	
 }
 
 SceneSelect::~SceneSelect(void)
@@ -103,8 +72,8 @@ void SceneSelect::Init(void)
 	selectTypeNum_ = static_cast<int>(MENU_TYPE::GAME_START);
 	selectType_ = MENU_TYPE::GAME_START;
 	nowSelectType_ = MENU_TYPE::HOME;
-	playerNum_[PLAYER_NUM_SELECT::USER] = 1;
-	playerNum_[PLAYER_NUM_SELECT::NPC] = 0;
+	playerNum_[static_cast<int>(PLAYER_NUM_SELECT::USER)] = 1;
+	playerNum_[static_cast<int>(PLAYER_NUM_SELECT::NPC)] = 0;
 	playerNumSelect_ = PLAYER_NUM_SELECT::USER;
 	gearCnt_ = 0.0f;
 
@@ -113,6 +82,9 @@ void SceneSelect::Init(void)
 
 	//BGM再生
 	snd.Play(SoundManager::SOUND_NAME::SELECT_BGM, SoundManager::PLAYTYPE::LOOP);
+
+	//ポストエフェクト
+	SplitScreenManager::GetInstance().SetShader(0, SplitScreenManager::SHADER_TYPE::DEFAULT);
 }
 
 void SceneSelect::Update(void)
@@ -121,7 +93,7 @@ void SceneSelect::Update(void)
 	gearCnt_ += SceneManager::GetInstance().GetDeltaTime();
 
 	//選択した項目
-	update_[nowSelectType_]();
+	(this->*update_[nowSelectType_])();
 }
 
 void SceneSelect::Draw(const Camera& _camera)
@@ -148,7 +120,7 @@ void SceneSelect::Draw(const Camera& _camera)
 	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backFrameImg_, true);
 
 	//選択肢ごとの描画
-	draw_[nowSelectType_]();
+	(this->*draw_[nowSelectType_])();
 }
 
 void SceneSelect::Release(void)
@@ -213,14 +185,14 @@ void SceneSelect::UpdateGameStart(void)
 
 	//決定
 	if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::ENTER, KeyConfig::JOYPAD_NO::PAD1)
-		&& playerNum_[PLAYER_NUM_SELECT::USER] > 0)
+		&& playerNum_[static_cast<int>(PLAYER_NUM_SELECT::USER)] > 0)
 	{
 		//決定音
 		snd.Play(SoundManager::SOUND_NAME::ENTER, SoundManager::PLAYTYPE::BACK);
 	
 		//プレイヤーの作成数
-		set.SetUserNum(playerNum_[PLAYER_NUM_SELECT::USER]);
-		set.SetNpcNum(playerNum_[PLAYER_NUM_SELECT::NPC]);
+		set.SetUserNum(playerNum_[static_cast<int>(PLAYER_NUM_SELECT::USER)]);
+		set.SetNpcNum(playerNum_[static_cast<int>(PLAYER_NUM_SELECT::NPC)]);
 		
 		//タイマーの初期化
 		gloUi.GetTimer().Init(static_cast<float>(set.GetTimeLimit()));
@@ -242,29 +214,29 @@ void SceneSelect::UpdateGameStart(void)
 
 	//上入力
 	if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_UP, KeyConfig::JOYPAD_NO::PAD1)
-		&& playerNum_[playerNumSelect_] < GameSetting::PLAYER_MAX_NUM) //上限
+		&& playerNum_[static_cast<int>(playerNumSelect_)] < GameSetting::PLAYER_MAX_NUM) //上限
 	{
 		//選択音
 		snd.Play(SoundManager::SOUND_NAME::SELECT_SE, SoundManager::PLAYTYPE::BACK);
 
 		//カウントアップ
-		playerNum_[playerNumSelect_] = playerNum_[playerNumSelect_] + 1;
+		playerNum_[static_cast<int>(playerNumSelect_)] = playerNum_[static_cast<int>(playerNumSelect_)] + 1;
 
 		//NPC人数の補正
-		if (playerNum_[PLAYER_NUM_SELECT::NPC] > GameSetting::PLAYER_MAX_NUM - playerNum_[PLAYER_NUM_SELECT::USER])
+		if (playerNum_[static_cast<int>(PLAYER_NUM_SELECT::NPC)] > GameSetting::PLAYER_MAX_NUM - playerNum_[static_cast<int>(PLAYER_NUM_SELECT::USER)])
 		{
-			playerNum_[PLAYER_NUM_SELECT::NPC] = GameSetting::PLAYER_MAX_NUM - playerNum_[PLAYER_NUM_SELECT::USER];
+			playerNum_[static_cast<int>(PLAYER_NUM_SELECT::NPC)] = GameSetting::PLAYER_MAX_NUM - playerNum_[static_cast<int>(PLAYER_NUM_SELECT::USER)];
 		}
 	}
 	//下入力
 	else if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_DOWN, KeyConfig::JOYPAD_NO::PAD1)
-		&& playerNum_[playerNumSelect_] > 0) //下限
+		&& playerNum_[static_cast<int>(playerNumSelect_)] > 0) //下限
 	{
 		//選択音
 		snd.Play(SoundManager::SOUND_NAME::SELECT_SE, SoundManager::PLAYTYPE::BACK);
 		
 		//カウントダウン
-		playerNum_[playerNumSelect_] = playerNum_[playerNumSelect_] - 1;
+		playerNum_[static_cast<int>(playerNumSelect_)] = playerNum_[static_cast<int>(playerNumSelect_)] - 1;
 	}
 	//左右入力
 	else if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_RIGHT, KeyConfig::JOYPAD_NO::PAD1)
@@ -301,49 +273,54 @@ void SceneSelect::UpdateGameEnd(void)
 
 void SceneSelect::DrawHome(void)
 {
+	//カラー
+	const int COLOR_MAX = Utility::INT_COLOR_MAX;
+
 	//ゲームスタート
-	if (selectType_ == MENU_TYPE::GAME_START)SetDrawBright(255, 255, 0);
+	if (selectType_ == MENU_TYPE::GAME_START)SetDrawBright(COLOR_MAX, COLOR_MAX, 0);
 	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y, SELECT_SCALE_DEFAULT, 0.0, menuBarImg_, true);
 	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y, SELECT_SCALE_DEFAULT, 0.0, menuImg_[MENU_TYPE::GAME_START], true);
-	SetDrawBright(255, 255, 255);
+	SetDrawBright(COLOR_MAX, COLOR_MAX, COLOR_MAX);
 
 	//オプション
-	if (selectType_ == MENU_TYPE::OPTION)SetDrawBright(255, 255, 0);
+	if (selectType_ == MENU_TYPE::OPTION)SetDrawBright(COLOR_MAX, COLOR_MAX, 0);
 	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS, SELECT_SCALE_DEFAULT, 0.0, menuBarImg_, true);
 	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS, SELECT_SCALE_DEFAULT, 0.0, menuImg_[MENU_TYPE::OPTION], true);
-	SetDrawBright(255, 255, 255);
+	SetDrawBright(COLOR_MAX, COLOR_MAX, COLOR_MAX);
 
 	//タイトルへ
-	if (selectType_ == MENU_TYPE::TITLE)SetDrawBright(255, 255, 0);
+	if (selectType_ == MENU_TYPE::TITLE)SetDrawBright(COLOR_MAX, COLOR_MAX, 0);
 	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 2, SELECT_SCALE_DEFAULT, 0.0, menuBarImg_, true);
 	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 2, SELECT_SCALE_DEFAULT, 0.0, menuImg_[MENU_TYPE::TITLE], true);
-	SetDrawBright(255, 255, 255);
+	SetDrawBright(COLOR_MAX, COLOR_MAX, COLOR_MAX);
 
 	//ゲーム終了
-	if (selectType_ == MENU_TYPE::GAME_END)SetDrawBright(255, 255, 0);
+	if (selectType_ == MENU_TYPE::GAME_END)SetDrawBright(COLOR_MAX, COLOR_MAX, 0);
 	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 3, SELECT_SCALE_DEFAULT, 0.0, menuBarImg_, true);
 	DrawRotaGraph(SELECT_POS_X, SELECT_POS_Y + SELECT_LOCAL_POS * 3, SELECT_SCALE_DEFAULT, 0.0, menuImg_[MENU_TYPE::GAME_END], true);
-	SetDrawBright(255, 255, 255);
+	SetDrawBright(COLOR_MAX, COLOR_MAX, COLOR_MAX);
 }
 
 void SceneSelect::DrawGameStart(void)
 {
+	//カラー
+	const int COLOR_MAX = Utility::INT_COLOR_MAX;
+	const int COLOR_HALF = COLOR_MAX / 2;
+
 	//メニュ―バー
-	SetDrawBright(255, 255, 0);
+	SetDrawBright(COLOR_MAX, COLOR_MAX, 0);
 	DrawExtendGraph(Application::SCREEN_HALF_X - PLAYER_NUM_TEXT_BOX_POS_X,
 		Application::SCREEN_HALF_Y - PLAYER_NUM_TEXT_BOX_POS_Y,
 		Application::SCREEN_HALF_X+ PLAYER_NUM_TEXT_BOX_POS_X,
 		Application::SCREEN_HALF_Y + PLAYER_NUM_TEXT_BOX_POS_Y,
 		menuBarImg_, true);
-	SetDrawBright(255, 255, 255);
+	SetDrawBright(COLOR_MAX, COLOR_MAX, COLOR_MAX);
 
 	//テキスト
 	DrawRotaGraph(Application::SCREEN_HALF_X - PLAYER_NUM_LOCAL_POS, Application::SCREEN_HALF_Y, SELECT_SCALE_DEFAULT, 0.0, numberTextImg_, true);
-	SetDrawBright(255, 100, 100);
-	DrawRotaGraph(Application::SCREEN_HALF_X + PLAYER_NUM_LOCAL_POS, Application::SCREEN_HALF_Y, 1.0, 0.0, numberImgs_[playerNum_[PLAYER_NUM_SELECT::USER]], true);
-	SetDrawBright(255, 255, 255);
-	//DrawRotaGraph(Application::SCREEN_HALF_X + PLAYER_NUM_LOCAL_POS * 2, Application::SCREEN_HALF_Y, 1.0, 0.0, numberImgs_[playerNum_[PLAYER_NUM_SELECT::NPC]], true);
-	//SetDrawBright(255, 255, 255);
+	SetDrawBright(COLOR_MAX, COLOR_HALF, COLOR_HALF);
+	DrawRotaGraph(Application::SCREEN_HALF_X + PLAYER_NUM_LOCAL_POS, Application::SCREEN_HALF_Y, 1.0, 0.0, numberImgs_[playerNum_[static_cast<int>(PLAYER_NUM_SELECT::USER)]], true);
+	SetDrawBright(COLOR_MAX, COLOR_MAX, COLOR_MAX);
 }
 
 void SceneSelect::DrawOption(void)

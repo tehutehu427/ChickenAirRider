@@ -46,7 +46,7 @@ void CharacterAction::Draw(void)
 {
 }
 
-const bool CharacterAction::IsHit(void)
+const bool CharacterAction::IsHit(void)const
 {
 	return jumpCnt_ >= JUMP_CNT;
 }

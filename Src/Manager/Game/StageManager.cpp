@@ -4,6 +4,11 @@
 #include "../Loader/LoaderManager.h"
 #include "../Manager/System/ResourceManager.h"
 #include "../Object/Stage/StageObject.h"
+#include "../../Object/Common/Geometry/Sphere.h"
+#include "../../Object/Common/Geometry/Capsule.h"
+#include "../../Object/Common/Geometry/Cube.h"
+#include "../../Object/Common/Geometry/Line.h"
+#include "../../Object/Common/Geometry/Model.h"
 #include "StageManager.h"
 
 void StageManager::LoadOutSide(void)

@@ -1,15 +1,11 @@
 #include "../Utility/Utility.h"
-#include "../Common/Geometry/Sphere.h"
-#include "../Common/Geometry/Capsule.h"
-#include "../Common/Geometry/Cube.h"
-#include "../Common/Geometry/Line.h"
-#include "../Common/Geometry/Model.h"
+#include "../Common/Geometry/Geometry.h"
 #include "StageObject.h"
 
-StageObject::StageObject(const StageImportData& _data,const int _modelId, const Collider::TAG _tag, const VECTOR _pos)
+StageObject::StageObject(const StageImportData& _data,const int _modelId, const Collider::TAG _tag, std::unique_ptr<Geometry> _geo)
 {
 	trans_.modelId = _modelId;
-	trans_.pos = _pos;
+	trans_.pos = _data.position;
 	trans_.scl = _data.scale;
 	trans_.quaRot = _data.quaternion;
 
@@ -21,14 +17,14 @@ StageObject::StageObject(const StageImportData& _data,const int _modelId, const 
 	data_.localPos2.y = data_.localPos2.y * data_.scale.y;
 	data_.localPos2.z = data_.localPos2.z * data_.scale.z;
 
-	createGeo_["sphere"] = [this](void) { return MakeSphere(); };
-	createGeo_["capsule"] = [this](void) { return MakeCapsule(); };
-	createGeo_["cube"] = [this](void) { return MakeCube(); };
-	createGeo_["line"] = [this](void) { return MakeLine(); };
-	createGeo_["model"] = [this](void) { return MakeModel(); };
+	createGeo_["sphere"] = &StageObject::MakeSphere;
+	createGeo_["capsule"] = &StageObject::MakeCapsule; 
+	createGeo_["cube"] = &StageObject::MakeCube;
+	createGeo_["line"] = &StageObject::MakeLine;
+	createGeo_["model"] = &StageObject::MakeModel;
 	
 	//ÉRÉâÉCÉ_ê∂ê¨
-	std::unique_ptr<Geometry> geo = createGeo_[data_.geometry]();
+	std::unique_ptr<Geometry> geo = (this->*createGeo_[data_.geometry])();
 	MakeCollider(_tag, std::move(geo), { Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT, _tag });
 }
 

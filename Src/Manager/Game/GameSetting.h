@@ -44,6 +44,16 @@ public:
 	//フルスクリーンかどうかの設定(false:フルスクリーン)
 	void SetScreenSize(const bool _screenSize);
 
+	//順位の取得
+	const int GetRank(const int _playerIndex) { return ranks_[_playerIndex]; }
+	const std::unordered_map<int, int> GetRanks(void) { return ranks_; }
+
+	//順位決定
+	void SetRank(const std::unordered_map<int, int> _ranks) { ranks_ = _ranks; }
+
+	//順位のリセット
+	void ResetRank(void) { ranks_.clear(); }
+
 private:
 
 	//初期時間制限
@@ -60,6 +70,9 @@ private:
 
 	//スクリーンの設定
 	bool screenSize_;
+
+	//順位
+	std::unordered_map<int, int> ranks_;
 
 	//コンストラクタ
 	GameSetting(void);

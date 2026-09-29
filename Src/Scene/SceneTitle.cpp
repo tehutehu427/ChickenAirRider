@@ -149,6 +149,5 @@ void SceneTitle::DebugDraw(void)
 {
 	//ÉVÅ[Éìñº
 	DrawString(0, 0, L"SceneTitle", 0xffffff);
-
 	DrawBox(100, 100, 924, 540, 0xff0ff0, true);
 }

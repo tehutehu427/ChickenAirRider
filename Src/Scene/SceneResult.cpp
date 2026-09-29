@@ -20,6 +20,9 @@ SceneResult::~SceneResult(void)
 {
 	//サウンド停止
 	SoundManager::GetInstance().StopAll();
+
+	//順位リセット
+	GameSetting::GetInstance().ResetRank();
 }
 
 void SceneResult::Load(void)
@@ -44,7 +47,6 @@ void SceneResult::Init(void)
 	auto& scnMng = SceneManager::GetInstance();
 	auto& res = ResourceManager::GetInstance();
 	auto& split = SplitScreenManager::GetInstance();
-	auto& plMng = PlayerManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
 	const auto& mainCamera = scnMng.GetCamera(0).lock();
 
@@ -128,8 +130,7 @@ void SceneResult::Update(void)
 void SceneResult::Draw(const Camera& _camera)
 {
 	//プレイヤー人数
-	auto& plMng = PlayerManager::GetInstance();
-	auto ranks = plMng.GetRanks();
+	auto ranks = GameSetting::GetInstance().GetRanks();
 
 	//背景
 	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backImg_,true);

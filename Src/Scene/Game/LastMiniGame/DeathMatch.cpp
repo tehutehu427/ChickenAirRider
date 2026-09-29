@@ -23,16 +23,13 @@ DeathMatch::~DeathMatch(void)
 void DeathMatch::Init(void)
 {
 	//インスタンス
-	auto& setting = GameSetting::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
-	//auto& machineMng = MachineManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
 
 	//各初期化
 	plMng.ResetPlayer();
 	stgMng.Init(StageManager::MODE::BATTLE);
-	//machineMng.Init();
 	itemMng.Init();
 	itemMng.SetSpawnType(ItemManager::SPAWN_TYPE::DEATH_MATCH);
 
@@ -96,7 +93,6 @@ void DeathMatch::Update(void)
 void DeathMatch::Draw(const Camera& _camera)
 {
 	//インスタンス
-	auto& setting = GameSetting::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();

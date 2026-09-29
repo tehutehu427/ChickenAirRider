@@ -5,12 +5,14 @@
 #include "../ObjectBase.h"
 
 class StageManager;
+class Geometry;
 
 class StageObject : public ObjectBase
 {
 public:
+
 	//コンストラクタ
-	StageObject(const StageImportData& _data, const int _modelId, const Collider::TAG _tag, const VECTOR _pos);
+	StageObject(const StageImportData& _data, const int _modelId, const Collider::TAG _tag, std::unique_ptr<Geometry> _geo);
 	
 	//デストラクタ
 	~StageObject(void)override;
@@ -42,7 +44,8 @@ private:
 	StageImportData data_;
 
 	//当たり判定形状
-	std::unordered_map<std::string, std::function<std::unique_ptr<Geometry>(void)>> createGeo_;
+	using CreateGeoFunc = std::unique_ptr<Geometry>(StageObject::*)(void);
+	std::unordered_map<std::string, CreateGeoFunc> createGeo_;
 
 	//形状生成
 	std::unique_ptr<Geometry> MakeSphere(void);

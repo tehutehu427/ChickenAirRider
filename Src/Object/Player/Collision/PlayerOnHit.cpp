@@ -17,24 +17,24 @@ PlayerOnHit::PlayerOnHit(Player& _player)
 	: player_(_player)
 {
 	//タグごとのヒット処理格納
-	onHit_[Collider::TAG::PLAYER1] = [this](const std::weak_ptr<Collider> _hitCol) {};
-	onHit_[Collider::TAG::PLAYER2] = [this](const std::weak_ptr<Collider> _hitCol) {};
-	onHit_[Collider::TAG::PLAYER3] = [this](const std::weak_ptr<Collider> _hitCol) {};
-	onHit_[Collider::TAG::PLAYER4] = [this](const std::weak_ptr<Collider> _hitCol) {};
-	onHit_[Collider::TAG::NORMAL_OBJECT] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
-	onHit_[Collider::TAG::TREE] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
-	onHit_[Collider::TAG::GROUND] = [this](const std::weak_ptr<Collider> _hitCol) {GroundOnHit(_hitCol); };
-	onHit_[Collider::TAG::MACHINE] = [this](const std::weak_ptr<Collider> _hitCol) {/*NormalObjectOnHit(_hitCol); */};
-	onHit_[Collider::TAG::MACHINE_RIDE] = [this](const std::weak_ptr<Collider> _hitCol) {RideMachineOnHit(_hitCol); };
-	onHit_[Collider::TAG::ITEM_BOX] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
-	onHit_[Collider::TAG::POWER_UP] = [this](const std::weak_ptr<Collider> _hitCol) {PowerUpItemOnHit(_hitCol); };
-	onHit_[Collider::TAG::BATTLE_ITEM] = [this](const std::weak_ptr<Collider> _hitCol) {BattleItemOnHit(_hitCol); };
-	onHit_[Collider::TAG::SPIN] = [this](const std::weak_ptr<Collider> _hitCol) { SpinOnHit(_hitCol); };
-	onHit_[Collider::TAG::CANNON_SHOT] = [this](const std::weak_ptr<Collider> _hitCol) { CannonShotOnHit(_hitCol); };
-	onHit_[Collider::TAG::SEARCH] = [this](const std::weak_ptr<Collider> _hitCol) {};
-	onHit_[Collider::TAG::WORLD_BORDER] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
-	onHit_[Collider::TAG::GLIDER_BORDER] = [this](const std::weak_ptr<Collider> _hitCol) {NormalObjectOnHit(_hitCol); };
-	onHit_[Collider::TAG::GLIDE_STAGE] = [this](const std::weak_ptr<Collider> _hitCol) {GlideStageOnHit(_hitCol); };
+	onHit_[static_cast<int>(Collider::TAG::PLAYER1)] = nullptr;
+	onHit_[static_cast<int>(Collider::TAG::PLAYER2)] = nullptr;
+	onHit_[static_cast<int>(Collider::TAG::PLAYER3)] = nullptr;
+	onHit_[static_cast<int>(Collider::TAG::PLAYER4)] = nullptr;
+	onHit_[static_cast<int>(Collider::TAG::NORMAL_OBJECT)] = &PlayerOnHit::NormalObjectOnHit;
+	onHit_[static_cast<int>(Collider::TAG::TREE)] = &PlayerOnHit::NormalObjectOnHit;
+	onHit_[static_cast<int>(Collider::TAG::GROUND)] = &PlayerOnHit::GroundOnHit;
+	onHit_[static_cast<int>(Collider::TAG::MACHINE)] = nullptr;
+	onHit_[static_cast<int>(Collider::TAG::MACHINE_RIDE)] = &PlayerOnHit::RideMachineOnHit;
+	onHit_[static_cast<int>(Collider::TAG::ITEM_BOX)] = &PlayerOnHit::NormalObjectOnHit;
+	onHit_[static_cast<int>(Collider::TAG::POWER_UP)] = &PlayerOnHit::PowerUpItemOnHit;
+	onHit_[static_cast<int>(Collider::TAG::BATTLE_ITEM)] = &PlayerOnHit::BattleItemOnHit;
+	onHit_[static_cast<int>(Collider::TAG::SPIN)] = &PlayerOnHit::SpinOnHit;
+	onHit_[static_cast<int>(Collider::TAG::CANNON_SHOT)] = &PlayerOnHit::CannonShotOnHit;
+	onHit_[static_cast<int>(Collider::TAG::SEARCH)] = nullptr;
+	onHit_[static_cast<int>(Collider::TAG::WORLD_BORDER)] = &PlayerOnHit::NormalObjectOnHit;
+	onHit_[static_cast<int>(Collider::TAG::GLIDER_BORDER)] = &PlayerOnHit::NormalObjectOnHit;
+	onHit_[static_cast<int>(Collider::TAG::GLIDE_STAGE)] = &PlayerOnHit::GlideStageOnHit;
 }
 
 PlayerOnHit::~PlayerOnHit(void)
@@ -51,7 +51,10 @@ void PlayerOnHit::OnHit(const std::weak_ptr<Collider> _hitCol)
 	const auto& hitTag = _hitCol.lock()->GetTag();
 
 	//タグごとのヒット処理
-	onHit_[hitTag](_hitCol);
+	if (onHit_[static_cast<int>(hitTag)] != nullptr)
+	{
+		(this->*onHit_[static_cast<int>(hitTag)])(_hitCol);
+	}
 }
 
 void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
@@ -65,7 +68,6 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	//コライダ
 	auto& mainCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::MAIN)];
 	auto& groundPreCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED)];
-	//auto& groundOldCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED_OLD)];
 
 	//位置の補正
 	const auto& hit = mainCol->GetGeometry().GetHitResult();
@@ -110,7 +112,6 @@ void PlayerOnHit::GroundOnHit(const std::weak_ptr<Collider> _hitCol)
 
 	//自身の線
 	Line& line = dynamic_cast<Line&>(groundPreCol->GetGeometry());
-	//float linePoint = line.GetLocalPosPoint1().y + line.GetLocalPosPoint2().y + 1.0f;
 
 	//自身の球
 	Sphere& mainSphere = dynamic_cast<Sphere&>(mainCol->GetGeometry());
@@ -132,9 +133,6 @@ void PlayerOnHit::GroundOnHit(const std::weak_ptr<Collider> _hitCol)
 		
 		//法線
 		VECTOR normal = VNorm(line.GetHitInfo().Normal);
-		
-		//足元の長さ
-		//float footLength = fabsf(line.GetLocalPosPoint2().y - line.GetLocalPosPoint1().y) - FOOT_COMP;
 
 		//深度
 		float depth = radius - VDot(normal, VSub(pos, hitPos));
@@ -146,26 +144,28 @@ void PlayerOnHit::GroundOnHit(const std::weak_ptr<Collider> _hitCol)
 			totalNormal = VAdd(totalNormal, normal);
 			maxDepth = std::max(maxDepth, depth);
 
-			// 接地判定
+			//接地判定
 			groundedThisFrame = true;
 
-			// 回転を元に戻す
+			//回転を元に戻す
 			player_.GetAction().ResetAxisX();
 		}
 	}
 
-	// 押し戻し
+	//押し戻し
 	if (maxDepth > 0.0f)
 	{
 		VECTOR N = VNorm(totalNormal);
 		pos = VAdd(pos, VScale(N, maxDepth));
 	}
 
+	//移動後座標の更新
 	player_.SetMovedPos(pos);
 
-	// ---- grounded の更新は最後に1回だけ ----
+	//接地判定の更新
 	player_.SetIsGrounded(groundedThisFrame);
-    // ---- 最後に前フレームの位置を保存（次フレーム用） ----
+    
+	//前座標の更新
     player_.SetPrePos(pos);
 }
 
@@ -234,6 +234,9 @@ void PlayerOnHit::SpinOnHit(const std::weak_ptr<Collider> _hitCol)
 
 	//スピンの相手
 	const auto& spinParent = dynamic_cast<const Player&>(hitCol->GetOwner());
+
+	//機体に乗っていないなら処理しない
+	if(!spinParent.GetMachine())return;
 
 	//攻撃力
 	float attack = spinParent.GetAttack();

@@ -67,6 +67,9 @@ public:
 	//値を反転させる溜めのスケール
 	static constexpr float REVERSE_SCALE = -1.0f;
 
+	//intカラーの最大値
+	static constexpr int INT_COLOR_MAX = 255;
+
 	//アルファ最大値
 	static constexpr int ALPHA_MAX = 255;
 

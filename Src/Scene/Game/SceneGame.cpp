@@ -23,13 +23,17 @@ SceneGame::SceneGame(void)
 {
 	gameState_ = GAME_STATE::MAIN;
 
+	//メイン
+	createGame_[static_cast<int>(GAME_STATE::MAIN)] = &SceneGame::CreateGameMain;
+	createGame_[static_cast<int>(GAME_STATE::CHECK)] = &SceneGame::CreateGameCheck;
+
 	//最終ゲーム
-	createLastGame_.emplace(LAST_GAME_TYPE::DEATH_MATCH, [this](void) {return std::make_unique<DeathMatch>(*this); });
-	createLastGame_.emplace(LAST_GAME_TYPE::AIR_GLIDER, [this](void) {return std::make_unique<AirGlider>(*this); });
+	createLastGame_[static_cast<int>(LAST_GAME_TYPE::DEATH_MATCH)] = &SceneGame::CreateLastGameDeathMatch;
+	createLastGame_[static_cast<int>(LAST_GAME_TYPE::AIR_GLIDER)] = &SceneGame::CreateLastGameAirGlider;
 	
 	//ソロ用最終ゲーム判定
-	soloLastGameJudge_.emplace(LAST_GAME_TYPE::DEATH_MATCH, false);
-	soloLastGameJudge_.emplace(LAST_GAME_TYPE::AIR_GLIDER, true);
+	soloLastGameJudge_[static_cast<int>(LAST_GAME_TYPE::DEATH_MATCH)] = false;
+	soloLastGameJudge_[static_cast<int>(LAST_GAME_TYPE::AIR_GLIDER)] = true;
 }
 
 SceneGame::~SceneGame(void)
@@ -50,9 +54,6 @@ SceneGame::~SceneGame(void)
 
 void SceneGame::Load(void)
 {
-	//メイン
-	createGame_.emplace(GAME_STATE::MAIN, [this](void) {return std::make_unique<GameMain>(*this); });
-	createGame_.emplace(GAME_STATE::CHECK, [this](void) {return std::make_unique<GameCheck>(*this); });
 	ResetLastGame();
 }
 
@@ -121,7 +122,7 @@ void SceneGame::ChangeGameState(const GAME_STATE _gameState)
 	Release();
 
 	//状態変更
-	game_ = std::move(createGame_[_gameState]());
+	game_ = std::move((this->*createGame_[static_cast<int>(_gameState)])());
 	
 	//初期化
 	game_->Init();
@@ -139,13 +140,13 @@ void SceneGame::ResetLastGame(void)
 	if (plNum <= 1)
 	{
 		//判定
-		bool judge = soloLastGameJudge_[rand];
+		bool judge = soloLastGameJudge_[static_cast<int>(rand)];
 
 		//ソロでできるゲームにする
 		while (!judge)
 		{
 			rand = static_cast<LAST_GAME_TYPE>(Utility::GetRandomValue(0, static_cast<int>(LAST_GAME_TYPE::MAX) - 1));
-			judge = soloLastGameJudge_[rand];
+			judge = soloLastGameJudge_[static_cast<int>(rand)];
 		}
 	}
 
@@ -153,5 +154,25 @@ void SceneGame::ResetLastGame(void)
 	lastGameType_ = rand;
 
 	//最終ゲーム生成
-	createGame_.emplace(GAME_STATE::LAST, [this](void) {return std::move(createLastGame_[lastGameType_]()); });
+	createGame_[static_cast<int>(GAME_STATE::LAST)] = createLastGame_[static_cast<int>(lastGameType_)];
+}
+
+std::unique_ptr<GameBase> SceneGame::CreateGameMain(void)
+{
+	return std::make_unique<GameMain>(*this);
+}
+
+std::unique_ptr<GameBase> SceneGame::CreateGameCheck(void)
+{
+	return std::make_unique<GameCheck>(*this);
+}
+
+std::unique_ptr<GameBase> SceneGame::CreateLastGameDeathMatch(void)
+{
+	return std::make_unique<DeathMatch>(*this);
+}
+
+std::unique_ptr<GameBase> SceneGame::CreateLastGameAirGlider(void)
+{
+	return std::make_unique<AirGlider>(*this);	
 }

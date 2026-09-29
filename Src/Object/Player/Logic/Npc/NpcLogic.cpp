@@ -24,32 +24,32 @@ void NpcLogic::Update(void)
     brain_->Update();
 }
 
-const bool NpcLogic::IsPush(void) 
+const bool NpcLogic::IsPush(void)const
 {
     return push_;
 }
 
-const bool NpcLogic::StartCharge(void)
+const bool NpcLogic::StartCharge(void)const
 {
     return startCharge_;
 }
 
-const bool NpcLogic::DisCharge(void) 
+const bool NpcLogic::DisCharge(void)const
 {
     return disCharge_;
 }
 
-const Vector2F NpcLogic::TurnValue(void)
+const Vector2F NpcLogic::TurnValue(void)const
 {
     return turnValue_;
 }
 
-const bool NpcLogic::IsSpecial(void)
+const bool NpcLogic::IsSpecial(void)const
 {
     return special_;
 }
 
-const bool NpcLogic::IsGetOff(void)
+const bool NpcLogic::IsGetOff(void)const
 {
     return getOff_;
 }
@@ -59,12 +59,12 @@ const bool NpcLogic::IsButtonMeshing(void)
     return buttonMeshing_;
 }
 
-const Vector2F NpcLogic::WalkValue(void)
+const Vector2F NpcLogic::WalkValue(void)const
 {
     return walkValue_;
 }
 
-const bool NpcLogic::IsJump(void)
+const bool NpcLogic::IsJump(void)const
 {
     return jump_;
 }

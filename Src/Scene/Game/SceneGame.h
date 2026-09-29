@@ -13,6 +13,7 @@ public:
 		MAIN,
 		CHECK,
 		LAST,
+		MAX
 	};
 
 	//最終ゲームの種類
@@ -57,16 +58,27 @@ private:
 	//最終ゲーム
 	LAST_GAME_TYPE lastGameType_;
 
+	//ゲーム生成関数ポインタ
+	using CreateGameFunc = std::unique_ptr<GameBase>(SceneGame::*)(void);
+
 	//ゲーム生成
-	std::unordered_map<GAME_STATE, std::function<std::unique_ptr<GameBase>(void)>> createGame_;
+	std::array<CreateGameFunc, static_cast<int>(GAME_STATE::MAX)> createGame_;
 
 	//最終ゲーム生成
-	std::unordered_map<LAST_GAME_TYPE, std::function<std::unique_ptr<GameBase>(void)>> createLastGame_;
+	std::array<CreateGameFunc, static_cast<int>(LAST_GAME_TYPE::MAX)> createLastGame_;
 	
 	//ソロでもできるかのチェック
-	std::unordered_map<LAST_GAME_TYPE, bool> soloLastGameJudge_;
+	std::array<bool, static_cast<int>(LAST_GAME_TYPE::MAX)> soloLastGameJudge_;
 
 	//最終ゲームを再構築
 	void ResetLastGame(void);
+
+	//ゲーム生成関数
+	std::unique_ptr<GameBase> CreateGameMain(void);
+	std::unique_ptr<GameBase> CreateGameCheck(void);
+
+	//最終ゲーム生成関数
+	std::unique_ptr<GameBase> CreateLastGameDeathMatch(void);
+	std::unique_ptr<GameBase> CreateLastGameAirGlider(void);
 };
 

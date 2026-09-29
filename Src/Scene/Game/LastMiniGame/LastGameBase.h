@@ -43,8 +43,10 @@ protected:
 	//終了判定
 	bool isEnd_;
 
+	//順位確定の判定
+	const bool IsRankConfirmed(void)const { return nowRank_ <= 1; }
+
 	//デバッグ描画
 	virtual void DebugDraw(void)override;
-
 };
 

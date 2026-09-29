@@ -78,6 +78,7 @@ void AirGlider::Update(void)
 			//プレイヤーが一人なら
 			if (plNum <= 1)
 			{
+				//その時点で終了
 				isEnd_ = true;
 			}
 		}

@@ -36,29 +36,35 @@ private:
 	//最終ゲーム確認時間
 	static constexpr int LAST_GAME_CHECK_TIME = 5;
 
+	//最終ゲームの画像の拡大率
+	static constexpr float LAST_GAME_IMAGE_SIZE = 1.5f;
+
 	//確認項目
 	enum class CHECK_STATE
 	{
-		NONE = -1,
 		PLAYER_PARAM,	//プレイヤーのステータス
 		LAST_GAME,		//最後のゲーム
+		MAX
 	};
 
 	//確認項目
 	CHECK_STATE state_;
 
+	//関数ポインタ
+	using Func = void(GameCheck::*)(void);
+
 	//更新
-	std::unordered_map<CHECK_STATE, std::function<void(void)>> update_;
+	std::array<Func, static_cast<int>(CHECK_STATE::MAX)> update_;
 
 	//描画
-	std::unordered_map<CHECK_STATE, std::function<void(void)>> draw_;
+	std::array<Func, static_cast<int>(CHECK_STATE::MAX)> draw_;
 
 	//タイマー
 	std::unique_ptr<Timer> timer_;
 
 	//最終ゲーム画像
-	std::unordered_map<int, int>lastGameImage_;
-	std::unordered_map<int, int>lastGameTitle_;
+	std::array<int, static_cast<int>(SceneGame::LAST_GAME_TYPE::MAX)>lastGameImage_;
+	std::array<int, static_cast<int>(SceneGame::LAST_GAME_TYPE::MAX)>lastGameTitle_;
 
 	//デバッグ描画
 	void DebugDraw(void)override;

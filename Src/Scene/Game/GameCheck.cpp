@@ -15,15 +15,13 @@
 GameCheck::GameCheck(SceneGame& _parent)
 	: GameBase(_parent)
 {
-	update_.emplace(CHECK_STATE::NONE, [](void) {});
-	update_.emplace(CHECK_STATE::PLAYER_PARAM, [this](void) {UpdatePlayerParam(); });
-	update_.emplace(CHECK_STATE::LAST_GAME, [this](void) {UpdateLastGame(); });
+	update_[static_cast<int>(CHECK_STATE::PLAYER_PARAM)] = &GameCheck::UpdatePlayerParam;
+	update_[static_cast<int>(CHECK_STATE::LAST_GAME)] = &GameCheck::UpdateLastGame;
 
-	draw_.emplace(CHECK_STATE::NONE, [](void) {});
-	draw_.emplace(CHECK_STATE::PLAYER_PARAM, [this](void) {DrawPlayerParam(); });
-	draw_.emplace(CHECK_STATE::LAST_GAME, [this](void) {DrawLastGame(); });
+	draw_[static_cast<int>(CHECK_STATE::PLAYER_PARAM)] = &GameCheck::DrawPlayerParam;
+	draw_[static_cast<int>(CHECK_STATE::LAST_GAME)] = &GameCheck::DrawLastGame;
 
-	state_ = CHECK_STATE::NONE;
+	state_ = CHECK_STATE::PLAYER_PARAM;
 }
 
 GameCheck::~GameCheck(void)
@@ -52,10 +50,10 @@ void GameCheck::Init(void)
 	}
 
 	//画像
-	lastGameImage_.emplace(static_cast<int>(SceneGame::LAST_GAME_TYPE::DEATH_MATCH), res.Load(ResourceManager::SRC::DEATH_MATCH_CHECK_IMAGE).handleId_);
-	lastGameImage_.emplace(static_cast<int>(SceneGame::LAST_GAME_TYPE::AIR_GLIDER), res.Load(ResourceManager::SRC::AIR_GLIDER_CHECK_IMAGE).handleId_);
-	lastGameTitle_.emplace(static_cast<int>(SceneGame::LAST_GAME_TYPE::DEATH_MATCH), res.Load(ResourceManager::SRC::DEATH_MATCH_CHECK_TITLE).handleId_);
-	lastGameTitle_.emplace(static_cast<int>(SceneGame::LAST_GAME_TYPE::AIR_GLIDER), res.Load(ResourceManager::SRC::AIR_GLIDER_CHECK_TITLE).handleId_);
+	lastGameImage_[static_cast<int>(SceneGame::LAST_GAME_TYPE::DEATH_MATCH)] = res.Load(ResourceManager::SRC::DEATH_MATCH_CHECK_IMAGE).handleId_;
+	lastGameImage_[static_cast<int>(SceneGame::LAST_GAME_TYPE::AIR_GLIDER)] = res.Load(ResourceManager::SRC::AIR_GLIDER_CHECK_IMAGE).handleId_;
+	lastGameTitle_[static_cast<int>(SceneGame::LAST_GAME_TYPE::DEATH_MATCH)] = res.Load(ResourceManager::SRC::DEATH_MATCH_CHECK_TITLE).handleId_;
+	lastGameTitle_[static_cast<int>(SceneGame::LAST_GAME_TYPE::AIR_GLIDER)] = res.Load(ResourceManager::SRC::AIR_GLIDER_CHECK_TITLE).handleId_;
 
 	//BGM再生
 	snd.Play(SoundManager::SOUND_NAME::SELECT_BGM, SoundManager::PLAYTYPE::LOOP);
@@ -64,13 +62,20 @@ void GameCheck::Init(void)
 void GameCheck::Update(void)
 {
 	//更新
-	update_[state_]();
+	(this->*update_[static_cast<int>(state_)])();
 }
 
 void GameCheck::Draw(const Camera& _camera)
 {
+#ifdef _DEBUG
+
+	//デバッグ描画
+	DebugDraw();
+
+#endif // _DEBUG
+
 	//描画
-	draw_[state_]();
+	(this->*draw_[static_cast<int>(state_)])();
 }
 
 void GameCheck::Release(void)
@@ -82,6 +87,7 @@ void GameCheck::Release(void)
 
 void GameCheck::DebugDraw(void)
 {
+	//シーン名
 	DrawString(0, 0, L"GameCheck", 0xffffff);
 }
 
@@ -122,9 +128,10 @@ void GameCheck::UpdateLastGame(void)
 		const int plNum = GameSetting::GetInstance().GetUserNum();
 		split.CreateSplitViews(plNum, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 		
+		//カメラの設定
 		for (int i = 0; i < plNum; i++)
 		{
-			split.SetCamera(i, scnMng.GetCamera(i).lock());
+			split.SetCamera(i, scnMng.GetCamera(i));
 		}
 
 		//最終ゲームへ
@@ -149,5 +156,5 @@ void GameCheck::DrawLastGame(void)
 	DrawBox(0, Application::SCREEN_HALF_Y - TEXT_BOX_RANGE, Application::SCREEN_SIZE_X, Application::SCREEN_HALF_Y + TEXT_BOX_RANGE, Utility::GRAY, true);
 
 	//最終ゲームタイトルの表示
-	DrawRotaGraph(Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y, 1.5, 0.0, lastGameTitle_[lastGame], true);
+	DrawRotaGraph(Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y, LAST_GAME_IMAGE_SIZE, 0.0, lastGameTitle_[lastGame], true);
 }
