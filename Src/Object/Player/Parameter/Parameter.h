@@ -35,4 +35,3 @@ struct Parameter
 	//ã‰ºŒÀ’l‚Ìİ’è
 	void Clamp(void);
 };
-

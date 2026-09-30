@@ -19,9 +19,12 @@ public :
 		float step = 0.0f;
 	};
 
+	//デフォルトのアニメーション速度
+	static constexpr float DEFAULT_ANIM_SPEED = 60.0f;
 
 	// コンストラクタ
 	AnimationController(int modelId);
+	
 	// デストラクタ
 	~AnimationController(void);
 
@@ -30,7 +33,7 @@ public :
 	/// @param _type アニメーション番号
 	/// @param _speed 速度
 	/// @param _modelId モデルID
-	void Add(const std::string _name, const int _animNum, const float _speed, const int _modelId = -1);
+	void Add(const std::string _name, const int _animNum, const float _speed = DEFAULT_ANIM_SPEED, const int _modelId = -1);
 
 	/// @brief アニメーションプレイ
 	/// @param _name アニメーション名
@@ -55,7 +58,7 @@ public :
 	const float GetAnimStep(void)const;
 
 	//アニメーションスピードセッタ
-	void SetAnimSpeed(const float _spd);
+	void SetAnimSpeed(const float _speed);
 
 	// 再生終了
 	bool IsEnd(void) const;
@@ -87,6 +90,5 @@ private :
 
 	// 逆再生
 	float switchLoopReverse_;
-
 };
 

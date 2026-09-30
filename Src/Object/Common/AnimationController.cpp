@@ -201,9 +201,9 @@ const float AnimationController::GetAnimStep(void) const
 	return playAnim_.step;
 }
 
-void AnimationController::SetAnimSpeed(const float _spd)
+void AnimationController::SetAnimSpeed(const float _speed)
 {
-	playAnim_.speed = _spd;
+	playAnim_.speed = _speed;
 }
 
 bool AnimationController::IsEnd(void) const

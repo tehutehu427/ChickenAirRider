@@ -32,12 +32,16 @@ public:
 	//カメラ角度(DEG)
 	static constexpr float CAMERA_DEG = 0.0f;
 
+	//カメラのデフォルトアングル
+	static constexpr VECTOR DEFAULT_CAMERA_DEG = { 30.0f, 0.0f, 0.0f };
+
 	//カメラのズーム範囲
 	static constexpr float ZOOM_RADIUS = 300.0f;
+
 	// カメラクリップ：NEAR
 	static constexpr float CAMERA_NEAR = 10.0f;
 
-	// カメラクリップ：NEAR
+	// カメラクリップ：FAR
 	static constexpr float CAMERA_FAR = 30000.0f;
 
 	// カメラの初期座標
@@ -46,7 +50,6 @@ public:
 	// 追従位置からカメラ位置までの相対座標
 	static constexpr VECTOR LOCAL_F2C_POS = { 0.0f, 30.0f, -200.0f };
 	static constexpr VECTOR LOCAL_F2C_LEAP_POS = { 0.0f, 150.0f, -200.0f };
-	//static constexpr VECTOR LOCAL_F2C_POS = { 0.0f, -1000.0f, -200.0f };
 
 	//FPSの時の相対座標
 	static constexpr VECTOR FPS_LOCAL_F2C_POS = { 0.0f, 130.0f, 20.0f };

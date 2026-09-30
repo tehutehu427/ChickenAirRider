@@ -146,11 +146,11 @@ void Camera::SetDefault(void)
 	// ÉJÉÅÉâÇÃè„ï˚å¸
 	cameraUp_ = Utility::DIR_U;
 
-	angles_.x = Utility::Deg2RadF(30.0f);
-	angles_.y = 0.0f;
-	angles_.z = 0.0f;
+	// ÉJÉÅÉâÇÃäpìx
+	angles_.x = Utility::Deg2RadF(DEFAULT_CAMERA_DEG.x);
+	angles_.y = Utility::Deg2RadF(DEFAULT_CAMERA_DEG.y);
+	angles_.z = Utility::Deg2RadF(DEFAULT_CAMERA_DEG.z);
 	rot_ = Quaternion();
-
 }
 
 void Camera::SyncFollow(void)
@@ -301,17 +301,6 @@ void Camera::ProcessRot(void)
 	auto keyType = KeyConfig::TYPE::ALL;
 	if (ins.IsNew(KeyConfig::CONTROL_TYPE::CAMERA_TURN_RIGHT, padNo_, keyType)) { angles_.y += SPEED_MOUSE; }
 	if (ins.IsNew(KeyConfig::CONTROL_TYPE::CAMERA_TURN_LEFT, padNo_, keyType)) { angles_.y -= SPEED_MOUSE; }
-	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::CAMERA_TURN_UP, padNo_, keyType)) { angles_.x += SPEED_MOUSE; }
-	//if (ins.IsNew(KeyConfig::CONTROL_TYPE::CAMERA_TURN_DOWN, padNo_, keyType)) { angles_.x -= SPEED_MOUSE; }
-
-	//if (angles_.x < FPS_LIMIT_X_UP_RAD)
-	//{
-	//	angles_.x = FPS_LIMIT_X_UP_RAD;
-	//}
-	//else if (angles_.x > FPS_LIMIT_X_DW_RAD)
-	//{
-	//	angles_.x = FPS_LIMIT_X_DW_RAD;
-	//}
 }
 
 void Camera::ProcessRotMachine(void)

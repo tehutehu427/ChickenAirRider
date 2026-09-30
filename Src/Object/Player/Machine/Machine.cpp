@@ -142,7 +142,7 @@ void Machine::InitAnimation(void)
 
 	//‰Šú‰»
 	if(anim_ == nullptr)anim_ = std::make_unique<AnimationController>(trans_.modelId);
-	anim_->Add("Run", 0, 60.0f);
+	anim_->Add("Run", 0);
 	anim_->Play("Run");
 }
 
