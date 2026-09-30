@@ -3,6 +3,7 @@
 #include<memory>
 #include<string>
 #include<functional>
+#include<unordered_map>
 #include"../Object/Common/Collider.h"
 #include"../Object/Stage/StageImportData.h"
 #include"../System/Camera.h"
@@ -59,6 +60,10 @@ private:
 	std::unordered_map<std::string, std::function<int(void)>> modelId_;
 	std::unordered_map<std::string, Collider::TAG> tag_;
 
+	//当たり判定形状
+	using CreateGeoFunc = std::unique_ptr<Geometry>(StageManager::*)(const Transform& _trans, const StageImportData& _data);
+	std::unordered_map<std::string, CreateGeoFunc> createGeo_;
+
 	//ステージ
     std::vector<std::unique_ptr<StageObject>> stages_;
 
@@ -74,4 +79,11 @@ private:
 	//更新
 	void UpdateNormal(void);
 	void UpdateLoop(void);
+
+	//形状生成
+	std::unique_ptr<Geometry> MakeSphere(const Transform& _trans, const StageImportData& _data);
+	std::unique_ptr<Geometry> MakeCapsule(const Transform& _trans, const StageImportData& _data);
+	std::unique_ptr<Geometry> MakeCube(const Transform& _trans, const StageImportData& _data);
+	std::unique_ptr<Geometry> MakeLine(const Transform& _trans, const StageImportData& _data);
+	std::unique_ptr<Geometry> MakeModel(const Transform& _trans, const StageImportData& _data);
 };

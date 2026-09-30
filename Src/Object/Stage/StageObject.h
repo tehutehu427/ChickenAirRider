@@ -12,7 +12,7 @@ class StageObject : public ObjectBase
 public:
 
 	//コンストラクタ
-	StageObject(const StageImportData& _data, const int _modelId, const Collider::TAG _tag, std::unique_ptr<Geometry> _geo);
+	StageObject(const StageImportData& _data, const int _modelId);
 	
 	//デストラクタ
 	~StageObject(void)override;
@@ -32,6 +32,9 @@ public:
 	//当たり判定処理
 	void OnHit(const std::weak_ptr<Collider> _hitCol)override;
 
+	//当たり判定の作成
+	void CreateCollider(const Collider::TAG _tag, std::unique_ptr<Geometry> _geo);
+
 private:
 
 	//ステージの大きさ
@@ -39,18 +42,4 @@ private:
 
 	//モデルサイズ
 	static constexpr float MODEL_SIZE_Y = 200.0f;
-
-	//データの保有
-	StageImportData data_;
-
-	//当たり判定形状
-	using CreateGeoFunc = std::unique_ptr<Geometry>(StageObject::*)(void);
-	std::unordered_map<std::string, CreateGeoFunc> createGeo_;
-
-	//形状生成
-	std::unique_ptr<Geometry> MakeSphere(void);
-	std::unique_ptr<Geometry> MakeCapsule(void);
-	std::unique_ptr<Geometry> MakeCube(void);
-	std::unique_ptr<Geometry> MakeLine(void);
-	std::unique_ptr<Geometry> MakeModel(void);
 };

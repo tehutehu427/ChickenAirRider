@@ -2,30 +2,16 @@
 #include "../Common/Geometry/Geometry.h"
 #include "StageObject.h"
 
-StageObject::StageObject(const StageImportData& _data,const int _modelId, const Collider::TAG _tag, std::unique_ptr<Geometry> _geo)
+StageObject::StageObject(const StageImportData& _data,const int _modelId)
 {
+	//モデルの設定
 	trans_.modelId = _modelId;
 	trans_.pos = _data.position;
 	trans_.scl = _data.scale;
 	trans_.quaRot = _data.quaternion;
 
-	data_ = _data;
-	data_.localPos1.x = data_.localPos1.x * data_.scale.x;
-	data_.localPos1.y = data_.localPos1.y * data_.scale.y;
-	data_.localPos1.z = data_.localPos1.z * data_.scale.z;
-	data_.localPos2.x = data_.localPos2.x * data_.scale.x;
-	data_.localPos2.y = data_.localPos2.y * data_.scale.y;
-	data_.localPos2.z = data_.localPos2.z * data_.scale.z;
-
-	createGeo_["sphere"] = &StageObject::MakeSphere;
-	createGeo_["capsule"] = &StageObject::MakeCapsule; 
-	createGeo_["cube"] = &StageObject::MakeCube;
-	createGeo_["line"] = &StageObject::MakeLine;
-	createGeo_["model"] = &StageObject::MakeModel;
-	
-	//コライダ生成
-	std::unique_ptr<Geometry> geo = (this->*createGeo_[data_.geometry])();
-	MakeCollider(_tag, std::move(geo), { Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT, _tag });
+	//当たり判定前
+	broudRadius_ = _data.broudRadius;
 }
 
 StageObject::~StageObject(void)
@@ -38,9 +24,6 @@ void StageObject::Load(void)
 
 void StageObject::Init(void)
 {
-	//当たり判定前
-	broudRadius_ = data_.broudRadius;
-
 	//初期更新
 	Update();
 }
@@ -59,27 +42,8 @@ void StageObject::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
 }
 
-std::unique_ptr<Geometry> StageObject::MakeSphere(void)
+void StageObject::CreateCollider(const Collider::TAG _tag, std::unique_ptr<Geometry> _geo)
 {
-	return std::make_unique<Sphere>(trans_.pos, trans_.pos, data_.radius);
-}
-
-std::unique_ptr<Geometry> StageObject::MakeCapsule(void)
-{
-	return std::make_unique<Capsule>(trans_.pos, trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2, data_.radius);
-}
-
-std::unique_ptr<Geometry> StageObject::MakeCube(void)
-{
-	return std::make_unique<Cube>(trans_.pos, trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2);
-}
-
-std::unique_ptr<Geometry> StageObject::MakeLine(void)
-{
-	return std::make_unique<Line>(trans_.pos, trans_.pos, trans_.quaRot, data_.localPos1, data_.localPos2);
-}
-
-std::unique_ptr<Geometry> StageObject::MakeModel(void)
-{
-	return std::make_unique<Model>(trans_.pos, trans_.pos, trans_.quaRot, trans_.modelId);
+	//当たり判定の作成
+	MakeCollider(_tag, std::move(_geo), { Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT, _tag });
 }

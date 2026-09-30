@@ -42,7 +42,12 @@ void StageManager::Init(const MODE _mode, int _createNum)
 			int modelId = modelId_[data.name]();
 
 			//ステージの生成
-			stages_.emplace_back(std::make_unique<StageObject>(data, modelId, tag_[data.tag], data.position));
+			stages_.emplace_back(std::make_unique<StageObject>(data, modelId));
+			auto& stage = stages_.back();
+
+			//コライダ生成
+			std::unique_ptr<Geometry> geo = (this->*createGeo_[data.geometry])(stage->GetTrans(), data);
+			stage->CreateCollider(tag_[data.tag], std::move(geo));
 		}
 	}
 
@@ -60,7 +65,12 @@ void StageManager::Init(const MODE _mode, int _createNum)
 			pos.z *= (i + 1);
 
 			//ステージの生成
-			stages_.emplace_back(std::make_unique<StageObject>(data, modelId, tag_[data.tag], pos));
+			stages_.emplace_back(std::make_unique<StageObject>(data, modelId));
+			auto& stage = stages_.back();
+
+			//コライダ生成
+			std::unique_ptr<Geometry> geo = (this->*createGeo_[data.geometry])(stage->GetTrans(), data);
+			stage->CreateCollider(tag_[data.tag], std::move(geo));
 		}
 	}
 
@@ -150,6 +160,12 @@ StageManager::StageManager(void)
 	tag_["glass"] = Collider::TAG::GROUND;
 	tag_["ground"] = Collider::TAG::GROUND;
 
+	createGeo_["sphere"] = &StageManager::MakeSphere;
+	createGeo_["capsule"] = &StageManager::MakeCapsule;
+	createGeo_["cube"] = &StageManager::MakeCube;
+	createGeo_["line"] = &StageManager::MakeLine;
+	createGeo_["model"] = &StageManager::MakeModel;
+
 	update_[MODE::MAIN] = [this](void){UpdateNormal(); };
 	update_[MODE::BATTLE] = [this](void){UpdateNormal(); };
 	update_[MODE::AIR_GLIDER] = [this](void){UpdateLoop(); };
@@ -174,4 +190,29 @@ void StageManager::UpdateLoop(void)
 {
 	//通常更新
 	UpdateNormal();
+}
+
+std::unique_ptr<Geometry> StageManager::MakeSphere(const Transform& _trans, const StageImportData& _data)
+{
+	return std::make_unique<Sphere>(_trans.pos, _trans.pos, _data.radius);
+}
+
+std::unique_ptr<Geometry> StageManager::MakeCapsule(const Transform& _trans, const StageImportData& _data)
+{
+	return std::make_unique<Capsule>(_trans.pos, _trans.pos, _trans.quaRot, _data.localPos1, _data.localPos2, _data.radius);
+}
+
+std::unique_ptr<Geometry> StageManager::MakeCube(const Transform& _trans, const StageImportData& _data)
+{
+	return std::make_unique<Cube>(_trans.pos, _trans.pos, _trans.quaRot, _data.localPos1, _data.localPos2);
+}
+
+std::unique_ptr<Geometry> StageManager::MakeLine(const Transform& _trans, const StageImportData& _data)
+{
+	return std::make_unique<Line>(_trans.pos, _trans.pos, _trans.quaRot, _data.localPos1, _data.localPos2);
+}
+
+std::unique_ptr<Geometry> StageManager::MakeModel(const Transform& _trans, const StageImportData& _data)
+{
+	return std::make_unique<Model>(_trans.pos, _trans.pos, _trans.quaRot, _trans.modelId);
 }
