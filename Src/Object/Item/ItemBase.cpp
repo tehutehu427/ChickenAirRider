@@ -15,6 +15,16 @@ ItemBase::ItemBase(const VECTOR& _pos, const VECTOR& _vec)
 	gravPow_ = Utility::VECTOR_ZERO;
 	movedPos_ = _pos;
 	isCreateCol_ = false;
+
+	//状態ごとの更新関数
+	update_[static_cast<int>(STATE::ALIVE)] = &ItemBase::UpdateAlive;
+	update_[static_cast<int>(STATE::GOT)] = &ItemBase::UpdateGot;
+	update_[static_cast<int>(STATE::DEAD)] = &ItemBase::UpdateDead;
+
+	//状態ごとの描画関数
+	draw_[static_cast<int>(STATE::ALIVE)] = &ItemBase::DrawAlive;
+	draw_[static_cast<int>(STATE::GOT)] = &ItemBase::DrawGot;
+	draw_[static_cast<int>(STATE::DEAD)] = &ItemBase::DrawDead;
 }
 
 ItemBase::~ItemBase(void)
@@ -36,11 +46,17 @@ void ItemBase::Init(void)
 	broudRadius_ = BROUD_RADIUS;
 	isCreateCol_ = false;
 
+	//初期更新
 	Update();
 }
 
 void ItemBase::Update(void)
 {
+	//死亡ならスキップ
+	if (state_ == STATE::DEAD)return;
+
+	//各状態の更新
+	(this->*update_[static_cast<int>(state_)])();
 }
 
 void ItemBase::Draw(void)
@@ -48,27 +64,8 @@ void ItemBase::Draw(void)
 	//死亡ならスキップ
 	if (state_ == STATE::DEAD)return;
 
-	//生存中なら
-	else if (state_ == STATE::ALIVE)
-	{
-		//大きく描画
-		DrawBillboard3D(trans_.pos, 0.5f, 0.5f, ALIVE_IMG_SIZE, 0.0f, trans_.modelId, true);
-	}
-	else
-	{
-		//所持者
-		const auto& hiter = hiter_.lock();
-
-		//取得者がいないとスキップ
-		if (hiter == nullptr)return;
-
-		//取得者の座標
-		VECTOR hiterPos = hiter->GetOwner().GetTrans().pos;
-		Sphere& sphere = dynamic_cast<Sphere&>(hiter->GetGeometry());
-		
-		//小さめに描画
-		DrawBillboard3D(VGet(hiterPos.x, hiterPos.y + sphere.GetRadius() + LOCAL_HITER_POS_Y, hiterPos.z), 0.5f, 0.5f, GOT_IMG_SIZE, 0.0f, trans_.modelId, true);
-	}
+	//各状態の描画
+	(this->*draw_[static_cast<int>(state_)])();
 }
 
 void ItemBase::OnHit(const std::weak_ptr<Collider> _hitCol)
@@ -167,4 +164,42 @@ void ItemBase::OnHit(const std::weak_ptr<Collider> _hitCol)
 		//移動しなくなる
 		movePow_ = Utility::VECTOR_ZERO;
 	}
+}
+
+void ItemBase::UpdateAlive(void)
+{
+}
+
+void ItemBase::UpdateGot(void)
+{
+}
+
+void ItemBase::UpdateDead(void)
+{
+}
+
+void ItemBase::DrawAlive(void)
+{
+	//大きく描画
+	DrawBillboard3D(trans_.pos, 0.5f, 0.5f, ALIVE_IMG_SIZE, 0.0f, trans_.modelId, true);
+}
+
+void ItemBase::DrawGot(void)
+{
+	//所持者
+	const auto& hiter = hiter_.lock();
+
+	//取得者がいないとスキップ
+	if (hiter == nullptr)return;
+
+	//取得者の座標
+	VECTOR hiterPos = hiter->GetOwner().GetTrans().pos;
+	Sphere& sphere = dynamic_cast<Sphere&>(hiter->GetGeometry());
+
+	//小さめに描画
+	DrawBillboard3D(VGet(hiterPos.x, hiterPos.y + sphere.GetRadius() + LOCAL_HITER_POS_Y, hiterPos.z), 0.5f, 0.5f, GOT_IMG_SIZE, 0.0f, trans_.modelId, true);
+}
+
+void ItemBase::DrawDead(void)
+{
 }

@@ -29,7 +29,7 @@ void Character::Load(const CharacterImportData& _data, const int _modelId)
 	//モデル反転の有無
 	if (_data.isModelReverse)
 	{
-		trans_.quaRotLocal = Quaternion::AngleAxis(Utility::Deg2RadF(180.0f), Utility::AXIS_Y);
+		trans_.quaRotLocal = Quaternion::AngleAxis(Utility::Deg2RadF(Utility::DEGREE_MAX / 2), Utility::AXIS_Y);
 	}
 
 	//アニメーション

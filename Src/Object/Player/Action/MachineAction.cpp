@@ -108,7 +108,7 @@ void MachineAction::Update(void)
 		{
 			//各情報をプレイヤーに合わせる
 			effectController_->SetPos(eff.first, eff.second, playerTrans.pos);
-			effectController_->SetQuaRot(eff.first, eff.second, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(180.0f), 0.0f)));
+			effectController_->SetQuaRot(eff.first, eff.second, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(Utility::DEGREE_MAX / 2), 0.0f)));
 			effectController_->SetScale(eff.first, eff.second, BOOST_EFF_SCL);
 		}
 	}
@@ -299,7 +299,7 @@ void MachineAction::Charge(void)
 		effNum_[EffectController::EFF_TYPE::CHARGE] = effectController_->Play(
 			EffectController::EFF_TYPE::CHARGE
 			, playerTrans.pos
-			, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(180.0f), 0.0f))
+			, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(Utility::DEGREE_MAX / 2), 0.0f))
 			, CHARGE_EFF_SCL
 			, true);
 	}
@@ -353,7 +353,7 @@ void MachineAction::DisCharge(void)
 	effNum_[EffectController::EFF_TYPE::BOOST] = effectController_->Play(
 		EffectController::EFF_TYPE::BOOST
 		, playerTrans.pos
-		, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(180.0f), 0.0f))
+		, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(Utility::DEGREE_MAX / 2), 0.0f))
 		, BOOST_EFF_SCL);
 }
 
@@ -382,7 +382,7 @@ void MachineAction::Spin(void)
 		isSpin_ = true;
 	}
 
-	//スピン時間
+	//スピン
 	if (isSpin_)
 	{
 		//カウンタ

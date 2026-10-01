@@ -38,5 +38,8 @@ private:
 	//パラメーター
 	Parameter param_;
 
+	//更新
+	void UpdateAlive(void)override;
+	void UpdateGot(void)override;
+	void UpdateDead(void)override;
 };
-

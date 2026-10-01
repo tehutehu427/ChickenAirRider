@@ -12,6 +12,7 @@ public:
 		ALIVE,	//生存
 		GOT,	//取得
 		DEAD,	//死亡
+		MAX
 	};
 
 	/// @brief コンストラクタ
@@ -95,5 +96,19 @@ protected:
 
 	//取得者
 	std::weak_ptr<Collider> hiter_;
-};
 
+	//関数ポインタ
+	using Func = void(ItemBase::*)(void);
+	std::array<Func, static_cast<int>(STATE::MAX)> update_;
+	std::array<Func, static_cast<int>(STATE::MAX)> draw_;
+
+	//更新
+	virtual void UpdateAlive(void);
+	virtual void UpdateGot(void);
+	virtual void UpdateDead(void);
+
+	//描画
+	virtual void DrawAlive(void);
+	virtual void DrawGot(void);
+	virtual void DrawDead(void);
+};
