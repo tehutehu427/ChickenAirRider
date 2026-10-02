@@ -52,18 +52,12 @@ void ItemBase::Init(void)
 
 void ItemBase::Update(void)
 {
-	//死亡ならスキップ
-	if (state_ == STATE::DEAD)return;
-
 	//各状態の更新
 	(this->*update_[static_cast<int>(state_)])();
 }
 
 void ItemBase::Draw(void)
 {
-	//死亡ならスキップ
-	if (state_ == STATE::DEAD)return;
-
 	//各状態の描画
 	(this->*draw_[static_cast<int>(state_)])();
 }

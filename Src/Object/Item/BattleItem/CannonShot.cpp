@@ -23,17 +23,17 @@ CannonShot::CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR&
 	state_ = STATE::ALIVE;
 	attack_ = 0.0f;
 
-	update_.emplace(STATE::ALIVE, [this](void) {UpdateAlive(); });
-	update_.emplace(STATE::BLAST, [this](void) {UpdateBlast(); });
-	update_.emplace(STATE::DEAD, [this](void) {UpdateDead(); });
+	update_[static_cast<int>(STATE::ALIVE)] = &CannonShot::UpdateAlive;
+	update_[static_cast<int>(STATE::BLAST)] = &CannonShot::UpdateBlast;
+	update_[static_cast<int>(STATE::DEAD)] = &CannonShot::UpdateDead;
 
-	draw_.emplace(STATE::ALIVE, [this](void) {DrawAlive(); });
-	draw_.emplace(STATE::BLAST, [this](void) {DrawBlast(); });
-	draw_.emplace(STATE::DEAD, [this](void) {DrawDead(); });
+	draw_[static_cast<int>(STATE::ALIVE)] = &CannonShot::DrawAlive;
+	draw_[static_cast<int>(STATE::BLAST)] = &CannonShot::DrawBlast;
+	draw_[static_cast<int>(STATE::DEAD)] = &CannonShot::DrawDead;
 
-	changeState_.emplace(STATE::ALIVE, [this](void) {ChangeStateAlive(); });
-	changeState_.emplace(STATE::BLAST, [this](void) {ChangeStateBlast(); });
-	changeState_.emplace(STATE::DEAD, [this](void) {ChangeStateDead(); });
+	changeState_[static_cast<int>(STATE::ALIVE)] = &CannonShot::ChangeStateAlive;
+	changeState_[static_cast<int>(STATE::BLAST)] = &CannonShot::ChangeStateBlast;
+	changeState_[static_cast<int>(STATE::DEAD)] = &CannonShot::ChangeStateDead;
 }
 
 CannonShot::~CannonShot(void)
@@ -85,7 +85,7 @@ void CannonShot::Init(void)
 void CannonShot::Update(void)
 {
 	//更新
-	update_[state_]();
+	(this->*update_[static_cast<int>(state_)])();
 
 	//エフェクト更新
 	effect_->Update();
@@ -94,13 +94,13 @@ void CannonShot::Update(void)
 void CannonShot::Draw(void)
 {
 	//描画
-	draw_[state_]();
+	(this->*draw_[static_cast<int>(state_)])();
 }
 
 void CannonShot::OnHit(const std::weak_ptr<Collider> _hitCol)
 {
-	//すでに爆発しているなら
-	if (state_ == STATE::BLAST)return;
+	//生きていないなら何もしない
+	if (state_ != STATE::ALIVE)return;
 
 	//所持者
 	const auto& holder = holder_.lock();
@@ -108,6 +108,7 @@ void CannonShot::OnHit(const std::weak_ptr<Collider> _hitCol)
 	
 	if (hiter->IsIncludeMyTag({Collider::TAG::PLAYER1, Collider::TAG::PLAYER2, Collider::TAG::PLAYER3, Collider::TAG::PLAYER4, Collider::TAG::MACHINE}))
 	{
+		//感知判定に当たっているなら追尾
 		if (collider_[static_cast<int>(COL::SEARCH)]->IsHit())
 		{
 			//標的に対する移動ベクトル
@@ -116,19 +117,20 @@ void CannonShot::OnHit(const std::weak_ptr<Collider> _hitCol)
 			//標的に少し傾ける
 			movePowToTarget_ = VAdd(movePow_,VScale(moveVecToTarget,speed_* SEARCH_MOVE_POW_MULTI));
 		}
+		//本体が当たったので爆発
 		else
 		{
 			//爆発
-			changeState_[STATE::BLAST]();
+			(this->*changeState_[static_cast<int>(STATE::BLAST)])();
 		}
 	}
 	else if (hiter->IsIncludeMyTag({Collider::TAG::NORMAL_OBJECT, Collider::TAG::GROUND}))
 	{
-		//メイン判定にあたってない　または　すでに爆発しているなら
+		//メイン判定にあたってない　または　すでに爆発しているなら何もしない
 		if (!collider_[static_cast<int>(COL::MAIN)]->IsHit() || state_ == STATE::BLAST)return;
 
 		//爆発
-		changeState_[STATE::BLAST]();
+		(this->*changeState_[static_cast<int>(STATE::BLAST)])();
 	}
 }
 
@@ -147,7 +149,7 @@ void CannonShot::UpdateAlive(void)
 	if (aliveCnt_ > ALIVE_TIME)
 	{
 		//爆発
-		changeState_[STATE::BLAST]();
+		(this->*changeState_[static_cast<int>(STATE::BLAST)])();
 
 		return;
 	}
@@ -178,7 +180,7 @@ void CannonShot::UpdateBlast(void)
 	if (blastCnt_ > BLAST_TIME)
 	{
 		//死亡
-		changeState_[STATE::DEAD]();
+		(this->*changeState_[static_cast<int>(STATE::DEAD)])();
 	}
 }
 

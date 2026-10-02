@@ -98,9 +98,10 @@ public:
 		MAX
 	};
 
-
-	/// @brief コンストラクタ
-	/// @param _playerNum ユーザーの数
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="_userNum">ユーザーの数</param>
 	Camera(int _userNum);
 
 	//デストラクタ

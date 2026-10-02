@@ -137,37 +137,45 @@ public:
 	// リソースの破棄
 	void Destroy(void)override;
 
-	/// @brief キーが押されているか
-	/// @param cType 操作名
-	/// @param no ゲームコントローラーの番号
-	/// @param type 入力タイプ
-	/// @return true:押されている
+	/// <summary>
+	/// キーが押されているか
+	/// </summary>
+	/// <param name="cType">操作名</param>
+	/// <param name="no">ゲームコントローラーの番号</param>
+	/// <param name="type">入力タイプ</param>
+	/// <returns>true:押されている</returns>
 	bool IsNew(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no ,TYPE type = TYPE::ALL);
 
-	/// @brief どれかキーが押されているか
+	//どれかキーが押されているか
 	bool IsTrgDownAny(void);
 
-	/// @brief キーが押されたか(押された瞬間のみ)
-	/// @param cType 操作名
-	/// @param no ゲームコントローラーの番号
-	/// @param type 入力タイプ
-	/// @return true:押された
+	/// <summary>
+	/// キーが押されたか(押された瞬間のみ)
+	/// </summary>
+	/// <param name="cType">操作名</param>
+	/// <param name="no">ゲームコントローラーの番号</param>
+	/// <param name="type">入力タイプ</param>
+	/// <returns>true:押された</returns>
 	bool IsTrgDown(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no,TYPE type = TYPE::ALL);
 
-	/// @brief キーが離されたか(離された瞬間のみ)
-	/// @param cType 操作名
-	/// @param no ゲームコントローラーの番号
-	/// @param type 入力タイプ
-	/// @return true:押されている
+	/// <summary>
+	/// キーが離されたか(離された瞬間のみ)
+	/// </summary>
+	/// <param name="cType">操作名</param>
+	/// <param name="no">ゲームコントローラーの番号</param>
+	/// <param name="type">入力タイプ</param>
+	/// <returns>true:離された</returns>
 	bool IsTrgUp(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, TYPE type = TYPE::ALL);
 
-	/// @brief キーが保持されているか(離された瞬間のみ)
-	/// @param cType 操作名
-	/// @param no ゲームコントローラーの番号
-	/// @param _holdTime 保持時間
-	/// @param _isReset 判定後のリセットの有無
-	/// @param type 入力タイプ
-	/// @return true:押されている
+	/// <summary>
+	/// キーが保持されているか(離された瞬間のみ)
+	/// </summary>
+	/// <param name="cType">操作名</param>
+	/// <param name="no">ゲームコントローラーの番号</param>
+	/// <param name="_holdTime">保持時間</param>
+	/// <param name="_isReset">判定後のリセットの有無</param>
+	/// <param name="type">入力タイプ</param>
+	/// <returns>true:押されている</returns>
 	bool IsTrgHold(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, float _holdTime, bool _isReset = false, TYPE type = TYPE::ALL);
 
 	/// <summary>
@@ -178,25 +186,33 @@ public:
 	/// @param type 入力タイプ
 	/// <returns>入力時間</returns>
 	float GetKeyTrgHoldCnt(CONTROL_TYPE cType, KeyConfig::JOYPAD_NO no, TYPE type = TYPE::ALL);
-
-	/// @brief 対応キーを追加
-	/// @param type キーの種類
-	/// @param key 追加したい入力(キーボード)
+	
+	/// <summary>
+	/// 対応キーを追加
+	/// </summary>
+	/// <param name="type">キーの種類</param>
+	/// <param name="key">追加したい入力(キーボード)</param>
 	void Add(CONTROL_TYPE type, int key);
 
-	/// @brief 対応キーを追加
-	/// @param type キーの種類
-	/// @param key 追加したい入力(ゲームコントローラーボタン)
+	/// <summary>
+	/// 対応キーを追加
+	/// </summary>
+	/// <param name="type">キーの種類</param>
+	/// <param name="key">追加したい入力(ゲームコントローラーボタン)</param>
 	void Add(CONTROL_TYPE type, JOYPAD_BTN key);
 
-	/// @brief 対応キーを追加
-	/// @param type キーの種類
-	/// @param key 追加したい入力(ゲームコントローラースティック)
+	/// <summary>
+	/// 対応キーを追加
+	/// </summary>
+	/// <param name="type">キーの種類</param>
+	/// <param name="key">追加したい入力(ゲームコントローラースティック)</param>
 	void Add(CONTROL_TYPE type, JOYPAD_STICK key);
 
-	/// @brief 対応キーを追加
-	/// @param type キーの種類
-	/// @param key 追加したい入力(マウス)
+	/// <summary>
+	/// 対応キーを追加
+	/// </summary>
+	/// <param name="type">キーの種類</param>
+	/// <param name="key">追加したい入力(マウス)</param>
 	void Add(CONTROL_TYPE type, MOUSE key);
 
 	// マウス座標の取得
@@ -226,14 +242,18 @@ public:
 	//指定の方向に倒れた度合い0から1000
 	int PadStickOverSize(KeyConfig::JOYPAD_NO no, KeyConfig::JOYPAD_STICK stick)const;
 	
-	/// @brief ゲームコントローラーを振動する
-	/// @param _no 振動させるゲームコントローラーの番号
-	/// @param _time ミリ秒　,-1で無限に続けることができる(STOP 必須)
-	/// @param _pow 振動の強さ(1～1000)
+	/// <summary>
+	/// ゲームコントローラーを振動する
+	/// </summary>
+	/// <param name="_no">振動させるゲームコントローラーの番号</param>
+	/// <param name="_time">ミリ秒　,-1で無限に続けることができる(STOP 必須)</param>
+	/// <param name="_pow">振動の強さ(1～1000)</param>
 	void PadVibration(KeyConfig::JOYPAD_NO _no, int _time, int _pow);
 
-	/// @brief 振動を止める
-	/// @param _no ゲームコントローラーの番号
+	/// <summary>
+	/// 振動を止める
+	/// </summary>
+	/// <param name="_no">ゲームコントローラーの番号</param>
 	void StopPadVibration(KeyConfig::JOYPAD_NO _no);
 
 protected:
@@ -250,4 +270,3 @@ private:
 	std::map<CONTROL_TYPE, std::vector<JOYPAD_STICK>>stickInput_;		//操作の種類とスティックの種類でコントローラーの状態を格納
 	std::map < CONTROL_TYPE, std::vector<MOUSE>>mouseInput_;			//操作の種類とマウスの種類でマウスの状態を格納
 };
-

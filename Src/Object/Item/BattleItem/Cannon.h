@@ -44,5 +44,8 @@ private:
 
 	//’e‚Ì¶¬
 	void CreateShot(void);
+
+	//æ“¾‚ÌXV
+	void UpdateGot(void)override;
 };
 

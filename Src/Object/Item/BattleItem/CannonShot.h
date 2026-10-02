@@ -47,6 +47,7 @@ private:
 		ALIVE,	//生存
 		BLAST,	//爆発
 		DEAD,	//死亡
+		MAX
 	};
 
 	enum class COL
@@ -106,14 +107,16 @@ private:
 	//速度
 	float speed_;
 
-	//更新
-	std::unordered_map<STATE, std::function<void(void)>> update_;
+	using Func = void(CannonShot::*)(void);
 
-	//描画
-	std::unordered_map<STATE, std::function<void(void)>> draw_;
+	//状態ごとの更新
+	std::array<Func, static_cast<int>(STATE::MAX)> update_;
+
+	//状態ごとの描画
+	std::array<Func, static_cast<int>(STATE::MAX)> draw_;
 
 	//状態変更
-	std::unordered_map<STATE, std::function<void(void)>> changeState_;
+	std::array<Func, static_cast<int>(STATE::MAX)> changeState_;
 
 	//各更新
 	void UpdateAlive(void);

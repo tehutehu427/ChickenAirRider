@@ -28,20 +28,24 @@ public :
 	// デストラクタ
 	~AnimationController(void);
 
-	/// @brief 追加
-	/// @param _name アニメーション名
-	/// @param _type アニメーション番号
-	/// @param _speed 速度
-	/// @param _modelId モデルID
+	/// <summary>
+	/// アニメーションの追加
+	/// </summary>
+	/// <param name="_name">アニメーション名</param>
+	/// <param name="_animNum">アニメーション番号</param>
+	/// <param name="_speed">速度</param>
+	/// <param name="_modelId">モデルID</param>
 	void Add(const std::string _name, const int _animNum, const float _speed = DEFAULT_ANIM_SPEED, const int _modelId = -1);
 
-	/// @brief アニメーションプレイ
-	/// @param _name アニメーション名
-	/// @param isLoop ループするか
-	/// @param startStep 再生開始フレーム
-	/// @param endStep 再生終了フレーム
-	/// @param isStop アニメーションを止める
-	/// @param isForce 同じアニメーションを再生したい場合はtrue
+	/// <summary>
+	/// アニメーションプレイ
+	/// </summary>
+	/// <param name="_name">アニメーション名</param>
+	/// <param name="_isLoop">ループするか</param>
+	/// <param name="_startStep">再生開始フレーム</param>
+	/// <param name="_endStep">再生終了フレーム</param>
+	/// <param name="_isStop">アニメーションを止める</param>
+	/// <param name="_isForce">同じアニメーションを再生したい場合はtrue</param>
 	void Play(const std::string& _name, const bool _isLoop = true, 
 		const float _startStep = 0.0f, const float _endStep = -1.0f, const bool _isStop = false, const bool _isForce = false);
 

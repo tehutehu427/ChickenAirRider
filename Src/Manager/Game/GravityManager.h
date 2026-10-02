@@ -17,10 +17,12 @@ public:
 	//初期化
 	void Init(void)override;
 
-	/// @brief 重力計算(ジャンプ行動など)
-	/// @param _dir 重力方向
-	/// @param _pow 重力計算に使う変数
-	/// @param _per 重力倍率
+	/// <summary>
+	/// 重力計算(ジャンプ行動など)
+	/// </summary>
+	/// <param name="_dir">重力方向</param>
+	/// <param name="_pow">重力計算に使う変数</param>
+	/// <param name="_per">重力倍率</param>
 	void CalcGravity(const VECTOR& _dir, VECTOR& _pow, const float _per = 1.0f);
 
 	//重力計算

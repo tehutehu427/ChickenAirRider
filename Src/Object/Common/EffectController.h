@@ -27,19 +27,23 @@ public:
 	//更新関係
 	void Update(void);
 
-	/// @brief エフェクトの追加
-	/// @param _effHandle エフェクトハンドル
-	/// @param _effType ハンドルを保存したいタイプ
+	/// <summary>
+	/// エフェクトの追加
+	/// </summary>
+	/// <param name="_effHandle">エフェクトハンドル</param>
+	/// <param name="_effType">ハンドルを保存したいタイプ</param>
 	void Add(const int _effHandle, const EFF_TYPE _effType);
 
-	/// @brief エフェクトの再生
-	/// @param _effType エフェクトの種類
-	/// @param _pos 座標情報
-	/// @param _quaRot 回転情報
-	/// @param _scl 大きさ情報
-	/// @param _isLoop ループの有無
-	/// @param _speedMultiplier 速度の倍率
-	/// @return 再生したエフェクトの配列番号(このエフェクトの設定をいじる時に使用), -1:失敗
+	/// <summary>
+	/// エフェクトの再生
+	/// </summary>
+	/// <param name="_effType">エフェクトの再生</param>
+	/// <param name="_pos">座標情報</param>
+	/// <param name="_quaRot">回転情報</param>
+	/// <param name="_scl">大きさ情報</param>
+	/// <param name="_isLoop">ループの有無</param>
+	/// <param name="_speedMultiplier">速度の倍率</param>
+	/// <returns>再生したエフェクトの配列番号(このエフェクトの設定をいじる時に使用), -1:失敗</returns>
 	const int Play(const EFF_TYPE _effType,
 		const VECTOR _pos,
 		const Quaternion _quaRot,
@@ -47,14 +51,18 @@ public:
 		const bool _isLoop = false,
 		const float _speedMultiplier = NORMAL_MULTI);
 
-	/// @brief 再生中エフェクトを止める
-	/// @param _effType 止めたいエフェクトの種類
-	/// @param _arrayNum 止めたいエフェクトの配列番号
+	/// <summary>
+	/// 再生中エフェクトを止める
+	/// </summary>
+	/// <param name="_effType">止めたいエフェクトの種類</param>
+	/// <param name="_arrayNum">止めたいエフェクトの配列番号</param>
 	void Stop(const EFF_TYPE _effType, const int _arrayNum);
 
-	/// @brief エフェクトの削除
-	/// @param _effType 削除するエフェクトの種類
-	/// @param _arrayNum 削除するエフェクトの配列番号
+	/// <summary>
+	/// エフェクトの削除
+	/// </summary>
+	/// <param name="_effType">削除するエフェクトの種類</param>
+	/// <param name="_arrayNum">削除するエフェクトの配列番号</param>
 	void Delete(const EFF_TYPE _effType, const int _arrayNum);
 
 	//全停止
@@ -62,40 +70,52 @@ public:
 
 	//全削除
 	void AllDelete(void);
-
-	/// @brief 再生が終わっているか
-	/// @param _effType 確認したいエフェクトの種類
-	/// @param _arrayNum 確認したいエフェクトの配列番号
-	/// @return true:再生が終わった
+	
+	/// <summary>
+	/// 再生が終わっているか
+	/// </summary>
+	/// <param name="_effType">確認したいエフェクトの種類</param>
+	/// <param name="_arrayNum">確認したいエフェクトの配列番号</param>
+	/// <returns>true:再生が終わった</returns>
 	const bool IsEnd(const EFF_TYPE _effType, const int _arrayNum);
 	
-	/// @brief 指定したエフェクトがいくつ再生されているか
-	/// @param _effType 確認したいエフェクト
-	/// @return プレイされている数(-1:そもそもそのエフェクトが存在しない)
+	/// <summary>
+	/// 指定したエフェクトがいくつ再生されているか
+	/// </summary>
+	/// <param name="_effType">確認したいエフェクト</param>
+	/// <returns>プレイされている数(-1:そもそもそのエフェクトが存在しない)</returns>
 	const int GetPlayNum(const EFF_TYPE _effType);
 
-	/// @brief 座標の再設定
-	/// @param _effType エフェクトの種類
-	/// @param _arrayNum 変更したいエフェクトの配列番号
-	/// @param _pos 変更後の座標情報
+	/// <summary>
+	/// 座標の再設定
+	/// </summary>
+	/// <param name="_effType">エフェクトの種類</param>
+	/// <param name="_arrayNum">変更したいエフェクトの配列番号</param>
+	/// <param name="_pos">変更後の座標情報</param>
 	void SetPos(const EFF_TYPE _effType, const int _arrayNum, const VECTOR _pos);
-	
-	/// @brief 回転の再設定
-	/// @param _effType エフェクトの種類
-	/// @param _arrayNum 変更したいエフェクトの配列番号
-	/// @param _quaRot 変更後の回転情報
+
+	/// <summary>
+	/// 回転の再設定
+	/// </summary>
+	/// <param name="_effType">エフェクトの種類</param>
+	/// <param name="_arrayNum">変更したいエフェクトの配列番号</param>
+	/// <param name="_quaRot">変更後の回転情報</param>
 	void SetQuaRot(const EFF_TYPE _effType, const int _arrayNum, const Quaternion _quaRot);
 	
-	/// @brief 大きさの再設定
-	/// @param _effType エフェクトの種類
-	/// @param _arrayNum 変更したいエフェクトの配列番号
-	/// @param _scl 変更後の大きさ
+	/// <summary>
+	/// 大きさの再設定
+	/// </summary>
+	/// <param name="_effType">エフェクトの種類</param>
+	/// <param name="_arrayNum">変更したいエフェクトの配列番号</param>
+	/// <param name="_scl">変更後の大きさ</param>
 	void SetScale(const EFF_TYPE _effType, const int _arrayNum, const VECTOR _scl);
 
-	/// @brief 速度の再設定
-	/// @param _effType エフェクトの種類
-	/// @param _arrayNum 変更したいエフェクトの配列番号
-	/// @param _speedMultiplier 変更後の速度倍率 
+	/// <summary>
+	/// 速度の再設定
+	/// </summary>
+	/// <param name="_effType">エフェクトの種類</param>
+	/// <param name="_arrayNum">変更したいエフェクトの配列番号</param>
+	/// <param name="_speedMultiplier">変更後の速度倍率 </param>
 	void SetSpeed(const EFF_TYPE _effType, const int _arrayNum, const float _speedMultiplier);
 
 private:
@@ -119,13 +139,17 @@ private:
 		int playNum;						//プレイ中のエフェクトの数
 	};
 
-	static constexpr float NORMAL_MULTI = 1.0f;	//通常倍率
+	//通常倍率
+	static constexpr float NORMAL_MULTI = 1.0f;	
 
-	std::map<EFF_TYPE, EffectData> effects_;	//エフェクト関連
+	//エフェクトデータ
+	std::map<EFF_TYPE, EffectData> effects_;	
 
-	/// @brief もう一度再生
-	/// @param _effType もう一度再生させるエフェクトの種類
-	/// @param _arrayNum もう一度再生させる配列
+	/// <summary>
+	/// もう一度再生
+	/// </summary>
+	/// <param name="_effType">もう一度再生させるエフェクトの種類</param>
+	/// <param name="_arrayNum">もう一度再生させる配列</param>
 	void RePlay(const EFF_TYPE _effType, const int _arrayNum);
 };
 

@@ -46,11 +46,13 @@ public :
 		MAX				//タグの数管理用	※タグに使わないでください
 	};
 
-	/// @brief コンストラクタ
-	/// @param _parent 親情報
-	/// @param _tags 自身の衝突用タグ
-	/// @param _geometry 当たり判定の形状
-	/// @param _notHitTags 衝突させないタグ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="_owner">親情報</param>
+	/// <param name="_tag">自身の衝突用タグ</param>
+	/// <param name="_geometry">当たり判定の形状</param>
+	/// <param name="_notHitTags">衝突させないタグ</param>
 	Collider(ObjectBase& _owner, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags);
 
 	// デストラクタ
@@ -77,8 +79,10 @@ public :
 	//終了処理(所持者の解放時に置く)
 	void Kill(void);
 
-	/// @brief 当たった時の処理
-	/// @param _collider 相手のコライダ
+	/// <summary>
+	/// 当たった時の処理
+	/// </summary>
+	/// <param name="_collider">相手のコライダ</param>
 	void OnHit(const std::weak_ptr<Collider> _collider);
 
 	/// <summary>

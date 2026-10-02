@@ -29,38 +29,29 @@ void Cannon::Init(void)
 
 void Cannon::Update(void)
 {
+	//弾の更新
 	for (auto& shot : shots_)
 	{
 		shot->Update();
 	}
 
-	//取得中なら
-	if (state_ == STATE::GOT)
-	{
-		//生成カウンタ
-		createCnt_ += SceneManager::GetInstance().GetDeltaTime();
-
-		if (createCnt_ > CREATE_TIME)
-		{
-			CreateShot();
-			createCnt_ = 0.0f;
-		}
-	}
-
 	//共通更新
 	BattleItemBase::Update();
 
+	//大砲の角度を設定
 	trans_.quaRot = trans_.quaRot.Mult(Quaternion::Euler(VGet(Utility::Deg2RadF(ANGLE_X),0.0f, 0.0f)));
 	trans_.Update();
 }
 
 void Cannon::Draw(void)
 {
+	//弾の描画
 	for (auto& shot : shots_)
 	{
 		shot->Draw();
 	}
 
+	//共通描画
 	BattleItemBase::Draw();
 }
 
@@ -96,4 +87,19 @@ void Cannon::CreateShot(void)
 
 	//配列追加
 	shots_.emplace_back(std::move(shot));
+}
+
+void Cannon::UpdateGot(void)
+{
+	//生成カウンタ
+	createCnt_ += SceneManager::GetInstance().GetDeltaTime();
+
+	if (createCnt_ > CREATE_TIME)
+	{
+		CreateShot();
+		createCnt_ = 0.0f;
+	}
+
+	//共通更新
+	BattleItemBase::UpdateGot();
 }

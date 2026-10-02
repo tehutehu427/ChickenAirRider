@@ -8,10 +8,12 @@ class CharacterAction : public ActionBase
 {
 public:
 
-	/// @brief コンストラクタ
-	/// @param _player 親情報
-	/// @param _chara キャラクターの情報
-	/// @param _logic 行動情報
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="_player">親情報</param>
+	/// <param name="_chara">キャラクターの情報</param>
+	/// <param name="_logic">行動情報</param>
 	CharacterAction(Player& _player, Character& _chara, LogicBase& _logic);
 
 	//デストラクタ

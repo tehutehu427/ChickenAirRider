@@ -26,13 +26,16 @@ public:
 
 	// 大きさ
 	VECTOR scl;
+
 	// 回転
 	VECTOR rot;
+
 	// 位置
 	VECTOR pos;			//基本位置
 	VECTOR localPos;	//相対位置
 	VECTOR overAllPos;	//総合位置
 
+	//行列
 	MATRIX matScl;		//大きさ(行列)
 	MATRIX matRot;		//回転(行列)
 	MATRIX matPos;		//位置(行列)
@@ -69,5 +72,4 @@ public:
 
 	// 対象方向を取得
 	VECTOR GetDir(const VECTOR& vec) const;
-
 };

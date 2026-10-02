@@ -82,46 +82,61 @@ public:
 	//解放
 	void Destroy(void)override;
 
-	/// @brief サウンドの追加
-	/// @param _name サウンド名
-	/// @param _id サウンドのID
-	/// @param _soundType サウンドの種類
-	/// @return true：追加完了
+	/// <summary>
+	/// サウンドの追加
+	/// </summary>
+	/// <param name="_name">サウンド名</param>
+	/// <param name="_id">サウンドのID</param>
+	/// <param name="_soundType">サウンドの種類</param>
+	/// <param name="_volumePercent">音量(%表記)</param>
+	/// <returns>true：追加完了</returns>
 	const bool Add(const SOUND_NAME _name, const int _id, const TYPE _soundType, const int _volumePercent = PERCENT_MAX);
 
-	/// @brief 音源の再生
-	/// @param _src リソース種類
-	/// @param _playType 再生種類
+	/// <summary>
+	/// 音源の再生
+	/// </summary>
+	/// <param name="_name">サウンド名</param>
+	/// <param name="_playType">再生タイプ</param>
 	void Play(const SOUND_NAME _name, const PLAYTYPE _playType);
 
-	/// @brief 音源の停止
-	/// @param _src リソース種類
+	/// <summary>
+	/// 音源の停止
+	/// </summary>
+	/// <param name="_name">サウンド名</param>
 	void Stop(const SOUND_NAME _name);
 
 	//全音源の停止
 	void StopAll(void);
 
-	/// @brief 再生中かを返す
-	/// @param _src リソース種類
-	/// @return trueの場合再生中,falseの場合再生していない
+	/// <summary>
+	/// 再生中かを返す
+	/// </summary>
+	/// <param name="_name">サウンド名</param>
+	/// <returns>true:再生中</returns>
 	bool IsPlay(const SOUND_NAME _name) const;
-
-	/// @brief 音源単体ごとの音量
-	/// @param _name 音源の名前
-	/// @param _volumePercent 音量(%表記)
+	
+	/// <summary>
+	/// 音源単体ごとの音量の再設定
+	/// </summary>
+	/// <param name="_name">サウンド名</param>
+	/// <param name="_volumePercent">音量(%表記)</param>
 	void SetVolume(const SOUND_NAME _name, const int _volumePercent);
 
 	//読み込んだ音量を設定する
 	void SetLoadedSoundsVolume(void) { for (int i = 0; i < static_cast<int>(TYPE::MAX); i++) { SetSystemVolume(volume_[i], i); } };
 
-	/// @brief 音量の設定
-	/// @param _volumePercent 音量パーセント
-	/// @param _type サウンド種類
+	/// <summary>
+	/// 種類ごとの音量の設定
+	/// </summary>
+	/// <param name="_volumePercent">音量(%表記)</param>
+	/// <param name="_type">サウンド種類</param>
 	void SetSystemVolume(const int _volumePercent, const int _type);
 
-	/// @brief 音量を返す
-	/// @param _type サウンド種類
-	/// @return 指定したサウンド種類の音量を返す
+	/// <summary>
+	/// 音量を返す
+	/// </summary>
+	/// <param name="_type">サウンド種類</param>
+	/// <returns>指定したサウンド種類の音量を返す</returns>
 	const int GetSoundTypeVolume(const int _type) const { return volume_[_type]; }
 
 private:

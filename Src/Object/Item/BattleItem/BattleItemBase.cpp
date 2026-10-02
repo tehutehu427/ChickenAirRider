@@ -39,95 +39,103 @@ void BattleItemBase::Init(void)
 
 void BattleItemBase::Update(void)
 {
-	//死亡ならスキップ
-	if (state_ == STATE::DEAD)return;
-
-	//カウンタ
-	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
-	trans_.pos = movedPos_;
-
-	//生存なら移動
-	if (state_ == STATE::ALIVE)
-	{
-		//生成から少し置いてコライダ生成
-		if (createColCnt_ > CREATE_COL_TIME && !isCreateCol_)
-		{
-			//コライダ生成
-			std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, PLAYER_HIT_RADIUS);
-			MakeCollider(Collider::TAG::BATTLE_ITEM, std::move(geo), { Collider::TAG::BATTLE_ITEM,Collider::TAG::NORMAL_OBJECT,Collider::TAG::GROUND });
-		
-			isCreateCol_ = true;
-		}
-
-		//重力
-		GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);
-
-		//カウンタ
-		createColCnt_ += delta;
-
-		//移動
-		movedPos_ = VAdd(movedPos_, movePow_);
-		movedPos_ = VAdd(movedPos_, gravPow_);
-	}
-
-	//取得なら表示
-	else if (state_ == STATE::GOT)
-	{
-		displayCnt_ += delta;
-
-		//表示時間
-		if (displayCnt_ > ACTIVE_TIME)
-		{
-			//死亡
-			state_ = STATE::DEAD;
-		}
-
-		//所持者
-		const auto& hiter = hiter_.lock();
-
-		//取得者がマシンに乗っていないならスキップ
-		if (!dynamic_cast<const Player&>(hiter->GetOwner()).IsRide())
-		{
-			//死亡
-			state_ = STATE::DEAD;
-			return;
-		}
-
-		//所持者の座標
-		VECTOR hiterPos = hiter->GetOwner().GetTrans().pos;
-		const Sphere& sphere = dynamic_cast<const Sphere&>(hiter->GetGeometry());
-		hiterPos.y += sphere.GetRadius();
-
-		//モデル更新
-		trans_.pos = VAdd(hiterPos, VGet(0.0f, LOCAL_POS_Y, 0.0f));
-		trans_.quaRot = hiter->GetOwner().GetTrans().quaRot;
-		trans_.scl = modelScl_;
-		trans_.Update();
-	}
+	//状態ごとの更新
+	(this->*update_[static_cast<int>(state_)])();
 }
 
 void BattleItemBase::Draw(void)
 {
-	//死亡ならスキップ
-	if (state_ == STATE::DEAD)return;
-
-	//生存中なら
-	else if (state_ == STATE::ALIVE)
-	{
-		//大きく描画
-		DrawBillboard3D(trans_.pos, 0.5f, 0.5f, ALIVE_IMG_SIZE, 0.0f, imgId_, true);
-	}
-	else
-	{
-		//取得者がいないとスキップ
-		if (hiter_.lock() == nullptr)return;
-
-		//取得者の頭上にモデル描画
-		MV1DrawModel(trans_.modelId);
-	}
+	//状態ごとの描画
+	(this->*draw_[static_cast<int>(state_)])();
 }
 
-void BattleItemBase::OnHit(const std::weak_ptr<Collider> _hitCol)
+void BattleItemBase::UpdateAlive(void)
 {
-	ItemBase::OnHit(_hitCol);
+	//移動後座標更新
+	trans_.pos = movedPos_;
+
+	//カウンタ
+	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
+
+	//生成から少し置いてコライダ生成
+	if (createColCnt_ > CREATE_COL_TIME && !isCreateCol_)
+	{
+		//コライダ生成
+		std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, PLAYER_HIT_RADIUS);
+		MakeCollider(Collider::TAG::BATTLE_ITEM, std::move(geo), { Collider::TAG::BATTLE_ITEM,Collider::TAG::NORMAL_OBJECT,Collider::TAG::GROUND });
+
+		isCreateCol_ = true;
+	}
+
+	//重力
+	GravityManager::GetInstance().CalcGravity(Utility::DIR_D, gravPow_);
+
+	//カウンタ
+	createColCnt_ += delta;
+
+	//移動
+	movedPos_ = VAdd(movedPos_, movePow_);
+	movedPos_ = VAdd(movedPos_, gravPow_);
+}
+
+void BattleItemBase::UpdateGot(void)
+{
+	//移動後座標更新
+	trans_.pos = movedPos_;
+
+	//カウンタ
+	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
+	displayCnt_ += delta;
+
+	//表示時間
+	if (displayCnt_ > ACTIVE_TIME)
+	{
+		//死亡
+		state_ = STATE::DEAD;
+	}
+
+	//所持者
+	const auto& hiter = hiter_.lock();
+
+	//取得者がマシンに乗っていないならスキップ
+	if (!dynamic_cast<const Player&>(hiter->GetOwner()).IsRide())
+	{
+		//死亡
+		state_ = STATE::DEAD;
+		return;
+	}
+
+	//所持者の座標
+	VECTOR hiterPos = hiter->GetOwner().GetTrans().pos;
+	const Sphere& sphere = dynamic_cast<const Sphere&>(hiter->GetGeometry());
+	hiterPos.y += sphere.GetRadius();
+
+	//モデル更新
+	trans_.pos = VAdd(hiterPos, VGet(0.0f, LOCAL_POS_Y, 0.0f));
+	trans_.quaRot = hiter->GetOwner().GetTrans().quaRot;
+	trans_.scl = modelScl_;
+	trans_.Update();
+}
+
+void BattleItemBase::UpdateDead(void)
+{
+}
+
+void BattleItemBase::DrawAlive(void)
+{
+	//大きく画像描画
+	DrawBillboard3D(trans_.pos, 0.5f, 0.5f, ALIVE_IMG_SIZE, 0.0f, imgId_, true);
+}
+
+void BattleItemBase::DrawGot(void)
+{
+	//取得者がいないとスキップ
+	if (hiter_.lock() == nullptr)return;
+
+	//取得者の頭上にモデル描画
+	MV1DrawModel(trans_.modelId);
+}
+
+void BattleItemBase::DrawDead(void)
+{
 }

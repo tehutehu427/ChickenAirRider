@@ -40,10 +40,6 @@ void PowerUpItemBase::Init(void)
 
 void PowerUpItemBase::Update(void)
 {
-	//死亡ならスキップ
-	if (state_ == STATE::DEAD)return;
-	trans_.pos = movedPos_;
-
 	//状態ごとの更新
 	(this->*update_[static_cast<int>(state_)])();
 }
@@ -60,6 +56,9 @@ void PowerUpItemBase::OnHit(const std::weak_ptr<Collider> _hitCol)
 
 void PowerUpItemBase::UpdateAlive(void)
 {
+	//移動後座標更新
+	trans_.pos = movedPos_;
+
 	//カウンタ
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
@@ -86,6 +85,9 @@ void PowerUpItemBase::UpdateAlive(void)
 
 void PowerUpItemBase::UpdateGot(void)
 {
+	//移動後座標更新
+	trans_.pos = movedPos_;
+
 	//カウンタ
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 

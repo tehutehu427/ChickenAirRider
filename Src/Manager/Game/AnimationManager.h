@@ -15,9 +15,11 @@ public:
 	//解放
 	void Destroy(void);
 
-	/// @brief アニメーションの番号を取得
-	/// @param _name キャラクター名
-	/// @return キャラクターのアニメーション番号
+	/// <summary>
+	/// アニメーションの番号を取得
+	/// </summary>
+	/// <param name="_name">キャラクター名</param>
+	/// <returns>キャラクターのアニメーション番号</returns>
 	const std::unordered_map<std::string, AnimationImportData::AnimationData>& GetAnimationData(const std::string _name);
 
 private:

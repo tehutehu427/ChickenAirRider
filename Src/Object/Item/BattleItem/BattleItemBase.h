@@ -30,9 +30,6 @@ public:
 	//描画
 	virtual void Draw(void)override;
 
-	//当たり判定
-	virtual void OnHit(const std::weak_ptr<Collider> _hitCol)override;
-
 protected:
 
 	//効果時間
@@ -46,5 +43,15 @@ protected:
 
 	//モデル自身の大きさ
 	VECTOR modelScl_;
+
+	//状態ごとの更新
+	void UpdateAlive(void)override;
+	void UpdateGot(void)override;
+	void UpdateDead(void)override;
+
+	//状態ごとの描画
+	void DrawAlive(void)override;
+	void DrawGot(void)override;
+	void DrawDead(void)override;
 };
 

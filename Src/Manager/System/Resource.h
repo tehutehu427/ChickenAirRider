@@ -19,21 +19,26 @@ public:
 		EFFEKSEER,	//エフェクト(エフェクシア)
 		SOUND,		//音関係
 	};
+
 	// コンストラクタ
 	Resource(void);
-
-	/// @brief コンストラクタ
-	/// @param type リソースのタイプ
-	/// @param path リソースまでのパス
+	
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="type">リソースのタイプ</param>
+	/// <param name="path">リソースまでのパス</param>
 	Resource(TYPE type, const std::wstring& path);
 	
-	/// @brief コンストラクタ(IMGS用)
-	/// @param type リソースのタイプ
-	/// @param path リソースまでのパス
-	/// @param numX 横分割数
-	/// @param numY 縦分割数
-	/// @param sizeX 分割後画像の1つ分の横サイズ
-	/// @param sizeY 分割後画像の1つ分の縦サイズ
+	/// <summary>
+	/// コンストラクタ(IMGS用)
+	/// </summary>
+	/// <param name="type">リソースのタイプ</param>
+	/// <param name="path">リソースまでのパス</param>
+	/// <param name="numX">横分割数</param>
+	/// <param name="numY">縦分割数</param>
+	/// <param name="sizeX">分割後画像の1つ分の横サイズ</param>
+	/// <param name="sizeY">分割後画像の1つ分の縦サイズ</param>
 	Resource(TYPE type, const std::wstring& path, int numX, int numY, int sizeX, int sizeY);
 
 	// デストラクタ

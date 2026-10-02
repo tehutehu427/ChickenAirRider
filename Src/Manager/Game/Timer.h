@@ -5,8 +5,10 @@ class Timer
 {
 public:
 
-	/// @brief コンストラクタ
-	/// @param _timeLimit 時間制限(0.0だと無制限)
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="">時間制限(0.0だと無制限)</param>
 	Timer(void);
 	
 	//デストラクタ
@@ -39,10 +41,12 @@ public:
 	//残り時間の取得
 	const float GetRemainingTime(void)const;
 
-	/// @brief 指定秒数以下になったか
-	/// @param _time 指定秒
-	/// @return 指定秒数以下だった
-	const bool IsUnderSeconds(const float _time) { return GetRemainingTime() < _time; }
+	/// <summary>
+	/// 指定秒数以下になったか
+	/// </summary>
+	/// <param name="_time">指定秒</param>
+	/// <returns>指定秒数以下だった</returns>
+	const bool IsUnderSeconds(const float _time)const { return GetRemainingTime() < _time; }
 
 	//位置の設定
 	void SetPos(const Vector2 _pos) { pos_ = _pos; }

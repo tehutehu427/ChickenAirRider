@@ -15,9 +15,11 @@ public:
 		MAX
 	};
 
-	/// @brief コンストラクタ
-	/// @param _pos 生成座標
-	/// @param _vec 移動方向
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="_pos">生成座標</param>
+	/// <param name="_vec">移動方向</param>
 	ItemBase(const VECTOR& _pos,const VECTOR& _vec);
 
 	//デストラクタ
