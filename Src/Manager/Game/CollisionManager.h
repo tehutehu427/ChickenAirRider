@@ -50,22 +50,28 @@ private:
 	//デストラクタ
 	~CollisionManager(void)override;
 
-	/// @brief オブジェクトの距離による当たり判定前の判定
-	/// @param _obj1 オブジェクト1
-	/// @param _obj2 オブジェクト2
-	/// @return true:当たり判定をする
+	/// <summary>
+	/// オブジェクトの距離による事前当たり判定
+	/// </summary>
+	/// <param name="_obj1">オブジェクト1</param>
+	/// <param name="_obj2">オブジェクト2</param>
+	/// <returns>true:当たり判定を開始する</returns>
 	const bool IsBroudCollision(const ObjectBase& _obj1, const ObjectBase& _obj2);
 
-	/// @brief 当たり判定をするタグか
-	/// @param _col1 1つ目のコライダ
-	/// @param _col2 2つ目のコライダ
-	/// @return true:当たり判定するタグだった
+	/// <summary>
+	/// 当たり判定をするタグか
+	/// </summary>
+	/// <param name="_col1">1つ目のコライダ</param>
+	/// <param name="_col2">2つ目のコライダ</param>
+	/// <returns>当たり判定するタグだった</returns>
 	const bool IsCollisionTag(const Collider& _col1, const Collider& _col2)const;
 
-	/// @brief 当たり判定
-	/// @param _col1 1つ目のコライダ
-	/// @param _col2 2つ目のコライダ
-	/// @return true:当たった
+	/// <summary>
+	/// 当たり判定
+	/// </summary>
+	/// <param name="_col1">1つ目のコライダ</param>
+	/// <param name="_col2">2つ目のコライダ</param>
+	/// <returns>true:当たった</returns>
 	const bool IsCollision(const Collider& _col1, const Collider& _col2)const;
 };
 

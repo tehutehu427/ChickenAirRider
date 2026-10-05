@@ -150,21 +150,21 @@ private:
 	//カメラと分割スクリーンの生成
 	void CreateCameraAndSplitScreens(const int _playerNum);
 	
-	// デフォルトコンストラクタをprivateにして、
-	// 外部から生成できない様にする
+	//コンストラクタ
 	SceneManager(void);
-	// デストラクタも同様
+
+	//デストラクタ
 	~SceneManager(void)override;
 
-	// デルタタイムをリセットする
+	//デルタタイムをリセットする
 	void ResetDeltaTime(void);
 
-	/// <summary>
-	/// シーン変更時のリセット等
-	/// </summary>
-	/// <param name="_isFade">フェードの有無(true:フェードあり)</param>
+	///<summary>
+	///シーン変更時のリセット等
+	///</summary>
+	///<param name="_isFade">フェードの有無(true:フェードあり)</param>
 	void ResetChangeScene(const bool _isFade);
 
-	// フェード
+	//フェード
 	void Fade(void);
 };

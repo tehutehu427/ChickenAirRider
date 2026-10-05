@@ -72,16 +72,23 @@ protected:
 	//通常色
 	static constexpr int NORMAL_COLOR = 0xffffff;
 
-	//親情報
-	const VECTOR& pos_;			//親の座標
-	const VECTOR& movedPos_;	//親の移動後座標
-	const Quaternion& quaRot_;	//親の回転
+	//親の座標
+	const VECTOR& pos_;			
+	
+	//親の移動後座標
+	const VECTOR& movedPos_;	
+
+	//親の回転
+	const Quaternion& quaRot_;	
 
 	//当たった情報
 	HitResult hitResult_;
 
-	/// @brief コンストラクタ(外部で作る必要のない基底なのでprotected)
-	/// @param _pos 追従する親の座標
-	/// @param _rot 追従する親の回転
+	/// <summary>
+	/// コンストラクタ(外部で作る必要のない基底なのでprotected)
+	/// </summary>
+	/// <param name="_pos">追従する親の座標</param>
+	/// <param name="_movedPos">追従する親の移動後座標</param>
+	/// <param name="_rot">追従する親の回転</param>
 	Geometry(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot);
 };

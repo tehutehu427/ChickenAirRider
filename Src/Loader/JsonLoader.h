@@ -7,10 +7,12 @@ class JsonLoader : public ILoader<T>
 {
 public:
 
-	/// @brief ロード
-	/// @param _filename jsonファイル名
-	/// @return データ
-	std::vector<T> Load(const std::string& _filename) override
+    /// <summary>
+    ///  jsonファイルをロードしてデータを取得する
+    /// </summary>
+    /// <param name="_filename">jsonファイル名</param>
+    /// <returns>対応データ</returns>
+    std::vector<T> Load(const std::string& _filename) override
 	{
         //ファイル名
         std::ifstream ifs(_filename);

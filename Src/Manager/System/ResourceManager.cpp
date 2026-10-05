@@ -15,6 +15,9 @@ void ResourceManager::Init(void)
 #pragma region 画像
 
 	//アイテム画像のパス
+	std::wstring FaderImage = PATH_IMG + L"Fader/";
+
+	//アイテム画像のパス
 	std::wstring itemImage = PATH_IMG + L"Item/";
 
 	//タイトル画像のパス
@@ -31,6 +34,10 @@ void ResourceManager::Init(void)
 
 	//イベントのUI画像のパス
 	std::wstring eventImage = uiImage + L"Event/";
+
+	//フェード画像
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, FaderImage + L"Fade.png");
+	resourcesMap_.emplace(SRC::FADE, std::move(res));
 
 	//箱ひび画像
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"BoxCrack.png");

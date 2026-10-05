@@ -5,15 +5,20 @@
 class Model : public Geometry
 {
 public:
-
-	/// @brief コンストラクタ
-	/// @param _pos 追従する親の座標
-	/// @param _rot 追従する親の回転
-	/// @param _modelId 追従する親のモデルID
+	
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="_pos">追従する親の座標</param>
+	/// <param name="_movedPos">追従する親の移動後座標</param>
+	/// <param name="_rot">追従する親の回転</param>
+	/// <param name="_modelId">追従する親のモデルID</param>
 	Model(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const int _modelId);
 
-	/// @brief コピーコンストラクタ
-	/// @param _copyBase コピー元
+	/// <summary>
+	/// コピーコンストラクタ
+	/// </summary>
+	/// <param name="_copyBase">コピー元</param>
 	Model(const Model& _copyBase);
 
 	//デストラクタ
@@ -50,7 +55,12 @@ public:
 
 private:
 
-	int parentModelId_;					//親のモデルID
-	MV1_COLL_RESULT_POLY hitLineInfo_;	//当たった時の情報(線)
-	MV1_COLL_RESULT_POLY_DIM hitInfo_;	//当たった時の情報(球、カプセル)
+	//親のモデルID
+	int parentModelId_;					
+	
+	//当たった時の情報(線)
+	MV1_COLL_RESULT_POLY hitLineInfo_;	
+
+	//当たった時の情報(球、カプセル)
+	MV1_COLL_RESULT_POLY_DIM hitInfo_;
 };

@@ -100,7 +100,6 @@ private:
 
 	//更新用
 	std::array<PixelFunc, static_cast<int>(SHADER_TYPE::MAX)> updateShader_;
-	//TODO：ピクセルシェーダーのカウンタ関係の調整
 
 	//有効な分割数
 	int activeViewCount_;

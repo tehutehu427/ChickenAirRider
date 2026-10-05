@@ -32,15 +32,19 @@ public:
 
 	//描画
 	void Draw(void);
-
-	/// @brief パワーアップアイテム生成
-	/// @param _pos	生成位置
-	/// @param _num 生成数(指定なしならランダム)
+	
+	/// <summary>
+	/// パワーアップアイテム生成
+	/// </summary>
+	/// <param name="_pos">生成位置</param>
+	/// <param name="_num">生成数(指定なしならランダム)</param>
 	void CreatePowerUpItem(const VECTOR _pos, const int _num = -1);
 
-	/// @brief バトルアイテム生成
-	/// @param _pos	生成位置
-	/// @param _num 生成数(指定なしならランダム)
+	/// <summary>
+	/// バトルアイテム生成
+	/// </summary>
+	/// <param name="_pos">生成位置</param>
+	/// <param name="_num">生成数(指定なしならランダム)</param>
 	void CreateBattleItem(const VECTOR _pos, const int _num = -1);
 
 	//生成タイプの設定
@@ -109,4 +113,3 @@ private:
 	//バトルアイテム生成
 	std::unique_ptr<BattleItemBase> CreateCannon(const VECTOR& _pos, const VECTOR& _vec);
 };
-

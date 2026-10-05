@@ -6,13 +6,18 @@ class Sphere : public Geometry
 {
 public:
 
-	/// @brief コンストラクタ
-	/// @param _pos 追従する親の座標
-	/// @param _radius 半径
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="_pos">追従する親の座標</param>
+	/// <param name="_movedPos">追従する親の移動後座標</param>
+	/// <param name="_radius">半径</param>
 	Sphere(const VECTOR& _pos, const VECTOR& _movedPos, const  float _radius);
 
-	/// @brief コピーコンストラクタ
-	/// @param _copyBase コピー元
+	/// <summary>
+	/// コピーコンストラクタ
+	/// </summary>
+	/// <param name="_copyBase">コピー元</param>
 	Sphere(const Sphere& _copyBase);
 
 	//デストラクタ
@@ -46,6 +51,9 @@ public:
 
 private:
 
-	float radius_;						//半径
-	MV1_COLL_RESULT_POLY_DIM hitInfo_;	//当たった時の情報(モデル)
+	//半径
+	float radius_;						
+
+	//当たった時の情報(モデル)
+	MV1_COLL_RESULT_POLY_DIM hitInfo_;	
 };

@@ -14,9 +14,11 @@ class LoaderManager : public Singleton<LoaderManager<T>>
 
 public:
 
-    /// @brief ファイルの全データを取得
-    /// @param _fileName ファイル名 
-    /// @return データ
+    /// <summary>
+    /// ファイルの全データを取得
+    /// </summary>
+    /// <param name="_fileName">ファイル名</param>
+    /// <returns>データ</returns>
     const std::vector<T>& GetfileData(const std::string& _fileName)
     {
         //ロード済みか

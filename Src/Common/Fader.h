@@ -1,6 +1,5 @@
 #pragma once
-#include <functional>
-#include <unordered_map>
+#include <array>
 
 class Fader
 {
@@ -17,10 +16,10 @@ public:
 	};
 
 	//コンストラクタ
-	Fader();
+	Fader(void);
 
 	//デストラクタ
-	~Fader();
+	~Fader(void);
 
 	//初期化
 	void Init(void);
@@ -29,7 +28,7 @@ public:
 	void Update(void);
 
 	//描画
-	void Draw(void);		
+	void Draw(void);
 	
 	//指定フェードを開始する
 	void SetFade(const STATE _state);
@@ -69,19 +68,18 @@ private:
 
 	//画像の拡大率
 	float rate_;
+	
+	//関数ポインタ
+	using Func = void(Fader::*)(void);
 
 	//状態別更新処理の管理
-	std::unordered_map<STATE, std::function<void(void)>> stateUpdateMap_;
-
-	//処理の登録
-	void RegisterStateUpdate(const STATE _state, const std::function<void(void)> _func);
+	std::array<Func, static_cast<int>(STATE::MAX)> stateUpdateMap_;
 
 	//状態別更新処理
-	void UpdateFadeIn();
-	void UpdateFadeOut();
-	void UpdateNone() {};
+	void UpdateFadeIn(void);
+	void UpdateFadeOut(void);
+	void UpdateNone(void);
 
 	//円が他のくりぬき処理
-	void SpriteMask();
-
+	void SpriteMask(void)const;
 };

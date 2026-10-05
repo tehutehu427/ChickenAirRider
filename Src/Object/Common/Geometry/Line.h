@@ -6,15 +6,20 @@ class Line : public Geometry
 {
 public:
 
-	/// @brief コンストラクタ
-	/// @param _pos 追従する親の座標
-	/// @param _rot 追従する親の回転
-	/// @param _localPosPoint1 1つ目の点の座標
-	/// @param _localPosPoint2 2つ目の点の座標
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="_pos">追従する親の座標</param>
+	/// <param name="_movedPos"></param>
+	/// <param name="_rot">追従する親の回転</param>
+	/// <param name="_localPosPoint1">1つ目の点の座標</param>
+	/// <param name="_localPosPoint2">2つ目の点の座標</param>
 	Line(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR& _localPosPoint1, const VECTOR& _localPosPoint2);
 
-	/// @brief コピーコンストラクタ
-	/// @param _copyBase コピー元
+	/// <summary>
+	/// コピーコンストラクタ
+	/// </summary>
+	/// <param name="_copyBase">コピー元</param>
 	Line(const Line& _copyBase);
 
 	// デストラクタ
@@ -63,8 +68,12 @@ public:
 
 private:
 
-	VECTOR localPosPoint1_;	//1つ目の点の座標
-	VECTOR localPosPoint2_;	//2つ目の点の座標
+	//1つ目の点の座標
+	VECTOR localPosPoint1_;	
 
-	MV1_COLL_RESULT_POLY hitInfo_;	//当たった時の情報(モデル)
+	//2つ目の点の座標
+	VECTOR localPosPoint2_;	
+
+	//当たった時の情報(モデル)
+	MV1_COLL_RESULT_POLY hitInfo_;	
 };

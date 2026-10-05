@@ -1,5 +1,6 @@
 #pragma once
 
+//®”‚Ì3ŸŒ³ƒxƒNƒgƒ‹
 struct IntVector3
 {
 	int x;

@@ -7,9 +7,11 @@ class CsvLoader : public ILoader<T>
 {
 public:
 
-    /// @brief ロード
-    /// @param _filename csvファイル名
-    /// @return データ
+    /// <summary>
+	/// csvファイルをロードしてデータを取得する
+    /// </summary>
+    /// <param name="_filename">csvファイル名</param>
+    /// <returns>データ</returns>
     std::vector<T> Load(const std::string& _filename) override {
         std::ifstream ifs(_filename);
         std::vector<T> result;

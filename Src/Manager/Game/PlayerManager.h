@@ -56,9 +56,16 @@ private:
 	//デストラクタ
 	~PlayerManager(void)override;
 
-	/// @brief プレイヤーの生成
-	/// @param _playerIndex プレイヤー番号
+	/// <summary>
+	/// プレイヤーの生成
+	/// </summary>
+	/// <param name="_playerIndex">プレイヤー番号</param>
 	void CreateUserPlayer(const int _playerIndex);
+	
+	/// <summary>
+	/// NPCプレイヤーの生成
+	/// </summary>
+	/// <param name="_playerIndex">プレイヤー番号</param>
 	void CreateNpcPlayer(const int _playerIndex);
 };
 

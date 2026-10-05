@@ -22,6 +22,9 @@ public:
 	{
 		NONE,
 
+		//フェード
+		FADE,				//フェード画像
+
 		//キャラクターモデル
 		CHICKEN,			//チキンモデル
 
@@ -124,8 +127,6 @@ public:
 		RANK_FOUR,		//4位
 		RESULT_BACK,	//リザルト背景
 		CURTAIN,		//カーテン
-
-		//サウンド
 
 		//BGM
 		TITLE_BGM,		//タイトルBGM

@@ -30,15 +30,23 @@ public:
 	// 回転
 	VECTOR rot;
 
-	// 位置
-	VECTOR pos;			//基本位置
-	VECTOR localPos;	//相対位置
-	VECTOR overAllPos;	//総合位置
+	//基本位置
+	VECTOR pos;			
 
-	//行列
-	MATRIX matScl;		//大きさ(行列)
-	MATRIX matRot;		//回転(行列)
-	MATRIX matPos;		//位置(行列)
+	//相対位置
+	VECTOR localPos;	
+
+	//総合位置
+	VECTOR overAllPos;	
+
+	//大きさ(行列)
+	MATRIX matScl;
+
+	//回転(行列)
+	MATRIX matRot;
+
+	//位置(行列)
+	MATRIX matPos;
 
 	// 回転
 	Quaternion quaRot;

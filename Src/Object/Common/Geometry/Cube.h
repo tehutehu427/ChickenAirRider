@@ -14,21 +14,29 @@ public:
 		VECTOR axis[3];
 	};
 
-	/// @brief コンストラクタ
-	/// @param _pos 追従する親の座標
-	/// @param _rot 追従する親の回転
-	/// @param _min 親から見た、箱の最小地点
-	/// @param _max 親から見た、箱の最大地点
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="_pos">追従する親の座標</param>
+	/// <param name="_movedPos">追従する親の移動後座標</param>
+	/// <param name="_rot">追従する親の回転</param>
+	/// <param name="_min">親から見た、箱の最小地点</param>
+	/// <param name="_max">親から見た、箱の最大地点</param>
 	Cube(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max);
 	
-	/// @brief コンストラクタ
-	/// @param _pos 追従する親の座標
-	/// @param _rot 追従する親の回転
-	/// @param _halfSize 箱の半分サイズ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="_pos">追従する親の座標</param>
+	/// <param name="_movedPos">追従する親の移動後座標</param>
+	/// <param name="_rot">追従する親の回転</param>
+	/// <param name="_halfSize">箱の半分サイズ</param>
 	Cube(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR _halfSize);
 
-	/// @brief コピーコンストラクタ
-	/// @param _copyBase コピー元
+	/// <summary>
+	/// コピーコンストラクタ
+	/// </summary>
+	/// <param name="_copyBase">コピー元</param>
 	Cube(const Cube& _copyBase);
 
 	//デストラクタ
