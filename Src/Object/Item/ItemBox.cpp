@@ -72,19 +72,16 @@ void ItemBox::Load(void)
 void ItemBox::Init(void)
 {
 	//当たり判定
-	std::unique_ptr<Geometry> geo = std::make_unique<Cube>(trans_.pos, trans_.pos, trans_.quaRot, BOX_HALF);
+	std::unique_ptr<Geometry> geo = std::make_unique<Cube>(trans_.pos, trans_.pos, trans_.quaRot, BROUD_RADIUS, BOX_HALF);
 	MakeCollider(Collider::TAG::ITEM_BOX, std::move(geo), { Collider::TAG::FOOT });
 
 	//足元の判定
-	geo = std::make_unique<Line>(trans_.pos, trans_.pos, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
+	geo = std::make_unique<Line>(trans_.pos, trans_.pos, footLine_, BROUD_RADIUS, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	MakeCollider(Collider::TAG::FOOT, std::move(geo), { Collider::TAG::ITEM_BOX });
 
 	//変数
 	health_ = HEALTH_MAX;
 	invincible_ = INVINCIBLE_SPIN;
-
-	//当たり判定前
-	broudRadius_ = BROUD_RADIUS;
 
 	//更新
 	trans_.Update();
@@ -133,15 +130,15 @@ void ItemBox::Draw(void)
 	renderer_->Draw(trans_.modelId, *material_);
 }
 
-void ItemBox::OnHit(const std::weak_ptr<Collider> _hitCol)
+void ItemBox::OnHit(const Collider* _hitCol)
 {
 	//足元
 	const auto& footCol = collider_[FOOT_COL];
 
-	const auto& hitCol = _hitCol.lock();
+	const auto& hitCol = _hitCol;
 	const auto& hitTag = hitCol->GetTag();
 
-	if (hitTag == Collider::TAG::SPIN && invincible_ < 0)
+	if (hitCol->IsIncludeMyTag({ Collider::TAG::SPIN }) && invincible_ < 0)
 	{
 		//スピンをもつのはプレイヤーのみ
 		const auto& player = dynamic_cast<const Player&>(hitCol->GetOwner());
@@ -152,7 +149,7 @@ void ItemBox::OnHit(const std::weak_ptr<Collider> _hitCol)
 		//無敵時間リセット
 		invincible_ = INVINCIBLE_SPIN;
 	}
-	else if (hitTag == Collider::TAG::CANNON_SHOT && invincible_ < 0)
+	else if (hitCol->IsIncludeMyTag({ Collider::TAG::CANNON_SHOT }) && invincible_ < 0)
 	{
 		//ショット
 		const auto& shot = dynamic_cast<const CannonShot&>(hitCol->GetOwner());
@@ -163,8 +160,7 @@ void ItemBox::OnHit(const std::weak_ptr<Collider> _hitCol)
 		//無敵時間リセット
 		invincible_ = CannonShot::INVINCIBLE;
 	}
-	else if (hitTag == Collider::TAG::GROUND
-		|| hitTag == Collider::TAG::NORMAL_OBJECT)
+	else if (hitCol->IsIncludeMyTag({ Collider::TAG::GROUND, Collider::TAG::NORMAL_OBJECT }))
 	{
 		if (footCol->IsHit())
 		{

@@ -1,21 +1,35 @@
 #include"../pch.h"
+#include "../../Manager/Game/CollisionManager.h"
 #include "../ObjectBase.h"
 #include "Geometry/Geometry.h"
 #include "Collider.h"
 
-Collider::Collider(ObjectBase& _owner, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags) :
+Collider::Collider(ObjectBase& _owner, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags, CollisionManager* _colMng) :
 	owner_(_owner),
 	myTag_(_tag),
 	geometry_(std::move(_geometry)),
-	notHitTags_(_notHitTags)
+	notHitTags_(_notHitTags),
+	colMng_(_colMng)
 {
 	isHit_ = false;
 	isDead_ = false;
+
+	//マネージャーに登録
+	if(colMng_ != nullptr)
+	{
+		colMng_->AddCollider(this);
+	}
 }
 
 Collider::~Collider(void)
 {
 	notHitTags_.clear();
+
+	//マネージャーから削除
+	if (colMng_ != nullptr)
+	{
+		colMng_->DeleteCollider(this);
+	}
 }
 
 void Collider::Kill(void)
@@ -23,7 +37,7 @@ void Collider::Kill(void)
 	isDead_ = true;
 }
 
-void Collider::OnHit(const std::weak_ptr<Collider> _collider)
+void Collider::OnHit(const Collider* _collider)
 {
 	//死亡済み
 	if (isDead_)return;

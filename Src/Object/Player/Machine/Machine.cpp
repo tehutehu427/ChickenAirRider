@@ -32,7 +32,6 @@ void Machine::Load(void)
 void Machine::Init(void)
 {
 	//初期化
-	broudRadius_ = BROUD_RADIUS;
 	invincible_ = 0;
 
 	//ダメージの初期化
@@ -66,10 +65,10 @@ void Machine::Draw(void)
 	MV1DrawModel(trans_.modelId);
 }
 
-void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
+void Machine::OnHit(const Collider* _hitCol)
 {
 	//相手コライダ
-	const auto& hitCol = _hitCol.lock();
+	const auto& hitCol = _hitCol;
 
 	if (hitCol->IsIncludeMyTag({Collider::TAG::SPIN}))
 	{
@@ -107,11 +106,11 @@ void Machine::OnHit(const std::weak_ptr<Collider> _hitCol)
 void Machine::CreateCol(void)
 {
 	//コライダ生成
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, radius_);
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, BROUD_RADIUS, radius_);
 	MakeCollider(Collider::TAG::MACHINE, std::move(geo), { Collider::TAG::MACHINE_RIDE });
 
 	//乗車判定コライダ
-	geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, RIDE_COL_RADIUS);
+	geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, BROUD_RADIUS, RIDE_COL_RADIUS);
 	MakeCollider(Collider::TAG::MACHINE_RIDE, std::move(geo), { Collider::TAG::MACHINE,Collider::TAG::MACHINE_RIDE });
 }
 

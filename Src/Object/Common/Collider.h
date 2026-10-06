@@ -3,6 +3,7 @@
 #include<set>
 #include"Geometry/Geometry.h"
 
+class CollisionManager;
 class ObjectBase;
 
 class Collider
@@ -53,7 +54,8 @@ public :
 	/// <param name="_tag">自身の衝突用タグ</param>
 	/// <param name="_geometry">当たり判定の形状</param>
 	/// <param name="_notHitTags">衝突させないタグ</param>
-	Collider(ObjectBase& _owner, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags);
+	/// <param name="_colMng">自己格納用のマネージャー</param>
+	Collider(ObjectBase& _owner, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags, CollisionManager* _colMng);
 
 	// デストラクタ
 	~Collider(void);
@@ -83,7 +85,7 @@ public :
 	/// 当たった時の処理
 	/// </summary>
 	/// <param name="_collider">相手のコライダ</param>
-	void OnHit(const std::weak_ptr<Collider> _collider);
+	void OnHit(const Collider* _collider);
 
 	/// <summary>
 	/// 指定されたタグが自分の衝突用タグに含まれているか
@@ -100,6 +102,9 @@ public :
 	const bool IsIncludeNotHitTag(const std::set<TAG>& _tags)const;
 
 private:
+
+	//自己格納用のマネージャー
+	CollisionManager* colMng_;
 
 	//所持者
 	ObjectBase& owner_;

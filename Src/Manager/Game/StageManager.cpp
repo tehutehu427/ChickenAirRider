@@ -194,25 +194,25 @@ void StageManager::UpdateLoop(void)
 
 std::unique_ptr<Geometry> StageManager::MakeSphere(const Transform& _trans, const StageImportData& _data)
 {
-	return std::make_unique<Sphere>(_trans.pos, _trans.pos, _data.radius);
+	return std::make_unique<Sphere>(_trans.pos, _trans.pos, _data.broudRadius, _data.radius);
 }
 
 std::unique_ptr<Geometry> StageManager::MakeCapsule(const Transform& _trans, const StageImportData& _data)
 {
-	return std::make_unique<Capsule>(_trans.pos, _trans.pos, _trans.quaRot, _data.localPos1, _data.localPos2, _data.radius);
+	return std::make_unique<Capsule>(_trans.pos, _trans.pos, _trans.quaRot, _data.broudRadius, _data.localPos1, _data.localPos2, _data.radius);
 }
 
 std::unique_ptr<Geometry> StageManager::MakeCube(const Transform& _trans, const StageImportData& _data)
 {
-	return std::make_unique<Cube>(_trans.pos, _trans.pos, _trans.quaRot, _data.localPos1, _data.localPos2);
+	return std::make_unique<Cube>(_trans.pos, _trans.pos, _trans.quaRot, _data.broudRadius, _data.localPos1, _data.localPos2);
 }
 
 std::unique_ptr<Geometry> StageManager::MakeLine(const Transform& _trans, const StageImportData& _data)
 {
-	return std::make_unique<Line>(_trans.pos, _trans.pos, _trans.quaRot, _data.localPos1, _data.localPos2);
+	return std::make_unique<Line>(_trans.pos, _trans.pos, _trans.quaRot, _data.broudRadius, _data.localPos1, _data.localPos2);
 }
 
 std::unique_ptr<Geometry> StageManager::MakeModel(const Transform& _trans, const StageImportData& _data)
 {
-	return std::make_unique<Model>(_trans.pos, _trans.pos, _trans.quaRot, _trans.modelId);
+	return std::make_unique<Model>(_trans.pos, _trans.pos, _trans.quaRot, _data.broudRadius, _trans.modelId);
 }

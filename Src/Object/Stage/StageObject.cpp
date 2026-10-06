@@ -9,9 +9,6 @@ StageObject::StageObject(const StageImportData& _data,const int _modelId)
 	trans_.pos = _data.position;
 	trans_.scl = _data.scale;
 	trans_.quaRot = _data.quaternion;
-
-	//“–‚½‚è”»’è‘O
-	broudRadius_ = _data.broudRadius;
 }
 
 StageObject::~StageObject(void)
@@ -38,7 +35,7 @@ void StageObject::Draw(void)
 	MV1DrawModel(trans_.modelId);
 }
 
-void StageObject::OnHit(const std::weak_ptr<Collider> _hitCol)
+void StageObject::OnHit(const Collider* _hitCol)
 {
 }
 

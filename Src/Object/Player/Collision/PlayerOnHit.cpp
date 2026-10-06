@@ -45,10 +45,10 @@ void PlayerOnHit::Load(void)
 {
 }
 
-void PlayerOnHit::OnHit(const std::weak_ptr<Collider> _hitCol)
+void PlayerOnHit::OnHit(const Collider* _hitCol)
 {
 	//タグ
-	const auto& hitTag = _hitCol.lock()->GetTag();
+	const auto& hitTag = _hitCol->GetTag();
 
 	//タグごとのヒット処理
 	if (onHit_[static_cast<int>(hitTag)] != nullptr)
@@ -57,10 +57,10 @@ void PlayerOnHit::OnHit(const std::weak_ptr<Collider> _hitCol)
 	}
 }
 
-void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
+void PlayerOnHit::NormalObjectOnHit(const Collider* _hitCol)
 {
 	//相手コライダ
-	const auto& hitCol = _hitCol.lock();
+	const auto& hitCol = _hitCol;
 
 	//当たった形状情報
 	const auto& hitGeo = hitCol->GetGeometry();
@@ -97,14 +97,14 @@ void PlayerOnHit::NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol)
 	}
 }
 
-void PlayerOnHit::GroundOnHit(const std::weak_ptr<Collider> _hitCol)
+void PlayerOnHit::GroundOnHit(const Collider* _hitCol)
 {
 	//各コライダ
 	auto& mainCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::MAIN)];
 	auto& groundPreCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED)];
 
 	//相手コライダ
-	const auto& hitCol = _hitCol.lock();
+	const auto& hitCol = _hitCol;
 
 	//相手モデル
 	Model& model = dynamic_cast<Model&>(hitCol->GetGeometry());
@@ -169,7 +169,7 @@ void PlayerOnHit::GroundOnHit(const std::weak_ptr<Collider> _hitCol)
     player_.SetPrePos(pos);
 }
 
-void PlayerOnHit::RideMachineOnHit(const std::weak_ptr<Collider> _hitCol)
+void PlayerOnHit::RideMachineOnHit(const Collider* _hitCol)
 {
 	//機体に乗っているなら処理なし
 	if (player_.GetState() == Player::STATE::RIDE_MACHINE)return;
@@ -178,7 +178,7 @@ void PlayerOnHit::RideMachineOnHit(const std::weak_ptr<Collider> _hitCol)
 	if (!player_.GetLogic().IsGetOff())return;
 
 	//相手コライダ
-	const auto& hitCol = _hitCol.lock();
+	const auto& hitCol = _hitCol;
 
 	//機体確定なので型変換
 	const Machine& machine = dynamic_cast<const Machine&>(hitCol->GetOwner());
@@ -193,13 +193,13 @@ void PlayerOnHit::RideMachineOnHit(const std::weak_ptr<Collider> _hitCol)
 	player_.RideMachine(std::move(machineMng.GetMachine(machine)));
 }
 
-void PlayerOnHit::PowerUpItemOnHit(const std::weak_ptr<Collider> _hitCol)
+void PlayerOnHit::PowerUpItemOnHit(const Collider* _hitCol)
 {
 	//身体が当たっていないならスキップ
 	if (!player_.GetColliders()[static_cast<int>(Player::COL_VALUE::MAIN)]->IsHit())return;
 
 	//相手コライダ
-	const auto& hitCol = _hitCol.lock();
+	const auto& hitCol = _hitCol;
 
 	//消失済みならスキップ
 	if (hitCol->IsDead())return;
@@ -217,17 +217,17 @@ void PlayerOnHit::PowerUpItemOnHit(const std::weak_ptr<Collider> _hitCol)
 	player_.SetParam(player_.GetParam() + param);
 }
 
-void PlayerOnHit::BattleItemOnHit(const std::weak_ptr<Collider> _hitCol)
+void PlayerOnHit::BattleItemOnHit(const Collider* _hitCol)
 {
 }
 
-void PlayerOnHit::SpinOnHit(const std::weak_ptr<Collider> _hitCol)
+void PlayerOnHit::SpinOnHit(const Collider* _hitCol)
 {
 	//無敵中なら処理しない
 	if (!player_.IsEndInvincible() || player_.GetState() != Player::STATE::RIDE_MACHINE)return;
 
 	//相手コライダ
-	const auto& hitCol = _hitCol.lock();
+	const auto& hitCol = _hitCol;
 
 	//SE
 	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::DAMAGE, SoundManager::PLAYTYPE::BACK);
@@ -248,13 +248,13 @@ void PlayerOnHit::SpinOnHit(const std::weak_ptr<Collider> _hitCol)
 	player_.SetInvincible(INVINCIBLE_SPIN);
 }
 
-void PlayerOnHit::CannonShotOnHit(const std::weak_ptr<Collider> _hitCol)
+void PlayerOnHit::CannonShotOnHit(const Collider* _hitCol)
 {
 	//無敵中なら処理しない
 	if (!player_.IsEndInvincible() || player_.GetState() != Player::STATE::RIDE_MACHINE)return;
 
 	//相手コライダ
-	const auto& hitCol = _hitCol.lock();
+	const auto& hitCol = _hitCol;
 
 	//SE
 	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::DAMAGE, SoundManager::PLAYTYPE::BACK);
@@ -272,7 +272,7 @@ void PlayerOnHit::CannonShotOnHit(const std::weak_ptr<Collider> _hitCol)
 	player_.SetInvincible(CannonShot::INVINCIBLE);
 }
 
-void PlayerOnHit::GlideStageOnHit(const std::weak_ptr<Collider> _hitCol)
+void PlayerOnHit::GlideStageOnHit(const Collider* _hitCol)
 {
 	//既に移動終了なら判定しない
 	if (!player_.GetCanMove())return;

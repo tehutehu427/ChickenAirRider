@@ -56,7 +56,6 @@ void CannonShot::Load(void)
 void CannonShot::Init(void)
 {
 	//èâä˙âª
-	broudRadius_ = BROUD_RADIUS;
 	aliveCnt_ = 0.0f;
 	blastCnt_ = 0.0f;
 	state_ = STATE::ALIVE;
@@ -71,10 +70,10 @@ void CannonShot::Init(void)
 	attack_ = dynamic_cast<const Player&>(holder->GetOwner()).GetAttack() * ATTACK_MULTI;
 
 	//ÉRÉâÉCÉ_
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SHOT_RADIUS);
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, BROUD_RADIUS, SHOT_RADIUS);
 	MakeCollider(Collider::TAG::CANNON_SHOT, std::move(geo), { tag,Collider::TAG::FOOT,Collider::TAG::SPIN});
 
-	geo = std::make_unique<Sphere>(trans_.pos, movedPos_, SEARCH_RADIUS);
+	geo = std::make_unique<Sphere>(trans_.pos, movedPos_, BROUD_RADIUS, SEARCH_RADIUS);
 	MakeCollider(Collider::TAG::SEARCH, std::move(geo), { tag,Collider::TAG::FOOT,Collider::TAG::SPIN,Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT});
 	
 	trans_.Update();

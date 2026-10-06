@@ -16,7 +16,7 @@ public:
 	//ヒット情報
 	struct HitResult
 	{
-		float t = 1.0f;        // 0～1：衝突した割合（移動途中の位置）
+		float t = 1.0f;				 // 0～1：衝突した割合（移動途中の位置）
 		VECTOR point = { 0,0,0 };
 		VECTOR normal = { 0,0,0 };
 		float depth = 0.0f;   
@@ -48,6 +48,9 @@ public:
 	//親の回転を返す
 	inline const Quaternion& GetColRot(void)const { return quaRot_; }
 
+	//事前当たり判定用半径の取得
+	inline const float GetBroudRadius(void)const { return broudRadius_; }
+
 	//当たった法線方向の取得
 	inline const VECTOR GetHitNormal(void)const { return hitResult_.normal; }
 
@@ -72,6 +75,9 @@ protected:
 	//通常色
 	static constexpr int NORMAL_COLOR = 0xffffff;
 
+	//事前当たり判定用半径
+	float broudRadius_;
+
 	//親の座標
 	const VECTOR& pos_;			
 	
@@ -90,5 +96,6 @@ protected:
 	/// <param name="_pos">追従する親の座標</param>
 	/// <param name="_movedPos">追従する親の移動後座標</param>
 	/// <param name="_rot">追従する親の回転</param>
-	Geometry(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot);
+	/// <param name="_broudRadius">事前当たり判定用半径</param>
+	Geometry(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const float _broudRadius);
 };

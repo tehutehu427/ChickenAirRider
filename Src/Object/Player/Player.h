@@ -62,7 +62,7 @@ public:
 	void Draw(void)override;
 
 	//“–‚½‚è”»’èˆ—
-	void OnHit(const std::weak_ptr<Collider> _hitCol)override;
+	void OnHit(const Collider* _hitCol)override;
 
 	//ƒpƒbƒh”Ô†‚Ìæ“¾
 	const KeyConfig::JOYPAD_NO GetPadNo(void)const { return padNo_; }

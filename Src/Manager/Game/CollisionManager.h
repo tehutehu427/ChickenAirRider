@@ -25,10 +25,10 @@ public:
 	static constexpr int COL_UPDATE_FRAME = 0;		//更新ディレイフレーム
 	
 	//コライダの追加
-	void AddCollider(const std::shared_ptr<Collider> _collider);
+	void AddCollider(Collider* _collider);
 
-	//必要なくなったコライダの削除(更新の最後に置く)
-	void Sweep(void);
+	//コライダの削除
+	void DeleteCollider(Collider* _collider);
 
 	//更新
 	void Update(void);
@@ -39,7 +39,7 @@ public:
 private:
 
 	//当たり判定格納
-	std::vector<std::shared_ptr<Collider>>colliders_;
+	std::vector<Collider*>colliders_;
 
 	//当たり判定するフレーム
 	int updateFrame_;
@@ -51,27 +51,26 @@ private:
 	~CollisionManager(void)override;
 
 	/// <summary>
-	/// オブジェクトの距離による事前当たり判定
+	/// コライダーの形状衝突判定
 	/// </summary>
-	/// <param name="_obj1">オブジェクト1</param>
-	/// <param name="_obj2">オブジェクト2</param>
-	/// <returns>true:当たり判定を開始する</returns>
-	const bool IsBroudCollision(const ObjectBase& _obj1, const ObjectBase& _obj2);
+	/// <param name="_col1">コライダ１</param>
+	/// <param name="_col2">コライダ２</param>
+	void CollisionGeometry(Collider* _col1, Collider* _col2);
 
 	/// <summary>
-	/// 当たり判定をするタグか
+	/// タグごとの判定
 	/// </summary>
-	/// <param name="_col1">1つ目のコライダ</param>
-	/// <param name="_col2">2つ目のコライダ</param>
-	/// <returns>当たり判定するタグだった</returns>
-	const bool IsCollisionTag(const Collider& _col1, const Collider& _col2)const;
+	/// <param name="_col1">コライダ１</param>
+	/// <param name="_col2">コライダ２</param>
+	/// <returns>true:当たり判定をする</returns>
+	const bool CheckCollisionTags(const Collider* _col1, const Collider* _col2)const;
 
 	/// <summary>
-	/// 当たり判定
+	/// 判定前の処理
 	/// </summary>
-	/// <param name="_col1">1つ目のコライダ</param>
-	/// <param name="_col2">2つ目のコライダ</param>
-	/// <returns>true:当たった</returns>
-	const bool IsCollision(const Collider& _col1, const Collider& _col2)const;
+	/// <param name="_col1">コライダ１</param>
+	/// <param name="_col2">コライダ２</param>
+	/// <returns>true:当たり判定をする</returns>
+	const bool PreCollision(Collider* _col1, Collider* _col2)const;
 };
 

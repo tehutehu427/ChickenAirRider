@@ -38,7 +38,7 @@ public:
 	virtual void Draw(void)override;
 
 	//“–‚½‚è”»’è
-	virtual void OnHit(const std::weak_ptr<Collider> _hitCol)override;
+	virtual void OnHit(const Collider* _hitCol)override;
 
 	//€–S”»’è‚Ìæ“¾
 	const bool IsDead(void)const { return state_ == STATE::DEAD; }
@@ -97,7 +97,7 @@ protected:
 	bool isCreateCol_;
 
 	//æ“¾Ò
-	std::weak_ptr<Collider> hiter_;
+	const Collider* hiter_;
 
 	//ŠÖ”ƒ|ƒCƒ“ƒ^
 	using Func = void(ItemBase::*)(void);

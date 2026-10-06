@@ -11,8 +11,9 @@ public:
 	/// </summary>
 	/// <param name="_pos">追従する親の座標</param>
 	/// <param name="_movedPos">追従する親の移動後座標</param>
+	/// <param name="_broudRadius">事前当たり判定用半径</param>
 	/// <param name="_radius">半径</param>
-	Sphere(const VECTOR& _pos, const VECTOR& _movedPos, const  float _radius);
+	Sphere(const VECTOR& _pos, const VECTOR& _movedPos, const float _broudRadius, const float _radius);
 
 	/// <summary>
 	/// コピーコンストラクタ

@@ -80,12 +80,12 @@ void Player::Load(void)
 	machine_->Load();
 
 	//当たり判定生成
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, NORMAL_RADIUS);
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, BROUD_RADIUS, NORMAL_RADIUS);
 	MakeCollider(playerTag_, std::move(geo), { playerTag_,Collider::TAG::FOOT });
 
 	//接地判定用の当たり判定
-	geo = std::make_unique<Line>(trans_.pos, movedPos_, footLine_, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
-	MakeCollider(Collider::TAG::FOOT, std::move(geo), { playerTag_,Collider::TAG::FOOT });
+	geo = std::make_unique<Line>(trans_.pos, movedPos_, footLine_, BROUD_RADIUS, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
+	MakeCollider(Collider::TAG::FOOT, std::move(geo), { playerTag_,Collider::TAG::FOOT,Collider::TAG::SPIN });
 
 	//行動基準
 	(this->*createLogic_[static_cast<int>(operation_)])();
@@ -100,9 +100,6 @@ void Player::Load(void)
 
 void Player::Init(void)
 {
-	//当たり判定前用
-	broudRadius_ = BROUD_RADIUS;
-
 	//座標
 	movedPos_ = VAdd(Utility::VECTOR_ZERO, VScale(LOCAL_POS, static_cast<float>(playerIndex_)));
 	trans_.pos = movedPos_;
@@ -169,7 +166,7 @@ void Player::Draw(void)
 	(this->*draw_[static_cast<int>(state_)])();
 }
 
-void Player::OnHit(const std::weak_ptr<Collider> _hitCol)
+void Player::OnHit(const Collider* _hitCol)
 {
 	//ヒット処理
 	onHit_->OnHit(_hitCol);
@@ -281,10 +278,11 @@ void Player::Damage(const float _damage)
 void Player::CreateSpinCollider(void)
 {
 	//スピンコライダを生成
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, machine_->GetHitRadius() + SPIN_RADIUS);
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, BROUD_RADIUS + SPIN_RADIUS, machine_->GetHitRadius() + SPIN_RADIUS);
 	MakeCollider(Collider::TAG::SPIN, std::move(geo),
 		{ playerTag_,
 		Collider::TAG::FOOT,
+		Collider::TAG::SPIN,
 		Collider::TAG::NORMAL_OBJECT,
 		Collider::TAG::GROUND,
 		Collider::TAG::MACHINE_RIDE });

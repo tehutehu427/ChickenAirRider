@@ -24,7 +24,7 @@ void BattleItemBase::Load(void)
 void BattleItemBase::Init(void)
 {
 	//コライダ生成
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, OBJECT_HIT_RADIUS);
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, BROUD_RADIUS, OBJECT_HIT_RADIUS);
 	MakeCollider(Collider::TAG::BATTLE_ITEM, std::move(geo),
 		{ Collider::TAG::POWER_UP
 		,Collider::TAG::PLAYER1
@@ -61,7 +61,7 @@ void BattleItemBase::UpdateAlive(void)
 	if (createColCnt_ > CREATE_COL_TIME && !isCreateCol_)
 	{
 		//コライダ生成
-		std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, PLAYER_HIT_RADIUS);
+		std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, BROUD_RADIUS, PLAYER_HIT_RADIUS);
 		MakeCollider(Collider::TAG::BATTLE_ITEM, std::move(geo), { Collider::TAG::BATTLE_ITEM,Collider::TAG::NORMAL_OBJECT,Collider::TAG::GROUND });
 
 		isCreateCol_ = true;
@@ -95,7 +95,7 @@ void BattleItemBase::UpdateGot(void)
 	}
 
 	//所持者
-	const auto& hiter = hiter_.lock();
+	const auto& hiter = hiter_;
 
 	//取得者がマシンに乗っていないならスキップ
 	if (!dynamic_cast<const Player&>(hiter->GetOwner()).IsRide())
@@ -130,7 +130,7 @@ void BattleItemBase::DrawAlive(void)
 void BattleItemBase::DrawGot(void)
 {
 	//取得者がいないとスキップ
-	if (hiter_.lock() == nullptr)return;
+	if (hiter_ == nullptr)return;
 
 	//取得者の頭上にモデル描画
 	MV1DrawModel(trans_.modelId);

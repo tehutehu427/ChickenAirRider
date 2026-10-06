@@ -30,7 +30,7 @@ public:
 	void Draw(void)override;
 
 	//“–‚½‚è”»’èˆ—
-	void OnHit(const std::weak_ptr<Collider> _hitCol)override;
+	void OnHit(const Collider* _hitCol)override;
 
 	//“–‚½‚è”»’è‚Ìì¬
 	void CreateCollider(const Collider::TAG _tag, std::unique_ptr<Geometry> _geo);

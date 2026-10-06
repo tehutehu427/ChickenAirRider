@@ -25,7 +25,7 @@ void PowerUpItemBase::Load(void)
 void PowerUpItemBase::Init(void)
 {
 	//コライダ生成(接地用)
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, OBJECT_HIT_RADIUS);
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, BROUD_RADIUS, OBJECT_HIT_RADIUS);
 	MakeCollider(Collider::TAG::POWER_UP, std::move(geo),
 		{ Collider::TAG::POWER_UP
 		,Collider::TAG::PLAYER1
@@ -49,7 +49,7 @@ void PowerUpItemBase::Draw(void)
 	ItemBase::Draw();
 }
 
-void PowerUpItemBase::OnHit(const std::weak_ptr<Collider> _hitCol)
+void PowerUpItemBase::OnHit(const Collider* _hitCol)
 {
 	ItemBase::OnHit(_hitCol);
 }
@@ -66,7 +66,7 @@ void PowerUpItemBase::UpdateAlive(void)
 	if (createColCnt_ > CREATE_COL_TIME && !isCreateCol_)
 	{
 		//コライダ生成
-		std::unique_ptr<Geometry>geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, PLAYER_HIT_RADIUS);
+		std::unique_ptr<Geometry>geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, BROUD_RADIUS, PLAYER_HIT_RADIUS);
 		MakeCollider(Collider::TAG::POWER_UP, std::move(geo), { Collider::TAG::POWER_UP,Collider::TAG::NORMAL_OBJECT,Collider::TAG::GROUND });
 
 		isCreateCol_ = true;

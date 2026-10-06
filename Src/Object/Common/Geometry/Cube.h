@@ -20,9 +20,10 @@ public:
 	/// <param name="_pos">追従する親の座標</param>
 	/// <param name="_movedPos">追従する親の移動後座標</param>
 	/// <param name="_rot">追従する親の回転</param>
+	/// <param name="_broudRadius">事前当たり判定用半径</param>
 	/// <param name="_min">親から見た、箱の最小地点</param>
 	/// <param name="_max">親から見た、箱の最大地点</param>
-	Cube(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR _min, const VECTOR _max);
+	Cube(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const float _broudRadius, const VECTOR _min, const VECTOR _max);
 	
 	/// <summary>
 	/// コンストラクタ
@@ -30,8 +31,9 @@ public:
 	/// <param name="_pos">追従する親の座標</param>
 	/// <param name="_movedPos">追従する親の移動後座標</param>
 	/// <param name="_rot">追従する親の回転</param>
+	/// <param name="_broudRadius">事前当たり判定用半径</param>
 	/// <param name="_halfSize">箱の半分サイズ</param>
-	Cube(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR _halfSize);
+	Cube(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const float _broudRadius, const VECTOR _halfSize);
 
 	/// <summary>
 	/// コピーコンストラクタ

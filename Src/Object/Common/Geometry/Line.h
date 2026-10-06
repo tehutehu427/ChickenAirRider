@@ -12,9 +12,10 @@ public:
 	/// <param name="_pos">追従する親の座標</param>
 	/// <param name="_movedPos"></param>
 	/// <param name="_rot">追従する親の回転</param>
+	/// <param name="_broudRadius">事前当たり判定用半径</param>
 	/// <param name="_localPosPoint1">1つ目の点の座標</param>
 	/// <param name="_localPosPoint2">2つ目の点の座標</param>
-	Line(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const VECTOR& _localPosPoint1, const VECTOR& _localPosPoint2);
+	Line(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const float _broudRadius, const VECTOR& _localPosPoint1, const VECTOR& _localPosPoint2);
 
 	/// <summary>
 	/// コピーコンストラクタ

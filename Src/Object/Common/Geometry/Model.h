@@ -12,8 +12,9 @@ public:
 	/// <param name="_pos">追従する親の座標</param>
 	/// <param name="_movedPos">追従する親の移動後座標</param>
 	/// <param name="_rot">追従する親の回転</param>
+	/// <param name="_broudRadius">事前当たり判定用半径</param>
 	/// <param name="_modelId">追従する親のモデルID</param>
-	Model(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const int _modelId);
+	Model(const VECTOR& _pos, const VECTOR& _movedPos, const Quaternion& _rot, const float _broudRadius, const int _modelId);
 
 	/// <summary>
 	/// コピーコンストラクタ

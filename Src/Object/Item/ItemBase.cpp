@@ -43,7 +43,6 @@ void ItemBase::Init(void)
 	movePow_.z = vec_.z * static_cast<float>(Utility::GetRandomValue(MOVE_POW_MIN, MOVE_POW_MAX));
 
 	//初期化
-	broudRadius_ = BROUD_RADIUS;
 	isCreateCol_ = false;
 
 	//初期更新
@@ -62,16 +61,12 @@ void ItemBase::Draw(void)
 	(this->*draw_[static_cast<int>(state_)])();
 }
 
-void ItemBase::OnHit(const std::weak_ptr<Collider> _hitCol)
+void ItemBase::OnHit(const Collider* _hitCol)
 {
 	//所持者
-	const auto& hiter = _hitCol.lock();
+	const auto& hiter = _hitCol;
 	
-	if (hiter->GetTag() == Collider::TAG::PLAYER1
-		|| hiter->GetTag() == Collider::TAG::PLAYER2
-		|| hiter->GetTag() == Collider::TAG::PLAYER3
-		|| hiter->GetTag() == Collider::TAG::PLAYER4
-		)
+	if (hiter->IsIncludeMyTag({Collider::TAG::PLAYER1, Collider::TAG::PLAYER2, Collider::TAG::PLAYER3, Collider::TAG::PLAYER4}))
 	{
 		//コライダ削除
 		DeleteAllCollider();
@@ -82,7 +77,7 @@ void ItemBase::OnHit(const std::weak_ptr<Collider> _hitCol)
 		//取得者
 		hiter_ = _hitCol;
 	}
-	else if (hiter->GetTag() == Collider::TAG::NORMAL_OBJECT)
+	else if (hiter->IsIncludeMyTag({ Collider::TAG::NORMAL_OBJECT }))
 	{
 		//コライダ
 		auto& mainCol = collider_[static_cast<int>(COL_VALUE::OBJECT)];
@@ -107,7 +102,7 @@ void ItemBase::OnHit(const std::weak_ptr<Collider> _hitCol)
 		//移動しなくなる
 		movePow_ = Utility::VECTOR_ZERO;
 	}
-	else if (hiter->GetTag() == Collider::TAG::GROUND)
+	else if (hiter->IsIncludeMyTag({ Collider::TAG::GROUND }))
 	{
 		//コライダ
 		auto& mainCol = collider_[static_cast<int>(COL_VALUE::OBJECT)];
@@ -181,7 +176,7 @@ void ItemBase::DrawAlive(void)
 void ItemBase::DrawGot(void)
 {
 	//所持者
-	const auto& hiter = hiter_.lock();
+	const auto& hiter = hiter_;
 
 	//取得者がいないとスキップ
 	if (hiter == nullptr)return;

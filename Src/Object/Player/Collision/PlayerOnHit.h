@@ -18,7 +18,7 @@ public:
 	void Load(void);
 
 	//ヒット処理
-	void OnHit(const std::weak_ptr<Collider> _hitCol);
+	void OnHit(const Collider* _hitCol);
 
 private:
 
@@ -32,17 +32,17 @@ private:
 	Player& player_;
 
 	//コライダごとのヒット処理
-	using HitFunc = void(PlayerOnHit::*)(const std::weak_ptr<Collider> _hitCol);
+	using HitFunc = void(PlayerOnHit::*)(const Collider* _hitCol);
 	std::array<HitFunc, static_cast<int>(Collider::TAG::MAX)> onHit_;
 
 	//ヒット処理
-	void NormalObjectOnHit(const std::weak_ptr<Collider> _hitCol);
-	void GroundOnHit(const std::weak_ptr<Collider> _hitCol);
-	void RideMachineOnHit(const std::weak_ptr<Collider> _hitCol);
-	void PowerUpItemOnHit(const std::weak_ptr<Collider> _hitCol);
-	void BattleItemOnHit(const std::weak_ptr<Collider> _hitCol);
-	void SpinOnHit(const std::weak_ptr<Collider> _hitCol);
-	void CannonShotOnHit(const std::weak_ptr<Collider> _hitCol);
-	void GlideStageOnHit(const std::weak_ptr<Collider> _hitCol);
+	void NormalObjectOnHit(const const Collider* _hitCol);
+	void GroundOnHit(const Collider* _hitCol);
+	void RideMachineOnHit(const Collider* _hitCol);
+	void PowerUpItemOnHit(const Collider* _hitCol);
+	void BattleItemOnHit(const Collider* _hitCol);
+	void SpinOnHit(const Collider* _hitCol);
+	void CannonShotOnHit(const Collider* _hitCol);
+	void GlideStageOnHit(const Collider* _hitCol);
 };
 
