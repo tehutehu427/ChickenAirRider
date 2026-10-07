@@ -180,7 +180,7 @@ void ItemBox::OnHit(const Collider* _hitCol)
 	if (health_ < 0)
 	{
 		//ƒRƒ‰ƒCƒ_íœ
-		DeleteAllCollider();
+		SetIsEnabledByAll();
 
 		//Ž€–S”»’è
 		isDead_ = true;

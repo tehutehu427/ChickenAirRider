@@ -58,7 +58,7 @@ void Cannon::Draw(void)
 void Cannon::CreateShot(void)
 {
 	//ŠŽŽÒ
-	const auto& hiter = hiter_.lock();
+	const auto& hiter = hiter_;
 	
 	//‘¬“x
 	VECTOR hiterPos = hiter->GetOwner().GetTrans().pos;

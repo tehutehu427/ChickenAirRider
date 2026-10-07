@@ -12,7 +12,7 @@ Collider::Collider(ObjectBase& _owner, const TAG _tag, std::unique_ptr<Geometry>
 	colMng_(_colMng)
 {
 	isHit_ = false;
-	isDead_ = false;
+	isEnabled_ = true;
 
 	//マネージャーに登録
 	if(colMng_ != nullptr)
@@ -32,15 +32,10 @@ Collider::~Collider(void)
 	}
 }
 
-void Collider::Kill(void)
-{
-	isDead_ = true;
-}
-
 void Collider::OnHit(const Collider* _collider)
 {
-	//死亡済み
-	if (isDead_)return;
+	//無効なら何もしない
+	if (!isEnabled_)return;
 
 	//この当たり判定が当たった
 	isHit_ = true;

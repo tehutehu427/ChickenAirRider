@@ -59,9 +59,6 @@ void DeathMatch::Update(void)
 	//当たり判定更新
 	colMng.Update();
 
-	//当たり判定の破棄
-	colMng.Sweep();
-
 	//ゲームパッドがないならマウス操作なので
 	if (GetJoypadNum() < 1)
 	{

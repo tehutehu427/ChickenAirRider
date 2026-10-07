@@ -36,8 +36,8 @@ void CollisionManager::Update(void)
 
 	for (int i = 0; i < colSize - 1; i++)
 	{
-		//コライダが死亡済みなら
-		if (colliders_[i]->IsDead())
+		//コライダが無効なら
+		if (!colliders_[i]->IsEnabled())
 		{
 			//飛ばす
 			continue;
@@ -45,8 +45,8 @@ void CollisionManager::Update(void)
 
 		for (int j = i + 1; j < colSize; j++)
 		{
-			//コライダが死亡済みなら
-			if (colliders_[i]->IsDead() || colliders_[j]->IsDead())
+			//コライダが無効なら
+			if (!colliders_[i]->IsEnabled() || !colliders_[j]->IsEnabled())
 			{
 				//飛ばす
 				continue;

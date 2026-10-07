@@ -35,9 +35,6 @@ void ItemManager::Update(void)
 	{
 		//アイテムボックスの更新
 		itemBox->Update();
-
-		//当たり判定の整理
-		itemBox->Sweep();
 	}
 
 	//削除された判定を配列から破棄
@@ -47,9 +44,6 @@ void ItemManager::Update(void)
 	{
 		//アイテムの更新
 		item->Update();
-
-		//当たり判定の整理
-		item->Sweep();
 	}
 
 	//デルタタイム

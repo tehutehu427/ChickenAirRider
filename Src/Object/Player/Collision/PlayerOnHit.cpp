@@ -201,8 +201,8 @@ void PlayerOnHit::PowerUpItemOnHit(const Collider* _hitCol)
 	//相手コライダ
 	const auto& hitCol = _hitCol;
 
-	//消失済みならスキップ
-	if (hitCol->IsDead())return;
+	//無効ならスキップ
+	if (!hitCol->IsEnabled())return;
 
 	//SE
 	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::GET_ITEM, SoundManager::PLAYTYPE::BACK);

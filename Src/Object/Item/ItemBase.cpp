@@ -69,7 +69,7 @@ void ItemBase::OnHit(const Collider* _hitCol)
 	if (hiter->IsIncludeMyTag({Collider::TAG::PLAYER1, Collider::TAG::PLAYER2, Collider::TAG::PLAYER3, Collider::TAG::PLAYER4}))
 	{
 		//ƒRƒ‰ƒCƒ_íœ
-		DeleteAllCollider();
+		SetIsEnabledByAll();
 
 		//€–S”»’è
 		state_ = STATE::GOT;

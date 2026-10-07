@@ -47,9 +47,6 @@ void PlayerManager::Update(void)
 	{
 		//XV
 		player->Update();
-		
-		//“–‚½‚è”»’è‚Ì®—
-		player->Sweep();
 	}
 }
 

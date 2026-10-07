@@ -99,7 +99,7 @@ void Machine::OnHit(const Collider* _hitCol)
 	if (IsDead())
 	{
 		//“–‚½‚è”»’èíœ‚µ‚Ä‚¨‚­
-		DeleteAllCollider();
+		SetIsEnabledByAll();
 	}
 }
 
@@ -117,7 +117,7 @@ void Machine::CreateCol(void)
 void Machine::DeleteCol(void)
 {
 	//ƒRƒ‰ƒCƒ_íœ
-	DeleteAllCollider();
+	SetIsEnabledByAll();
 }
 
 void Machine::SetScale(const VECTOR& _scale)

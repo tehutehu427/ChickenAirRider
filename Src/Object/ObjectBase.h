@@ -35,9 +35,6 @@ public:
 	//描画
 	virtual void Draw(void) = 0;
 
-	//当たり判定の削除
-	void Sweep(void);
-
 	/// <summary>
 	/// それぞれの当たり判定後の処理
 	/// </summary>
@@ -77,12 +74,12 @@ protected:
 	/// <param name="_tag">自身の当たり判定タグ</param>
 	/// <param name="_geometry">自身の形状情報</param>
 	/// <param name="_notHitTags">衝突させないタグ</param>
-	void MakeCollider(const Collider::TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags = {});
+	void MakeCollider(const Collider::TAG& _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags = {});
 
-	//該当タグで当たり判定削除
-	void DeleteColliderAtTag(Collider::TAG _tag);
+	//該当タグで当たり判定設定
+	void SetIsEnabledByTag(const Collider::TAG& _tag, const bool _isEnabled);
 
 	//全当たり判定の消去
-	void DeleteAllCollider(void);
+	void SetIsEnabledByAll(void);
 };
 

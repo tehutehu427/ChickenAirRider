@@ -22,16 +22,10 @@ ObjectBase::~ObjectBase(void)
 	for (auto& collider : collider_)
 	{
 		//所持している全コライダの削除
-		collider->Kill();
+		collider->SetIsEnabled(false);
 	}
 
 	collider_.clear();
-}
-
-void ObjectBase::Sweep(void)
-{
-	//削除された判定を配列から破棄
-	std::erase_if(collider_, [](std::shared_ptr<Collider>& _collider) {return _collider->IsDead(); });
 }
 
 void ObjectBase::ChangeModelColor(const COLOR_F _colorScale)
@@ -46,7 +40,7 @@ void ObjectBase::ChangeModelColor(const COLOR_F _colorScale)
 	}
 }
 
-void ObjectBase::MakeCollider(const Collider::TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags)
+void ObjectBase::MakeCollider(const Collider::TAG& _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags)
 {
 	//情報を使ってコライダの作成
 	std::unique_ptr<Collider> collider = std::make_unique<Collider>(*this, _tag, std::move(_geometry), _notHitTags, &CollisionManager::GetInstance());
@@ -55,26 +49,22 @@ void ObjectBase::MakeCollider(const Collider::TAG _tag, std::unique_ptr<Geometry
 	collider_.push_back(std::move(collider));
 }
 
-void ObjectBase::DeleteColliderAtTag(Collider::TAG _tag)
+void ObjectBase::SetIsEnabledByTag(const Collider::TAG& _tag, const bool _isEnabled)
 {
 	for (auto& collider : collider_)
 	{
 		//そのコライダが存在しない　又は　指定タグと違う
 		if (collider == nullptr || collider->GetTag() != _tag)continue;
-		collider->Kill();
+		collider->SetIsEnabled(false);
 	}
-
-	//削除
-	std::erase_if(collider_, [](std::unique_ptr<Collider>& _collider) {return _collider->IsDead(); });
 }
 
-void ObjectBase::DeleteAllCollider(void)
+void ObjectBase::SetIsEnabledByAll(void)
 {
 	for (auto& collider : collider_)
 	{
 		//そのコライダが存在しない
 		if (collider == nullptr)continue;
-		collider->Kill();
+		collider->SetIsEnabled(false);
 	}
-	collider_.clear();
 }

@@ -75,11 +75,11 @@ public :
 	//当たったかの判定の取得
 	inline const bool IsHit(void)const { return isHit_; }
 
-	//終了判定の取得
-	inline const bool IsDead(void)const { return isDead_; }
+	//有効判定の取得
+	inline const bool IsEnabled(void)const { return isEnabled_; }
 
 	//終了処理(所持者の解放時に置く)
-	void Kill(void);
+	void SetIsEnabled(const bool _isEnabled) {isEnabled_ = _isEnabled; }
 
 	/// <summary>
 	/// 当たった時の処理
@@ -121,6 +121,6 @@ private:
 	//当たったかの判定
 	bool isHit_;
 
-	//終了判定
-	bool isDead_;
+	//有効判定
+	bool isEnabled_;
 };

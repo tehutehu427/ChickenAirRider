@@ -291,7 +291,7 @@ void Player::CreateSpinCollider(void)
 void Player::DeleteSpinCollider(void)
 {
 	//スピンコライダを消す
-	DeleteColliderAtTag(Collider::TAG::SPIN);
+	SetIsEnabledByTag(Collider::TAG::SPIN);
 }
 
 void Player::CheckUnder(void)

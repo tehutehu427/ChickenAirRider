@@ -8,7 +8,7 @@
 #include "../../Player/Player.h"
 #include "CannonShot.h"
 
-CannonShot::CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR& _scl, const std::weak_ptr<Collider> _holder, const float _speed)
+CannonShot::CannonShot(const VECTOR& _pos, const Quaternion& _rot, const VECTOR& _scl, const Collider* _holder, const float _speed)
 {
 	movedPos_ = _pos;
 	trans_.pos = _pos;
@@ -63,7 +63,7 @@ void CannonShot::Init(void)
 	movePow_ = Utility::VECTOR_ZERO;
 
 	//所持者
-	const auto& holder = holder_.lock();
+	const auto& holder = holder_;
 	const auto& tag = holder->GetTag();
 
 	//攻撃力
@@ -96,14 +96,17 @@ void CannonShot::Draw(void)
 	(this->*draw_[static_cast<int>(state_)])();
 }
 
-void CannonShot::OnHit(const std::weak_ptr<Collider> _hitCol)
+void CannonShot::OnHit(const Collider* _hitCol)
 {
+	//所有者がいないなら何もしない
+	if (!holder_)return;
+
 	//生きていないなら何もしない
 	if (state_ != STATE::ALIVE)return;
 
 	//所持者
-	const auto& holder = holder_.lock();
-	const auto& hiter = _hitCol.lock();
+	const auto& holder = holder_;
+	const auto& hiter = _hitCol;
 	
 	if (hiter->IsIncludeMyTag({Collider::TAG::PLAYER1, Collider::TAG::PLAYER2, Collider::TAG::PLAYER3, Collider::TAG::PLAYER4, Collider::TAG::MACHINE}))
 	{
@@ -217,7 +220,7 @@ void CannonShot::ChangeStateBlast(void)
 	sphere.SetRadius(BLAST_RADIUS);
 
 	//索敵範囲は削除
-	DeleteColliderAtTag(Collider::TAG::SEARCH);
+	SetIsEnabledByTag(Collider::TAG::SEARCH);
 
 	//爆発エフェクト
 	effect_->Play(EffectController::EFF_TYPE::BLAST, trans_.pos, Utility::VECTOR_ZERO, BLAST_EFFECT_SIZE);
@@ -229,5 +232,5 @@ void CannonShot::ChangeStateDead(void)
 	state_ = STATE::DEAD;
 
 	//当たり判定削除
-	DeleteAllCollider();
+	SetIsEnabledByAll();
 }
