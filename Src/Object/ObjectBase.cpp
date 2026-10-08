@@ -55,16 +55,16 @@ void ObjectBase::SetIsEnabledByTag(const Collider::TAG& _tag, const bool _isEnab
 	{
 		//そのコライダが存在しない　又は　指定タグと違う
 		if (collider == nullptr || collider->GetTag() != _tag)continue;
-		collider->SetIsEnabled(false);
+		collider->SetIsEnabled(_isEnabled);
 	}
 }
 
-void ObjectBase::SetIsEnabledByAll(void)
+void ObjectBase::SetIsEnabledByAll(const bool _isEnabled)
 {
 	for (auto& collider : collider_)
 	{
 		//そのコライダが存在しない
 		if (collider == nullptr)continue;
-		collider->SetIsEnabled(false);
+		collider->SetIsEnabled(_isEnabled);
 	}
 }

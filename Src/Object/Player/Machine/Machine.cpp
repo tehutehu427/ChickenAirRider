@@ -27,6 +27,16 @@ Machine::~Machine(void)
 
 void Machine::Load(void)
 {
+	//コライダ生成
+	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, BROUD_RADIUS, radius_);
+	MakeCollider(Collider::TAG::MACHINE, std::move(geo), { Collider::TAG::MACHINE_RIDE });
+
+	//乗車判定コライダ
+	geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, BROUD_RADIUS, RIDE_COL_RADIUS);
+	MakeCollider(Collider::TAG::MACHINE_RIDE, std::move(geo), { Collider::TAG::MACHINE,Collider::TAG::MACHINE_RIDE });
+
+	//全体を無効化
+	SetIsEnabledByAll(false);
 }
 
 void Machine::Init(void)
@@ -98,26 +108,21 @@ void Machine::OnHit(const Collider* _hitCol)
 	//体力が0以下になったら
 	if (IsDead())
 	{
-		//当たり判定削除しておく
-		SetIsEnabledByAll();
+		//当たり判定無効化
+		SetIsEnabledByAll(false);
 	}
 }
 
 void Machine::CreateCol(void)
 {
-	//コライダ生成
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, BROUD_RADIUS, radius_);
-	MakeCollider(Collider::TAG::MACHINE, std::move(geo), { Collider::TAG::MACHINE_RIDE });
-
-	//乗車判定コライダ
-	geo = std::make_unique<Sphere>(trans_.pos, trans_.pos, BROUD_RADIUS, RIDE_COL_RADIUS);
-	MakeCollider(Collider::TAG::MACHINE_RIDE, std::move(geo), { Collider::TAG::MACHINE,Collider::TAG::MACHINE_RIDE });
+	//コライダ有効化
+	SetIsEnabledByAll(true);
 }
 
 void Machine::DeleteCol(void)
 {
-	//コライダ削除
-	SetIsEnabledByAll();
+	//コライダ無効化
+	SetIsEnabledByAll(false);
 }
 
 void Machine::SetScale(const VECTOR& _scale)

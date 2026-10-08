@@ -87,6 +87,19 @@ void Player::Load(void)
 	geo = std::make_unique<Line>(trans_.pos, movedPos_, footLine_, BROUD_RADIUS, LOCAL_LINE_UP, LOCAL_LINE_DOWN);
 	MakeCollider(Collider::TAG::FOOT, std::move(geo), { playerTag_,Collider::TAG::FOOT,Collider::TAG::SPIN });
 
+	//スピンコライダを生成
+	geo = std::make_unique<Sphere>(trans_.pos, movedPos_, BROUD_RADIUS + SPIN_RADIUS, machine_->GetHitRadius() + SPIN_RADIUS);
+	MakeCollider(Collider::TAG::SPIN, std::move(geo),
+		{ playerTag_,
+		Collider::TAG::FOOT,
+		Collider::TAG::SPIN,
+		Collider::TAG::NORMAL_OBJECT,
+		Collider::TAG::GROUND,
+		Collider::TAG::MACHINE_RIDE });
+
+	//最初は無効化
+	DisableSpinCollider();
+
 	//行動基準
 	(this->*createLogic_[static_cast<int>(operation_)])();
 	logic_->Init();
@@ -275,23 +288,16 @@ void Player::Damage(const float _damage)
 	}
 }
 
-void Player::CreateSpinCollider(void)
+void Player::EnableSpinCollider(void)
 {
-	//スピンコライダを生成
-	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, BROUD_RADIUS + SPIN_RADIUS, machine_->GetHitRadius() + SPIN_RADIUS);
-	MakeCollider(Collider::TAG::SPIN, std::move(geo),
-		{ playerTag_,
-		Collider::TAG::FOOT,
-		Collider::TAG::SPIN,
-		Collider::TAG::NORMAL_OBJECT,
-		Collider::TAG::GROUND,
-		Collider::TAG::MACHINE_RIDE });
+	//スピンコライダを有効化
+	SetIsEnabledByTag(Collider::TAG::SPIN, true);
 }
 
-void Player::DeleteSpinCollider(void)
+void Player::DisableSpinCollider(void)
 {
-	//スピンコライダを消す
-	SetIsEnabledByTag(Collider::TAG::SPIN);
+	//スピンコライダを無効化
+	SetIsEnabledByTag(Collider::TAG::SPIN, false);
 }
 
 void Player::CheckUnder(void)

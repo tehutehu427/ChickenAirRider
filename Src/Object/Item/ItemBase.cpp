@@ -68,8 +68,8 @@ void ItemBase::OnHit(const Collider* _hitCol)
 	
 	if (hiter->IsIncludeMyTag({Collider::TAG::PLAYER1, Collider::TAG::PLAYER2, Collider::TAG::PLAYER3, Collider::TAG::PLAYER4}))
 	{
-		//コライダ削除
-		SetIsEnabledByAll();
+		//コライダ無効化
+		SetIsEnabledByAll(false);
 
 		//死亡判定
 		state_ = STATE::GOT;

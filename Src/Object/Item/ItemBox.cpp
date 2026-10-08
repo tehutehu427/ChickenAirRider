@@ -179,8 +179,8 @@ void ItemBox::OnHit(const Collider* _hitCol)
 	//体力がなくなったら
 	if (health_ < 0)
 	{
-		//コライダ削除
-		SetIsEnabledByAll();
+		//コライダ無効化
+		SetIsEnabledByAll(false);
 
 		//死亡判定
 		isDead_ = true;

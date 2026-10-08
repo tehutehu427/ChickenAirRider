@@ -73,11 +73,14 @@ void CannonShot::Init(void)
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, BROUD_RADIUS, SHOT_RADIUS);
 	MakeCollider(Collider::TAG::CANNON_SHOT, std::move(geo), { tag,Collider::TAG::FOOT,Collider::TAG::SPIN});
 
+	//索敵判定
 	geo = std::make_unique<Sphere>(trans_.pos, movedPos_, BROUD_RADIUS, SEARCH_RADIUS);
 	MakeCollider(Collider::TAG::SEARCH, std::move(geo), { tag,Collider::TAG::FOOT,Collider::TAG::SPIN,Collider::TAG::GROUND,Collider::TAG::NORMAL_OBJECT});
 	
+	//モデル更新
 	trans_.Update();
 
+	//初期更新
 	Update();
 }
 
@@ -219,8 +222,8 @@ void CannonShot::ChangeStateBlast(void)
 	auto& sphere = dynamic_cast<Sphere&>(collider_[static_cast<int>(COL::MAIN)]->GetGeometry());
 	sphere.SetRadius(BLAST_RADIUS);
 
-	//索敵範囲は削除
-	SetIsEnabledByTag(Collider::TAG::SEARCH);
+	//索敵範囲は無効化
+	SetIsEnabledByTag(Collider::TAG::SEARCH, false);
 
 	//爆発エフェクト
 	effect_->Play(EffectController::EFF_TYPE::BLAST, trans_.pos, Utility::VECTOR_ZERO, BLAST_EFFECT_SIZE);
@@ -231,6 +234,6 @@ void CannonShot::ChangeStateDead(void)
 	//死亡
 	state_ = STATE::DEAD;
 
-	//当たり判定削除
-	SetIsEnabledByAll();
+	//当たり判定無効化
+	SetIsEnabledByAll(false);
 }

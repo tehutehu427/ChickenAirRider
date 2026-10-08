@@ -80,6 +80,6 @@ protected:
 	void SetIsEnabledByTag(const Collider::TAG& _tag, const bool _isEnabled);
 
 	//‘S“–‚½‚è”»’è‚ÌÁ‹
-	void SetIsEnabledByAll(void);
+	void SetIsEnabledByAll(const bool _isEnabled);
 };
 

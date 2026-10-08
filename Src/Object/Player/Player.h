@@ -176,10 +176,10 @@ public:
 	void SetCanMove(const bool _canMove) { canMove_ = _canMove; }
 
 	//スピンコライダの生成
-	void CreateSpinCollider(void);
+	void EnableSpinCollider(void);
 
 	//スピンコライダの削除
-	void DeleteSpinCollider(void);
+	void DisableSpinCollider(void);
 
 	//スピンによるモデルの回転
 	const Quaternion& GetModelRot(void)const { return modelQuaRot_; }

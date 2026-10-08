@@ -73,7 +73,6 @@ void MachineManager::Update(void)
 	//íœ‚³‚ê‚½”»’è‚ğ”z—ñ‚©‚ç”jŠü
 	std::erase_if(machines_, [](const std::unique_ptr<Machine>& _machine){return _machine == nullptr;});
 	std::erase_if(machines_, [](const std::unique_ptr<Machine>& _machine){return _machine->IsDead();});
-
 }
 
 void MachineManager::Draw(void)

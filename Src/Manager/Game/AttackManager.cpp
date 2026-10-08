@@ -5,11 +5,10 @@ void AttackManager::LoadOutSide(void)
 {
 }
 
-void AttackManager::AddAttackCollider(const ATTACK_TYPE& _name, const std::weak_ptr<Collider>& _col)
+void AttackManager::AddAttackCollider(const ATTACK_TYPE& _name, const Collider* _col)
 {
 	//登録コライダのポインタ
-	auto addCol = _col.lock();
-	if (!addCol)return;
+	if (!_col)return;
 
 	if (IsRegisterCollider(_col))
 	{
@@ -19,27 +18,24 @@ void AttackManager::AddAttackCollider(const ATTACK_TYPE& _name, const std::weak_
 	}
 
 	//登録
-	colliderAttackTypeList_[addCol.get()].name = _name;
+	colliderAttackTypeList_[_col].name = _name;
 }
 
-void AttackManager::DeleteAttackCollider(const std::weak_ptr<Collider>& _col)
+void AttackManager::DeleteAttackCollider(const Collider* _col)
 {
 	//削除コライダ
-	auto deleteCol = _col.lock();
-	if (!deleteCol)return;
+	if (!_col)return;
 
 	//一致したものを消す
-	colliderAttackTypeList_.erase(deleteCol.get());
+	colliderAttackTypeList_.erase(_col);
 }
 
-void AttackManager::ResetTargetColList(const std::weak_ptr<Collider>& _col)
+void AttackManager::ResetTargetColList(const Collider* _col)
 {
 	//攻撃コライダ
-	auto col = _col.lock();
-	if (!col)return;
+	if (!_col)return;
 
 	//含まれているかを探す
-	auto colPtr = col.get();
 	if (!IsRegisterCollider(_col))
 	{
 		//見つからなかった
@@ -47,18 +43,15 @@ void AttackManager::ResetTargetColList(const std::weak_ptr<Collider>& _col)
 	}
 
 	//リセット
-	colliderAttackTypeList_[colPtr].targetCol.clear();
+	colliderAttackTypeList_[_col].targetCol.clear();
 }
 
-const bool AttackManager::IsCanHit(const std::weak_ptr<Collider>& _atkCol, const std::weak_ptr<Collider>& _hitCol)
+const bool AttackManager::IsCanHit(const Collider* _atkCol, const Collider* _hitCol)
 {
 	//コライダのポインタ
-	auto atkCol = _atkCol.lock();
-	auto hitCol = _hitCol.lock();
-	if (!atkCol || !hitCol)return false;
+	if (!_atkCol || !_hitCol)return false;
 
 	//含まれているかを探す
-	auto atkColPtr = atkCol.get();
 	if (!IsRegisterCollider(_atkCol))
 	{
 		//見つからなかった
@@ -67,9 +60,8 @@ const bool AttackManager::IsCanHit(const std::weak_ptr<Collider>& _atkCol, const
 	}
 
 	//単体ヒット　かつ　既に攻撃済みリストに当たったコライダが登録されているかを調べる
-	auto hitColPtr = hitCol.get();
-	bool isMultiHit = attackDatas_[static_cast<int>(colliderAttackTypeList_[atkColPtr].name)]->isMultiHit;
-	bool isRegist = colliderAttackTypeList_[atkColPtr].targetCol.contains(hitColPtr);
+	bool isMultiHit = attackDatas_[static_cast<int>(colliderAttackTypeList_[_atkCol].name)].isMultiHit;
+	bool isRegist = colliderAttackTypeList_[_atkCol].targetCol.contains(_hitCol);
 	if (!isMultiHit && isRegist)
 	{
 		//当たらない
@@ -80,15 +72,10 @@ const bool AttackManager::IsCanHit(const std::weak_ptr<Collider>& _atkCol, const
 	return true;
 }
 
-const std::weak_ptr<AttackManager::AttackData> AttackManager::GetAttackData(const std::weak_ptr<Collider>& _atkCol, const std::weak_ptr<Collider>& _hitCol)
+const AttackManager::AttackData& AttackManager::GetAttackData(const Collider* _atkCol, const Collider* _hitCol)
 {
 	//コライダのポインタ
-	auto atkCol = _atkCol.lock();
-	auto hitCol = _hitCol.lock();
-	if (!atkCol || !hitCol)return {};
-
-	//ポインタ変換
-	auto atkColPtr = atkCol.get();
+	if (!_atkCol || !_hitCol)return AttackData();
 
 	//含まれているか
 	if (!IsRegisterCollider(_atkCol))
@@ -98,14 +85,13 @@ const std::weak_ptr<AttackManager::AttackData> AttackManager::GetAttackData(cons
 	}
 
 	//見つかったので攻撃済みリストに当たった側を保存する
-	auto hitColPtr = hitCol.get();
-	colliderAttackTypeList_[atkColPtr].targetCol.insert(hitColPtr);
+	colliderAttackTypeList_[_atkCol].targetCol.insert(_hitCol);
 
 	//攻撃情報を返す
-	return attackDatas_[static_cast<int>(colliderAttackTypeList_[atkColPtr].name)];
+	return attackDatas_[static_cast<int>(colliderAttackTypeList_[_atkCol].name)];
 }
 
-void AttackManager::SetAttackData(const ATTACK_TYPE& _name, std::shared_ptr<AttackManager::AttackData> _data)
+void AttackManager::SetAttackData(const ATTACK_TYPE& _name, const AttackData& _data)
 {
 	//攻撃情報を上書き
 	attackDatas_[static_cast<int>(_name)] = _data;
@@ -123,13 +109,13 @@ void AttackManager::Destroy(void)
 {
 	//全削除
 	colliderAttackTypeList_.clear();
-	attackDatas_.fill(nullptr);
+	attackDatas_.fill(AttackData());
 }
 
-const bool AttackManager::IsRegisterCollider(const std::weak_ptr<Collider>& _col)
+const bool AttackManager::IsRegisterCollider(const Collider* _col)
 {
 	//含まれているかを探す
-	auto colPtr = _col.lock().get();
+	auto colPtr = _col;
 	if (!colliderAttackTypeList_.contains(colPtr))
 	{
 		//見つからなかった

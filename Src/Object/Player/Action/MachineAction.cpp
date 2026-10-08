@@ -372,7 +372,7 @@ void MachineAction::Spin(void)
 		snd.Play(SoundManager::SOUND_NAME::SPIN, SoundManager::PLAYTYPE::BACK);
 
 		//スピン開始
-		player_.CreateSpinCollider();
+		player_.EnableSpinCollider();
 		effNum_[EffectController::EFF_TYPE::SPIN] = effectController_->Play(
 			EffectController::EFF_TYPE::SPIN
 			, player_.GetTrans().pos
@@ -400,7 +400,7 @@ void MachineAction::Spin(void)
 			effNum_[EffectController::EFF_TYPE::SPIN]--;
 
 			//スピン終了
-			player_.DeleteSpinCollider();
+			player_.DisableSpinCollider();
 		}
 	}
 }
