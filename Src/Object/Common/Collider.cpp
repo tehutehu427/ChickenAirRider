@@ -1,35 +1,31 @@
 #include"../pch.h"
 #include "../../Manager/Game/CollisionManager.h"
+#include "../../Manager/Game/AttackManager.h"
 #include "../ObjectBase.h"
 #include "Geometry/Geometry.h"
 #include "Collider.h"
 
-Collider::Collider(ObjectBase& _owner, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags, CollisionManager* _colMng) :
+Collider::Collider(ObjectBase& _owner, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags) :
 	owner_(_owner),
 	myTag_(_tag),
 	geometry_(std::move(_geometry)),
-	notHitTags_(_notHitTags),
-	colMng_(_colMng)
+	notHitTags_(_notHitTags)
 {
 	isHit_ = false;
 	isEnabled_ = true;
 
 	//マネージャーに登録
-	if(colMng_ != nullptr)
-	{
-		colMng_->AddCollider(this);
-	}
+	CollisionManager::GetInstance().AddCollider(this);
 }
 
 Collider::~Collider(void)
 {
+	//配列削除
 	notHitTags_.clear();
 
 	//マネージャーから削除
-	if (colMng_ != nullptr)
-	{
-		colMng_->DeleteCollider(this);
-	}
+	CollisionManager::GetInstance().DeleteCollider(this);
+	AttackManager::GetInstance().DeleteAttackCollider(this);
 }
 
 void Collider::OnHit(const Collider* _collider)

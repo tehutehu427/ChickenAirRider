@@ -5,20 +5,13 @@ void AttackManager::LoadOutSide(void)
 {
 }
 
-void AttackManager::AddAttackCollider(const ATTACK_TYPE& _name, const Collider* _col)
+void AttackManager::SetAttackCollider(const Collider* _col, const AttackData& _data)
 {
 	//登録コライダのポインタ
 	if (!_col)return;
 
-	if (IsRegisterCollider(_col))
-	{
-		//エラー防止
-		assert(!"すでに登録しているものを再登録しようとしています");
-		return;
-	}
-
-	//登録
-	colliderAttackTypeList_[_col].name = _name;
+	//攻撃情報を設定
+	attackDatas_[_col] = _data;
 }
 
 void AttackManager::DeleteAttackCollider(const Collider* _col)
@@ -27,7 +20,8 @@ void AttackManager::DeleteAttackCollider(const Collider* _col)
 	if (!_col)return;
 
 	//一致したものを消す
-	colliderAttackTypeList_.erase(_col);
+	attackColliderHitList_.erase(_col);
+	attackDatas_.erase(_col);
 }
 
 void AttackManager::ResetTargetColList(const Collider* _col)
@@ -43,7 +37,7 @@ void AttackManager::ResetTargetColList(const Collider* _col)
 	}
 
 	//リセット
-	colliderAttackTypeList_[_col].targetCol.clear();
+	attackColliderHitList_[_col].clear();
 }
 
 const bool AttackManager::IsCanHit(const Collider* _atkCol, const Collider* _hitCol)
@@ -60,8 +54,8 @@ const bool AttackManager::IsCanHit(const Collider* _atkCol, const Collider* _hit
 	}
 
 	//単体ヒット　かつ　既に攻撃済みリストに当たったコライダが登録されているかを調べる
-	bool isMultiHit = attackDatas_[static_cast<int>(colliderAttackTypeList_[_atkCol].name)].isMultiHit;
-	bool isRegist = colliderAttackTypeList_[_atkCol].targetCol.contains(_hitCol);
+	bool isMultiHit = attackDatas_[_atkCol].isMultiHit;
+	bool isRegist = attackColliderHitList_[_atkCol].contains(_hitCol);
 	if (!isMultiHit && isRegist)
 	{
 		//当たらない
@@ -72,7 +66,7 @@ const bool AttackManager::IsCanHit(const Collider* _atkCol, const Collider* _hit
 	return true;
 }
 
-const AttackManager::AttackData& AttackManager::GetAttackData(const Collider* _atkCol, const Collider* _hitCol)
+const AttackData& AttackManager::GetAttackData(const Collider* _atkCol, const Collider* _hitCol)
 {
 	//コライダのポインタ
 	if (!_atkCol || !_hitCol)return AttackData();
@@ -85,16 +79,10 @@ const AttackManager::AttackData& AttackManager::GetAttackData(const Collider* _a
 	}
 
 	//見つかったので攻撃済みリストに当たった側を保存する
-	colliderAttackTypeList_[_atkCol].targetCol.insert(_hitCol);
+	attackColliderHitList_[_atkCol].insert(_hitCol);
 
 	//攻撃情報を返す
-	return attackDatas_[static_cast<int>(colliderAttackTypeList_[_atkCol].name)];
-}
-
-void AttackManager::SetAttackData(const ATTACK_TYPE& _name, const AttackData& _data)
-{
-	//攻撃情報を上書き
-	attackDatas_[static_cast<int>(_name)] = _data;
+	return attackDatas_[_atkCol];
 }
 
 AttackManager::AttackManager(void)
@@ -108,15 +96,15 @@ AttackManager::~AttackManager(void)
 void AttackManager::Destroy(void)
 {
 	//全削除
-	colliderAttackTypeList_.clear();
-	attackDatas_.fill(AttackData());
+	attackColliderHitList_.clear();
+	attackDatas_.clear();
 }
 
 const bool AttackManager::IsRegisterCollider(const Collider* _col)
 {
 	//含まれているかを探す
 	auto colPtr = _col;
-	if (!colliderAttackTypeList_.contains(colPtr))
+	if (!attackColliderHitList_.contains(colPtr))
 	{
 		//見つからなかった
 		return false;

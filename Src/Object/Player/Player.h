@@ -37,6 +37,7 @@ public:
 	{
 		MAIN,		//本体
 		GROUNDED,	//接地
+		SPIN,		//スピン
 		MAX
 	};
 
@@ -197,6 +198,9 @@ private:
 	static constexpr VECTOR LOCAL_LINE_UP = { 0.0f,0.0f,0.0f };									//線判定の上相対座標
 	static constexpr float LOCAL_LINE_DOWN_Y = -15.0f;											//線判定の下相対座標
 	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,LOCAL_LINE_DOWN_Y - NORMAL_RADIUS,0.0f };	//線判定の下相対座標
+
+	//無敵時間
+	static constexpr float SPIN_HIT_INTERVAL = 0.2f;
 
 	//基本機能
 	std::unique_ptr<Character> chara_;		//キャラクタ―

@@ -8,6 +8,7 @@
 #include "../Manager/Game/CharacterManager.h"
 #include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/GravityManager.h"
+#include "../Manager/Game/AttackManager.h"
 #include "../Renderer/ModelMaterial.h"
 #include "../Renderer/ModelRenderer.h"
 #include "../Common/Geometry/Sphere.h"
@@ -292,6 +293,16 @@ void Player::EnableSpinCollider(void)
 {
 	//スピンコライダを有効化
 	SetIsEnabledByTag(Collider::TAG::SPIN, true);
+
+	//攻撃データ(ステータスで変化するため随時作成)
+	AttackData data;
+	data.element = AttackData::ATTACK_ELEMENT::NORMAL;
+	data.hitInterval = SPIN_HIT_INTERVAL;
+	data.isMultiHit = true;
+	data.power = GetAttack();
+
+	//攻撃マネージャーに登録
+	AttackManager::GetInstance().SetAttackCollider(collider_[static_cast<int>(COL_VALUE::SPIN)].get(), data);
 }
 
 void Player::DisableSpinCollider(void)

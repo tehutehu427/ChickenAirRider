@@ -55,7 +55,7 @@ public :
 	/// <param name="_geometry">当たり判定の形状</param>
 	/// <param name="_notHitTags">衝突させないタグ</param>
 	/// <param name="_colMng">自己格納用のマネージャー</param>
-	Collider(ObjectBase& _owner, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags, CollisionManager* _colMng);
+	Collider(ObjectBase& _owner, const TAG _tag, std::unique_ptr<Geometry> _geometry, const std::set<TAG> _notHitTags);
 
 	// デストラクタ
 	~Collider(void);
@@ -102,9 +102,6 @@ public :
 	const bool IsIncludeNotHitTag(const std::set<TAG>& _tags)const;
 
 private:
-
-	//自己格納用のマネージャー
-	CollisionManager* colMng_;
 
 	//所持者
 	ObjectBase& owner_;

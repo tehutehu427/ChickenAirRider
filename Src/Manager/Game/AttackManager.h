@@ -18,25 +18,15 @@ class AttackManager : public Singleton<AttackManager>
 
 public:
 
-	//攻撃の種類
-	enum class ATTACK_TYPE
-	{
-		P_ATTACK	//プレイヤー攻撃
-		, E_NORMAL	//敵通常
-		, E_TACKLE	//敵突進
-		, E_JUMP	//敵ジャンプ
-		, MAX
-	};
-
 	//外部読み込み
 	void LoadOutSide(void)override;
 
 	/// <summary>
 	/// 攻撃用コライダーの登録
 	/// </summary>
-	/// <param name="_name">攻撃データ名</param>
 	/// <param name="_col">攻撃用コライダ</param>
-	void AddAttackCollider(const ATTACK_TYPE& _name, const Collider* _col);
+	/// <param name="_data">攻撃データ</param>
+	void SetAttackCollider(const Collider* _col, const AttackData& _data);
 
 	/// <summary>
 	/// コライダリストから削除
@@ -66,21 +56,7 @@ public:
 	/// <returns>攻撃情報</returns>
 	const AttackData& GetAttackData(const Collider* _atkCol, const Collider* _hitCol);
 
-	/// <summary>
-	/// 攻撃データを設定
-	/// </summary>
-	/// <param name="_name">設定したい攻撃の名前</param>
-	/// <param name="_data">設定する攻撃情報</param>
-	void SetAttackData(const ATTACK_TYPE& _name, const AttackData& _data);
-
 private:
-
-	//攻撃ヒット情報
-	struct AttackRuntime
-	{
-		ATTACK_TYPE name;								//攻撃の種類
-		std::unordered_set<const Collider*> targetCol;	//あてられた側のコライダ
-	};
 
 	//コンストラクタ
 	AttackManager(void);
@@ -94,6 +70,6 @@ private:
 	//攻撃コライダが登録されているか
 	const bool IsRegisterCollider(const Collider* _col);
 
-	std::unordered_map<const Collider*, AttackRuntime> colliderAttackTypeList_;		//攻撃判定用コライダーリスト
-	std::array<AttackData, static_cast<int>(ATTACK_TYPE::MAX)> attackDatas_;		//各攻撃の情報リスト
+	std::unordered_map<const Collider*, std::unordered_set<const Collider*>> attackColliderHitList_;	//攻撃判定用コライダーリスト
+	std::unordered_map<const Collider*, AttackData> attackDatas_;										//各攻撃の情報リスト
 };
