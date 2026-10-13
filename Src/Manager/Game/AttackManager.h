@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include<string>
 #include<unordered_set>
 #include<memory>
@@ -54,7 +54,7 @@ public:
 	/// <param name="_atkCol">当たった攻撃のコライダ</param>
 	/// <param name="_hitCol">当たった本体のコライダ</param>
 	/// <returns>攻撃情報</returns>
-	const AttackData& GetAttackData(const Collider* _atkCol, const Collider* _hitCol);
+	const AttackData GetAttackData(const Collider* _atkCol, const Collider* _hitCol);
 
 private:
 

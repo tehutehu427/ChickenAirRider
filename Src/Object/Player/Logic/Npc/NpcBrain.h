@@ -27,6 +27,7 @@ private:
 	{
 		THINK,		//思考
 		ACTION,		//行動
+		MAX
 	};
 
 	//行動判断回数
@@ -46,14 +47,18 @@ private:
 	//更新順
 	ORDER order_;
 
+	//関数ポインタ
+	using Func = void(NpcBrain::*)(void);
+	using JudgeFunc = void(NpcBrain::*)(int);
+
 	//更新
-	std::unordered_map<ORDER, std::function<void(void)>> update_;
+	std::array<Func, static_cast<int>(ORDER::MAX)> update_;
 
 	//要因ごとの優先度による判断設定
-	std::vector<std::function<void(int)>> priorityJudge_;
+	std::vector<JudgeFunc> priorityJudge_;
 	
 	//アクション保存
-	std::queue<std::function<void(void)>> action_;
+	std::queue<Func> action_;
 
 	//行動を終えたか
 	bool isEndAction_;

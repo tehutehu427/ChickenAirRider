@@ -1,5 +1,6 @@
 #include"../pch.h"
 #include"../../Manager/System/SceneManager.h"
+#include"../../Manager/Game/AttackManager.h"
 #include "../Object/Common/Geometry/Sphere.h"
 #include "../Object/Player/Player.h"
 #include "../Object/Item/BattleItem/CannonShot.h"
@@ -80,29 +81,34 @@ void Machine::OnHit(const Collider* _hitCol)
 	//相手コライダ
 	const auto& hitCol = _hitCol;
 
-	if (hitCol->IsIncludeMyTag({Collider::TAG::SPIN}))
+	if (hitCol->IsIncludeMyTag({Collider::TAG::SPIN, Collider::TAG::CANNON_SHOT }))
 	{
-		//攻撃者から攻撃力を取得
-		const Player& player = dynamic_cast<const Player&>(hitCol->GetOwner());
-		const float atk = player.GetAttack();
+		//攻撃マネージャー
+		auto& atkMng = AttackManager::GetInstance();
+
+		//自身のコライダ
+		const auto& myCol = collider_[static_cast<int>(COL::MAIN)].get();
+
+		//本体にあたってないので無視
+		if (!myCol->IsHit())return;
+
+		//当たれるか
+		if (!atkMng.IsCanHit(_hitCol, myCol)) return;
+
+		//攻撃情報
+		const auto& atkData = atkMng.GetAttackData(_hitCol, myCol);
+
+		//攻撃間隔
+		if (0.0f < invincible_ && atkData.isMultiHit)
+		{
+			return;
+		}
 
 		//ダメージ
-		damage_ += atk - (unitParam_.fixedDefence + (unitParam_.fixedWeight * Parameter::WEIGHT_AFFECT) - (unitParam_.fixedFlight * Parameter::FLIGHT_AFFECT));
+		damage_ += atkData.power - (unitParam_.fixedDefence + (unitParam_.fixedWeight * Parameter::WEIGHT_AFFECT) - (unitParam_.fixedFlight * Parameter::FLIGHT_AFFECT));
 
 		//無敵時間リセット
-		invincible_ = INVINCIBLE_SPIN;
-	}
-	else if(hitCol->IsIncludeMyTag({Collider::TAG::CANNON_SHOT}))
-	{
-		//攻撃者から攻撃力を取得
-		const CannonShot& shot = dynamic_cast<const CannonShot&>(hitCol->GetOwner());
-		const float atk = shot.GetAttack();
-
-		//ダメージ
-		damage_ += atk - (unitParam_.fixedDefence + (unitParam_.fixedWeight * Parameter::WEIGHT_AFFECT) - (unitParam_.fixedFlight * Parameter::FLIGHT_AFFECT));
-
-		//無敵時間リセット
-		invincible_ = CannonShot::INVINCIBLE;
+		invincible_ = atkData.hitInterval;
 	}
 
 	//体力が0以下になったら

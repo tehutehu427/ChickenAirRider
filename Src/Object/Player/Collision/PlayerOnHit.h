@@ -33,13 +33,12 @@ private:
 	std::array<HitFunc, static_cast<int>(Collider::TAG::MAX)> onHit_;
 
 	//ÉqÉbÉgèàóù
-	void NormalObjectOnHit(const const Collider* _hitCol);
+	void NormalObjectOnHit(const Collider* _hitCol);
 	void GroundOnHit(const Collider* _hitCol);
 	void RideMachineOnHit(const Collider* _hitCol);
 	void PowerUpItemOnHit(const Collider* _hitCol);
 	void BattleItemOnHit(const Collider* _hitCol);
-	void SpinOnHit(const Collider* _hitCol);
-	void CannonShotOnHit(const Collider* _hitCol);
+	void AttackOnHit(const Collider* _hitCol);
 	void GlideStageOnHit(const Collider* _hitCol);
 };
 

@@ -4,7 +4,7 @@
 #include"../Object/Common/AnimationController.h"
 #include"../Parameter/UnitParameter.h"
 
-class CharacterImportData;
+struct CharacterImportData;
 
 class Character
 {

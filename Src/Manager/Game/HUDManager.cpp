@@ -1,4 +1,4 @@
-#include "../../pch.h"
+﻿#include "../../pch.h"
 #include "../../Application.h"
 #include "../../Utility/Utility.h"
 #include "../../Common/Vector2.h"
@@ -268,7 +268,7 @@ void HUDManager::DrawHealth(const int _playerIndex)
 	Vector2 pos = {};
 	pos.x = view.x + static_cast<int>(view.width * HEALTH_POS.x);
 	pos.y = view.y + static_cast<int>(view.height * HEALTH_POS.y - barHeight);
-	float hpHeight = static_cast<int>(barHeight * rate);
+	float hpHeight = barHeight * rate;
 	float top = pos.y + (barHeight - hpHeight);
 	int frame = static_cast<int>(FRAME_SIZE * scale);
 

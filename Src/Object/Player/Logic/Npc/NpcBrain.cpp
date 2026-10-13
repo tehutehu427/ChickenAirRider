@@ -17,12 +17,12 @@ NpcBrain::NpcBrain(const Player& _parent, NpcLogic& _logic)
 	order_ = ORDER::THINK;
 
 	//判断基準
-	priorityJudge_.push_back([this](int _num) {JudgeItemBox(_num); });
-	priorityJudge_.push_back([this](int _num) {JudgeItem(_num); });
+	priorityJudge_.push_back(&NpcBrain::JudgeItemBox);
+	priorityJudge_.push_back(&NpcBrain::JudgeItem);
 
 	//更新
-	update_.emplace(ORDER::THINK, [this](void) {UpdateThink(); });
-	update_.emplace(ORDER::ACTION, [this](void) {UpdateAction(); });
+	update_[static_cast<int>(ORDER::THINK)] = &NpcBrain::UpdateThink;
+	update_[static_cast<int>(ORDER::ACTION)] = &NpcBrain::UpdateAction;
 }
 
 NpcBrain::~NpcBrain(void)
@@ -42,7 +42,7 @@ void NpcBrain::Init(void)
 
 void NpcBrain::Update(void)
 {
-	update_[order_]();
+	(this->*update_[static_cast<int>(order_)])();
 }
 
 void NpcBrain::UpdateThink(void)
@@ -53,8 +53,9 @@ void NpcBrain::UpdateThink(void)
 	//行動決め
 	for (int i = 0; i < JUDGE_NUM; i++)
 	{
-		priorityJudge_[Utility::GetRandomValue(0, size - 1)](i);
-		//JudgeItemBox(i);
+		//乱数
+		int rand = Utility::GetRandomValue(0, size - 1);
+		(this->*priorityJudge_[rand])(i);
 	}
 }
 
@@ -85,7 +86,7 @@ void NpcBrain::JudgeItemBox(int _num)
 	int rand = Utility::GetRandomValue(0, size - 1);
 
 	//距離
-	float randDist = Utility::Distance(parentPos, poses[rand]);
+	float randDist = static_cast<float>(Utility::Distance(parentPos, poses[rand]));
 	float dist = 0.0f;
 
 	//優先度
@@ -94,7 +95,7 @@ void NpcBrain::JudgeItemBox(int _num)
 	for (int i = 0; i < size; i++)
 	{
 		//ボックスの距離
-		dist = Utility::Distance(parentPos, poses[i]);
+		dist = static_cast<float>(Utility::Distance(parentPos, poses[i]));
 		
 		//近いなら優先度をあげる
 		if (randDist > dist)priority += DIST_WEIGHT;

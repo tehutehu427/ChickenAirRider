@@ -70,12 +70,17 @@ public:
 
 private:
 
+	//コライダ番号
+	enum class COL
+	{
+		MAIN,	//メイン
+		RIDE,	//乗車判定
+		MAX
+	};
+
 	//乗車判定半径
 	static constexpr float RIDE_COL_RADIUS = 250.0f;
 	static constexpr float BROUD_RADIUS = 350.0f;
-	
-	//ムテキ時間
-	static constexpr float INVINCIBLE_SPIN = 0.2f;
 
 	//アニメーションの有無
 	bool isAnim_;

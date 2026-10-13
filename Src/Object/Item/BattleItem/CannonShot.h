@@ -37,7 +37,7 @@ public:
 	const float GetAttack(void)const { return attack_; }
 
 	//¶€ó‘Ô
-	const bool IsAlive(void) { return state_ != STATE::DEAD; }
+	const bool IsAlive(void)const { return state_ != STATE::DEAD; }
 
 private:
 
@@ -54,6 +54,7 @@ private:
 	{
 		MAIN,	//ƒƒCƒ“
 		SEARCH,	//õ“G
+		MAX
 	};
 
 	//‘¬“x

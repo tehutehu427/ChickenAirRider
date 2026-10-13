@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 //イベントの種類
 enum class EVENT_TYPE

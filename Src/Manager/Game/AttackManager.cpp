@@ -12,6 +12,9 @@ void AttackManager::SetAttackCollider(const Collider* _col, const AttackData& _d
 
 	//攻撃情報を設定
 	attackDatas_[_col] = _data;
+
+	//コライダのポインタを登録
+	attackColliderHitList_[_col].clear();
 }
 
 void AttackManager::DeleteAttackCollider(const Collider* _col)
@@ -66,10 +69,10 @@ const bool AttackManager::IsCanHit(const Collider* _atkCol, const Collider* _hit
 	return true;
 }
 
-const AttackData& AttackManager::GetAttackData(const Collider* _atkCol, const Collider* _hitCol)
+const AttackData AttackManager::GetAttackData(const Collider* _atkCol, const Collider* _hitCol)
 {
 	//コライダのポインタ
-	if (!_atkCol || !_hitCol)return AttackData();
+	if (!_atkCol || !_hitCol)return {};
 
 	//含まれているか
 	if (!IsRegisterCollider(_atkCol))

@@ -6,6 +6,7 @@
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/SoundManager.h"
 #include "../Manager/Game/MachineManager.h"
+#include "../Manager/Game/AttackManager.h"
 #include "../Parameter/Parameter.h"
 #include "../Object/Item/ItemBase.h"
 #include "../Object/Item/PowerUpItemBase.h"
@@ -29,8 +30,8 @@ PlayerOnHit::PlayerOnHit(Player& _player)
 	onHit_[static_cast<int>(Collider::TAG::ITEM_BOX)] = &PlayerOnHit::NormalObjectOnHit;
 	onHit_[static_cast<int>(Collider::TAG::POWER_UP)] = &PlayerOnHit::PowerUpItemOnHit;
 	onHit_[static_cast<int>(Collider::TAG::BATTLE_ITEM)] = &PlayerOnHit::BattleItemOnHit;
-	onHit_[static_cast<int>(Collider::TAG::SPIN)] = &PlayerOnHit::SpinOnHit;
-	onHit_[static_cast<int>(Collider::TAG::CANNON_SHOT)] = &PlayerOnHit::CannonShotOnHit;
+	onHit_[static_cast<int>(Collider::TAG::SPIN)] = &PlayerOnHit::AttackOnHit;
+	onHit_[static_cast<int>(Collider::TAG::CANNON_SHOT)] = &PlayerOnHit::AttackOnHit;
 	onHit_[static_cast<int>(Collider::TAG::SEARCH)] = nullptr;
 	onHit_[static_cast<int>(Collider::TAG::WORLD_BORDER)] = &PlayerOnHit::NormalObjectOnHit;
 	onHit_[static_cast<int>(Collider::TAG::GLIDER_BORDER)] = &PlayerOnHit::NormalObjectOnHit;
@@ -221,55 +222,40 @@ void PlayerOnHit::BattleItemOnHit(const Collider* _hitCol)
 {
 }
 
-void PlayerOnHit::SpinOnHit(const Collider* _hitCol)
+void PlayerOnHit::AttackOnHit(const Collider* _hitCol)
 {
 	//無敵中なら処理しない
 	if (!player_.IsEndInvincible() || player_.GetState() != Player::STATE::RIDE_MACHINE)return;
 
-	//相手コライダ
-	const auto& hitCol = _hitCol;
+	//攻撃マネージャー
+	auto& atkMng = AttackManager::GetInstance();
+
+	//自身のコライダ
+	const auto& myCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::MAIN)].get();
+
+	//本体にあたってないので無視
+	if (!myCol->IsHit())return;
+
+	//当たれるか
+	if (!atkMng.IsCanHit(_hitCol, myCol)) return;
+
+	//攻撃情報
+	const auto& atkData = atkMng.GetAttackData(_hitCol, myCol);
+
+	//攻撃間隔
+	if (!player_.IsEndInvincible() && atkData.isMultiHit)
+	{
+		return;
+	}
 
 	//SE
 	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::DAMAGE, SoundManager::PLAYTYPE::BACK);
 
-	//スピンの相手
-	const auto& spinParent = dynamic_cast<const Player&>(hitCol->GetOwner());
-
-	//機体に乗っていないなら処理しない
-	if(!spinParent.GetMachine())return;
-
-	//攻撃力
-	float attack = spinParent.GetAttack();
-
 	//ダメージ処理
-	player_.Damage(attack);
+	player_.Damage(atkData.power);
 
-	//無敵時間リセット
-	player_.SetInvincible(INVINCIBLE_SPIN);
-}
-
-void PlayerOnHit::CannonShotOnHit(const Collider* _hitCol)
-{
-	//無敵中なら処理しない
-	if (!player_.IsEndInvincible() || player_.GetState() != Player::STATE::RIDE_MACHINE)return;
-
-	//相手コライダ
-	const auto& hitCol = _hitCol;
-
-	//SE
-	SoundManager::GetInstance().Play(SoundManager::SOUND_NAME::DAMAGE, SoundManager::PLAYTYPE::BACK);
-
-	//大砲の弾
-	const auto& shot = dynamic_cast<const CannonShot&>(hitCol->GetOwner());
-
-	//攻撃力
-	float attack = shot.GetAttack();
-
-	//ダメージ処理
-	player_.Damage(attack);
-
-	//無敵時間リセット
-	player_.SetInvincible(CannonShot::INVINCIBLE);
+	//無敵時間
+	player_.SetInvincible(atkData.hitInterval);
 }
 
 void PlayerOnHit::GlideStageOnHit(const Collider* _hitCol)

@@ -3,6 +3,7 @@
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/ResourceManager.h"
 #include"../Manager/Game/GravityManager.h"
+#include"../Manager/Game/AttackManager.h"
 #include "../../Common/EffectController.h"
 #include "../../Common/Geometry/Sphere.h"
 #include "../../Player/Player.h"
@@ -72,6 +73,14 @@ void CannonShot::Init(void)
 	//コライダ
 	std::unique_ptr<Geometry> geo = std::make_unique<Sphere>(trans_.pos, movedPos_, BROUD_RADIUS, SHOT_RADIUS);
 	MakeCollider(Collider::TAG::CANNON_SHOT, std::move(geo), { tag,Collider::TAG::FOOT,Collider::TAG::SPIN});
+
+	//攻撃マネージャーに登録
+	AttackData data;
+	data.element = AttackData::ATTACK_ELEMENT::ITEM;
+	data.power = attack_;
+	data.isMultiHit = false;
+	data.hitInterval = -1.0f;
+	AttackManager::GetInstance().SetAttackCollider(collider_[static_cast<int>(COL::MAIN)].get(), data);
 
 	//索敵判定
 	geo = std::make_unique<Sphere>(trans_.pos, movedPos_, BROUD_RADIUS, SEARCH_RADIUS);
@@ -236,4 +245,6 @@ void CannonShot::ChangeStateDead(void)
 
 	//当たり判定無効化
 	SetIsEnabledByAll(false);
+
+	//攻撃の無効化
 }

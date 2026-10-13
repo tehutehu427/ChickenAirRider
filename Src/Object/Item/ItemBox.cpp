@@ -4,6 +4,7 @@
 #include "../Manager/System/SceneManager.h"
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/Game/GravityManager.h"
+#include "../Manager/Game/AttackManager.h"
 #include "../Object/Common/Geometry/Cube.h"
 #include "../Object/Common/Geometry/Line.h"
 #include "../Object/Player/Player.h"
@@ -138,28 +139,37 @@ void ItemBox::OnHit(const Collider* _hitCol)
 	const auto& hitCol = _hitCol;
 	const auto& hitTag = hitCol->GetTag();
 
-	if (hitCol->IsIncludeMyTag({ Collider::TAG::SPIN }) && invincible_ < 0)
+	//攻撃系
+	if (hitCol->IsIncludeMyTag({ Collider::TAG::SPIN,Collider::TAG::CANNON_SHOT }))
 	{
-		//スピンをもつのはプレイヤーのみ
-		const auto& player = dynamic_cast<const Player&>(hitCol->GetOwner());
+		//攻撃マネージャー
+		auto& atkMng = AttackManager::GetInstance();
 
-		//攻撃力分ダメージ
-		health_ -= player.GetAttack() * SPIN_DAMAGE_DEF;
+		//自身のコライダ
+		const auto& myCol = collider_[static_cast<int>(COL::MAIN)].get();
 
-		//無敵時間リセット
-		invincible_ = INVINCIBLE_SPIN;
-	}
-	else if (hitCol->IsIncludeMyTag({ Collider::TAG::CANNON_SHOT }) && invincible_ < 0)
-	{
-		//ショット
-		const auto& shot = dynamic_cast<const CannonShot&>(hitCol->GetOwner());
+		//本体にあたってないので無視
+		if (!myCol->IsHit())return;
+
+		//当たれるか
+		if (!atkMng.IsCanHit(_hitCol, myCol)) return;
+
+		//攻撃情報
+		const auto& atkData = atkMng.GetAttackData(_hitCol, myCol);
+
+		//攻撃間隔
+		if (0.0f < invincible_ && atkData.isMultiHit)
+		{
+			return;
+		}
 
 		//ダメージ
-		health_ -= shot.GetAttack();
+		health_ -= atkData.power;
 
 		//無敵時間リセット
-		invincible_ = CannonShot::INVINCIBLE;
+		invincible_ = atkData.hitInterval;
 	}
+	//地面系
 	else if (hitCol->IsIncludeMyTag({ Collider::TAG::GROUND, Collider::TAG::NORMAL_OBJECT }))
 	{
 		if (footCol->IsHit())

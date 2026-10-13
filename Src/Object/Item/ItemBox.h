@@ -44,6 +44,14 @@ public:
 	const VECTOR& GetCreatePos(void) { return createPos_; }
 
 private:
+
+	//コライダの種類
+	enum class COL
+	{
+		MAIN,	//メイン
+		FOOT,	//足元
+		MAX
+	};
 	
 	//当たり判定
 	static constexpr int FOOT_COL = 1;	//足元判定のコライダ番号

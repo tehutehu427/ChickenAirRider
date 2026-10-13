@@ -309,6 +309,9 @@ void Player::DisableSpinCollider(void)
 {
 	//スピンコライダを無効化
 	SetIsEnabledByTag(Collider::TAG::SPIN, false);
+
+	//攻撃マネージャーから削除
+	AttackManager::GetInstance().DeleteAttackCollider(collider_[static_cast<int>(COL_VALUE::SPIN)].get());
 }
 
 void Player::CheckUnder(void)
