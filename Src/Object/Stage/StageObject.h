@@ -12,7 +12,7 @@ class StageObject : public ObjectBase
 public:
 
 	//コンストラクタ
-	StageObject(const StageImportData& _data, const int _modelId);
+	StageObject(const StageImportData& _data, const int _modelId, const VECTOR& _pos);
 	
 	//デストラクタ
 	~StageObject(void)override;

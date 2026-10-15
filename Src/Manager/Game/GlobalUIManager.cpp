@@ -107,8 +107,8 @@ void GlobalUIManager::DrawCountDown(void)
 
 	Vector2 size =
 	{
-		Application::SCREEN_SIZE_X * static_cast<int>(timeDecimel),
-		Application::SCREEN_SIZE_Y * static_cast<int>(timeDecimel)
+		static_cast<int>(Application::SCREEN_SIZE_X * timeDecimel),
+		static_cast<int>(Application::SCREEN_SIZE_Y * timeDecimel)
 	};
 
 	Vector2 pos =

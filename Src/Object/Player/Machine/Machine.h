@@ -79,7 +79,7 @@ private:
 	};
 
 	//乗車判定半径
-	static constexpr float RIDE_COL_RADIUS = 250.0f;
+	static constexpr float RIDE_COL_RADIUS = 50.0f;
 	static constexpr float BROUD_RADIUS = 350.0f;
 
 	//アニメーションの有無

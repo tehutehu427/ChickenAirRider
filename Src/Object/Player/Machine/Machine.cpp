@@ -73,6 +73,7 @@ void Machine::Update(void)
 
 void Machine::Draw(void)
 {
+	//ƒ‚ƒfƒ‹•`‰æ
 	MV1DrawModel(trans_.modelId);
 }
 

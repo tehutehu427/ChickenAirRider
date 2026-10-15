@@ -26,7 +26,7 @@ void AirGlider::Init(void)
 
 	//Še‰Šú‰»
 	plMng.ResetPlayer(START_POS);
-	stgMng.Init(StageManager::MODE::AIR_GLIDER,80);
+	stgMng.Init(StageManager::MODE::AIR_GLIDER, STAGE_CREATE_NUM);
 
 	//‹¤’Ê‰Šú‰»
 	LastGameBase::Init();

@@ -167,6 +167,9 @@ public:
 	//プレイヤーの操作者
 	const OPERATION_TYPE GetOperation(void)const { return operation_; }
 
+	//マシンに乗れるかの取得
+	const bool GetCanRide(void)const { return rideCoolTime_ <= 0.0f; }
+
 	//降りれるかどうかの設定
 	void SetCanGetOff(const bool _getOff) { canGetOff_ = _getOff; }
 
@@ -201,6 +204,9 @@ private:
 
 	//無敵時間
 	static constexpr float SPIN_HIT_INTERVAL = 0.2f;
+
+	//再乗車までのクールタイム
+	static constexpr float RIDE_COOL_TIME = 1.0f;
 
 	//基本機能
 	std::unique_ptr<Character> chara_;		//キャラクタ―
@@ -257,6 +263,9 @@ private:
 
 	//無敵時間
 	float invincible_;
+
+	//再乗車用カウンタ
+	float rideCoolTime_;
 
 	//降りれるかどうか
 	bool canGetOff_;

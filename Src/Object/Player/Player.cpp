@@ -160,6 +160,9 @@ void Player::Update(void)
 	//無敵時間
 	invincible_ -= delta;
 
+	//機体乗車クールタイム
+	rideCoolTime_ -= delta;
+
 	//移動
 	MoveAndUpdateState();
 
@@ -437,9 +440,10 @@ void Player::UpdateRide(void)
 {
 	//カメラ
 	auto camera = camera_.lock();
+	VECTOR targetPos = camera->GetTargetPos();
 
 	//カメラ注視点までのベクトル
-	VECTOR vec = Utility::GetMoveVec(trans_.pos, camera->GetTargetPos());
+	VECTOR vec = Utility::GetMoveVec(trans_.pos, targetPos);
 	trans_.quaRot = trans_.quaRot.LookRotation(vec);
 
 	//行動
@@ -448,6 +452,9 @@ void Player::UpdateRide(void)
 	//降りたなら
 	if (state_ == STATE::RIDE_MACHINE && logic_->IsGetOff() && canGetOff_)
 	{
+		//スピンの当たり判定を無効化
+		DisableSpinCollider();
+
 		//降りた機体を保存
 		MachineManager::GetInstance().SaveGetOffMachine(std::move(machine_));
 
@@ -456,6 +463,9 @@ void Player::UpdateRide(void)
 
 		//キャラクターに遷移
 		ChangeState(STATE::NORMAL);
+
+		//再乗車用カウンタをリセット
+		rideCoolTime_ = RIDE_COOL_TIME;
 
 		//処理終了
 		return;

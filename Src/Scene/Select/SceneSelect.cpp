@@ -237,17 +237,23 @@ void SceneSelect::UpdateGameStart(void)
 		
 		//カウントダウン
 		playerNum_[static_cast<int>(playerNumSelect_)] = playerNum_[static_cast<int>(playerNumSelect_)] - 1;
+
+		//人数の補正
+		if (playerNum_[static_cast<int>(PLAYER_NUM_SELECT::USER)] <= 0)
+		{
+			playerNum_[static_cast<int>(PLAYER_NUM_SELECT::USER)] = 1;
+		}
 	}
-	//左右入力
-	else if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_RIGHT, KeyConfig::JOYPAD_NO::PAD1)
-		|| key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_LEFT, KeyConfig::JOYPAD_NO::PAD1))
-	{
-		//選択音
-		snd.Play(SoundManager::SOUND_NAME::SELECT_SE, SoundManager::PLAYTYPE::BACK);
-		
-		//ユーザーとNPC選択の切り替え
-		playerNumSelect_ = static_cast<PLAYER_NUM_SELECT>((static_cast<int>(playerNumSelect_) + 1) % static_cast<int>(PLAYER_NUM_SELECT::MAX));
-	}
+	////左右入力
+	//else if (key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_RIGHT, KeyConfig::JOYPAD_NO::PAD1)
+	//	|| key.IsTrgDown(KeyConfig::CONTROL_TYPE::SELECT_LEFT, KeyConfig::JOYPAD_NO::PAD1))
+	//{
+	//	//選択音
+	//	snd.Play(SoundManager::SOUND_NAME::SELECT_SE, SoundManager::PLAYTYPE::BACK);
+	//	
+	//	//ユーザーとNPC選択の切り替え
+	//	playerNumSelect_ = static_cast<PLAYER_NUM_SELECT>((static_cast<int>(playerNumSelect_) + 1) % static_cast<int>(PLAYER_NUM_SELECT::MAX));
+	//}
 }
 
 void SceneSelect::UpdateOption(void)

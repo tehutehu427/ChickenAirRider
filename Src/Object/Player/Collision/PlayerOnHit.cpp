@@ -172,26 +172,39 @@ void PlayerOnHit::GroundOnHit(const Collider* _hitCol)
 
 void PlayerOnHit::RideMachineOnHit(const Collider* _hitCol)
 {
-	//機体に乗っているなら処理なし
-	if (player_.GetState() == Player::STATE::RIDE_MACHINE)return;
+	//機体に乗っている　または　再乗車不可なら処理なし
+	if (player_.GetState() == Player::STATE::RIDE_MACHINE || !player_.GetCanRide())return;
 
-	//スペシャルボタンを押し続けた
-	if (!player_.GetLogic().IsGetOff())return;
+	//乗り判定
+	bool isRide = false;
 
-	//相手コライダ
-	const auto& hitCol = _hitCol;
+	//スペシャルボタンを押したら乗る
+	//isRide = player_.GetLogic().IsGetOff();
 
-	//機体確定なので型変換
-	const Machine& machine = dynamic_cast<const Machine&>(hitCol->GetOwner());
+	//足元コライダ
+	const auto& groundedCol = player_.GetColliders()[static_cast<int>(Player::COL_VALUE::GROUNDED)];
 
-	//機体管理
-	auto& machineMng = MachineManager::GetInstance();
+	//足元が当たっているなら乗る
+	isRide = groundedCol->IsHit();
 
-	//機体に移動
-	player_.SetMovedPos(machine.GetTrans().pos);
+	//乗るかどうか
+	if (isRide)
+	{
+		//相手コライダ
+		const auto& hitCol = _hitCol;
 
-	//機体を比較し取得
-	player_.RideMachine(std::move(machineMng.GetMachine(machine)));
+		//機体確定なので型変換
+		const Machine& machine = dynamic_cast<const Machine&>(hitCol->GetOwner());
+
+		//機体管理
+		auto& machineMng = MachineManager::GetInstance();
+
+		//機体に移動
+		player_.SetMovedPos(machine.GetTrans().pos);
+
+		//機体を比較し取得
+		player_.RideMachine(std::move(machineMng.GetMachine(machine)));
+	}
 }
 
 void PlayerOnHit::PowerUpItemOnHit(const Collider* _hitCol)

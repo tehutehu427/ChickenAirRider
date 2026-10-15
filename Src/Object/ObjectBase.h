@@ -76,10 +76,10 @@ protected:
 	/// <param name="_notHitTags">衝突させないタグ</param>
 	void MakeCollider(const Collider::TAG& _tag, std::unique_ptr<Geometry> _geometry, const std::set<Collider::TAG> _notHitTags = {});
 
-	//該当タグで当たり判定設定
+	//該当タグで当たり判定の有効無効設定
 	void SetIsEnabledByTag(const Collider::TAG& _tag, const bool _isEnabled);
 
-	//全当たり判定の消去
+	//全当たり判定の有効無効設定
 	void SetIsEnabledByAll(const bool _isEnabled);
 };
 

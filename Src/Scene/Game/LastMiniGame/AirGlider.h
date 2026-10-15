@@ -27,6 +27,9 @@ private:
 
 	//プレイヤーのスタート位置
 	static constexpr VECTOR START_POS = { -100.0f,600.0f,0.0f };
+	
+	//ステージの生成数
+	static constexpr int STAGE_CREATE_NUM = 80;
 
 	//飛距離
 	std::unordered_map<int, float> flightDistance_;

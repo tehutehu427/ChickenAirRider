@@ -67,7 +67,7 @@ private:
 	static constexpr VECTOR LOCAL_LINE_DOWN = { 0.0f,-110.0f,0.0f };		//ü”»’è‚Ì‰º‘Š‘ÎÀ•W
 
 	//‘Ì—Í‚ÌÅ‘å’l
-	static constexpr float HEALTH_MAX = 50.0f;
+	static constexpr float HEALTH_MAX = 15.0f;
 
 	//–³“GŠÔ
 	static constexpr float INVINCIBLE_SPIN = 0.05f;

@@ -2,11 +2,11 @@
 #include "../Common/Geometry/Geometry.h"
 #include "StageObject.h"
 
-StageObject::StageObject(const StageImportData& _data,const int _modelId)
+StageObject::StageObject(const StageImportData& _data,const int _modelId, const VECTOR& _pos)
 {
 	//ÉÇÉfÉãÇÃê›íË
 	trans_.modelId = _modelId;
-	trans_.pos = _data.position;
+	trans_.pos = _pos;
 	trans_.scl = _data.scale;
 	trans_.quaRot = _data.quaternion;
 }

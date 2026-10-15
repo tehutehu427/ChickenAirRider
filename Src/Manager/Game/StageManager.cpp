@@ -42,7 +42,7 @@ void StageManager::Init(const MODE _mode, int _createNum)
 			int modelId = modelId_[data.name]();
 
 			//ステージの生成
-			stages_.emplace_back(std::make_unique<StageObject>(data, modelId));
+			stages_.emplace_back(std::make_unique<StageObject>(data, modelId, data.position));
 			auto& stage = stages_.back();
 
 			//コライダ生成
@@ -65,7 +65,7 @@ void StageManager::Init(const MODE _mode, int _createNum)
 			pos.z *= (i + 1);
 
 			//ステージの生成
-			stages_.emplace_back(std::make_unique<StageObject>(data, modelId));
+			stages_.emplace_back(std::make_unique<StageObject>(data, modelId, pos));
 			auto& stage = stages_.back();
 
 			//コライダ生成
