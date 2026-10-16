@@ -440,11 +440,9 @@ void Player::UpdateRide(void)
 {
 	//カメラ
 	auto camera = camera_.lock();
-	VECTOR targetPos = camera->GetTargetPos();
 
-	//カメラ注視点までのベクトル
-	VECTOR vec = Utility::GetMoveVec(trans_.pos, targetPos);
-	trans_.quaRot = trans_.quaRot.LookRotation(vec);
+	//カメラの回転を反映(X回転を除く)
+	trans_.quaRot = camera->GetQuaRotOutX();
 
 	//行動
 	action_->Update();

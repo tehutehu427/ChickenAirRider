@@ -198,7 +198,7 @@ void Camera::SyncFollowLeap(void)
 	//重力方向制御（今は固定）
 	Quaternion gRot = Quaternion::Euler(VECTOR(0.0, 0.0, 0.0));
 
-	//回転設定
+	//正面から設定されたY軸分、回転させる
 	rotOutX_ = gRot.Mult(Quaternion::AngleAxis(angles_.y, Utility::AXIS_Y));
 	rot_ = rotOutX_;
 

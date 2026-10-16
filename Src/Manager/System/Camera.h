@@ -128,7 +128,7 @@ public:
 	// カメラ角度の取得
 	Quaternion GetQuaRot(void) const;
 
-	// X回転を抜いたカメラ角度の取得
+	// X回転を抜いたカメラ角度(水平方向)の取得
 	Quaternion GetQuaRotOutX(void) const;
 
 	// カメラの前方方向の取得

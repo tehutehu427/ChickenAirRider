@@ -337,7 +337,6 @@ void SceneManager::CreateCameraAndSplitScreens(const int _playerNum)
 		//UI‚Ì•ªŠ„‚ÉƒJƒƒ‰‚ğ“o˜^
 		split.SetCamera(i, camera);
 	}
-
 }
 
 void SceneManager::ResetDeltaTime(void)
