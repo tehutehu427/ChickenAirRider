@@ -75,7 +75,7 @@ private:
 
 	//エフェクト関係
 	static constexpr VECTOR BOOST_EFF_SCL = {5.0f, 5.0f, 5.0f};
-	static constexpr VECTOR CHARGE_EFF_SCL = {20.0f, 20.0f, 20.0f};
+	static constexpr VECTOR CHARGE_EFF_SCL = {40.0f, 40.0f, 40.0f};
 	static constexpr VECTOR SPIN_EFF_SCL = {1.0f, 1.0f, 1.0f };
 
 	//エフェクト

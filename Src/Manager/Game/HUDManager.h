@@ -176,4 +176,3 @@ private:
 	void DrawParam(const int _playerIndex);
 	void DrawGetOff(const int _playerIndex);
 };
-

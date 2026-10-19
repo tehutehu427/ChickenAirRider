@@ -259,6 +259,27 @@ void MachineAction::Charge(void)
 	}
 	else
 	{
+		//プレイヤー情報
+		const auto& playerTrans = player_.GetTrans();
+
+		//チャージエフェクト(1個のみ)
+		if (effNum_[EffectController::EFF_TYPE::CHARGE] < 1)
+		{
+			effNum_[EffectController::EFF_TYPE::CHARGE] = effectController_->Play(
+				EffectController::EFF_TYPE::CHARGE
+				, playerTrans.pos
+				, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(Utility::DEGREE_MAX / 2), 0.0f))
+				, CHARGE_EFF_SCL);
+		}
+		else
+		{
+			//チャージエフェクトの更新
+			effectController_->SetPos(EffectController::EFF_TYPE::CHARGE, effNum_[EffectController::EFF_TYPE::CHARGE], playerTrans.pos);
+			effectController_->SetQuaRot(EffectController::EFF_TYPE::CHARGE, effNum_[EffectController::EFF_TYPE::CHARGE], playerTrans.quaRot);
+			effectController_->SetScale(EffectController::EFF_TYPE::CHARGE, effNum_[EffectController::EFF_TYPE::CHARGE], CHARGE_EFF_SCL);
+		}
+
+		//キャラの大きさを変える
 		float rate = (unitParam.chargeCapacity * chargeCnt_ / unitParam.chargeCapacity) * 0.2f;
 		VECTOR scale = player_.GetTrans().scl;
 		scale.y = 1.0f - rate;
@@ -289,19 +310,6 @@ void MachineAction::Charge(void)
 			//減速
 			driveCnt_ -= delta * TURN_BRAKE_POW;
 		}
-	}
-
-	//チャージエフェクト(1個のみ)
-	if (effNum_[EffectController::EFF_TYPE::CHARGE] < 1)
-	{
-		//プレイヤー情報
-		const auto& playerTrans = player_.GetTrans();
-		effNum_[EffectController::EFF_TYPE::CHARGE] = effectController_->Play(
-			EffectController::EFF_TYPE::CHARGE
-			, playerTrans.pos
-			, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(Utility::DEGREE_MAX / 2), 0.0f))
-			, CHARGE_EFF_SCL
-			, true);
 	}
 }
 
