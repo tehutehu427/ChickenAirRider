@@ -29,8 +29,8 @@ ItemBox::ItemBox(const VECTOR& _pos, const ITEM_TYPE _type)
 	color_.emplace(ITEM_TYPE::BATTLE, BATTLE_COLOR);
 
 	//アイテムの生成
-	createItem_.emplace(ITEM_TYPE::POWER_UP, [this](void) {CreatePowerUpItem(); });
-	createItem_.emplace(ITEM_TYPE::BATTLE, [this](void) {CreateBattleItem(); });
+	createItem_[static_cast<int>(ITEM_TYPE::POWER_UP)] = &ItemBox::CreatePowerUpItem;
+	createItem_[static_cast<int>(ITEM_TYPE::BATTLE)]  = &ItemBox::CreateBattleItem;
 }
 
 ItemBox::~ItemBox(void)
@@ -195,20 +195,23 @@ void ItemBox::OnHit(const Collider* _hitCol)
 		//死亡判定
 		isDead_ = true;
 
+		//自身から相手へのベクトル生成
+		VECTOR vec = Utility::GetMoveVec(trans_.pos, hitCol->GetOwner().GetTrans().pos);
+
 		//アイテム生成
-		createItem_[type_]();
+		(this->*createItem_[static_cast<int>(type_)])(vec);
 	}
 
 	//モデル更新
 	trans_.Update();
 }
 
-void ItemBox::CreatePowerUpItem(void)
+void ItemBox::CreatePowerUpItem(const VECTOR& _vec)
 {
-	ItemManager::GetInstance().CreatePowerUpItem(trans_.pos);
+	ItemManager::GetInstance().CreatePowerUpItem(trans_.pos, _vec);
 }
 
-void ItemBox::CreateBattleItem(void)
+void ItemBox::CreateBattleItem(const VECTOR& _vec)
 {
-	ItemManager::GetInstance().CreateBattleItem(trans_.pos);
+	ItemManager::GetInstance().CreateBattleItem(trans_.pos, _vec);
 }

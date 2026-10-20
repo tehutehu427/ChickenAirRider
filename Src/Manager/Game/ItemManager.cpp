@@ -161,7 +161,7 @@ void ItemManager::CreateDeathMatch(void)
 	ItemBox::ITEM_TYPE randType = static_cast<ItemBox::ITEM_TYPE>(Utility::GetRandomValue(0, static_cast<int>(ItemBox::ITEM_TYPE::MAX) - 1));
 
 	//生成
-	CreateBattleItem(boxPosData_[rand].pos, 1);
+	CreateBattleItem(boxPosData_[rand].pos,Utility::VECTOR_ZERO, 1);
 }
 
 void ItemManager::CreateItemBox(void)
@@ -194,29 +194,36 @@ std::unique_ptr<BattleItemBase> ItemManager::CreateCannon(const VECTOR& _pos, co
 	return std::make_unique<Cannon>(_pos, _vec);
 }
 
-void ItemManager::CreatePowerUpItem(const VECTOR _pos, const int _num)
+void ItemManager::CreatePowerUpItem(const VECTOR& _pos, const VECTOR& _vec, const int _num)
 {
 	//サイズ
 	int importSize = static_cast<int>(powerUpItemData_.size());
 
-	//生成位置
-	VECTOR moveVec = CREATE_MOVE_VEC;
+	//移動方向
+	VECTOR moveVec = _vec;
+	
+	//ベクトルの差異
+	float offset = 0.0f;
+
+	//
+	VECTOR side = VCross(moveVec, VGet(0.0f, 1.0f, 0.0f));
+
+	//ランダム方向
+	VECTOR randVec = Utility::VECTOR_ZERO;
 
 	//生成数
 	int createNum = _num == -1 ? Utility::GetRandomValue(CREATE_MIN, CREATE_MAX) : _num;
 
-	//データの値
+	//ランダムでアイテムを決める
 	int rand = 0;
 
 	//ランダムで決めた生成数分アイテムを生成する
 	for (int i = 0 ; i < createNum ; i++)
 	{
-		//位置の反転
-		if (i % 2 == 0)moveVec.x = -moveVec.x;
-		else if (i % 2 == 1)moveVec.z = -moveVec.z;
+		//ランダムで少しベクトルをずらす
+		offset = Utility::GetRandomValue(-CREATE_VEC_OFFSET, CREATE_VEC_OFFSET);
 
-		//一つだけなら中央に
-		if (createNum == 1)moveVec = { 0.0f,0.0f,0.0f };
+		//randVec = VAdd()
 
 		//ランダムでアイテムの種類決め
 		rand =  Utility::GetRandomValue(0, importSize - 1);
@@ -231,18 +238,18 @@ void ItemManager::CreatePowerUpItem(const VECTOR _pos, const int _num)
 	}
 }
 
-void ItemManager::CreateBattleItem(const VECTOR _pos, const int _num)
+void ItemManager::CreateBattleItem(const VECTOR& _pos, const VECTOR& _vec, const int _num)
 {
 	//サイズ
 	int importSize = static_cast<int>(battleItemData_.size());
 
 	//生成位置
-	VECTOR moveVec = CREATE_MOVE_VEC;
+	VECTOR moveVec;
 
 	//生成数
 	int createNum = _num == -1 ? Utility::GetRandomValue(CREATE_MIN, CREATE_MAX) : _num;
 
-	//データの値
+	//ランダムでアイテムを決める
 	int rand = 0;
 
 	//ランダムで決めた生成数分アイテムを生成する

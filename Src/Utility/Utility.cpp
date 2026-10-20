@@ -849,11 +849,24 @@ float Utility::PingPongUpdate(const float _value, const float _step, const float
 
 int Utility::GetRandomValue(int _min, int _max)
 {
+    //最小値、最大値
+    int min = _min;
+    int max = _max;
+
+    //minよりmaxが小さいなら入れ替える
+    if (min > max)
+    {
+        //入れ替え用
+        int a = min;
+        min = max;
+        max = a;
+    }
+
     //ランダムエンジン
     static std::mt19937 mt(std::random_device{}());
 
     // min ～ max の範囲で一様分布
-    std::uniform_int_distribution<int> dist(_min, _max);
+    std::uniform_int_distribution<int> dist(min, max);
 
     //ランダムの値
     return dist(mt);
