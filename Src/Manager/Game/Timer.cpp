@@ -8,6 +8,7 @@ Timer::Timer(void)
 {
 	cnt_ = 0.0f;
 	timeLimit_ = 0.0f;
+	multi_ = 0.0f;
 	cntValid_ = false;
 	isView_ = false;
 	pos_ = {};
@@ -27,6 +28,7 @@ void Timer::Init(const float _timeLimit)
 {
 	//初期化
 	cnt_ = 0.0f;
+	multi_ = 1.0f;
 	preCnt_ = cnt_;
 	cntValid_ = false;
 	isView_ = false;
@@ -54,7 +56,7 @@ void Timer::Update(void)
 	if (IsTimeOver())return;
 
 	//カウントアップ
-	cnt_ += delta;
+	cnt_ += delta * multi_;
 
 	//カウンタの数字が変わったか
 	if (static_cast<int>(ceilf(cnt_)) != static_cast<int>(ceilf(preCnt_)))

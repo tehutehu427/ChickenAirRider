@@ -19,7 +19,7 @@ int WINAPI WinMain(
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	// メモリリーク検出のためのブレークポイントを設定
-	_CrtSetBreakAlloc(41441);
+	_CrtSetBreakAlloc(40171);
 
 #endif // _DEBUG
 

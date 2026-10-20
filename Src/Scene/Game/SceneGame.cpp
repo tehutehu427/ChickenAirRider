@@ -13,6 +13,7 @@
 #include"../Manager/Game/PlayerManager.h"
 #include"../Manager/Game/ItemManager.h"
 #include"../Manager/Game/EventManager.h"
+#include"../Manager/Game/AttackManager.h"
 #include"../Scene/Game/GameMain.h"
 #include"../Scene/Game/GameCheck.h"
 #include"../Scene/Game/LastMiniGame/DeathMatch.h"
@@ -88,6 +89,9 @@ void SceneGame::Init(void)
 
 	//イベント管理の生成
 	EventManager::CreateInstance(timing);
+
+	//イベント管理の生成
+	AttackManager::CreateInstance(timing);
 
 	//ゲームの状態変更
 	ChangeGameState(GAME_STATE::MAIN);

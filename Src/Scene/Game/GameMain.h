@@ -42,7 +42,10 @@ private:
 	static constexpr float FINISH_TIME = 2.0f;
 
 	//カウントダウン時間
-	static constexpr float COUNT_DOWN = 5.0f;
+	static constexpr float COUNT_DOWN = 3.0f;
+
+	//最初のカウントダウン速度
+	static constexpr float FIRST_COUNT_SPEED = 2.0f;
 
 	//カウンタ
 	float cnt_;

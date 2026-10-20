@@ -29,6 +29,12 @@ public:
 	//時間制限の設定
 	void SetTimeLimit(const float _timeLimit) { timeLimit_ = _timeLimit; }
 
+	//速度倍率の設定
+	void SetSpeedMulti(const float _multi) { multi_ = _multi; }
+
+	//速度倍率リセット
+	void ResetSpeedMulti(void) { multi_ = 1.0f; }
+
 	//カウントの有無の設定
 	void SetCountValid(const bool _cntValid) { cntValid_ = _cntValid; }
 
@@ -69,6 +75,9 @@ private:
 
 	//カウンタ
 	float cnt_;
+
+	//速度倍率
+	float multi_;
 
 	//カウンタの前フレーム
 	float preCnt_;

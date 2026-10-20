@@ -54,6 +54,7 @@ void GameMain::Init(void)
 	gloUi.GetTimer().Init(COUNT_DOWN);
 	gloUi.GetTimer().SetCountValid(true);
 	gloUi.GetTimer().SetCountView(false);
+	gloUi.GetTimer().SetSpeedMulti(FIRST_COUNT_SPEED);
 	gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::COUNT_DOWN, true);
 	gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::TIMER, true);
 
@@ -165,6 +166,7 @@ void GameMain::UpdateStart(void)
 		gloUi.GetTimer().Init(static_cast<float>(setting.GetTimeLimit()));
 		gloUi.GetTimer().SetCountValid(true);
 		gloUi.GetTimer().SetCountView(true);
+		gloUi.GetTimer().SetSpeedMulti(1.0f);
 
 		//カウントダウンの削除
 		gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::COUNT_DOWN, false);
