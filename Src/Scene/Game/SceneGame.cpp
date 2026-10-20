@@ -69,6 +69,9 @@ void SceneGame::Init(void)
 	//当たり判定管理の生成
 	CollisionManager::CreateInstance(timing);
 
+	//イベント管理の生成
+	AttackManager::CreateInstance(timing);
+
 	//重力制御
 	GravityManager::CreateInstance(timing);
 
@@ -89,9 +92,6 @@ void SceneGame::Init(void)
 
 	//イベント管理の生成
 	EventManager::CreateInstance(timing);
-
-	//イベント管理の生成
-	AttackManager::CreateInstance(timing);
 
 	//ゲームの状態変更
 	ChangeGameState(GAME_STATE::MAIN);
