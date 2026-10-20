@@ -7,14 +7,14 @@ void AttackManager::LoadOutSide(void)
 
 void AttackManager::SetAttackCollider(const Collider* _col, const AttackData& _data)
 {
-	//登録コライダのポインタ
+	//登録コライダのポインタが存在するか
 	if (!_col)return;
 
 	//攻撃情報を設定
 	attackDatas_[_col] = _data;
 
-	//コライダのポインタを登録
-	attackColliderHitList_[_col].clear();
+	//コライダのポインタを登録し、相手コライダリストを空の状態にしておく
+	attackColliderHitList_.try_emplace(_col);
 }
 
 void AttackManager::DeleteAttackCollider(const Collider* _col)
