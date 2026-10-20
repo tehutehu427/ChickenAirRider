@@ -16,6 +16,7 @@ public:
 		CHARGE,		//チャージエフェクト
 		SPIN,		//スピンエフェクト
 		BLAST,		//爆発エフェクト
+		MAX
 	};
 
 	//コンストラクタ
@@ -52,71 +53,49 @@ public:
 		const float _speedMultiplier = NORMAL_MULTI);
 
 	/// <summary>
-	/// 再生中エフェクトを止める
-	/// </summary>
-	/// <param name="_effType">止めたいエフェクトの種類</param>
-	/// <param name="_arrayNum">止めたいエフェクトの配列番号</param>
-	void Stop(const EFF_TYPE _effType, const int _arrayNum);
-
-	/// <summary>
 	/// エフェクトの削除
 	/// </summary>
 	/// <param name="_effType">削除するエフェクトの種類</param>
-	/// <param name="_arrayNum">削除するエフェクトの配列番号</param>
-	void Delete(const EFF_TYPE _effType, const int _arrayNum);
+	/// <param name="_id">削除するエフェクトのID</param>
+	void Delete(const EFF_TYPE _effType, const int _id);
 
 	//全停止
 	void AllStop(void);
 
 	//全削除
 	void AllDelete(void);
-	
-	/// <summary>
-	/// 再生が終わっているか
-	/// </summary>
-	/// <param name="_effType">確認したいエフェクトの種類</param>
-	/// <param name="_arrayNum">確認したいエフェクトの配列番号</param>
-	/// <returns>true:再生が終わった</returns>
-	const bool IsEnd(const EFF_TYPE _effType, const int _arrayNum);
-	
-	/// <summary>
-	/// 指定したエフェクトがいくつ再生されているか
-	/// </summary>
-	/// <param name="_effType">確認したいエフェクト</param>
-	/// <returns>プレイされている数(-1:そもそもそのエフェクトが存在しない)</returns>
-	const int GetPlayNum(const EFF_TYPE _effType);
 
 	/// <summary>
 	/// 座標の再設定
 	/// </summary>
 	/// <param name="_effType">エフェクトの種類</param>
-	/// <param name="_arrayNum">変更したいエフェクトの配列番号</param>
+	/// <param name="_id">変更したいエフェクトのID</param>
 	/// <param name="_pos">変更後の座標情報</param>
-	void SetPos(const EFF_TYPE _effType, const int _arrayNum, const VECTOR _pos);
+	void SetPos(const EFF_TYPE _effType, const int _id, const VECTOR _pos);
 
 	/// <summary>
 	/// 回転の再設定
 	/// </summary>
 	/// <param name="_effType">エフェクトの種類</param>
-	/// <param name="_arrayNum">変更したいエフェクトの配列番号</param>
+	/// <param name="_id">変更したいエフェクトのID</param>
 	/// <param name="_quaRot">変更後の回転情報</param>
-	void SetQuaRot(const EFF_TYPE _effType, const int _arrayNum, const Quaternion _quaRot);
+	void SetQuaRot(const EFF_TYPE _effType, const int _id, const Quaternion _quaRot);
 	
 	/// <summary>
 	/// 大きさの再設定
 	/// </summary>
 	/// <param name="_effType">エフェクトの種類</param>
-	/// <param name="_arrayNum">変更したいエフェクトの配列番号</param>
+	/// <param name="_id">変更したいエフェクトのID</param>
 	/// <param name="_scl">変更後の大きさ</param>
-	void SetScale(const EFF_TYPE _effType, const int _arrayNum, const VECTOR _scl);
+	void SetScale(const EFF_TYPE _effType, const int _id, const VECTOR _scl);
 
 	/// <summary>
 	/// 速度の再設定
 	/// </summary>
 	/// <param name="_effType">エフェクトの種類</param>
-	/// <param name="_arrayNum">変更したいエフェクトの配列番号</param>
+	/// <param name="_id">変更したいエフェクトのID</param>
 	/// <param name="_speedMultiplier">変更後の速度倍率 </param>
-	void SetSpeed(const EFF_TYPE _effType, const int _arrayNum, const float _speedMultiplier);
+	void SetSpeed(const EFF_TYPE _effType, const int _id, const float _speedMultiplier);
 
 private:
 
@@ -136,7 +115,6 @@ private:
 	{
 		int resId;							//リソースデータ
 		std::map<int, PlayData> playData;	//プレイ中のデータ
-		int playNum;						//プレイ中のエフェクトの数
 	};
 
 	//通常倍率
@@ -145,6 +123,9 @@ private:
 	//エフェクトデータ
 	std::map<EFF_TYPE, EffectData> effects_;	
 
+	//次に渡すID
+	int nextId_ = 0;
+
 	/// <summary>
 	/// もう一度再生
 	/// </summary>
@@ -152,4 +133,3 @@ private:
 	/// <param name="_arrayNum">もう一度再生させる配列</param>
 	void RePlay(const EFF_TYPE _effType, const int _arrayNum);
 };
-

@@ -78,8 +78,8 @@ void SceneManager::Init(void)
 	// デルタタイム
 	preTime_ = std::chrono::system_clock::now();
 	
-	//ウィンドウがアクティブ状態でなくとも処理を行う
-	SetAlwaysRunFlag(true);
+	//ウィンドウが非アクティブな場合は処理を行わない
+	SetAlwaysRunFlag(false);
 
 	// 3D用の設定
 	Init3D();

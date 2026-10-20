@@ -23,6 +23,10 @@ MachineAction::MachineAction(Player& _player, LogicBase& _logic)
 	spinCnt_ = 0.0f;
 	isSpin_ = false;
 
+	effScl_[EffectController::EFF_TYPE::BOOST] = BOOST_EFF_SCL;
+	effScl_[EffectController::EFF_TYPE::CHARGE] = CHARGE_EFF_SCL;
+	effScl_[EffectController::EFF_TYPE::SPIN] = SPIN_EFF_SCL;
+
 	update_[true] = [this](void) {UpdateGround(); };
 	update_[false] = [this](void) {UpdateFlight(); };
 }
@@ -101,7 +105,7 @@ void MachineAction::Update(void)
 	
 	//エフェクト更新
 	effectController_->Update();
-	for (auto& eff : effNum_)
+	for (auto& eff : effId_)
 	{
 		//エフェクトが存在するなら
 		if (eff.second != -1)
@@ -109,7 +113,7 @@ void MachineAction::Update(void)
 			//各情報をプレイヤーに合わせる
 			effectController_->SetPos(eff.first, eff.second, playerTrans.pos);
 			effectController_->SetQuaRot(eff.first, eff.second, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(Utility::DEGREE_MAX / 2), 0.0f)));
-			effectController_->SetScale(eff.first, eff.second, BOOST_EFF_SCL);
+			effectController_->SetScale(eff.first, eff.second, effScl_[eff.first]);
 		}
 	}
 }
@@ -244,6 +248,19 @@ void MachineAction::Charge(void)
 	//デルタタイム
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
+	//最初の瞬間のみチャージエフェクトを再生
+	if (chargeCnt_ <= 0.0f)
+	{
+		//プレイヤー情報
+		const auto& playerTrans = player_.GetTrans();
+
+		effId_[EffectController::EFF_TYPE::CHARGE] = effectController_->Play(
+			EffectController::EFF_TYPE::CHARGE
+			, playerTrans.pos
+			, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(Utility::DEGREE_MAX / 2), 0.0f))
+			, effScl_[EffectController::EFF_TYPE::CHARGE]);
+	}
+
 	//チャージカウンタ
 	chargeCnt_ += BASE_CHARGE * param.charge / unitParam.chargeCapacity;
 
@@ -259,26 +276,6 @@ void MachineAction::Charge(void)
 	}
 	else
 	{
-		//プレイヤー情報
-		const auto& playerTrans = player_.GetTrans();
-
-		//チャージエフェクト(1個のみ)
-		if (effNum_[EffectController::EFF_TYPE::CHARGE] < 1)
-		{
-			effNum_[EffectController::EFF_TYPE::CHARGE] = effectController_->Play(
-				EffectController::EFF_TYPE::CHARGE
-				, playerTrans.pos
-				, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(Utility::DEGREE_MAX / 2), 0.0f))
-				, CHARGE_EFF_SCL);
-		}
-		else
-		{
-			//チャージエフェクトの更新
-			effectController_->SetPos(EffectController::EFF_TYPE::CHARGE, effNum_[EffectController::EFF_TYPE::CHARGE], playerTrans.pos);
-			effectController_->SetQuaRot(EffectController::EFF_TYPE::CHARGE, effNum_[EffectController::EFF_TYPE::CHARGE], playerTrans.quaRot);
-			effectController_->SetScale(EffectController::EFF_TYPE::CHARGE, effNum_[EffectController::EFF_TYPE::CHARGE], CHARGE_EFF_SCL);
-		}
-
 		//キャラの大きさを変える
 		float rate = (unitParam.chargeCapacity * chargeCnt_ / unitParam.chargeCapacity) * 0.2f;
 		VECTOR scale = player_.GetTrans().scl;
@@ -354,15 +351,15 @@ void MachineAction::DisCharge(void)
 	const auto& playerTrans = player_.GetTrans();
 
 	//チャージのエフェクトの停止
-	effectController_->Delete(EffectController::EFF_TYPE::CHARGE, effNum_[EffectController::EFF_TYPE::CHARGE]);
-	effNum_[EffectController::EFF_TYPE::CHARGE]--;
+	effectController_->Delete(EffectController::EFF_TYPE::CHARGE, effId_[EffectController::EFF_TYPE::CHARGE]);
+	effId_[EffectController::EFF_TYPE::CHARGE]--;
 
 	//ブーストエフェクト
-	effNum_[EffectController::EFF_TYPE::BOOST] = effectController_->Play(
+	effId_[EffectController::EFF_TYPE::BOOST] = effectController_->Play(
 		EffectController::EFF_TYPE::BOOST
 		, playerTrans.pos
 		, playerTrans.quaRot.Mult(Quaternion::Euler(0.0f, Utility::Deg2RadF(Utility::DEGREE_MAX / 2), 0.0f))
-		, BOOST_EFF_SCL);
+		, effScl_[EffectController::EFF_TYPE::BOOST]);
 }
 
 void MachineAction::Spin(void)
@@ -381,11 +378,11 @@ void MachineAction::Spin(void)
 
 		//スピン開始
 		player_.EnableSpinCollider();
-		effNum_[EffectController::EFF_TYPE::SPIN] = effectController_->Play(
+		effId_[EffectController::EFF_TYPE::SPIN] = effectController_->Play(
 			EffectController::EFF_TYPE::SPIN
 			, player_.GetTrans().pos
 			, player_.GetTrans().quaRot
-			, SPIN_EFF_SCL
+			, effScl_[EffectController::EFF_TYPE::SPIN]
 			, true);
 		isSpin_ = true;
 	}
@@ -404,8 +401,8 @@ void MachineAction::Spin(void)
 			isSpin_ = false;
 			
 			//スピンエフェクトの停止
-			effectController_->Delete(EffectController::EFF_TYPE::SPIN, effNum_[EffectController::EFF_TYPE::SPIN]);
-			effNum_[EffectController::EFF_TYPE::SPIN]--;
+			effectController_->Delete(EffectController::EFF_TYPE::SPIN, effId_[EffectController::EFF_TYPE::SPIN]);
+			effId_[EffectController::EFF_TYPE::SPIN]--;
 
 			//スピン終了
 			player_.DisableSpinCollider();

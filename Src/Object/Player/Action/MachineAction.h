@@ -76,13 +76,13 @@ private:
 	//エフェクト関係
 	static constexpr VECTOR BOOST_EFF_SCL = {5.0f, 5.0f, 5.0f};
 	static constexpr VECTOR CHARGE_EFF_SCL = {40.0f, 40.0f, 40.0f};
-	static constexpr VECTOR SPIN_EFF_SCL = {1.0f, 1.0f, 1.0f };
+	static constexpr VECTOR SPIN_EFF_SCL = {5.0f, 5.0f, 5.0f };
 
 	//エフェクト
 	std::unique_ptr<EffectController> effectController_;
 
 	//エフェクトの配列番号
-	std::unordered_map<EffectController::EFF_TYPE, int> effNum_;
+	std::unordered_map<EffectController::EFF_TYPE, int> effId_;
 
 	//走行時間カウンタ
 	float driveCnt_;
@@ -113,6 +113,9 @@ private:
 
 	//スピン判定
 	bool isSpin_;
+
+	//エフェクトの大きさ
+	std::unordered_map<EffectController::EFF_TYPE, VECTOR> effScl_;
 
 	//状態ごとの更新
 	void UpdateGround(void)override;

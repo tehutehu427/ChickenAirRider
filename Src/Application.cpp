@@ -121,7 +121,6 @@ void Application::Run(void)
 		//終了(デバッグ)
 		if (CheckHitKey(KEY_INPUT_ESCAPE))isGameEnd_ = true;
 	}
-
 }
 
 void Application::Destroy(void)
