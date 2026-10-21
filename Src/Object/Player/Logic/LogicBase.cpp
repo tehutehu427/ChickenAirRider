@@ -1,6 +1,7 @@
 #include "LogicBase.h"
 
 LogicBase::LogicBase(void)
+	: canGetOff_(false)
 {
 }
 

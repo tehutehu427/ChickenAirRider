@@ -25,6 +25,7 @@ void HUDManager::LoadOutSide(void)
 		playerHud.hudData[static_cast<int>(HUD_TYPE::PUSH_BUTTON)] = { &HUDManager::DrawPushButton,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::CHARGE_GAUGE)] = { &HUDManager::DrawChargeGauge,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::HEALTH)] = { &HUDManager::DrawHealth,false };
+		playerHud.hudData[static_cast<int>(HUD_TYPE::GET_ITEM)] = { &HUDManager::DrawGetItem,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::PARAMETER)] = { &HUDManager::DrawParam,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::GET_OFF)] = { &HUDManager::DrawGetOff,false };
 	}
@@ -55,6 +56,17 @@ void HUDManager::LoadOutSide(void)
 	attackImg_ = res.Load(ResourceManager::SRC::ATTACK).handleId_;
 	defenceImg_ = res.Load(ResourceManager::SRC::DEFENCE).handleId_;
 	maxHealthImg_ = res.Load(ResourceManager::SRC::MAX_HEALTH).handleId_;
+
+	//パワーアップテキスト
+	maxSpeedText_ = res.Load(ResourceManager::SRC::MAX_SPEED_TEXT).handleId_;
+	acceleText_ = res.Load(ResourceManager::SRC::ACCELERATION_TEXT).handleId_;
+	turnText_ = res.Load(ResourceManager::SRC::TURNING_TEXT).handleId_;
+	chargeText_ = res.Load(ResourceManager::SRC::CHARGE_TEXT).handleId_;
+	flightText_ = res.Load(ResourceManager::SRC::FLIGHT_TEXT).handleId_;
+	weightText_ = res.Load(ResourceManager::SRC::WEIGHT_TEXT).handleId_;
+	attackText_ = res.Load(ResourceManager::SRC::ATTACK_TEXT).handleId_;
+	defenceText_ = res.Load(ResourceManager::SRC::DEFENCE_TEXT).handleId_;
+	maxHealthText_ = res.Load(ResourceManager::SRC::MAX_HEALTH_TEXT).handleId_;
 
 	//チャージゲージカウント
 	cnt_ = 0.0f;
@@ -123,6 +135,14 @@ void HUDManager::SetPlayer(const Player* _player, const int _index)
 void HUDManager::SetVisible(const int _index, const HUD_TYPE _type, const bool _visible)
 {
 	playerHUD_[_index].hudData[static_cast<size_t>(_type)].visible = _visible;
+}
+
+void HUDManager::AddGetItemInfo(const int _index, const Parameter& _param)
+{
+	//アイテムの情報
+	GetItemInfo info;
+
+	getItemInfo_[_index].push(info);
 }
 
 HUDManager::HUDManager(void)
@@ -287,6 +307,10 @@ void HUDManager::DrawHealth(const int _playerIndex)
 			pos.y + static_cast<int>(barHeight),
 			Utility::RED, true);
 	}
+}
+
+void HUDManager::DrawGetItem(const int _playerIndex)
+{
 }
 
 void HUDManager::DrawParam(const int _playerIndex)

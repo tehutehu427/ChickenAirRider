@@ -5,6 +5,7 @@
 #include "../Object/Common/Geometry/Model.h"
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/SoundManager.h"
+#include "../Manager/Game/HUDManager.h"
 #include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/AttackManager.h"
 #include "../Parameter/Parameter.h"
@@ -229,6 +230,8 @@ void PlayerOnHit::PowerUpItemOnHit(const Collider* _hitCol)
 
 	//ƒvƒŒƒCƒ„[‚É‰ÁZ
 	player_.SetParam(player_.GetParam() + param);
+
+	HUDManager::GetInstance().AddGetItemInfo()
 }
 
 void PlayerOnHit::BattleItemOnHit(const Collider* _hitCol)

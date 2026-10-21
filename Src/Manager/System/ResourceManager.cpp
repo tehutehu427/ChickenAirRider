@@ -79,6 +79,42 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"MaxHealth.png");
 	resourcesMap_.emplace(SRC::MAX_HEALTH, std::move(res));
 
+	//最高速テキスト
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"MaxSpeedText.png");
+	resourcesMap_.emplace(SRC::MAX_SPEED_TEXT, std::move(res));
+
+	//加速テキスト
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"AccelerationText.png");
+	resourcesMap_.emplace(SRC::ACCELERATION_TEXT, std::move(res));
+	
+	//旋回テキスト
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"TurningText.png");
+	resourcesMap_.emplace(SRC::TURNING_TEXT, std::move(res));
+
+	//チャージテキスト
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"ChargeText.png");
+	resourcesMap_.emplace(SRC::CHARGE_TEXT, std::move(res));
+
+	//飛行テキスト
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"FlightText.png");
+	resourcesMap_.emplace(SRC::FLIGHT_TEXT, std::move(res));
+
+	//重さテキスト
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"WeightText.png");
+	resourcesMap_.emplace(SRC::WEIGHT_TEXT, std::move(res));
+
+	//攻撃テキスト
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"AttackText.png");
+	resourcesMap_.emplace(SRC::ATTACK_TEXT, std::move(res));
+
+	//防御テキスト
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"DefenceText.png");
+	resourcesMap_.emplace(SRC::DEFENCE_TEXT, std::move(res));
+
+	//最大体力テキスト
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"MaxHealthText.png");
+	resourcesMap_.emplace(SRC::MAX_HEALTH_TEXT, std::move(res));
+
 	//キャノン画像
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, itemImage + L"Cannon.png");
 	resourcesMap_.emplace(SRC::CANNON_IMAGE, std::move(res));

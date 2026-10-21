@@ -9,30 +9,10 @@
 MachineManager::MachineManager(void)
 {
 	//リソース
-	getModelId_["wakaba"] = [this](void)
-	{
-		//インスタンス
-		auto& res = ResourceManager::GetInstance();
-		return res.LoadModelDuplicate(ResourceManager::SRC::WAKABA_STAR);
-	};
-	getModelId_["earth"] = [this](void)
-	{
-		//インスタンス
-		auto& res = ResourceManager::GetInstance();
-		return res.LoadModelDuplicate(ResourceManager::SRC::EARTH_STAR);
-	};
-	getModelId_["battle"] = [this](void)
-	{
-		//インスタンス
-		auto& res = ResourceManager::GetInstance();
-		return res.LoadModelDuplicate(ResourceManager::SRC::BATTLE_STAR);
-	};
-	getModelId_["bottle"] = [this](void)
-	{
-		//インスタンス
-		auto& res = ResourceManager::GetInstance();
-		return res.LoadModelDuplicate(ResourceManager::SRC::BOTTLE_STAR);
-	};
+	getModelId_["wakaba"] = &MachineManager::GetModelIdWakaba;
+	getModelId_["earth"] = &MachineManager::GetModelIdEarth;
+	getModelId_["battle"] = &MachineManager::GetModelIdBattle;
+	getModelId_["bottle"] = &MachineManager::GetModelIdBottle;
 }
 
 MachineManager::~MachineManager(void)
@@ -45,6 +25,34 @@ void MachineManager::LoadOutSide(void)
 {
 	//ステージ情報
 	importData_ = LoaderManager<MachineImportData>::GetInstance().GetfileData(Utility::WStrToStr(Application::PATH_JSON + L"Machine.json"));
+}
+
+const int MachineManager::GetModelIdWakaba(void)const
+{
+	//インスタンス
+	auto& res = ResourceManager::GetInstance();
+	return res.LoadModelDuplicate(ResourceManager::SRC::WAKABA_STAR);
+}
+
+const int MachineManager::GetModelIdEarth(void)const
+{
+	//インスタンス
+	auto& res = ResourceManager::GetInstance();
+	return res.LoadModelDuplicate(ResourceManager::SRC::EARTH_STAR);
+}
+
+const int MachineManager::GetModelIdBattle(void)const
+{
+	//インスタンス
+	auto& res = ResourceManager::GetInstance();
+	return res.LoadModelDuplicate(ResourceManager::SRC::BATTLE_STAR);
+}
+
+const int MachineManager::GetModelIdBottle(void)const
+{
+	//インスタンス
+	auto& res = ResourceManager::GetInstance();
+	return res.LoadModelDuplicate(ResourceManager::SRC::BOTTLE_STAR);
 }
 
 void MachineManager::Init(void)
@@ -95,7 +103,7 @@ void MachineManager::CreateMachine(void)
 	int rand = Utility::GetRandomValue(0, size - 1);
 
 	//機体の種類
-	int modelId = getModelId_.at(importData_[rand].name)();
+	int modelId = (this->*getModelId_[importData_[rand].name])();
 	VECTOR pos = Utility::VECTOR_ZERO;
 	pos.x = static_cast<float>(Utility::GetRandomValue(static_cast<int>(-CREATE_RANGE), static_cast<int>(CREATE_RANGE)));
 	pos.y = static_cast<float>(Utility::GetRandomValue(static_cast<int>(-CREATE_RANGE), static_cast<int>(CREATE_RANGE)));
@@ -114,7 +122,7 @@ void MachineManager::CreateMachine(void)
 void MachineManager::CreateMachine(const int _machineType, const VECTOR& _pos)
 {
 	//機体の種類
-	int modelId = getModelId_.at(importData_[_machineType].name)();
+	int modelId = (this->*getModelId_[importData_[_machineType].name])();
 	VECTOR pos = _pos;
 
 	//機体
@@ -138,7 +146,7 @@ void MachineManager::SaveGetOffMachine(std::unique_ptr<Machine> _machine)
 
 const int MachineManager::GetModelId(const MACHINE_TYPE _machineName)
 {
-	return getModelId_[importData_[static_cast<int>(_machineName)].name]();
+	return (this->*getModelId_[importData_[static_cast<int>(_machineName)].name])();
 }
 
 const float MachineManager::GetRadius(const MACHINE_TYPE _machineName)
@@ -162,14 +170,14 @@ std::unique_ptr<Machine> MachineManager::GetMachine(const Machine& _machine)
 	return nullptr;
 }
 
-std::unique_ptr<Machine> MachineManager::GetCreateMachine(const MACHINE_TYPE _machineName)const 
+std::unique_ptr<Machine> MachineManager::GetCreateMachine(const MACHINE_TYPE _machineName)
 {
 	//機体添え字
 	int num = static_cast<int>(_machineName);
 	std::string name = importData_[num].name;
 
 	//機体の種類
-	int modelId = getModelId_.at(name)();
+	int modelId = (this->*getModelId_[name])();
 
 	//機体
 	std::unique_ptr<Machine> machine = std::make_unique<Machine>(importData_[num], modelId);

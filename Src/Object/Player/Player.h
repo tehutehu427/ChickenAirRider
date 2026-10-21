@@ -171,7 +171,7 @@ public:
 	const bool GetCanRide(void)const { return rideCoolTime_ <= 0.0f; }
 
 	//降りれるかどうかの設定
-	void SetCanGetOff(const bool _getOff) { canGetOff_ = _getOff; }
+	void SetCanGetOff(const bool _getOff);
 
 	//移動できるかどうかの取得
 	const bool GetCanMove(void)const { return canMove_; }
@@ -266,9 +266,6 @@ private:
 
 	//再乗車用カウンタ
 	float rideCoolTime_;
-
-	//降りれるかどうか
-	bool canGetOff_;
 
 	//移動可能かどうか
 	bool canMove_;

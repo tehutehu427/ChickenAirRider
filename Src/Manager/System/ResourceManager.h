@@ -58,6 +58,17 @@ public:
 		DEFENCE,			//防御
 		MAX_HEALTH,			//最大体力
 
+		//パワーアップテキスト
+		MAX_SPEED_TEXT,			//最高速
+		ACCELERATION_TEXT,		//加速
+		TURNING_TEXT,			//旋回
+		CHARGE_TEXT,			//チャージ
+		FLIGHT_TEXT,			//飛行
+		WEIGHT_TEXT,			//重さ
+		ATTACK_TEXT,			//攻撃
+		DEFENCE_TEXT,			//防御
+		MAX_HEALTH_TEXT,		//最大体力
+
 		//バトルアイテム画像
 		CANNON_IMAGE,		//大砲画像
 

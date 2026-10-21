@@ -34,6 +34,9 @@ public:
 	//スペシャルボタンを押したか
 	virtual const bool IsSpecial(void)const = 0;
 
+	//機体から降りれるかの設定
+	void SetCanGetOff(const float _getOff) { canGetOff_ = _getOff; }
+
 	//機体から降りたか
 	virtual const bool IsGetOff(void)const = 0;
 
@@ -51,5 +54,10 @@ public:
 	virtual const bool IsJump(void)const = 0;
 
 #pragma endregion キャラクター
+
+protected:
+
+	//降りれるかどうか
+	bool canGetOff_;
 };
 

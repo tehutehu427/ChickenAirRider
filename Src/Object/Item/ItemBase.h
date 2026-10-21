@@ -65,7 +65,7 @@ protected:
 	static constexpr float LOCAL_HITER_POS_Y = 60.0f;
 
 	//ˆÚ“®—Í
-	static constexpr int MOVE_POW_MIN = 5;
+	static constexpr int MOVE_POW_MIN = 10;
 	static constexpr int MOVE_POW_MAX = 15;
 	static constexpr float MOVE_POW_Y = 30.0f;
 

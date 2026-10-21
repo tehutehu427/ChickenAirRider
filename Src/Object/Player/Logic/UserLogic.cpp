@@ -126,6 +126,9 @@ const bool UserLogic::IsSpecial(void)const
 
 const bool UserLogic::IsGetOff(void)const
 {
+    //そもそも降りられないなら
+    if (!canGetOff_)return false;
+
     //インスタンス
     auto& key = KeyConfig::GetInstance();
 

@@ -19,6 +19,7 @@ public:
 	{
 		MAIN,			//基本
 		DEATH_MATCH,	//デスマッチ
+		MAX
 	};
 
 	//初期化
@@ -80,7 +81,8 @@ private:
 	std::vector<BoxCreatePositionData> boxPosData_;
 
 	//モデルID取得
-	std::unordered_map<std::string, std::function<int(void)>> getImageId_;
+	using GetImageFunc = const int(ItemManager::*)(void);
+	std::unordered_map<std::string, GetImageFunc> getImageId_;
 
 	//アイテムボックス
 	std::vector<std::unique_ptr<ItemBox>> itemBoxes_;
@@ -89,13 +91,15 @@ private:
 	std::vector<std::unique_ptr<ItemBase>> items_;
 
 	//バトルアイテムの生成
-	std::unordered_map<BattleItemBase::BATTLE_ITEM_TYPE, std::function<std::unique_ptr<BattleItemBase>(const VECTOR&, const VECTOR&)>> createBattleItem_;
+	using CreateBattleItemFunc = std::unique_ptr<BattleItemBase>(ItemManager::*)(const VECTOR&, const VECTOR&);
+	std::array<CreateBattleItemFunc, static_cast<int>(BattleItemBase::BATTLE_ITEM_TYPE::MAX)> createBattleItem_;
 
 	//生成タイプ
 	SPAWN_TYPE type_;
 
 	//ゲームごとの生成
-	std::unordered_map<SPAWN_TYPE, std::function<void(void)>> create_;
+	using CreateFunc = void(ItemManager::*)(void);
+	std::array<CreateFunc, static_cast<int>(SPAWN_TYPE::MAX)> create_;
 
 	//生成カウンタ
 	float boxCreateCnt_;
@@ -112,6 +116,17 @@ private:
 
 	//アイテムボックス生成
 	void CreateItemBox(void);
+
+	//アイテム画像取得
+	const int GetImageMaxSpeed(void);
+	const int GetImageAcceleration(void);
+	const int GetImageTurning(void);
+	const int GetImageCharge(void);
+	const int GetImageFlight(void);
+	const int GetImageWeight(void);
+	const int GetImageAttack(void);
+	const int GetImageDefence(void);
+	const int GetImageMaxHealth(void);
 
 	//バトルアイテム生成
 	std::unique_ptr<BattleItemBase> CreateCannon(const VECTOR& _pos, const VECTOR& _vec);

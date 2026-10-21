@@ -52,7 +52,7 @@ public:
 	std::unique_ptr<Machine> GetMachine(const Machine& _machine);
 
 	//機体を生成して返す
-	std::unique_ptr<Machine> GetCreateMachine(const MACHINE_TYPE _machineName)const;
+	std::unique_ptr<Machine> GetCreateMachine(const MACHINE_TYPE _machineName);
 
 private:
 
@@ -67,7 +67,8 @@ private:
 	std::vector<MachineImportData> importData_;
 
 	//名前管理
-	std::unordered_map<std::string, std::function<int(void)>> getModelId_;
+	using GetModelIdFunc = const int(MachineManager::*)(void)const;
+	std::unordered_map<std::string, GetModelIdFunc> getModelId_;
 
 	//機体の格納
 	std::vector<std::unique_ptr<Machine>> machines_;
@@ -80,5 +81,10 @@ private:
 
 	//読み込み
 	void LoadOutSide(void)override;
-};
 
+	//モデルIDの取得
+	const int GetModelIdWakaba(void)const;
+	const int GetModelIdEarth(void)const;
+	const int GetModelIdBattle(void)const;
+	const int GetModelIdBottle(void)const;
+};

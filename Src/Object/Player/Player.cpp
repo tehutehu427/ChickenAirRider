@@ -42,7 +42,6 @@ Player::Player(const int _plIndex, std::weak_ptr<Camera> _camera, OPERATION_TYPE
 	footLine_ = Quaternion();
 	damage_ = 0.0f;
 	invincible_ = 0.0f;
-	canGetOff_ = false;
 	canMove_ = false;
 
 	//操作タイプ
@@ -108,8 +107,6 @@ void Player::Load(void)
 	//当たり判定後処理
 	onHit_ = std::make_unique<PlayerOnHit>(*this);
 	onHit_->Load();
-
-	canGetOff_ = true;
 }
 
 void Player::Init(void)
@@ -292,6 +289,11 @@ void Player::Damage(const float _damage)
 	}
 }
 
+void Player::SetCanGetOff(const bool _getOff)
+{
+	logic_->SetCanGetOff(_getOff);
+}
+
 void Player::EnableSpinCollider(void)
 {
 	//スピンコライダを有効化
@@ -448,7 +450,7 @@ void Player::UpdateRide(void)
 	action_->Update();
 
 	//降りたなら
-	if (state_ == STATE::RIDE_MACHINE && logic_->IsGetOff() && canGetOff_)
+	if (state_ == STATE::RIDE_MACHINE && logic_->IsGetOff())
 	{
 		//スピンの当たり判定を無効化
 		DisableSpinCollider();

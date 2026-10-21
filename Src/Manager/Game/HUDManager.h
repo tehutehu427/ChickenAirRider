@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include<memory>
 #include<array>
+#include<queue>
 #include "../Common/Singleton.h"
 #include "../Common/Vector2F.h"
 #include "../../Renderer/PixelRenderer.h"
@@ -22,6 +23,7 @@ public:
 		PUSH_BUTTON,	//プッシュ表示
 		CHARGE_GAUGE,	//チャージゲージ
 		HEALTH,			//体力
+		GET_ITEM,		//アイテム取得表示
 		PARAMETER,		//パラメーター
 		GET_OFF,		//降車
 		MAX
@@ -44,6 +46,9 @@ public:
 
 	//プレイヤーの表示設定
 	void SetVisible(const int _index, const HUD_TYPE _type, const bool _visible);
+
+	//アイテム取得情報を配列に追加
+	void AddGetItemInfo(const int _index, const Parameter& _param);
 
 private:
 
@@ -75,6 +80,19 @@ private:
 
 		//色
 		int color = 0;
+	};
+
+	//取得アイテム情報
+	struct GetItemInfo
+	{
+		//アイコン画像
+		int icon = -1;
+
+		//名前画像
+		int nameImage = -1;
+
+		//カウンタ
+		float cnt = 0.0f;
 	};
 
 	//入力
@@ -148,6 +166,17 @@ private:
 	int defenceImg_;
 	int maxHealthImg_;
 
+	//パワーアップテキスト
+	int maxSpeedText_;
+	int acceleText_;
+	int turnText_;
+	int chargeText_;
+	int flightText_;
+	int weightText_;
+	int attackText_;
+	int defenceText_;
+	int maxHealthText_;
+
 	//カウンタ
 	float cnt_;
 
@@ -165,6 +194,7 @@ private:
 
 	//プレイヤー参照
 	std::array<PlayerHUD, static_cast<int>(GameSetting::PLAYER_MAX_NUM)> playerHUD_;
+	std::array<std::queue<GetItemInfo>, static_cast<int>(GameSetting::PLAYER_MAX_NUM)> getItemInfo_;
 
 	//描画
 	void DrawPlayerHUD(const int _playerIndex);
@@ -173,6 +203,7 @@ private:
 	void DrawPushButton(const int _playerIndex);
 	void DrawChargeGauge(const int _playerIndex);
 	void DrawHealth(const int _playerIndex);
+	void DrawGetItem(const int _playerIndex);
 	void DrawParam(const int _playerIndex);
 	void DrawGetOff(const int _playerIndex);
 };

@@ -55,7 +55,7 @@ void ItemManager::Update(void)
 	if (boxCreateCnt_ > BOX_CREATE_TIME)
 	{
 		//生成
-		create_[type_]();
+		(this->*create_[static_cast<int>(type_)])();
 
 		//初期化
 		boxCreateCnt_ = 0.0f;
@@ -82,57 +82,22 @@ ItemManager::ItemManager(void)
 	//画像ID
 
 	//パワーアップ
-	getImageId_["maxSpeed"] = [](void)
-	{
-		return ResourceManager::GetInstance().Load(ResourceManager::SRC::MAX_SPEED).handleId_;
-	};
-	getImageId_["acceleration"] = [](void)
-	{
-		return ResourceManager::GetInstance().Load(ResourceManager::SRC::ACCELERATION).handleId_;
-	};
-	getImageId_["turning"] = [](void)
-	{
-		return ResourceManager::GetInstance().Load(ResourceManager::SRC::TURNING).handleId_;
-	};
-	getImageId_["charge"] = [](void)
-	{
-		return ResourceManager::GetInstance().Load(ResourceManager::SRC::CHARGE).handleId_;
-	};
-	getImageId_["flight"] = [](void)
-	{
-		return ResourceManager::GetInstance().Load(ResourceManager::SRC::FLIGHT).handleId_;
-	};
-	getImageId_["weight"] = [](void)
-	{
-		return ResourceManager::GetInstance().Load(ResourceManager::SRC::WEIGHT).handleId_;
-	};
-	getImageId_["attack"] = [](void)
-	{
-		return ResourceManager::GetInstance().Load(ResourceManager::SRC::ATTACK).handleId_;
-	};
-	getImageId_["defence"] = [](void)
-	{
-		return ResourceManager::GetInstance().Load(ResourceManager::SRC::DEFENCE).handleId_;
-	};
-	getImageId_["maxHealth"] = [](void)
-	{
-		return ResourceManager::GetInstance().Load(ResourceManager::SRC::MAX_HEALTH).handleId_;
-	};
+	getImageId_["maxSpeed"] = &ItemManager::GetImageMaxSpeed;
+	getImageId_["acceleration"] = &ItemManager::GetImageAcceleration;
+	getImageId_["turning"] = &ItemManager::GetImageTurning;
+	getImageId_["charge"] = &ItemManager::GetImageCharge;
+	getImageId_["flight"] = &ItemManager::GetImageFlight;
+	getImageId_["weight"] = &ItemManager::GetImageWeight;
+	getImageId_["attack"] = &ItemManager::GetImageAttack;
+	getImageId_["defence"] = &ItemManager::GetImageDefence;
+	getImageId_["maxHealth"] = &ItemManager::GetImageMaxHealth;
 
-	createBattleItem_[BattleItemBase::BATTLE_ITEM_TYPE::CANNON] = [this](const VECTOR& _pos, const VECTOR& _vec)
-	{
-		return CreateCannon(_pos, _vec);
-	};
+	//バトルアイテム
+	createBattleItem_[static_cast<int>(BattleItemBase::BATTLE_ITEM_TYPE::CANNON)] = &ItemManager::CreateCannon;
 
 	//生成
-	create_[SPAWN_TYPE::MAIN] = [this](void)
-	{
-		CreateMain();
-	};
-	create_[SPAWN_TYPE::DEATH_MATCH] = [this](void)
-	{
-		CreateDeathMatch();
-	};
+	create_[static_cast<int>(SPAWN_TYPE::MAIN)] = &ItemManager::CreateMain;
+	create_[static_cast<int>(SPAWN_TYPE::DEATH_MATCH)] = &ItemManager::CreateDeathMatch;
 
 	//初期化
 	boxCreateCnt_ = 0.0f;
@@ -189,6 +154,51 @@ void ItemManager::CreateItemBox(void)
 	itemBoxes_.push_back(std::move(itemBox));
 }
 
+const int ItemManager::GetImageMaxSpeed(void)
+{
+	return ResourceManager::GetInstance().Load(ResourceManager::SRC::MAX_SPEED).handleId_;
+}
+
+const int ItemManager::GetImageAcceleration(void)
+{
+	return ResourceManager::GetInstance().Load(ResourceManager::SRC::ACCELERATION).handleId_;
+}
+
+const int ItemManager::GetImageTurning(void)
+{
+	return ResourceManager::GetInstance().Load(ResourceManager::SRC::TURNING).handleId_;
+}
+
+const int ItemManager::GetImageCharge(void)
+{
+	return ResourceManager::GetInstance().Load(ResourceManager::SRC::CHARGE).handleId_;
+}
+
+const int ItemManager::GetImageFlight(void)
+{
+	return ResourceManager::GetInstance().Load(ResourceManager::SRC::FLIGHT).handleId_;
+}
+
+const int ItemManager::GetImageWeight(void)
+{
+	return ResourceManager::GetInstance().Load(ResourceManager::SRC::WEIGHT).handleId_;
+}
+
+const int ItemManager::GetImageAttack(void)
+{
+	return ResourceManager::GetInstance().Load(ResourceManager::SRC::ATTACK).handleId_;
+}
+
+const int ItemManager::GetImageDefence(void)
+{
+	return ResourceManager::GetInstance().Load(ResourceManager::SRC::DEFENCE).handleId_;
+}
+
+const int ItemManager::GetImageMaxHealth(void)
+{
+	return ResourceManager::GetInstance().Load(ResourceManager::SRC::MAX_HEALTH).handleId_;
+}
+
 std::unique_ptr<BattleItemBase> ItemManager::CreateCannon(const VECTOR& _pos, const VECTOR& _vec)
 {
 	return std::make_unique<Cannon>(_pos, _vec);
@@ -232,7 +242,7 @@ void ItemManager::CreatePowerUpItem(const VECTOR& _pos, const VECTOR& _pPos, con
 		rand =  Utility::GetRandomValue(0, importSize - 1);
 
 		//生成
-		std::unique_ptr<ItemBase> item = std::make_unique<PowerUpItemBase>(_pos, targetVec, getImageId_[powerUpItemData_[rand].name](), powerUpItemData_[rand].param);
+		std::unique_ptr<ItemBase> item = std::make_unique<PowerUpItemBase>(_pos, targetVec, (this->*getImageId_[powerUpItemData_[rand].name])(), powerUpItemData_[rand].param);
 		item->Load();
 		item->Init();
 
@@ -279,7 +289,7 @@ void ItemManager::CreateBattleItem(const VECTOR& _pos, const VECTOR& _pPos, cons
 		rand = Utility::GetRandomValue(0, importSize - 1);
 
 		//生成
-		std::unique_ptr<ItemBase> item = createBattleItem_[battleItemData_[rand].type](_pos, targetVec);
+		std::unique_ptr<ItemBase> item = (this->*createBattleItem_[static_cast<int>(battleItemData_[rand].type)])(_pos, targetVec);
 		item->Load();
 		item->Init();
 
