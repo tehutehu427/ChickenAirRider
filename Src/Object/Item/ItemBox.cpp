@@ -195,23 +195,20 @@ void ItemBox::OnHit(const Collider* _hitCol)
 		//死亡判定
 		isDead_ = true;
 
-		//自身から相手へのベクトル生成
-		VECTOR vec = Utility::GetMoveVec(trans_.pos, hitCol->GetOwner().GetTrans().pos);
-
 		//アイテム生成
-		(this->*createItem_[static_cast<int>(type_)])(vec);
+		(this->*createItem_[static_cast<int>(type_)])(hitCol->GetOwner().GetTrans().pos);
 	}
 
 	//モデル更新
 	trans_.Update();
 }
 
-void ItemBox::CreatePowerUpItem(const VECTOR& _vec)
+void ItemBox::CreatePowerUpItem(const VECTOR& _pPos)const
 {
-	ItemManager::GetInstance().CreatePowerUpItem(trans_.pos, _vec);
+	ItemManager::GetInstance().CreatePowerUpItem(trans_.pos, _pPos);
 }
 
-void ItemBox::CreateBattleItem(const VECTOR& _vec)
+void ItemBox::CreateBattleItem(const VECTOR& _pPos)const
 {
-	ItemManager::GetInstance().CreateBattleItem(trans_.pos, _vec);
+	ItemManager::GetInstance().CreateBattleItem(trans_.pos, _pPos);
 }

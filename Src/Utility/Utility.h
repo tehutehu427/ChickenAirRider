@@ -76,6 +76,9 @@ public:
 	//アルファ最大値
 	static constexpr int ALPHA_MAX = 255;
 
+	//割合
+	static constexpr float PERCENT = 100.0f;
+
 	//揺れのデフォルト値
 	static constexpr float DEFAULT_SHAKE_SPEED = 5.0f;		//揺れの振幅
 	static constexpr float DEFAULT_SHAKE_AMPLITUDE = 10.0f;	//揺れの速さ

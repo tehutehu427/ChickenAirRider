@@ -58,7 +58,7 @@ protected:
 
 	//半径
 	static constexpr float OBJECT_HIT_RADIUS = 70.0f;
-	static constexpr float PLAYER_HIT_RADIUS = 150.0f;
+	static constexpr float PLAYER_HIT_RADIUS = 180.0f;
 	static constexpr float BROUD_RADIUS = 200.0f;
 
 	//取得後表示相対座標
@@ -66,7 +66,7 @@ protected:
 
 	//移動力
 	static constexpr int MOVE_POW_MIN = 5;
-	static constexpr int MOVE_POW_MAX = 10;
+	static constexpr int MOVE_POW_MAX = 15;
 	static constexpr float MOVE_POW_Y = 30.0f;
 
 	//コライダ生成時間

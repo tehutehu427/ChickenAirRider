@@ -641,5 +641,5 @@ bool InputManager::IsMouseTrgHold(KeyConfig::MOUSE mouse, float _holdTime, bool 
 
 float InputManager::GetMouseTrgHoldCnt(KeyConfig::MOUSE mouse)
 {
-	return 0.0f;
+	return FindMouse(mouse).keyTrgHoldCnt;
 }

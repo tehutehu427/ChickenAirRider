@@ -161,7 +161,7 @@ void ItemManager::CreateDeathMatch(void)
 	ItemBox::ITEM_TYPE randType = static_cast<ItemBox::ITEM_TYPE>(Utility::GetRandomValue(0, static_cast<int>(ItemBox::ITEM_TYPE::MAX) - 1));
 
 	//生成
-	CreateBattleItem(boxPosData_[rand].pos,Utility::VECTOR_ZERO, 1);
+	CreateBattleItem(boxPosData_[rand].pos, boxPosData_[rand].pos, 1);
 }
 
 void ItemManager::CreateItemBox(void)
@@ -194,22 +194,23 @@ std::unique_ptr<BattleItemBase> ItemManager::CreateCannon(const VECTOR& _pos, co
 	return std::make_unique<Cannon>(_pos, _vec);
 }
 
-void ItemManager::CreatePowerUpItem(const VECTOR& _pos, const VECTOR& _vec, const int _num)
+void ItemManager::CreatePowerUpItem(const VECTOR& _pos, const VECTOR& _pPos, const int _num)
 {
 	//サイズ
 	int importSize = static_cast<int>(powerUpItemData_.size());
 
-	//移動方向
-	VECTOR moveVec = _vec;
+	//プレイヤーから生成位置に向かうベクトル
+	VECTOR moveVec = Utility::GetMoveVec(_pPos, _pos);
 	
 	//ベクトルの差異
-	float offset = 0.0f;
+	float sideOffset = 0.0f;
+	float frontOffset = 0.0f;
 
-	//
+	//プレイヤーに対する横ベクトル
 	VECTOR side = VCross(moveVec, VGet(0.0f, 1.0f, 0.0f));
 
-	//ランダム方向
-	VECTOR randVec = Utility::VECTOR_ZERO;
+	//最終的なベクトル
+	VECTOR targetVec = Utility::VECTOR_ZERO;
 
 	//生成数
 	int createNum = _num == -1 ? Utility::GetRandomValue(CREATE_MIN, CREATE_MAX) : _num;
@@ -221,15 +222,17 @@ void ItemManager::CreatePowerUpItem(const VECTOR& _pos, const VECTOR& _vec, cons
 	for (int i = 0 ; i < createNum ; i++)
 	{
 		//ランダムで少しベクトルをずらす
-		offset = Utility::GetRandomValue(-CREATE_VEC_OFFSET, CREATE_VEC_OFFSET);
+		sideOffset = static_cast<float>(Utility::GetRandomValue(-CREATE_SIDE_VEC_OFFSET, CREATE_SIDE_VEC_OFFSET));
+		frontOffset = static_cast<float>(Utility::GetRandomValue(0, CREATE_FRONT_VEC_OFFSET));
 
-		//randVec = VAdd()
+		//最終的なベクトルを決める
+		targetVec = VAdd(VScale(moveVec, frontOffset / Utility::PERCENT), VScale(side, sideOffset / Utility::PERCENT));
 
 		//ランダムでアイテムの種類決め
 		rand =  Utility::GetRandomValue(0, importSize - 1);
 
 		//生成
-		std::unique_ptr<ItemBase> item = std::make_unique<PowerUpItemBase>(_pos, moveVec, getImageId_[powerUpItemData_[rand].name](), powerUpItemData_[rand].param);
+		std::unique_ptr<ItemBase> item = std::make_unique<PowerUpItemBase>(_pos, targetVec, getImageId_[powerUpItemData_[rand].name](), powerUpItemData_[rand].param);
 		item->Load();
 		item->Init();
 
@@ -238,13 +241,23 @@ void ItemManager::CreatePowerUpItem(const VECTOR& _pos, const VECTOR& _vec, cons
 	}
 }
 
-void ItemManager::CreateBattleItem(const VECTOR& _pos, const VECTOR& _vec, const int _num)
+void ItemManager::CreateBattleItem(const VECTOR& _pos, const VECTOR& _pPos, const int _num)
 {
 	//サイズ
 	int importSize = static_cast<int>(battleItemData_.size());
 
-	//生成位置
-	VECTOR moveVec;
+	//プレイヤーから生成位置に向かうベクトル
+	VECTOR moveVec = Utility::GetMoveVec(_pPos, _pos);
+
+	//ベクトルの差異
+	float sideOffset = 0.0f;
+	float frontOffset = 0.0f;
+
+	//プレイヤーに対する横ベクトル
+	VECTOR side = VCross(moveVec, VGet(0.0f, 1.0f, 0.0f));
+
+	//最終的なベクトル
+	VECTOR targetVec = Utility::VECTOR_ZERO;
 
 	//生成数
 	int createNum = _num == -1 ? Utility::GetRandomValue(CREATE_MIN, CREATE_MAX) : _num;
@@ -255,18 +268,18 @@ void ItemManager::CreateBattleItem(const VECTOR& _pos, const VECTOR& _vec, const
 	//ランダムで決めた生成数分アイテムを生成する
 	for (int i = 0; i < createNum; i++)
 	{
-		//位置の反転
-		if (i % 2 == 0)moveVec.x = -moveVec.x;
-		else if (i % 2 == 1)moveVec.z = -moveVec.z;
+		//ランダムで少しベクトルをずらす
+		sideOffset = static_cast<float>(Utility::GetRandomValue(-CREATE_SIDE_VEC_OFFSET, CREATE_SIDE_VEC_OFFSET));
+		frontOffset = static_cast<float>(Utility::GetRandomValue(0, CREATE_FRONT_VEC_OFFSET));
 
-		//一つだけなら中央に
-		if (createNum == 1)moveVec = { 0.0f,0.0f,0.0f };
+		//最終的なベクトルを決める
+		targetVec = VAdd(VScale(moveVec, frontOffset / Utility::PERCENT), VScale(side, sideOffset / Utility::PERCENT));
 
 		//ランダムでアイテムの種類決め
 		rand = Utility::GetRandomValue(0, importSize - 1);
 
 		//生成
-		std::unique_ptr<ItemBase> item = createBattleItem_[battleItemData_[rand].type](_pos, moveVec);
+		std::unique_ptr<ItemBase> item = createBattleItem_[battleItemData_[rand].type](_pos, targetVec);
 		item->Load();
 		item->Init();
 

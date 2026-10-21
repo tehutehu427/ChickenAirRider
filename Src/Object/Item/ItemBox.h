@@ -119,10 +119,10 @@ private:
 	std::unordered_map<ITEM_TYPE, COLOR_F> color_;
 
 	//アイテムの生成関数ポインタ
-	using CreateFunc = void(ItemBox::*)(const VECTOR&);
+	using CreateFunc = void(ItemBox::*)(const VECTOR&)const;
 	std::array<CreateFunc, static_cast<int>(ITEM_TYPE::MAX)> createItem_;
 
 	//アイテムの生成
-	void CreatePowerUpItem(const VECTOR& _vec);
-	void CreateBattleItem(const VECTOR& _vec);
+	void CreatePowerUpItem(const VECTOR& _pPos)const;
+	void CreateBattleItem(const VECTOR& _pPos)const;
 };

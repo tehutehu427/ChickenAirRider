@@ -37,17 +37,17 @@ public:
 	/// パワーアップアイテム生成
 	/// </summary>
 	/// <param name="_pos">生成位置</param>
-	/// <param name="_vec">生成した後の移動方向</param>
+	/// <param name="_pPos">プレイヤーの座標</param>
 	/// <param name="_num">生成数(指定なしならランダム)</param>
-	void CreatePowerUpItem(const VECTOR& _pos, const VECTOR& _vec, const int _num = -1);
+	void CreatePowerUpItem(const VECTOR& _pos, const VECTOR& _pPos, const int _num = -1);
 
 	/// <summary>
 	/// バトルアイテム生成
 	/// </summary>
 	/// <param name="_pos">生成位置</param>
-	/// <param name="_vec">生成した後の移動方向</param>
+	/// <param name="_pPos">プレイヤーの座標</param>
 	/// <param name="_num">生成数(指定なしならランダム)</param>
-	void CreateBattleItem(const VECTOR& _pos, const VECTOR& _vec, const int _num = -1);
+	void CreateBattleItem(const VECTOR& _pos, const VECTOR& _pPos, const int _num = -1);
 
 	//生成タイプの設定
 	void SetSpawnType(const SPAWN_TYPE _type) { type_ = _type; }
@@ -65,7 +65,8 @@ private:
 	static constexpr int CREATE_MIN = 2;
 
 	//アイテムの生成ベクトルの差異
-	static constexpr int CREATE_VEC_OFFSET = 30;
+	static constexpr int CREATE_SIDE_VEC_OFFSET = 40;
+	static constexpr int CREATE_FRONT_VEC_OFFSET = 100;
 
 	//アイテムボックスの生成間隔
 	static constexpr float BOX_CREATE_TIME = 5.0f;
