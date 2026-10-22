@@ -84,6 +84,7 @@ void GameMain::Init(void)
 		hud.SetVisible(i, HUDManager::HUD_TYPE::CHARGE_GAUGE, true);
 		hud.SetVisible(i, HUDManager::HUD_TYPE::HEALTH, true);
 		hud.SetVisible(i, HUDManager::HUD_TYPE::PUSH_BUTTON, true);
+		hud.SetVisible(i, HUDManager::HUD_TYPE::GET_ITEM, true);
 		hud.SetVisible(i, HUDManager::HUD_TYPE::GET_OFF, false);
 		split.SetShader(i, SplitScreenManager::SHADER_TYPE::GOD_RAY);
 	}
@@ -135,6 +136,7 @@ void GameMain::Release(void)
 		hud.SetVisible(i, HUDManager::HUD_TYPE::CHARGE_GAUGE, false);
 		hud.SetVisible(i, HUDManager::HUD_TYPE::HEALTH, false);
 		hud.SetVisible(i, HUDManager::HUD_TYPE::GET_OFF, false);
+		hud.SetVisible(i, HUDManager::HUD_TYPE::GET_ITEM, false);
 		split.SetShader(i, SplitScreenManager::SHADER_TYPE::DEFAULT);
 	}
 

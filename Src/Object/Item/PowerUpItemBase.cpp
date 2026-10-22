@@ -6,11 +6,11 @@
 #include "../Object/Common/Geometry/Sphere.h"
 #include "PowerUpItemBase.h"
 
-PowerUpItemBase::PowerUpItemBase(const VECTOR& _pos, const VECTOR& _vec, const int _imageId, const Parameter& _param)
+PowerUpItemBase::PowerUpItemBase(const VECTOR& _pos, const VECTOR& _vec, const int _imageId, const Parameter& _param, const POWER_UP_TYPE& _type)
 	: ItemBase(_pos,_vec)
+	, param_(_param)
+	, type_(_type)
 {
-	//パラメーター
-	param_ = _param;
 	trans_.modelId = _imageId;
 }
 

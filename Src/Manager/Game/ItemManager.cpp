@@ -92,6 +92,17 @@ ItemManager::ItemManager(void)
 	getImageId_["defence"] = &ItemManager::GetImageDefence;
 	getImageId_["maxHealth"] = &ItemManager::GetImageMaxHealth;
 
+	//パワーアップの種類
+	powerUpType_["maxSpeed"] = POWER_UP_TYPE::MAX_SPEED;
+	powerUpType_["acceleration"] = POWER_UP_TYPE::ACCELERATION;
+	powerUpType_["turning"] = POWER_UP_TYPE::TURNING;
+	powerUpType_["charge"] = POWER_UP_TYPE::CHARGE;
+	powerUpType_["flight"] = POWER_UP_TYPE::FLIGHT;
+	powerUpType_["weight"] = POWER_UP_TYPE::WEIGHT;
+	powerUpType_["attack"] = POWER_UP_TYPE::ATTACK;
+	powerUpType_["defence"] = POWER_UP_TYPE::DEFENCE;
+	powerUpType_["maxHealth"] = POWER_UP_TYPE::MAX_HEALTH;
+
 	//バトルアイテム
 	createBattleItem_[static_cast<int>(BattleItemBase::BATTLE_ITEM_TYPE::CANNON)] = &ItemManager::CreateCannon;
 
@@ -242,7 +253,8 @@ void ItemManager::CreatePowerUpItem(const VECTOR& _pos, const VECTOR& _pPos, con
 		rand =  Utility::GetRandomValue(0, importSize - 1);
 
 		//生成
-		std::unique_ptr<ItemBase> item = std::make_unique<PowerUpItemBase>(_pos, targetVec, (this->*getImageId_[powerUpItemData_[rand].name])(), powerUpItemData_[rand].param);
+		auto& data = powerUpItemData_[rand];
+		std::unique_ptr<ItemBase> item = std::make_unique<PowerUpItemBase>(_pos, targetVec, (this->*getImageId_[data.name])(), data.param, powerUpType_[data.name]);
 		item->Load();
 		item->Init();
 

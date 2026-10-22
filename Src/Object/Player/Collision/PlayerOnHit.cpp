@@ -231,7 +231,8 @@ void PlayerOnHit::PowerUpItemOnHit(const Collider* _hitCol)
 	//ÉvÉåÉCÉÑÅ[Ç…â¡éZ
 	player_.SetParam(player_.GetParam() + param);
 
-	HUDManager::GetInstance().AddGetItemInfo()
+	//UIÇ…í«â¡
+	HUDManager::GetInstance().AddGetItemInfo(player_.GetPlayerIndex(), powerUpItem.GetType());
 }
 
 void PlayerOnHit::BattleItemOnHit(const Collider* _hitCol)

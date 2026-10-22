@@ -37,7 +37,7 @@
       "chargeBraking": 0.2,
       "chargeCapacity": 100.0,
       "chargeDamp": 1.0,
-      "boostRate": 1.0,
+      "boostRate": 0.1,
       "boostPower": 4,
       "rateOfConvergence": 1.0,
 

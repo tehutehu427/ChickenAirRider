@@ -2,10 +2,11 @@
 #include<memory>
 #include<array>
 #include<queue>
-#include "../Common/Singleton.h"
-#include "../Common/Vector2F.h"
-#include "../../Renderer/PixelRenderer.h"
-#include "GameSetting.h"
+#include"../Common/Singleton.h"
+#include"../Common/Vector2F.h"
+#include"../../Renderer/PixelRenderer.h"
+#include"../../Object/Item/PowerUpType.h"
+#include"GameSetting.h"
 
 class PixelMaterial;
 class Player;
@@ -48,7 +49,7 @@ public:
 	void SetVisible(const int _index, const HUD_TYPE _type, const bool _visible);
 
 	//アイテム取得情報を配列に追加
-	void AddGetItemInfo(const int _index, const Parameter& _param);
+	void AddGetItemInfo(const int _index, const POWER_UP_TYPE& _type);
 
 private:
 
@@ -89,7 +90,7 @@ private:
 		int icon = -1;
 
 		//名前画像
-		int nameImage = -1;
+		int textImage = -1;
 
 		//カウンタ
 		float cnt = 0.0f;
@@ -119,6 +120,15 @@ private:
 	static constexpr Vector2F HEALTH_POS = { 0.95f,0.6f };
 	static constexpr Vector2F CHARGE_POS = { 0.85f,0.8f };
 	static constexpr Vector2F GET_OFF_POS = { 0.3f,0.6f };
+
+	//パワーアップ表示の時間
+	static constexpr float POWER_UP_DISPLAY_TIME = 1.0f;
+
+	//パワーアップテキスト
+	static constexpr float POWER_UP_ICON_SIZE = 2.0f;
+	static constexpr float POWER_UP_TEXT_SIZE = 1.0f;
+	static constexpr float POWER_UP_ICON_LOCAL_POS_Y = 50.0f;
+	static constexpr int POWER_UP_TEXT_LOCAL_POS_X = 200;
 
 	//チャージゲージの大きさ
 	static constexpr float GAUGE_SIZE = 512.0f;
@@ -166,17 +176,6 @@ private:
 	int defenceImg_;
 	int maxHealthImg_;
 
-	//パワーアップテキスト
-	int maxSpeedText_;
-	int acceleText_;
-	int turnText_;
-	int chargeText_;
-	int flightText_;
-	int weightText_;
-	int attackText_;
-	int defenceText_;
-	int maxHealthText_;
-
 	//カウンタ
 	float cnt_;
 
@@ -196,6 +195,10 @@ private:
 	std::array<PlayerHUD, static_cast<int>(GameSetting::PLAYER_MAX_NUM)> playerHUD_;
 	std::array<std::queue<GetItemInfo>, static_cast<int>(GameSetting::PLAYER_MAX_NUM)> getItemInfo_;
 
+	//パワーアップ画像設定
+	using SetGetItemImageFunc = void(HUDManager::*)(int&, int&);
+	std::array<SetGetItemImageFunc, static_cast<int>(POWER_UP_TYPE::MAX)> setGetItemImage_;
+
 	//描画
 	void DrawPlayerHUD(const int _playerIndex);
 
@@ -206,4 +209,15 @@ private:
 	void DrawGetItem(const int _playerIndex);
 	void DrawParam(const int _playerIndex);
 	void DrawGetOff(const int _playerIndex);
+
+	//画像設定
+	void SetGetItemImageMaxSpeed(int& _icon, int& _text);
+	void SetGetItemImageAcceleration(int& _icon, int& _text);
+	void SetGetItemImageTurning(int& _icon, int& _text);
+	void SetGetItemImageCharge(int& _icon, int& _text);
+	void SetGetItemImageFlight(int& _icon, int& _text);
+	void SetGetItemImageWeight(int& _icon, int& _text);
+	void SetGetItemImageAttack(int& _icon, int& _text);
+	void SetGetItemImageDefence(int& _icon, int& _text);
+	void SetGetItemImageMaxHealth(int& _icon, int& _text);
 };

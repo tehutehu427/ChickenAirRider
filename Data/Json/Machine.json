@@ -29,7 +29,7 @@
       "fixedDefence": 1.0,
       "fixedMaxHealth": 1.0,
 
-      "affectMaxSpeed": 0.5,
+      "affectMaxSpeed": 0.3,
       "affectAcceleration": 0.8,
       "affectTurning": 0.8,
       "affectCharge": 0.8,
@@ -41,9 +41,9 @@
 
       "chargeBraking": 0.6,
       "chargeCapacity": 80.0,
-      "chargeDamp": 1.0,
+      "chargeDamp": 0.8,
       "boostRate": 0.2,
-      "boostPower": 6,
+      "boostPower": 4,
       "rateOfConvergence": 1.0,
 
       "groundSpeed": 1.0,

@@ -175,18 +175,6 @@ void ItemBase::DrawAlive(void)
 
 void ItemBase::DrawGot(void)
 {
-	//所持者
-	const auto& hiter = hiter_;
-
-	//取得者がいないとスキップ
-	if (hiter == nullptr)return;
-
-	//取得者の座標
-	VECTOR hiterPos = hiter->GetOwner().GetTrans().pos;
-	Sphere& sphere = dynamic_cast<Sphere&>(hiter->GetGeometry());
-
-	//小さめに描画
-	DrawBillboard3D(VGet(hiterPos.x, hiterPos.y + sphere.GetRadius() + LOCAL_HITER_POS_Y, hiterPos.z), 0.5f, 0.5f, GOT_IMG_SIZE, 0.0f, trans_.modelId, true);
 }
 
 void ItemBase::DrawDead(void)

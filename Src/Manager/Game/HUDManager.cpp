@@ -30,6 +30,17 @@ void HUDManager::LoadOutSide(void)
 		playerHud.hudData[static_cast<int>(HUD_TYPE::GET_OFF)] = { &HUDManager::DrawGetOff,false };
 	}
 
+	//パワーアップ画像設定
+	setGetItemImage_[static_cast<int>(POWER_UP_TYPE::MAX_SPEED)] = &HUDManager::SetGetItemImageMaxSpeed;
+	setGetItemImage_[static_cast<int>(POWER_UP_TYPE::ACCELERATION)] = &HUDManager::SetGetItemImageAcceleration;
+	setGetItemImage_[static_cast<int>(POWER_UP_TYPE::TURNING)] = &HUDManager::SetGetItemImageTurning;
+	setGetItemImage_[static_cast<int>(POWER_UP_TYPE::CHARGE)] = &HUDManager::SetGetItemImageCharge;
+	setGetItemImage_[static_cast<int>(POWER_UP_TYPE::FLIGHT)] = &HUDManager::SetGetItemImageFlight;
+	setGetItemImage_[static_cast<int>(POWER_UP_TYPE::WEIGHT)] = &HUDManager::SetGetItemImageWeight;
+	setGetItemImage_[static_cast<int>(POWER_UP_TYPE::ATTACK)] = &HUDManager::SetGetItemImageAttack;
+	setGetItemImage_[static_cast<int>(POWER_UP_TYPE::DEFENCE)] = &HUDManager::SetGetItemImageDefence;
+	setGetItemImage_[static_cast<int>(POWER_UP_TYPE::MAX_HEALTH)] = &HUDManager::SetGetItemImageMaxHealth;
+
 	//入力画像
 	pushImg_ = res.Load(ResourceManager::SRC::PUSH).handleId_;
 	mouseImg_ = res.Load(ResourceManager::SRC::MOUSE).handleId_;
@@ -56,17 +67,6 @@ void HUDManager::LoadOutSide(void)
 	attackImg_ = res.Load(ResourceManager::SRC::ATTACK).handleId_;
 	defenceImg_ = res.Load(ResourceManager::SRC::DEFENCE).handleId_;
 	maxHealthImg_ = res.Load(ResourceManager::SRC::MAX_HEALTH).handleId_;
-
-	//パワーアップテキスト
-	maxSpeedText_ = res.Load(ResourceManager::SRC::MAX_SPEED_TEXT).handleId_;
-	acceleText_ = res.Load(ResourceManager::SRC::ACCELERATION_TEXT).handleId_;
-	turnText_ = res.Load(ResourceManager::SRC::TURNING_TEXT).handleId_;
-	chargeText_ = res.Load(ResourceManager::SRC::CHARGE_TEXT).handleId_;
-	flightText_ = res.Load(ResourceManager::SRC::FLIGHT_TEXT).handleId_;
-	weightText_ = res.Load(ResourceManager::SRC::WEIGHT_TEXT).handleId_;
-	attackText_ = res.Load(ResourceManager::SRC::ATTACK_TEXT).handleId_;
-	defenceText_ = res.Load(ResourceManager::SRC::DEFENCE_TEXT).handleId_;
-	maxHealthText_ = res.Load(ResourceManager::SRC::MAX_HEALTH_TEXT).handleId_;
 
 	//チャージゲージカウント
 	cnt_ = 0.0f;
@@ -137,11 +137,15 @@ void HUDManager::SetVisible(const int _index, const HUD_TYPE _type, const bool _
 	playerHUD_[_index].hudData[static_cast<size_t>(_type)].visible = _visible;
 }
 
-void HUDManager::AddGetItemInfo(const int _index, const Parameter& _param)
+void HUDManager::AddGetItemInfo(const int _index, const POWER_UP_TYPE& _type)
 {
 	//アイテムの情報
 	GetItemInfo info;
 
+	//画像を設定
+	(this->*setGetItemImage_[static_cast<int>(_type)])(info.icon, info.textImage);
+
+	//差し込み
 	getItemInfo_[_index].push(info);
 }
 
@@ -311,6 +315,47 @@ void HUDManager::DrawHealth(const int _playerIndex)
 
 void HUDManager::DrawGetItem(const int _playerIndex)
 {
+	//プレイヤー
+	const auto* player = playerHUD_[_playerIndex].player;
+
+	//存在しないなら何もしない
+	if (!player)return;
+
+	//配列の中身が空なら何もしない
+	if (getItemInfo_[_playerIndex].empty())return;
+
+	//分割
+	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
+
+	//サイズ比率(XYほぼ同一なので統一)
+	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
+
+	//座標
+	Vector2 pos = { view.x + static_cast<int>(Application::SCREEN_HALF_X * scale),view.y + static_cast<int>(Application::SCREEN_HALF_Y * scale) };
+	float iconSize = POWER_UP_ICON_SIZE * scale;
+	float textSize = POWER_UP_TEXT_SIZE * scale;
+	float iconLocalPosY = POWER_UP_ICON_LOCAL_POS_Y * scale;
+	int iconPosY = static_cast<int>(pos.y - iconLocalPosY);
+	int textPosX = pos.x + static_cast<int>(POWER_UP_TEXT_LOCAL_POS_X * scale);
+
+	//先頭の情報
+	GetItemInfo& frontInfo = getItemInfo_[_playerIndex].front();
+
+	//表示
+	VECTOR playerPos = player->GetTrans().pos;
+	DrawRotaGraph(pos.x, iconPosY, iconSize, 0.0, frontInfo.icon, true);
+	DrawRotaGraph(textPosX, iconPosY, textSize, 0.0, frontInfo.textImage, true);
+
+	//カウントを進める
+	float delta = SceneManager::GetInstance().GetDeltaTime();
+	frontInfo.cnt += delta;
+
+	//表示時間を超えたら
+	if (frontInfo.cnt > POWER_UP_DISPLAY_TIME)
+	{
+		//配列から破棄
+		getItemInfo_[_playerIndex].pop();
+	}
 }
 
 void HUDManager::DrawParam(const int _playerIndex)
@@ -433,4 +478,112 @@ void HUDManager::DrawGetOff(const int _playerIndex)
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	renderer_.Draw(*getOffMaterial_, gaugeCenter, sizeVec);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+}
+
+void HUDManager::SetGetItemImageMaxSpeed(int& _icon, int& _text)
+{
+	//リソース
+	auto& res = ResourceManager::GetInstance();
+
+	//アイコン
+	_icon = res.Load(ResourceManager::SRC::MAX_SPEED).handleId_;
+
+	//テキスト
+	_text = res.Load(ResourceManager::SRC::MAX_SPEED_TEXT).handleId_;
+}
+
+void HUDManager::SetGetItemImageAcceleration(int& _icon, int& _text)
+{
+	//リソース
+	auto& res = ResourceManager::GetInstance();
+
+	//アイコン
+	_icon = res.Load(ResourceManager::SRC::ACCELERATION).handleId_;
+
+	//テキスト
+	_text = res.Load(ResourceManager::SRC::ACCELERATION_TEXT).handleId_;
+}
+
+void HUDManager::SetGetItemImageTurning(int& _icon, int& _text)
+{
+	//リソース
+	auto& res = ResourceManager::GetInstance();
+
+	//アイコン
+	_icon = res.Load(ResourceManager::SRC::TURNING).handleId_;
+
+	//テキスト
+	_text = res.Load(ResourceManager::SRC::TURNING_TEXT).handleId_;
+}
+
+void HUDManager::SetGetItemImageCharge(int& _icon, int& _text)
+{
+	//リソース
+	auto& res = ResourceManager::GetInstance();
+
+	//アイコン
+	_icon = res.Load(ResourceManager::SRC::CHARGE).handleId_;
+
+	//テキスト
+	_text = res.Load(ResourceManager::SRC::CHARGE_TEXT).handleId_;
+}
+
+void HUDManager::SetGetItemImageFlight(int& _icon, int& _text)
+{
+	//リソース
+	auto& res = ResourceManager::GetInstance();
+
+	//アイコン
+	_icon = res.Load(ResourceManager::SRC::FLIGHT).handleId_;
+
+	//テキスト
+	_text = res.Load(ResourceManager::SRC::FLIGHT_TEXT).handleId_;
+}
+
+void HUDManager::SetGetItemImageWeight(int& _icon, int& _text)
+{
+	//リソース
+	auto& res = ResourceManager::GetInstance();
+
+	//アイコン
+	_icon = res.Load(ResourceManager::SRC::WEIGHT).handleId_;
+
+	//テキスト
+	_text = res.Load(ResourceManager::SRC::WEIGHT_TEXT).handleId_;
+}
+
+void HUDManager::SetGetItemImageAttack(int& _icon, int& _text)
+{
+	//リソース
+	auto& res = ResourceManager::GetInstance();
+
+	//アイコン
+	_icon = res.Load(ResourceManager::SRC::ATTACK).handleId_;
+
+	//テキスト
+	_text = res.Load(ResourceManager::SRC::ATTACK_TEXT).handleId_;
+}
+
+void HUDManager::SetGetItemImageDefence(int& _icon, int& _text)
+{
+	//リソース
+	auto& res = ResourceManager::GetInstance();
+
+	//アイコン
+	_icon = res.Load(ResourceManager::SRC::DEFENCE).handleId_;
+
+	//テキスト
+	_text = res.Load(ResourceManager::SRC::DEFENCE_TEXT).handleId_;
+}
+
+void HUDManager::SetGetItemImageMaxHealth(int& _icon, int& _text)
+{
+	//リソース
+	auto& res = ResourceManager::GetInstance();
+
+	//アイコン
+	_icon = res.Load(ResourceManager::SRC::MAX_HEALTH).handleId_;
+
+	//テキスト
+	_text = res.Load(ResourceManager::SRC::MAX_HEALTH_TEXT).handleId_;
 }

@@ -2,6 +2,7 @@
 #include<functional>
 #include "../Common/Singleton.h"
 #include "../Object/Item/ItemImportData.h"
+#include "../Object/Item/PowerUpType.h"
 #include "../Object/Item/BoxCreatePositionData.h"
 
 class ItemBox;
@@ -83,6 +84,7 @@ private:
 	//モデルID取得
 	using GetImageFunc = const int(ItemManager::*)(void);
 	std::unordered_map<std::string, GetImageFunc> getImageId_;
+	std::unordered_map<std::string, POWER_UP_TYPE> powerUpType_;
 
 	//アイテムボックス
 	std::vector<std::unique_ptr<ItemBox>> itemBoxes_;

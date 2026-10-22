@@ -73,7 +73,7 @@ void Player::Load(void)
 	chara_ = std::move(charaMng.CreateCharacter("chicken"));
 
 	//初期機体情報
-	const auto& machineMng = MachineManager::GetInstance();
+	auto& machineMng = MachineManager::GetInstance();
 
 	//機体
 	machine_ = std::move(machineMng.GetCreateMachine(MachineManager::MACHINE_TYPE::WAKABA));
@@ -116,7 +116,7 @@ void Player::Init(void)
 	trans_.pos = movedPos_;
 
 	//初期機体情報
-	const auto& machineMng = MachineManager::GetInstance();
+	auto& machineMng = MachineManager::GetInstance();
 
 	//機体
 	if (!machine_)
