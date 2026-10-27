@@ -70,9 +70,6 @@ private:
 	//FPS
 	std::unique_ptr<FpsControl> fps_;
 
-	//フォント登録
-	std::unique_ptr<FontRegistry> fontReg_;
-
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする
 	Application(void);

@@ -6,10 +6,11 @@
 #include "Manager/System/ResourceManager.h"
 #include "Manager/System/SceneManager.h"
 #include "Manager/System/SoundManager.h"
+#include "Manager/System/FontManager.h"
+#include "Manager/System/TextManager.h"
 #include "Manager/Game/GameSetting.h"
 #include "Manager/Game/GlobalUIManager.h"
 #include "FpsControl/FpsControl.h"
-#include "Common/FontRegistry.h"
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -86,13 +87,15 @@ void Application::Init(void)
 	// シーン管理初期化
 	SceneManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
+	//フォント管理初期化
+	FontManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
+
+	//テキスト管理初期化
+	TextManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
+
 	// FPS初期化
 	fps_ = std::make_unique<FpsControl>();
 	fps_->Init();
-
-	//フォント登録
-	fontReg_ = std::make_unique<FontRegistry>();
-	fontReg_->Init();
 }
 
 void Application::Run(void)
@@ -125,8 +128,6 @@ void Application::Run(void)
 
 void Application::Destroy(void)
 {
-	fontReg_->Destroy();
-
 	//シングルトンインスタンスの一括解放
 	SingletonRegistry::GetInstance().Delete(SingletonRegistry::DESTROY_TIMING::ALL_END);
 

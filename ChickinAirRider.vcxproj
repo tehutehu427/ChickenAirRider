@@ -163,6 +163,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Manager\Game\GuideManager.cpp" />
     <ClCompile Include="Src\Manager\Game\AttackManager.cpp" />
     <ClCompile Include="Src\Manager\Game\CharacterManager.cpp" />
     <ClCompile Include="Src\Event\NoChargeEvent.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Src\Event\EventFactory.cpp" />
     <ClCompile Include="Src\Manager\Game\EventManager.cpp" />
     <ClCompile Include="Src\Manager\Game\HUDManager.cpp" />
+    <ClCompile Include="Src\Manager\System\FontManager.cpp" />
     <ClCompile Include="Src\Object\Player\Logic\Npc\NpcBrain.cpp" />
     <ClCompile Include="Src\Scene\SceneResult.cpp" />
     <ClCompile Include="Src\Manager\Game\GlobalUIManager.cpp" />
@@ -219,7 +221,6 @@
     <ClCompile Include="Src\Scene\SceneBase.cpp" />
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Common\Fader.cpp" />
-    <ClCompile Include="Src\Common\FontRegistry.cpp" />
     <ClCompile Include="Src\Common\IntVector3.cpp" />
     <ClCompile Include="Src\Common\Quaternion.cpp" />
     <ClCompile Include="Src\Common\Vector2.cpp" />
@@ -256,8 +257,10 @@
     <ClCompile Include="Src\Manager\Game\Timer.cpp" />
     <ClCompile Include="Src\Common\Vector2F.cpp" />
     <ClCompile Include="Src\Manager\System\SplitScreenManager.cpp" />
+    <ClCompile Include="Src\Manager\System\TextManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Manager\Game\GuideManager.h" />
     <ClInclude Include="Src\Manager\Game\AttackData.h" />
     <ClInclude Include="Src\Manager\Game\AttackManager.h" />
     <ClInclude Include="Src\Manager\Game\CharacterManager.h" />
@@ -269,6 +272,8 @@
     <ClInclude Include="Src\Event\EventFactory.h" />
     <ClInclude Include="Src\Manager\Game\EventManager.h" />
     <ClInclude Include="Src\Manager\Game\HUDManager.h" />
+    <ClInclude Include="Src\Manager\System\FontManager.h" />
+    <ClInclude Include="Src\Manager\System\FontType.h" />
     <ClInclude Include="Src\Object\Item\PowerUpType.h" />
     <ClInclude Include="Src\Object\Player\Character\CharacterImportData.h" />
     <ClInclude Include="Src\Object\Player\Logic\Npc\NpcBrain.h" />
@@ -327,7 +332,6 @@
     <ClInclude Include="Src\Scene\SceneBase.h" />
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Common\Fader.h" />
-    <ClInclude Include="Src\Common\FontRegistry.h" />
     <ClInclude Include="Src\Common\IntVector3.h" />
     <ClInclude Include="Src\Common\Quaternion.h" />
     <ClInclude Include="Src\Common\Vector2.h" />
@@ -432,6 +436,7 @@
     <ClInclude Include="Src\Manager\Game\Timer.h" />
     <ClInclude Include="Src\Common\Vector2F.h" />
     <ClInclude Include="Src\Manager\System\SplitScreenManager.h" />
+    <ClInclude Include="Src\Manager\System\TextManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\PixelShader2DHeader.hlsli" />

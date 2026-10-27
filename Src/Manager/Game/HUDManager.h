@@ -59,15 +59,21 @@ private:
 	//描画情報
 	struct HUDData
 	{
-		DrawFunc func;	//描画処理
-		bool visible;	//描画判定
+		//描画処理
+		DrawFunc func = nullptr;	
+
+		//描画判定
+		bool visible = false;	
 	};
 
 	//プレイヤーUI情報
 	struct PlayerHUD
 	{
-		const Player* player = nullptr;										//プレイヤー
-		std::array<HUDData, static_cast<size_t>(HUD_TYPE::MAX)> hudData;	//描画情報
+		//プレイヤー
+		const Player* player = nullptr;
+
+		//描画情報
+		std::array<HUDData, static_cast<size_t>(HUD_TYPE::MAX)> hudData;
 	};
 
 	//描画パラメーターの紐付け
