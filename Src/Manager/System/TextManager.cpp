@@ -1,4 +1,4 @@
-#include "../../pch.h"
+﻿#include "../../pch.h"
 #include "ResourceManager.h"
 #include "FontManager.h"
 #include "TextManager.h"
@@ -7,7 +7,7 @@ void TextManager::Init(void)
 {
 }
 
-void TextManager::DrawTextToImage(const std::wstring& _str, const int _x, const int _y, const int _size, const int _thick, const FONT_TYPE _font)
+void TextManager::DrawTextToImage(const std::wstring& _str, const int _x, const int _y, const int _size, const int _thick, const int _color, const FONT_TYPE _font)const
 {
 	//フォントを取得
 	auto& fontMng = FontManager::GetInstance();
@@ -18,13 +18,21 @@ void TextManager::DrawTextToImage(const std::wstring& _str, const int _x, const 
 
 	//位置
 	int drawX = _x;
+	int drawY = _y;
 
 	//フォントサイズ
 	int fontSize = _size;
 
+	//行間
+	const int BETWEEN = 5;
+	int lineHeight = fontSize + BETWEEN;
+
 	//描画し終わっていないなら
 	while (!remaining.empty())
 	{
+		//改行を探す
+		size_t newLinePos = remaining.find('\n');
+
 		//文章から置き換えれるものを探す
 		size_t foundPos = std::wstring::npos;
 		std::wstring foundKey;
@@ -52,11 +60,80 @@ void TextManager::DrawTextToImage(const std::wstring& _str, const int _x, const 
 			}
 		}
 
+		//改行がテキスト画像より先にあるなら
+		if (newLinePos != std::wstring::npos && (foundPos == std::wstring::npos || newLinePos < foundPos))
+		{
+			//改行より前の文字
+			std::wstring before = remaining.substr(0, newLinePos);
+
+			//改行までに文字があるなら描画
+			if (!before.empty())
+			{
+				//描画
+				DrawStringToHandle(drawX, drawY, before.c_str(), _color, font);
+
+				//描画した文字幅だけ右にずらす
+				drawX += GetDrawStringWidthToHandle(before.c_str(), -1, font);
+			}
+
+			//改行
+			drawX = _x;
+			drawY += lineHeight;
+
+			//改行文字を削除
+			remaining = remaining.substr(newLinePos + 1);
+
+			//スキップ
+			continue;
+		}
+
 		//置き換えれる文字がなかった
 		if (foundPos == std::wstring::npos)
 		{
-			DrawStringToHandle()
+			//文章描画
+			DrawStringToHandle(drawX, drawY, remaining.c_str(), _color, font);
+			
+			//終了
+			break;
 		}
+
+		//置き換える文字より前の文章
+		std::wstring before = remaining.substr(0, foundPos);
+
+		//文章があるなら
+		if (!before.empty())
+		{
+			//文章描画
+			DrawStringToHandle(drawX, drawY, before.c_str(), _color, font);
+
+			//描画位置をずらす
+			drawX += GetDrawStringWidthToHandle(before.c_str(), -1, font);
+		}
+
+		//画像の描画
+		int originalWidth;
+		int originalHeight;
+
+		//画像サイズ
+		GetGraphSize(foundImage, &originalWidth, &originalHeight);
+
+		//フォントサイズに画像の高さを合わせる
+		int imageHeight = fontSize;
+
+		//幅を合わせる
+		int imageWidth = static_cast<int>(static_cast<float>(originalWidth) * imageHeight / originalHeight);
+
+		//文字の中央に画像を配置
+		int imageY = drawY + (fontSize - imageHeight) / 2;
+
+		//描画
+		DrawExtendGraph(drawX, imageY, drawX + imageWidth, imageY + imageHeight, foundImage, true);
+
+		//画像幅だけ右にずらす
+		drawX += imageWidth;
+
+		//描画済みの部分を削除
+		remaining = remaining.substr(foundPos + foundKey.length());
 	}
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 #include<array>
 #include<queue>
+#include<string>
 #include "../../Common/Singleton.h"
 #include"GameSetting.h"
 
@@ -39,7 +40,14 @@ public:
 	//ガイドの追加
 	void Add(const GUIDE_TYPE& _type, const int _playerIndex);
 
+	//ガイドの表示判定の設定
+	void SetIsDisplay(const GUIDE_TYPE& _type, const int _playerIndex, const bool _isDisplay);
+
 private:
+
+	//ガイドテキストのサイズ
+	static constexpr int TEXT_SIZE = 40;
+	static constexpr int TEXT_THICK = 10;
 
 	//表示時間
 	static constexpr float DISPLAY_TIME = 3.0f;
@@ -48,7 +56,7 @@ private:
 	std::array<float,GameSetting::PLAYER_MAX_NUM>cnt_;
 
 	//表示情報
-	std::array<int, static_cast<int>(GUIDE_TYPE::MAX)> image_;
+	std::array<std::wstring, static_cast<int>(GUIDE_TYPE::MAX)> text_;
 
 	//描画
 	std::array<std::queue<GUIDE_TYPE>,GameSetting::PLAYER_MAX_NUM> type_;
@@ -64,4 +72,7 @@ private:
 
 	//外部読み込み
 	void LoadOutSide(void)override;
+
+	//ガイドの描画
+	void DrawGuide(const int _playerIndex);
 };

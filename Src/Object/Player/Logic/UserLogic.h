@@ -69,7 +69,7 @@ private:
 	static constexpr float MOVE_POW = 1.0f;
 
 	//レバガチャ数
-	static constexpr int BUTTON_MESHING_MAX = 2;
+	static constexpr int BUTTON_MESHING_MAX = 6;
 
 	//レバガチャ受付時間
 	static constexpr float BUTTON_MESHING_RIMIT = 0.25f;

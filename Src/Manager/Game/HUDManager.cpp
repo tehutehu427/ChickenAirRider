@@ -125,8 +125,8 @@ void HUDManager::Draw(void)
 
 void HUDManager::SetPlayer(const Player* _player, const int _index)
 {
-	//ゲーム最大人数より大きかったら無視
-	if (_index > GameSetting::PLAYER_MAX_NUM)return;
+	//プレイヤーが存在しない　または　ゲーム最大人数より大きかったら無視
+	if (!_player || _index > GameSetting::PLAYER_MAX_NUM)return;
 
 	//プレイヤー設定
 	playerHUD_[_index].player = _player;

@@ -46,7 +46,7 @@ FontManager::~FontManager(void)
 
 void FontManager::LoadOutSide(void)
 {
-	//フォント名
+	//フォント名(プロパティ詳細のタイトル名を参照)
 	fontName_[static_cast<int>(FONT_TYPE::DOT)] = L"ベストテンDOT";
 	fontName_[static_cast<int>(FONT_TYPE::BOKUTATI)] = L"ぼくたちのゴシック";
 	fontName_[static_cast<int>(FONT_TYPE::HANAZOME)] = L"はなぞめフォント";
@@ -62,18 +62,12 @@ void FontManager::LoadOutSide(void)
 	fontPath_[static_cast<int>(FONT_TYPE::LOGO)] = L"Corporate-Logo-Bold-ver3.otf";
 	fontPath_[static_cast<int>(FONT_TYPE::BANANA)] = L"YDWbananaslipplus.otf";
 
-	// フォントをシステムに登録
+	//フォントをシステムに登録
 	const int FONT_MAX = static_cast<int>(FONT_TYPE::MAX);
 	for (int i = 0; i < FONT_MAX; i++)
 	{
-		if (AddFontResourceEx(
-			(Application::PATH_FONT + fontPath_[i]).c_str(),
-			FR_PRIVATE,
-			NULL)
-			== -1)
-		{
-			return;
-		}
+		//登録
+		AddFontResourceEx((Application::PATH_FONT + fontPath_[i]).c_str(), FR_PRIVATE, NULL);
 	}
 }
 
@@ -83,13 +77,7 @@ void FontManager::Destroy()
 	const int FONT_MAX = static_cast<int>(FONT_TYPE::MAX);
 	for (int i = 0; i < FONT_MAX; i++)
 	{
-		if (RemoveFontResourceEx(
-			(Application::PATH_FONT + fontPath_[i]).c_str(),
-			FR_PRIVATE,
-			NULL)
-			== -1)
-		{
-			return;
-		}
+		//解除
+		RemoveFontResourceEx((Application::PATH_FONT + fontPath_[i]).c_str(), FR_PRIVATE, NULL);
 	}
 }

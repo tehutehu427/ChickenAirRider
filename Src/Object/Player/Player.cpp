@@ -9,6 +9,7 @@
 #include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/GravityManager.h"
 #include "../Manager/Game/AttackManager.h"
+#include "../Manager/Game/GuideManager.h"
 #include "../Renderer/ModelMaterial.h"
 #include "../Renderer/ModelRenderer.h"
 #include "../Common/Geometry/Sphere.h"
@@ -132,6 +133,10 @@ void Player::Init(void)
 	//‰Šú‰»
 	damage_ = 0.0f;
 	canMove_ = true;
+
+	//ƒKƒCƒh‚Ì’Ç‰Á
+	auto& guide = GuideManager::GetInstance();
+	guide.Add(GuideManager::GUIDE_TYPE::CHARGE, playerIndex_);
 
 	//‰Šúó‘Ô
 	ChangeState(STATE::RIDE_MACHINE);

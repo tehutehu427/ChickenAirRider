@@ -16,6 +16,7 @@
 #include"../Manager/Game/GlobalUIManager.h"
 #include"../Manager/Game/HUDManager.h"
 #include"../Manager/Game/EventManager.h"
+#include"../Manager/Game/GuideManager.h"
 #include"../Object/SkyDome/SkyDome.h"
 #include "GameMain.h"
 
@@ -239,6 +240,7 @@ void GameMain::UpdateGame(void)
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
 	auto& key = KeyConfig::GetInstance();
+	auto& guide = GuideManager::GetInstance();
 
 	//イベントの更新
 	event.Update();
@@ -260,6 +262,9 @@ void GameMain::UpdateGame(void)
 
 	//当たり判定更新
 	colMng.Update();
+
+	//ガイドの更新
+	guide.Update();
 
 	//ゲームパッドがないならマウス操作なので
 	if (GetJoypadNum() < 1)
@@ -285,11 +290,6 @@ void GameMain::UpdateFinish(void)
 }
 
 void GameMain::DrawStart(const Camera& _camera)
-{
-	DrawGame(_camera);
-}
-
-void GameMain::DrawGame(const Camera& _camera)
 {
 #ifdef _DEBUG
 
@@ -321,8 +321,44 @@ void GameMain::DrawGame(const Camera& _camera)
 	plMng.Draw();
 }
 
+void GameMain::DrawGame(const Camera& _camera)
+{
+#ifdef _DEBUG
+
+	//デバッグ描画
+	DebugDraw();
+
+#endif // _DEBUG
+
+	//インスタンス
+	auto& setting = GameSetting::GetInstance();
+	auto& stgMng = StageManager::GetInstance();
+	auto& machineMng = MachineManager::GetInstance();
+	auto& plMng = PlayerManager::GetInstance();
+	auto& itemMng = ItemManager::GetInstance();
+	auto& guide = GuideManager::GetInstance();
+
+	//スカイドームを描画
+	sky_->Draw(_camera.GetPos());
+
+	//ステージの描画
+	stgMng.Draw(_camera);
+
+	//機体の描画
+	machineMng.Draw();
+
+	//アイテムの描画
+	itemMng.Draw();
+
+	//プレイヤーの描画
+	plMng.Draw();
+
+	//ガイド描画
+	guide.Draw();
+}
+
 void GameMain::DrawFinish(const Camera& _camera)
 {
 	//通常描画
-	DrawGame(_camera);
+	DrawStart(_camera);
 }

@@ -20,8 +20,9 @@ public:
 	/// <param name="_y">Y座標</param>
 	/// <param name="_size">フォントサイズ</param>
 	/// <param name="_thick">フォントの厚さ</param>
+	/// <param name="_color">フォントの色</param>
 	/// <param name="_font">フォント</param>
-	void DrawTextToImage(const std::wstring& _str, const int _x, const int _y, const int _size, const int _thick, const FONT_TYPE _font = FONT_TYPE::DOT);
+	void DrawTextToImage(const std::wstring& _str, const int _x, const int _y, const int _size, const int _thick, const int _color, const FONT_TYPE _font = FONT_TYPE::DOT)const;
 
 private:
 
