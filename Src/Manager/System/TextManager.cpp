@@ -158,4 +158,5 @@ void TextManager::LoadOutSide(void)
 	textImages_.push_back({ L"左クリック",res.Load(ResourceManager::SRC::MOUSE_LEFT).handleId_ });
 	textImages_.push_back({ L"右クリック",res.Load(ResourceManager::SRC::MOUSE_RIGHT).handleId_ });
 	textImages_.push_back({ L"マウスを動かす",res.Load(ResourceManager::SRC::MOUSE_MOVE).handleId_ });
+	textImages_.push_back({ L"Lスティックレバガチャ",res.Load(ResourceManager::SRC::L_LEVER_MASHING).handleId_ });
 }

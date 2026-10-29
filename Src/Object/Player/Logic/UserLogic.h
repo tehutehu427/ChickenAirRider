@@ -42,7 +42,7 @@ public:
 	const bool IsGetOff(void)const override;
 
 	//レバガチャ判定
-	const bool IsButtonMeshing(void)override;
+	const bool IsLeverMashing(void)override;
 
 #pragma endregion 機体
 
@@ -69,10 +69,10 @@ private:
 	static constexpr float MOVE_POW = 1.0f;
 
 	//レバガチャ数
-	static constexpr int BUTTON_MESHING_MAX = 6;
+	static constexpr int LEVER_MASHING_MAX = 6;
 
 	//レバガチャ受付時間
-	static constexpr float BUTTON_MESHING_RIMIT = 0.25f;
+	static constexpr float LEVER_MASHING_RIMIT = 0.25f;
 
 	//パッド番号
 	KeyConfig::JOYPAD_NO padNo_;
@@ -84,7 +84,7 @@ private:
 	Vector2F newTurnValue_;
 
 	//レバガチャカウンタ
-	int buttonMeshingCnt_;
+	int leverMashingCnt_;
 
 	//カウンタ
 	float cnt_;

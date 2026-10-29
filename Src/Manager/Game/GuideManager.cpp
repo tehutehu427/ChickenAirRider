@@ -9,14 +9,8 @@
 
 void GuideManager::Init(void)
 {
-	//カウンタ
-	for (auto& cnt : cnt_)
-	{
-		cnt = 0.0f;
-	}
-
 	//表示判定のリセット
-	ResetIsDisplay();
+	Reset();
 }
 
 void GuideManager::Update(void)
@@ -28,21 +22,26 @@ void GuideManager::Update(void)
 	for (int i = 0 ; i < GameSetting::PLAYER_MAX_NUM;i++)
 	{
 		//中身がないならカウンタも動かさない
-		if (type_[i].empty())continue;
+		if (types_[i].empty())continue;
+
+		//表示判定
+		auto& guideDatas = guideDatas_[i];
+		auto& guideData = guideDatas[static_cast<int>(types_[i].front())];
 
 		//表示時間を超えたら
-		if (cnt_[i] > DISPLAY_TIME)
+		if (guideData.cnt > DISPLAY_TIME)
 		{
 			//現在要素を抜き出し
-			type_[i].pop();
+			types_[i].pop();
 
 			//カウンタ初期化
-			cnt_[i] = 0.0f;
+			guideData.cnt = 0.0f;
 		}
-		else
+		//条件達成済みなら
+		else if(guideData.isClear)
 		{
 			//カウント
-			cnt_[i] += delta;
+			guideData.cnt += delta;
 		}
 	}
 }
@@ -59,16 +58,16 @@ void GuideManager::Draw(void)
 	}
 }
 
-void GuideManager::ResetIsDisplay(void)
+void GuideManager::Reset(void)
 {
-	//プレイヤーごとの表示の有無
-	for (auto& plDisplay : isDisplay_)
+	//プレイヤーごとのガイドの要素
+	for (auto& guideDatas : guideDatas_)
 	{
-		//要素ごとの表示の有無
-		for (auto& isDisplay : plDisplay)
+		for (auto& guideData : guideDatas)
 		{
-			//表示する
-			isDisplay = true;
+			//未達成
+			guideData = GuideData();
+
 		}
 	}
 }
@@ -76,29 +75,29 @@ void GuideManager::ResetIsDisplay(void)
 void GuideManager::Add(const GUIDE_TYPE& _type, const int _playerIndex)
 {
 	//表示判定
-	const auto& plIsDisplay = isDisplay_[_playerIndex];
-	const bool isDisplay = plIsDisplay[static_cast<int>(_type)];
+	const auto& guideData = guideDatas_[_playerIndex];
+	const bool isClear = guideData[static_cast<int>(_type)].isClear;
 
-	//表示しないようになっているなら追加しない
-	if (!isDisplay)return;
+	//達成しているなら何もしない
+	if (isClear)return;
 
 	//追加
-	type_[_playerIndex].push(_type);
+	types_[_playerIndex].emplace(_type);
 }
 
-void GuideManager::SetIsDisplay(const GUIDE_TYPE& _type, const int _playerIndex, const bool _isDisplay)
+void GuideManager::Conpleted(const GUIDE_TYPE& _type, const int _playerIndex)
 {
 	//表示判定
-	auto& plIsDisplay = isDisplay_[_playerIndex];
-	auto& isDisplay = plIsDisplay[static_cast<int>(_type)];
+	auto& guideDatas = guideDatas_[_playerIndex];
+	auto& guideData = guideDatas[static_cast<int>(_type)];
 
-	//設定
-	isDisplay = _isDisplay;
+	//達成
+	guideData.isClear = true;
 }
 
 GuideManager::GuideManager(void)
 {
-	text_[static_cast<int>(GUIDE_TYPE::CHARGE)] = L"Aボタンを押そう！！";
+	text_[static_cast<int>(GUIDE_TYPE::CHARGE)] = L"Aボタン/Bボタンまたは左クリックで\nチャージ＆ブレーキ！！\nゲージを溜めて\nボタンを離して超ダッシュ！！";
 	text_[static_cast<int>(GUIDE_TYPE::SPIN)] = L"";
 	text_[static_cast<int>(GUIDE_TYPE::ITEM_BOX)] = L"";
 	text_[static_cast<int>(GUIDE_TYPE::POWER_UP_ITEM)] = L"";
@@ -118,10 +117,10 @@ void GuideManager::LoadOutSide(void)
 void GuideManager::DrawGuide(const int _playerIndex)
 {
 	//表示するものがないなら何もしない
-	if (type_[_playerIndex].empty())return;
+	if (types_[_playerIndex].empty())return;
 
 	//表示するテキスト
-	const std::wstring& text = text_[static_cast<int>(type_[_playerIndex].front())];
+	const std::wstring& text = text_[static_cast<int>(types_[_playerIndex].front())];
 
 	//分割
 	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
@@ -132,8 +131,10 @@ void GuideManager::DrawGuide(const int _playerIndex)
 
 	//座標
 	Vector2 pos = { view.x, view.y };
+	Vector2 localPos = LOCAL_POS * scale;
+	pos += localPos;
 
 	//テキスト描画
 	const auto& textMng = TextManager::GetInstance();
-	textMng.DrawTextToImage(text, pos.x, pos.y, size, TEXT_THICK, Utility::BLACK, FONT_TYPE::BOKUTATI);
+	textMng.DrawTextToImage(text, pos.x, pos.y, size, TEXT_THICK, Utility::BLACK, FONT_TYPE::BANANA);
 }

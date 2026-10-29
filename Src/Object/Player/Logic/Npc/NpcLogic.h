@@ -42,7 +42,7 @@ public:
 	const bool IsGetOff(void)const override;
 
 	//ƒŒƒoƒKƒ`ƒƒ”»’è
-	const bool IsButtonMeshing(void)override;
+	const bool IsLeverMashing(void)override;
 
 #pragma endregion ‹@‘Ì
 

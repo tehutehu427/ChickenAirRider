@@ -41,7 +41,7 @@ public:
 	virtual const bool IsGetOff(void)const = 0;
 
 	//ƒŒƒoƒKƒ`ƒƒ”»’è
-	virtual const bool IsButtonMeshing(void) = 0;
+	virtual const bool IsLeverMashing(void) = 0;
 
 #pragma endregion ‹@‘Ì
 

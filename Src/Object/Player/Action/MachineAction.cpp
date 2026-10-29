@@ -5,6 +5,7 @@
 #include "../Manager/System/ResourceManager.h"
 #include "../Manager/System/SoundManager.h"
 #include "../Manager/Game/GravityManager.h"
+#include "../Manager/Game/GuideManager.h"
 #include "../../Common/EffectController.h"
 #include "../Logic/LogicBase.h"
 #include "MachineAction.h"
@@ -338,6 +339,13 @@ void MachineAction::DisCharge(void)
 		velocity_ = velocity;
 	}
 
+	//チャージ完了していたなら
+	if (isChargeMax_)
+	{
+		//チャージガイド完了
+		GuideManager::GetInstance().Conpleted(GuideManager::GUIDE_TYPE::CHARGE, player_.GetPlayerIndex());
+	}
+
 	//チャージを初期化
 	chargeCnt_ = 0.0f;
 
@@ -371,7 +379,7 @@ void MachineAction::Spin(void)
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
 	//スピン判定
-	if (logic_.IsButtonMeshing() && !isSpin_)
+	if (logic_.IsLeverMashing() && !isSpin_)
 	{
 		//スピンSE
 		snd.Play(SoundManager::SOUND_NAME::SPIN, SoundManager::PLAYTYPE::BACK);

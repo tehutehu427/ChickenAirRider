@@ -34,35 +34,45 @@ public:
 	//描画
 	void Draw(void);
 
-	//表示の有無のリセット
-	void ResetIsDisplay(void);
+	//ガイドの要素のリセット
+	void Reset(void);
 
 	//ガイドの追加
 	void Add(const GUIDE_TYPE& _type, const int _playerIndex);
 
-	//ガイドの表示判定の設定
-	void SetIsDisplay(const GUIDE_TYPE& _type, const int _playerIndex, const bool _isDisplay);
+	//完了した
+	void Conpleted(const GUIDE_TYPE& _type, const int _playerIndex);
 
 private:
 
+	//ガイドの要素
+	struct GuideData
+	{
+		//項目をクリアしたか
+		bool isClear = false;
+
+		//カウンタ
+		float cnt = 0.0f;
+	};
+
 	//ガイドテキストのサイズ
-	static constexpr int TEXT_SIZE = 40;
-	static constexpr int TEXT_THICK = 10;
+	static constexpr int TEXT_SIZE = 35;
+	static constexpr int TEXT_THICK = 5;
+
+	//説明の相対座標
+	static constexpr Vector2 LOCAL_POS = { 10,10 };
 
 	//表示時間
 	static constexpr float DISPLAY_TIME = 3.0f;
 
-	//表示用カウンタ
-	std::array<float,GameSetting::PLAYER_MAX_NUM>cnt_;
-
 	//表示情報
 	std::array<std::wstring, static_cast<int>(GUIDE_TYPE::MAX)> text_;
 
-	//描画
-	std::array<std::queue<GUIDE_TYPE>,GameSetting::PLAYER_MAX_NUM> type_;
+	//表示する種類
+	std::array<std::queue<GUIDE_TYPE>,GameSetting::PLAYER_MAX_NUM> types_;
 
-	//表示の有無
-	std::array<std::array<bool, static_cast<int>(GUIDE_TYPE::MAX)>, GameSetting::PLAYER_MAX_NUM> isDisplay_;
+	//ガイドの要素
+	std::array<std::array<GuideData, static_cast<int>(GUIDE_TYPE::MAX)>, GameSetting::PLAYER_MAX_NUM> guideDatas_;
 
 	//コンストラクタ
 	GuideManager(void);

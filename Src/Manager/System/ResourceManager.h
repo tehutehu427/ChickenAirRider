@@ -110,6 +110,7 @@ public:
 		B_BUTTON,				//Bボタン
 		X_BUTTON,				//Xボタン
 		Y_BUTTON,				//Yボタン
+		L_LEVER_MASHING,		//Lスティックレバガチャ
 
 		//UI
 		CHARGE_GAUGE,			//チャージゲージ

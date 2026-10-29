@@ -8,7 +8,7 @@
 UserLogic::UserLogic(KeyConfig::JOYPAD_NO _padNo)
 {
     padNo_ = _padNo;
-    buttonMeshingCnt_ = 0;
+    leverMashingCnt_ = 0;
     cnt_ = 0.0f;
     oldTurnValue_ = {};
     newTurnValue_ = {};
@@ -20,7 +20,7 @@ UserLogic::~UserLogic(void)
 
 void UserLogic::Init(void)
 {
-    buttonMeshingCnt_ = 0;
+    leverMashingCnt_ = 0;
     cnt_ = 0.0f;
     oldTurnValue_ = {};
     newTurnValue_ = {};
@@ -143,7 +143,7 @@ const bool UserLogic::IsGetOff(void)const
     return false;
 }
 
-const bool UserLogic::IsButtonMeshing(void)
+const bool UserLogic::IsLeverMashing(void)
 {
     //インスタンス
     const auto& key = KeyConfig::GetInstance();
@@ -164,7 +164,7 @@ const bool UserLogic::IsButtonMeshing(void)
         || oldTurnValue_.x >= 0.0f && newTurnValue_.x < 0.0f)
     {
         //レバガチャ判定
-        buttonMeshingCnt_++;
+        leverMashingCnt_++;
 
         //受付時間カウンタリセット
         cnt_ = 0.0f;
@@ -176,20 +176,20 @@ const bool UserLogic::IsButtonMeshing(void)
     }
 
     //レバガチャ判定
-    if (buttonMeshingCnt_ >= BUTTON_MESHING_MAX)
+    if (leverMashingCnt_ >= LEVER_MASHING_MAX)
     {
         //リセット
-        buttonMeshingCnt_ = 0;
+        leverMashingCnt_ = 0;
 
         //レバガチャした
         return true;
     }
 
     //時間制限
-    if (cnt_ > BUTTON_MESHING_RIMIT)
+    if (cnt_ > LEVER_MASHING_RIMIT)
     {
         //リセット
-        buttonMeshingCnt_ = 0;
+        leverMashingCnt_ = 0;
     }
 
     return false;

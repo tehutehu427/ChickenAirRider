@@ -54,7 +54,7 @@ const bool NpcLogic::IsGetOff(void)const
     return getOff_;
 }
 
-const bool NpcLogic::IsButtonMeshing(void)
+const bool NpcLogic::IsLeverMashing(void)
 {
     return buttonMeshing_;
 }

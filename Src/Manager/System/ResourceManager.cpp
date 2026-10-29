@@ -223,6 +223,10 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"YButton.png");
 	resourcesMap_.emplace(SRC::Y_BUTTON, std::move(res));
 
+	//Lスティックレバガチャ
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"LightLeverMashing.png");
+	resourcesMap_.emplace(SRC::L_LEVER_MASHING, std::move(res));
+
 	//UIのチャージゲージ画像
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"ChargeGauge.png");
 	resourcesMap_.emplace(SRC::CHARGE_GAUGE, std::move(res));
