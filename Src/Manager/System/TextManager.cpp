@@ -117,8 +117,11 @@ void TextManager::DrawTextToImage(const std::wstring& _str, const int _x, const 
 		//画像サイズ
 		GetGraphSize(foundImage, &originalWidth, &originalHeight);
 
+		//フォントと比べた画像側の比率
+		const float IMAGE_SCALE = 1.2f;
+
 		//フォントサイズに画像の高さを合わせる
-		int imageHeight = fontSize;
+		int imageHeight = static_cast<int>(fontSize * IMAGE_SCALE);
 
 		//幅を合わせる
 		int imageWidth = static_cast<int>(static_cast<float>(originalWidth) * imageHeight / originalHeight);
@@ -158,5 +161,6 @@ void TextManager::LoadOutSide(void)
 	textImages_.push_back({ L"左クリック",res.Load(ResourceManager::SRC::MOUSE_LEFT).handleId_ });
 	textImages_.push_back({ L"右クリック",res.Load(ResourceManager::SRC::MOUSE_RIGHT).handleId_ });
 	textImages_.push_back({ L"マウスを動かす",res.Load(ResourceManager::SRC::MOUSE_MOVE).handleId_ });
+	textImages_.push_back({ L"Lスティックを動かす",res.Load(ResourceManager::SRC::L_LEVER_MASHING).handleId_ });
 	textImages_.push_back({ L"Lスティックレバガチャ",res.Load(ResourceManager::SRC::L_LEVER_MASHING).handleId_ });
 }

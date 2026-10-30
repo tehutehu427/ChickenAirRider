@@ -69,7 +69,7 @@ private:
 	static constexpr float MOVE_POW = 1.0f;
 
 	//レバガチャ数
-	static constexpr int LEVER_MASHING_MAX = 6;
+	static constexpr int LEVER_MASHING_MAX = 4;
 
 	//レバガチャ受付時間
 	static constexpr float LEVER_MASHING_RIMIT = 0.25f;

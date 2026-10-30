@@ -15,6 +15,7 @@ public:
 	//説明の種類
 	enum class GUIDE_TYPE
 	{
+		BASIC,			//基本説明
 		CHARGE,			//チャージ、ダッシュ
 		SPIN,			//スピン
 		ITEM_BOX,		//アイテム
@@ -56,11 +57,11 @@ private:
 	};
 
 	//ガイドテキストのサイズ
-	static constexpr int TEXT_SIZE = 35;
+	static constexpr int TEXT_SIZE = 25;
 	static constexpr int TEXT_THICK = 5;
 
 	//説明の相対座標
-	static constexpr Vector2 LOCAL_POS = { 10,10 };
+	static constexpr Vector2 LOCAL_POS = { 20,20 };
 
 	//表示時間
 	static constexpr float DISPLAY_TIME = 3.0f;

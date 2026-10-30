@@ -108,6 +108,12 @@ void Player::Load(void)
 	//当たり判定後処理
 	onHit_ = std::make_unique<PlayerOnHit>(*this);
 	onHit_->Load();
+
+	//ガイドの追加
+	auto& guide = GuideManager::GetInstance();
+	guide.Add(GuideManager::GUIDE_TYPE::BASIC, playerIndex_);
+	guide.Add(GuideManager::GUIDE_TYPE::CHARGE, playerIndex_);
+	guide.Add(GuideManager::GUIDE_TYPE::SPIN, playerIndex_);
 }
 
 void Player::Init(void)
@@ -133,10 +139,6 @@ void Player::Init(void)
 	//初期化
 	damage_ = 0.0f;
 	canMove_ = true;
-
-	//ガイドの追加
-	auto& guide = GuideManager::GetInstance();
-	guide.Add(GuideManager::GUIDE_TYPE::CHARGE, playerIndex_);
 
 	//初期状態
 	ChangeState(STATE::RIDE_MACHINE);

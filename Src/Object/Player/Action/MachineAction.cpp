@@ -190,6 +190,9 @@ void MachineAction::UpdateFlight(void)
 
 void MachineAction::Move(void)
 {
+	//ガイド
+	auto& guide = GuideManager::GetInstance();
+
 	//デルタタイム
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
@@ -217,6 +220,10 @@ void MachineAction::Move(void)
 	{
 		//減速なのでカウンタ減少
 		driveCnt_ -= delta * unitParam.rateOfConvergence;
+
+		//基本操作ガイド完了
+		guide.Conpleted(GuideManager::GUIDE_TYPE::BASIC, player_.GetPlayerIndex());
+
 	}
 	else if (!player_.IsGrounded())
 	{
@@ -317,6 +324,9 @@ void MachineAction::DisCharge(void)
 	const auto& param = player_.GetAllParam();
 	const auto& unitParam = player_.GetUnitParam();
 
+	//ガイド
+	auto& guide = GuideManager::GetInstance();
+
 	//最高速
 	float maxSpeed = param.maxSpeed * BASE_MAX_SPEED;
 	
@@ -343,7 +353,7 @@ void MachineAction::DisCharge(void)
 	if (isChargeMax_)
 	{
 		//チャージガイド完了
-		GuideManager::GetInstance().Conpleted(GuideManager::GUIDE_TYPE::CHARGE, player_.GetPlayerIndex());
+		guide.Conpleted(GuideManager::GUIDE_TYPE::CHARGE, player_.GetPlayerIndex());
 	}
 
 	//チャージを初期化
@@ -375,6 +385,9 @@ void MachineAction::Spin(void)
 	//SE
 	auto& snd = SoundManager::GetInstance();
 
+	//ガイド
+	auto& guide = GuideManager::GetInstance();
+
 	//デルタタイム
 	const auto& delta = SceneManager::GetInstance().GetDeltaTime();
 
@@ -393,6 +406,9 @@ void MachineAction::Spin(void)
 			, effScl_[EffectController::EFF_TYPE::SPIN]
 			, true);
 		isSpin_ = true;
+
+		//スピンガイドの完了
+		guide.Conpleted(GuideManager::GUIDE_TYPE::SPIN, player_.GetPlayerIndex());
 	}
 
 	//スピン

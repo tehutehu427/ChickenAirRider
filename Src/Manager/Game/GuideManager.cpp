@@ -78,15 +78,33 @@ void GuideManager::Add(const GUIDE_TYPE& _type, const int _playerIndex)
 	const auto& guideData = guideDatas_[_playerIndex];
 	const bool isClear = guideData[static_cast<int>(_type)].isClear;
 
+	//表示ガイド
+	auto& types = types_[_playerIndex];
+
 	//達成しているなら何もしない
 	if (isClear)return;
 
+	//連続で同じガイドは入れない
+	if (!types.empty())
+	{
+		if (types.front() == _type)return;
+	}
+
 	//追加
-	types_[_playerIndex].emplace(_type);
+	types.emplace(_type);
 }
 
 void GuideManager::Conpleted(const GUIDE_TYPE& _type, const int _playerIndex)
 {
+	//表示ガイド
+	const auto& types = types_[_playerIndex];
+	
+	//空なら何もしない
+	if (types.empty())return;
+
+	//一つ一つやるために表示しているガイドと一致していないなら完了しない
+	if (types.front() != _type)return;
+
 	//表示判定
 	auto& guideDatas = guideDatas_[_playerIndex];
 	auto& guideData = guideDatas[static_cast<int>(_type)];
@@ -97,13 +115,14 @@ void GuideManager::Conpleted(const GUIDE_TYPE& _type, const int _playerIndex)
 
 GuideManager::GuideManager(void)
 {
-	text_[static_cast<int>(GUIDE_TYPE::CHARGE)] = L"Aボタン/Bボタンまたは左クリックで\nチャージ＆ブレーキ！！\nゲージを溜めて\nボタンを離して超ダッシュ！！";
-	text_[static_cast<int>(GUIDE_TYPE::SPIN)] = L"";
-	text_[static_cast<int>(GUIDE_TYPE::ITEM_BOX)] = L"";
-	text_[static_cast<int>(GUIDE_TYPE::POWER_UP_ITEM)] = L"";
-	text_[static_cast<int>(GUIDE_TYPE::BATTLE_ITEM)] = L"";
-	text_[static_cast<int>(GUIDE_TYPE::GET_OFF)] = L"";
-	text_[static_cast<int>(GUIDE_TYPE::MACHINE)] = L"";
+	text_[static_cast<int>(GUIDE_TYPE::BASIC)] = L"[基本操作]\n何もボタンを押さなくても\n自動的に前に進むよ。\nLスティックを動かすまたはマウスを動かすで\n方向転換もすることができるよ。";
+	text_[static_cast<int>(GUIDE_TYPE::CHARGE)] = L"[チャージ]\nAボタン/Bボタンまたは左クリックで\nチャージ＆ブレーキ！！\nゲージを溜めてボタンを離して\n超ダッシュ！！";
+	text_[static_cast<int>(GUIDE_TYPE::SPIN)] = L"[スピン]\nLスティックレバガチャまたはマウスを動かすでスピン攻撃！！\n対戦相手やアイテムボックスに\nダメージを与えることができるよ。";
+	text_[static_cast<int>(GUIDE_TYPE::ITEM_BOX)] = L"[アイテムボックス]\n箱に近づいてスピン攻撃！！\n壊すとアイテムが出てくるよ。";
+	text_[static_cast<int>(GUIDE_TYPE::POWER_UP_ITEM)] = L"[パワーアップアイテム]\n取るとマシンの性能がアップするよ。";
+	text_[static_cast<int>(GUIDE_TYPE::BATTLE_ITEM)] = L"[バトルアイテム]\n取ると相手を攻撃することができるよ。";
+	text_[static_cast<int>(GUIDE_TYPE::GET_OFF)] = L"[降りる]\nXボタン/Yボタンまたは右クリック長押しで\nマシンから降りることができるよ。";
+	text_[static_cast<int>(GUIDE_TYPE::MACHINE)] = L"[マシン]\n別のマシンに乗り換えてみよう。\nマシンによって性能は様々。\n自身にあったマシンを見つけよう。";
 }
 
 GuideManager::~GuideManager(void)
@@ -116,11 +135,15 @@ void GuideManager::LoadOutSide(void)
 
 void GuideManager::DrawGuide(const int _playerIndex)
 {
+	//表示ガイド
+	const auto& types = types_[_playerIndex];
+	
 	//表示するものがないなら何もしない
-	if (types_[_playerIndex].empty())return;
+	if (types.empty())return;
 
 	//表示するテキスト
-	const std::wstring& text = text_[static_cast<int>(types_[_playerIndex].front())];
+	const auto& frontType = types.front();
+	const std::wstring& text = text_[static_cast<int>(frontType)];
 
 	//分割
 	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
@@ -136,5 +159,5 @@ void GuideManager::DrawGuide(const int _playerIndex)
 
 	//テキスト描画
 	const auto& textMng = TextManager::GetInstance();
-	textMng.DrawTextToImage(text, pos.x, pos.y, size, TEXT_THICK, Utility::BLACK, FONT_TYPE::BANANA);
+	textMng.DrawTextToImage(text, pos.x, pos.y, size, TEXT_THICK, Utility::BLACK, FONT_TYPE::LOGO);
 }
