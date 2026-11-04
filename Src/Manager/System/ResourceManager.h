@@ -113,6 +113,7 @@ public:
 		L_LEVER_MASHING,		//Lスティックレバガチャ
 
 		//UI
+		DIALOG,					//ダイアログ
 		CHARGE_GAUGE,			//チャージゲージ
 		CHARGE_GAUGE_MASK,		//チャージゲージマスク
 		NUMBER,					//数字

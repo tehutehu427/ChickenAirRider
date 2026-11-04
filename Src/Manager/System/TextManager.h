@@ -24,6 +24,12 @@ public:
 	/// <param name="_font">フォント</param>
 	void DrawTextToImage(const std::wstring& _str, const int _x, const int _y, const int _size, const int _thick, const int _color, const FONT_TYPE _font = FONT_TYPE::DOT)const;
 
+	//行の最大文字数の計算
+	const int GetMaxWidth(const std::wstring& _str, const int _size, const int _thick, const FONT_TYPE& _font)const;
+
+	//行数の計算
+	const int GetLineCount(const std::wstring& _str)const;
+
 private:
 
 	//テキストを画像変換する用

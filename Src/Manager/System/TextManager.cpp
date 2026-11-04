@@ -140,6 +140,56 @@ void TextManager::DrawTextToImage(const std::wstring& _str, const int _x, const 
 	}
 }
 
+const int TextManager::GetMaxWidth(const std::wstring& _str, const int _size, const int _thick, const FONT_TYPE& _font) const
+{
+	//フォントを取得
+	auto& fontMng = FontManager::GetInstance();
+	const int font = fontMng.GetFontHandle(_font, _size, _thick);
+
+	std::wstringstream ss(_str);
+	std::wstring line;
+
+	int maxWidth = 0;
+
+	while (std::getline(ss, line))
+	{
+		int width = GetDrawStringWidthToHandle(
+			line.c_str(),
+			static_cast<int>(line.size()),
+			font
+		);
+
+		maxWidth = std::max(maxWidth, width);
+	}
+
+	return maxWidth;
+}
+
+const int TextManager::GetLineCount(const std::wstring& _str) const
+{
+	//空文字なら0行
+	if (_str.empty()) return 0;
+
+	int count = 1;
+
+	for (wchar_t c : _str)
+	{
+		//改行があればカウント
+		if (c == L'\n')
+		{
+			count++;
+		}
+	}
+
+	//最後の文字が改行なら1行減らす
+	if (_str.back() == L'\n')
+	{
+		count--;
+	}
+
+	return count;
+}
+
 TextManager::TextManager(void)
 {
 }

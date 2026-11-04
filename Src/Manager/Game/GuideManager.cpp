@@ -2,6 +2,7 @@
 #include "../../Application.h"
 #include "../../Common/Vector2.h"
 #include "../../Utility/Utility.h"
+#include "../System/ResourceManager.h"
 #include "../System/SceneManager.h"
 #include "../System/SplitScreenManager.h"
 #include "../System/TextManager.h"
@@ -115,6 +116,7 @@ void GuideManager::Conpleted(const GUIDE_TYPE& _type, const int _playerIndex)
 
 GuideManager::GuideManager(void)
 {
+	//テキスト
 	text_[static_cast<int>(GUIDE_TYPE::BASIC)] = L"[基本操作]\n何もボタンを押さなくても\n自動的に前に進むよ。\nLスティックを動かすまたはマウスを動かすで\n方向転換もすることができるよ。";
 	text_[static_cast<int>(GUIDE_TYPE::CHARGE)] = L"[チャージ]\nAボタン/Bボタンまたは左クリックで\nチャージ＆ブレーキ！！\nゲージを溜めてボタンを離して\n超ダッシュ！！";
 	text_[static_cast<int>(GUIDE_TYPE::SPIN)] = L"[スピン]\nLスティックレバガチャまたはマウスを動かすでスピン攻撃！！\n対戦相手やアイテムボックスに\nダメージを与えることができるよ。";
@@ -123,6 +125,12 @@ GuideManager::GuideManager(void)
 	text_[static_cast<int>(GUIDE_TYPE::BATTLE_ITEM)] = L"[バトルアイテム]\n取ると相手を攻撃することができるよ。";
 	text_[static_cast<int>(GUIDE_TYPE::GET_OFF)] = L"[降りる]\nXボタン/Yボタンまたは右クリック長押しで\nマシンから降りることができるよ。";
 	text_[static_cast<int>(GUIDE_TYPE::MACHINE)] = L"[マシン]\n別のマシンに乗り換えてみよう。\nマシンによって性能は様々。\n自身にあったマシンを見つけよう。";
+
+	//ダイアログマテリアル
+	dialogMaterial_ = std::make_unique<PixelMaterial>(L"Dialog.cso", 2);
+	dialogMaterial_->AddConstBuf({ 0.3f,0.3f,0.0f,0.0f });
+	dialogMaterial_->AddConstBuf({ 1.0f,1.0f,1.0f,1.0f });
+	dialogMaterial_->AddTextureBuf(ResourceManager::GetInstance().Load(ResourceManager::SRC::DIALOG).handleId_);
 }
 
 GuideManager::~GuideManager(void)
@@ -131,6 +139,7 @@ GuideManager::~GuideManager(void)
 
 void GuideManager::LoadOutSide(void)
 {
+
 }
 
 void GuideManager::DrawGuide(const int _playerIndex)
@@ -144,6 +153,9 @@ void GuideManager::DrawGuide(const int _playerIndex)
 	//表示するテキスト
 	const auto& frontType = types.front();
 	const std::wstring& text = text_[static_cast<int>(frontType)];
+	const FONT_TYPE font = FONT_TYPE::LOGO;
+	int textLineCount = TextManager::GetInstance().GetLineCount(text);
+	int maxLineLength = TextManager::GetInstance().GetMaxWidth(text, TEXT_SIZE, TEXT_THICK, font);
 
 	//分割
 	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
@@ -157,7 +169,16 @@ void GuideManager::DrawGuide(const int _playerIndex)
 	Vector2 localPos = LOCAL_POS * scale;
 	pos += localPos;
 
+	//ダイアログ描画
+	renderer_.SetPos(pos);
+	Vector2 dialogSize = { maxLineLength, static_cast<int>(size * textLineCount) };
+	renderer_.SetSize(dialogSize);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	renderer_.MakeSquareVertex();
+	renderer_.Draw(*dialogMaterial_);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
 	//テキスト描画
 	const auto& textMng = TextManager::GetInstance();
-	textMng.DrawTextToImage(text, pos.x, pos.y, size, TEXT_THICK, Utility::BLACK, FONT_TYPE::LOGO);
+	textMng.DrawTextToImage(text, pos.x, pos.y, size, TEXT_THICK, Utility::BLACK, font);
 }

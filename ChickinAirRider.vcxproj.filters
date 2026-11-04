@@ -866,5 +866,6 @@
     <FxCompile Include="Src\Shader\PostEffect\CountDown.hlsl" />
     <FxCompile Include="Src\Shader\PostEffect\Glitch.hlsl" />
     <FxCompile Include="Src\Shader\PostEffect\Wind.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\Dialog.hlsl" />
   </ItemGroup>
 </Project>

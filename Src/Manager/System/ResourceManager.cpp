@@ -227,6 +227,10 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"LightLeverMashing.png");
 	resourcesMap_.emplace(SRC::L_LEVER_MASHING, std::move(res));
 
+	//ダイアログ
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"Dialog.png");
+	resourcesMap_.emplace(SRC::DIALOG, std::move(res));
+
 	//UIのチャージゲージ画像
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"ChargeGauge.png");
 	resourcesMap_.emplace(SRC::CHARGE_GAUGE, std::move(res));

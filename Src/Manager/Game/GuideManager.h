@@ -4,6 +4,9 @@
 #include<string>
 #include "../../Common/Singleton.h"
 #include"GameSetting.h"
+#include"../../Renderer/PixelRenderer.h"
+
+class PixelMaterial;
 
 class GuideManager : public Singleton<GuideManager>
 {
@@ -74,6 +77,10 @@ private:
 
 	//ガイドの要素
 	std::array<std::array<GuideData, static_cast<int>(GUIDE_TYPE::MAX)>, GameSetting::PLAYER_MAX_NUM> guideDatas_;
+
+	//ピクセルシェーダー
+	PixelRenderer renderer_;
+	std::unique_ptr<PixelMaterial> dialogMaterial_;
 
 	//コンストラクタ
 	GuideManager(void);
