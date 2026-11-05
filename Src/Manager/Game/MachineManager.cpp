@@ -185,3 +185,18 @@ std::unique_ptr<Machine> MachineManager::GetCreateMachine(const MACHINE_TYPE _ma
 	//ï‘Ç∑
 	return std::move(machine);
 }
+
+const std::vector<VECTOR> MachineManager::GetMachinePos(void) const
+{
+	//ç¿ïWäiî[óp
+	std::vector<VECTOR> pos;
+
+	//ã@ëÃÇÃç¿ïWÇäiî[
+	for (const auto& machine : machines_)
+	{
+		if (machine == nullptr)continue;
+		pos.push_back(machine->GetTrans().pos);
+	}
+
+	return pos;
+}

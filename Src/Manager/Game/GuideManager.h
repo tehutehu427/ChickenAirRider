@@ -18,14 +18,22 @@ public:
 	//説明の種類
 	enum class GUIDE_TYPE
 	{
+		//操作説明
 		BASIC,			//基本説明
 		CHARGE,			//チャージ、ダッシュ
 		SPIN,			//スピン
+		GET_OFF,		//降車
+
+		//オブジェクト
 		ITEM_BOX,		//アイテム
 		POWER_UP_ITEM,	//パワーアップアイテム
 		BATTLE_ITEM,	//バトルアイテム
-		GET_OFF,		//降車
 		MACHINE,		//機体
+
+		//ラストゲーム
+		AIR_GLIDER,		//エアグライダー
+		DEATH_MATCH,	//デスマッチ
+
 		MAX
 	};
 

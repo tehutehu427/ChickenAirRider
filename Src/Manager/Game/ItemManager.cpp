@@ -312,8 +312,10 @@ void ItemManager::CreateBattleItem(const VECTOR& _pos, const VECTOR& _pPos, cons
 
 const std::vector<VECTOR> ItemManager::GetItemBoxPos(void)const
 {
+	//座標を格納する配列
 	std::vector<VECTOR>ret;
 
+	//アイテムボックスの座標を格納
 	for (const auto& itemBox : itemBoxes_)
 	{
 		ret.push_back(itemBox->GetTrans().pos);
@@ -324,8 +326,10 @@ const std::vector<VECTOR> ItemManager::GetItemBoxPos(void)const
 
 const std::vector<VECTOR> ItemManager::GetItemPos(void)const
 {
+	//座標を格納する配列
 	std::vector<VECTOR>ret;
 
+	//アイテムの座標を格納
 	for (const auto& item : items_)
 	{
 		ret.push_back(item->GetTrans().pos);

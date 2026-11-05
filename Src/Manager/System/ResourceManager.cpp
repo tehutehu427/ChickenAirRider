@@ -207,6 +207,10 @@ void ResourceManager::Init(void)
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"MouseMove.png");
 	resourcesMap_.emplace(SRC::MOUSE_MOVE, std::move(res));
 
+	//マウス下移動
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"MouseBack.png");
+	resourcesMap_.emplace(SRC::MOUSE_BACK, std::move(res));
+
 	//Aボタン
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"AButton.png");
 	resourcesMap_.emplace(SRC::A_BUTTON, std::move(res));
@@ -226,6 +230,10 @@ void ResourceManager::Init(void)
 	//Lスティックレバガチャ
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"LightLeverMashing.png");
 	resourcesMap_.emplace(SRC::L_LEVER_MASHING, std::move(res));
+
+	//Lスティック下
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"LightLeverDown.png");
+	resourcesMap_.emplace(SRC::L_LEVER_DOWN, std::move(res));
 
 	//ダイアログ
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"Dialog.png");
@@ -254,6 +262,10 @@ void ResourceManager::Init(void)
 	//終了UI画像
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"Finish.png");
 	resourcesMap_.emplace(SRC::FINISH_UI, std::move(res));
+
+	//注目用括弧画像
+	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"Attention.png");
+	resourcesMap_.emplace(SRC::ATTENTION, std::move(res));
 
 	//デスマッチの確認画像
 	res = std::make_unique<Resource>(Resource::TYPE::IMG, uiImage + L"DeathMatchExplan.png");

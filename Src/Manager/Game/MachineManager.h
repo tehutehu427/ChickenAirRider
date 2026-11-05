@@ -54,6 +54,9 @@ public:
 	//機体を生成して返す
 	std::unique_ptr<Machine> GetCreateMachine(const MACHINE_TYPE _machineName);
 
+	//機体の座標
+	const std::vector<VECTOR> GetMachinePos(void)const;
+
 private:
 
 	//機体の生成範囲

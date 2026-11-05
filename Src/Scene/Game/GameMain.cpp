@@ -180,6 +180,8 @@ void GameMain::UpdateStart(void)
 			//入力表示を非表示
 			hud.SetVisible(i, HUDManager::HUD_TYPE::PUSH_BUTTON, false);
 			hud.SetVisible(i, HUDManager::HUD_TYPE::GET_OFF, true);
+			hud.SetVisible(i, HUDManager::HUD_TYPE::ITEM_BOX, true);
+			hud.SetVisible(i, HUDManager::HUD_TYPE::MACHINE, true);
 		}
 
 		//ゲーム開始

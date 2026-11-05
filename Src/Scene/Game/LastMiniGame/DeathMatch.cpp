@@ -7,6 +7,7 @@
 #include "../Manager/Game/MachineManager.h"
 #include "../Manager/Game/PlayerManager.h"
 #include "../Manager/Game/ItemManager.h"
+#include "../Manager/Game/GuideManager.h"
 #include "../Object/SkyDome/SkyDome.h"
 #include "../Object/Player/Player.h"
 #include "DeathMatch.h"
@@ -26,12 +27,22 @@ void DeathMatch::Init(void)
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
+	auto& setting = GameSetting::GetInstance();
+	auto& guideMng = GuideManager::GetInstance();
 
 	//各初期化
 	plMng.ResetPlayer();
 	stgMng.Init(StageManager::MODE::BATTLE);
 	itemMng.Init();
 	itemMng.SetSpawnType(ItemManager::SPAWN_TYPE::DEATH_MATCH);
+
+	//プレイヤー人数
+	const int plNum = setting.GetPlayerNum();
+	for (int i = 0; i < plNum; i++)
+	{
+		//ガイドの追加
+		guideMng.Add(GuideManager::GUIDE_TYPE::DEATH_MATCH, i);
+	}
 
 	//共通初期化
 	LastGameBase::Init();

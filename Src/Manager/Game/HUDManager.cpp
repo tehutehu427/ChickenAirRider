@@ -6,6 +6,8 @@
 #include "../System/ResourceManager.h"
 #include "../System/KeyConfig.h"
 #include "../System/SplitScreenManager.h"
+#include "ItemManager.h"
+#include "MachineManager.h"
 #include "../Renderer/PixelMaterial.h"
 #include "../Renderer/PixelRenderer.h"
 #include "../../Object/Player/Player.h"
@@ -28,6 +30,8 @@ void HUDManager::LoadOutSide(void)
 		playerHud.hudData[static_cast<int>(HUD_TYPE::GET_ITEM)] = { &HUDManager::DrawGetItem,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::PARAMETER)] = { &HUDManager::DrawParam,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::GET_OFF)] = { &HUDManager::DrawGetOff,false };
+		playerHud.hudData[static_cast<int>(HUD_TYPE::ITEM_BOX)] = { &HUDManager::DrawItemBox,false };
+		playerHud.hudData[static_cast<int>(HUD_TYPE::MACHINE)] = { &HUDManager::DrawMachine,false };
 	}
 
 	//パワーアップ画像設定
@@ -67,6 +71,9 @@ void HUDManager::LoadOutSide(void)
 	attackImg_ = res.Load(ResourceManager::SRC::ATTACK).handleId_;
 	defenceImg_ = res.Load(ResourceManager::SRC::DEFENCE).handleId_;
 	maxHealthImg_ = res.Load(ResourceManager::SRC::MAX_HEALTH).handleId_;
+
+	//注目用括弧画像
+	attentionImg_ = res.Load(ResourceManager::SRC::ATTENTION).handleId_;
 
 	//チャージゲージカウント
 	cnt_ = 0.0f;
@@ -478,6 +485,100 @@ void HUDManager::DrawGetOff(const int _playerIndex)
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	renderer_.Draw(*getOffMaterial_, gaugeCenter, sizeVec);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+}
+
+void HUDManager::DrawItemBox(const int _playerIndex)
+{
+	//プレイヤー
+	const auto* player = playerHUD_[_playerIndex].player;
+
+	//存在しないなら何もしない
+	if (!player)return;
+
+	//分割
+	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
+
+	//サイズ比率(XYほぼ同一なので統一)
+	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
+
+	//プレイヤー座標
+	VECTOR playerPos = player->GetTrans().pos;
+
+	//アイテムボックスの座標
+	const auto& itemBoxPos = ItemManager::GetInstance().GetItemBoxPos();
+
+	//一番近いアイテムボックスの座標を取得
+	float minDistance = FLT_MAX;
+	VECTOR nearestItemBoxPos = {};
+	for (const auto& boxPos : itemBoxPos)
+	{
+		float distance = Utility::Distance(playerPos, boxPos);
+		if (distance < minDistance)
+		{
+			minDistance = distance;
+			nearestItemBoxPos = boxPos;
+		}
+	}
+
+	//距離が最大距離を超えていたら描画しない
+	if (minDistance > ITEM_BOX_MAX_DISTANCE)return;
+
+	//画面座標に変換
+	VECTOR screenPos = ConvWorldPosToScreenPos(nearestItemBoxPos);
+	Vector2 pos = { static_cast<int>(screenPos.x), static_cast<int>(screenPos.y) };
+
+	//距離でサイズを変化させる
+	float sizeScale = std::clamp(1.0f - (minDistance / ITEM_BOX_MAX_DISTANCE), 0.5f, 1.0f);
+
+	//注目用括弧の描画
+	DrawRotaGraph(pos.x, pos.y, sizeScale * scale, 0.0, attentionImg_, true);
+}
+
+void HUDManager::DrawMachine(const int _playerIndex)
+{
+	//プレイヤー
+	const auto* player = playerHUD_[_playerIndex].player;
+
+	//存在しないなら何もしない
+	if (!player)return;
+
+	//分割
+	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
+
+	//サイズ比率(XYほぼ同一なので統一)
+	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
+
+	//プレイヤー座標
+	VECTOR playerPos = player->GetTrans().pos;
+
+	//アイテムボックスの座標
+	const auto& machinePos = MachineManager::GetInstance().GetMachinePos();
+
+	//一番近いアイテムボックスの座標を取得
+	float minDistance = FLT_MAX;
+	VECTOR nearestMachinePos = {};
+	for (const auto& machinePos : machinePos)
+	{
+		float distance = Utility::Distance(playerPos, machinePos);
+		if (distance < minDistance)
+		{
+			minDistance = distance;
+			nearestMachinePos = machinePos;
+		}
+	}
+
+	//距離が最大距離を超えていたら描画しない
+	if (minDistance > MACHINE_MAX_DISTANCE)return;
+
+	//画面座標に変換
+	VECTOR screenPos = ConvWorldPosToScreenPos(nearestMachinePos);
+	Vector2 pos = { static_cast<int>(screenPos.x), static_cast<int>(screenPos.y) };
+
+	//距離でサイズを変化させる
+	float sizeScale = std::clamp(1.0f - (minDistance / MACHINE_MAX_DISTANCE), 0.5f, 1.0f);
+
+	//注目用括弧の描画
+	DrawRotaGraph(pos.x, pos.y, sizeScale * scale, 0.0, attentionImg_, true);
 }
 
 void HUDManager::SetGetItemImageMaxSpeed(int& _icon, int& _text)

@@ -106,11 +106,13 @@ public:
 		MOUSE_LEFT,				//マウス左クリック
 		MOUSE_RIGHT,			//マウス右クリック
 		MOUSE_MOVE,				//マウス左右移動
+		MOUSE_BACK,				//マウス下移動
 		A_BUTTON,				//Aボタン
 		B_BUTTON,				//Bボタン
 		X_BUTTON,				//Xボタン
 		Y_BUTTON,				//Yボタン
 		L_LEVER_MASHING,		//Lスティックレバガチャ
+		L_LEVER_DOWN,			//Lスティック下
 
 		//UI
 		DIALOG,					//ダイアログ
@@ -121,6 +123,7 @@ public:
 		TIMER_FRAME,			//タイマーの枠
 		FINISH_NUMBER,			//終了用の数字
 		FINISH_UI,				//終了UI
+		ATTENTION,				//注目用括弧
 
 		//イベントUI
 		MONO_EVENT_UI,			//モノクロイベントのUI

@@ -4,6 +4,7 @@
 #include "../Manager/Game/GameSetting.h"
 #include "../Manager/Game/StageManager.h"
 #include "../Manager/Game/PlayerManager.h"
+#include "../Manager/Game/GuideManager.h"
 #include "../../../Object/SkyDome/SkyDome.h"
 #include "../Object/Player/Player.h"
 #include "AirGlider.h"
@@ -23,10 +24,19 @@ void AirGlider::Init(void)
 	auto& setting = GameSetting::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
+	auto& guideMng = GuideManager::GetInstance();
 
 	//各初期化
 	plMng.ResetPlayer(START_POS);
 	stgMng.Init(StageManager::MODE::AIR_GLIDER, STAGE_CREATE_NUM);
+	
+	//プレイヤー人数
+	const int plNum = setting.GetPlayerNum();
+	for (int i = 0; i < plNum; i++)
+	{
+		//ガイドの追加
+		guideMng.Add(GuideManager::GUIDE_TYPE::AIR_GLIDER, i);
+	}
 
 	//共通初期化
 	LastGameBase::Init();

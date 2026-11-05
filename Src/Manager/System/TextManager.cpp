@@ -290,6 +290,8 @@ void TextManager::LoadOutSide(void)
 	textImages_.push_back({ L"左クリック",res.Load(ResourceManager::SRC::MOUSE_LEFT).handleId_ });
 	textImages_.push_back({ L"右クリック",res.Load(ResourceManager::SRC::MOUSE_RIGHT).handleId_ });
 	textImages_.push_back({ L"マウスを動かす",res.Load(ResourceManager::SRC::MOUSE_MOVE).handleId_ });
+	textImages_.push_back({ L"マウスを下移動",res.Load(ResourceManager::SRC::MOUSE_BACK).handleId_ });
 	textImages_.push_back({ L"Lスティックを動かす",res.Load(ResourceManager::SRC::L_LEVER_MASHING).handleId_ });
 	textImages_.push_back({ L"Lスティックレバガチャ",res.Load(ResourceManager::SRC::L_LEVER_MASHING).handleId_ });
+	textImages_.push_back({ L"Lスティックを下に倒す",res.Load(ResourceManager::SRC::L_LEVER_DOWN).handleId_ });
 }

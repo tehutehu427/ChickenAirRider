@@ -120,11 +120,13 @@ GuideManager::GuideManager(void)
 	text_[static_cast<int>(GUIDE_TYPE::BASIC)] = L"[基本操作]\n何もボタンを押さなくても\n自動的に前に進むよ。\nLスティックを動かすまたはマウスを動かすで\n方向転換もすることができるよ。";
 	text_[static_cast<int>(GUIDE_TYPE::CHARGE)] = L"[チャージ]\nAボタン/Bボタンまたは左クリックで\nチャージ＆ブレーキ！！\nゲージを溜めてボタンを離して\n超ダッシュ！！";
 	text_[static_cast<int>(GUIDE_TYPE::SPIN)] = L"[スピン]\nLスティックレバガチャまたはマウスを動かすでスピン攻撃！！\n対戦相手やアイテムボックスに\nダメージを与えることができるよ。";
+	text_[static_cast<int>(GUIDE_TYPE::GET_OFF)] = L"[降りる]\nXボタン/Yボタンまたは右クリック長押しで\nマシンから降りることができるよ。";
 	text_[static_cast<int>(GUIDE_TYPE::ITEM_BOX)] = L"[アイテムボックス]\n箱に近づいてスピン攻撃！！\n壊すとアイテムが出てくるよ。";
 	text_[static_cast<int>(GUIDE_TYPE::POWER_UP_ITEM)] = L"[パワーアップアイテム]\n取るとマシンの性能がアップするよ。";
 	text_[static_cast<int>(GUIDE_TYPE::BATTLE_ITEM)] = L"[バトルアイテム]\n取ると相手を攻撃することができるよ。";
-	text_[static_cast<int>(GUIDE_TYPE::GET_OFF)] = L"[降りる]\nXボタン/Yボタンまたは右クリック長押しで\nマシンから降りることができるよ。";
 	text_[static_cast<int>(GUIDE_TYPE::MACHINE)] = L"[マシン]\n別のマシンに乗り換えてみよう。\nマシンによって性能は様々。\n自身にあったマシンを見つけよう。";
+	text_[static_cast<int>(GUIDE_TYPE::AIR_GLIDER)] = L"[エアグライダー]\n崖から飛び出し飛行距離を競え！！\nマウスを下移動またはLスティックを下に倒すで上に飛ぶことができるよ。";
+	text_[static_cast<int>(GUIDE_TYPE::DEATH_MATCH)] = L"[デスマッチ]\nほかのプレイヤーと戦い生き残れ！！\nスピンやバトルアイテムを駆使し\n相手のマシンを破壊しよう。";
 
 	//ダイアログマテリアル
 	int dialogImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::DIALOG).handleId_;
