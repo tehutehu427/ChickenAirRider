@@ -127,10 +127,15 @@ GuideManager::GuideManager(void)
 	text_[static_cast<int>(GUIDE_TYPE::MACHINE)] = L"[マシン]\n別のマシンに乗り換えてみよう。\nマシンによって性能は様々。\n自身にあったマシンを見つけよう。";
 
 	//ダイアログマテリアル
-	dialogMaterial_ = std::make_unique<PixelMaterial>(L"Dialog.cso", 2);
-	dialogMaterial_->AddConstBuf({ 0.3f,0.3f,0.0f,0.0f });
+	int dialogImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::DIALOG).handleId_;
+	GetGraphSize(dialogImg_, &dialogSize_.x, &dialogSize_.y);
+
+	dialogMaterial_ = std::make_unique<PixelMaterial>(L"Dialog.cso", 4);
+	dialogMaterial_->AddConstBuf({ 0.3f,0.3f,static_cast<float>(dialogSize_.x), static_cast<float>(dialogSize_.y) });
+	dialogMaterial_->AddConstBuf({ DST_BORDER_SIZE,DST_BORDER_SIZE,DST_BORDER_SIZE,DST_BORDER_SIZE });
+	dialogMaterial_->AddConstBuf({ SRC_BORDER_SIZE, SRC_BORDER_SIZE,SRC_BORDER_SIZE, SRC_BORDER_SIZE });
 	dialogMaterial_->AddConstBuf({ 1.0f,1.0f,1.0f,1.0f });
-	dialogMaterial_->AddTextureBuf(ResourceManager::GetInstance().Load(ResourceManager::SRC::DIALOG).handleId_);
+	dialogMaterial_->AddTextureBuf(dialogImg_);
 }
 
 GuideManager::~GuideManager(void)
@@ -139,7 +144,6 @@ GuideManager::~GuideManager(void)
 
 void GuideManager::LoadOutSide(void)
 {
-
 }
 
 void GuideManager::DrawGuide(const int _playerIndex)
@@ -150,12 +154,8 @@ void GuideManager::DrawGuide(const int _playerIndex)
 	//表示するものがないなら何もしない
 	if (types.empty())return;
 
-	//表示するテキスト
-	const auto& frontType = types.front();
-	const std::wstring& text = text_[static_cast<int>(frontType)];
-	const FONT_TYPE font = FONT_TYPE::LOGO;
-	int textLineCount = TextManager::GetInstance().GetLineCount(text);
-	int maxLineLength = TextManager::GetInstance().GetMaxWidth(text, TEXT_SIZE, TEXT_THICK, font);
+	//テキストマネージャー
+	const auto& textMng = TextManager::GetInstance();
 
 	//分割
 	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
@@ -164,21 +164,31 @@ void GuideManager::DrawGuide(const int _playerIndex)
 	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
 	int size = static_cast<int>(TEXT_SIZE * scale);
 
+	//表示するテキスト
+	const auto& frontType = types.front();
+	const std::wstring& text = text_[static_cast<int>(frontType)];
+	const FONT_TYPE font = FONT_TYPE::LOGO;
+	int textLineCount = textMng.GetLineCount(text);
+	int textHeight = textMng.GetTextHeight(textLineCount, size);
+	int maxWidth = textMng.GetMaxWidth(text, size, TEXT_THICK, font);
+
 	//座標
 	Vector2 pos = { view.x, view.y };
 	Vector2 localPos = LOCAL_POS * scale;
+
+	//先に座標をセットしておく
+	renderer_.SetPos(pos);
 	pos += localPos;
 
 	//ダイアログ描画
-	renderer_.SetPos(pos);
-	Vector2 dialogSize = { maxLineLength, static_cast<int>(size * textLineCount) };
+	Vector2 dialogSize = { maxWidth + localPos.x * 2, textHeight + localPos.y * 2 };
 	renderer_.SetSize(dialogSize);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	dialogMaterial_->SetConstBuf(0, { static_cast<float>(dialogSize.x), static_cast<float>(dialogSize.y), static_cast<float>(dialogSize_.x), static_cast<float>(dialogSize_.y) });
 	renderer_.MakeSquareVertex();
 	renderer_.Draw(*dialogMaterial_);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
 	//テキスト描画
-	const auto& textMng = TextManager::GetInstance();
 	textMng.DrawTextToImage(text, pos.x, pos.y, size, TEXT_THICK, Utility::BLACK, font);
 }

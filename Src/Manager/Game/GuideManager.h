@@ -63,8 +63,12 @@ private:
 	static constexpr int TEXT_SIZE = 25;
 	static constexpr int TEXT_THICK = 5;
 
+	//ボーダーサイズ
+	static constexpr float SRC_BORDER_SIZE = 360.0f;
+	static constexpr float DST_BORDER_SIZE = 60.0f;
+
 	//説明の相対座標
-	static constexpr Vector2 LOCAL_POS = { 20,20 };
+	static constexpr Vector2 LOCAL_POS = { 30,20 };
 
 	//表示時間
 	static constexpr float DISPLAY_TIME = 3.0f;
@@ -81,6 +85,9 @@ private:
 	//ピクセルシェーダー
 	PixelRenderer renderer_;
 	std::unique_ptr<PixelMaterial> dialogMaterial_;
+
+	//ダイアログのサイズ
+	Vector2 dialogSize_;
 
 	//コンストラクタ
 	GuideManager(void);

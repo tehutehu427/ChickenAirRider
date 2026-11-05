@@ -27,6 +27,9 @@ public:
 	//行の最大文字数の計算
 	const int GetMaxWidth(const std::wstring& _str, const int _size, const int _thick, const FONT_TYPE& _font)const;
 
+	//行の高さを計算
+	const int GetTextHeight(const int _lineCount, const int _size)const;
+
 	//行数の計算
 	const int GetLineCount(const std::wstring& _str)const;
 
@@ -41,6 +44,12 @@ private:
 		//変換後の画像
 		int image = -1;
 	};
+
+	//フォントと比べた画像側の比率
+	static constexpr float IMAGE_SCALE = 1.2f;
+
+	//テキストの間隔
+	static constexpr int BETWEEN = 5;
 
 	//テキスト画像
 	std::vector<TextImage> textImages_;

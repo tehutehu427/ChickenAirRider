@@ -24,7 +24,6 @@ void TextManager::DrawTextToImage(const std::wstring& _str, const int _x, const 
 	int fontSize = _size;
 
 	//行間
-	const int BETWEEN = 5;
 	int lineHeight = fontSize + BETWEEN;
 
 	//描画し終わっていないなら
@@ -117,9 +116,6 @@ void TextManager::DrawTextToImage(const std::wstring& _str, const int _x, const 
 		//画像サイズ
 		GetGraphSize(foundImage, &originalWidth, &originalHeight);
 
-		//フォントと比べた画像側の比率
-		const float IMAGE_SCALE = 1.2f;
-
 		//フォントサイズに画像の高さを合わせる
 		int imageHeight = static_cast<int>(fontSize * IMAGE_SCALE);
 
@@ -142,27 +138,110 @@ void TextManager::DrawTextToImage(const std::wstring& _str, const int _x, const 
 
 const int TextManager::GetMaxWidth(const std::wstring& _str, const int _size, const int _thick, const FONT_TYPE& _font) const
 {
-	//フォントを取得
+	// フォントを取得
 	auto& fontMng = FontManager::GetInstance();
 	const int font = fontMng.GetFontHandle(_font, _size, _thick);
+
+	// フォントサイズに合わせた画像幅を取得
+	auto GetImageWidth = [&](const int image)
+		{
+			int originalWidth;
+			int originalHeight;
+
+			GetGraphSize(image, &originalWidth, &originalHeight);
+
+			if (originalHeight <= 0) return 0;
+
+			// フォントサイズに画像の高さを合わせる
+			int imageHeight = static_cast<int>(_size * IMAGE_SCALE);
+
+			// アスペクト比を維持して幅を計算
+			return static_cast<int>(
+				static_cast<float>(originalWidth) * imageHeight / originalHeight
+				);
+		};
 
 	std::wstringstream ss(_str);
 	std::wstring line;
 
 	int maxWidth = 0;
 
+	// 1行ずつ処理
 	while (std::getline(ss, line))
 	{
-		int width = GetDrawStringWidthToHandle(
-			line.c_str(),
-			static_cast<int>(line.size()),
-			font
-		);
+		// まだ幅を計算していない文章
+		std::wstring remaining = line;
 
-		maxWidth = std::max(maxWidth, width);
+		// 現在の行の幅
+		int lineWidth = 0;
+
+		while (!remaining.empty())
+		{
+			// 置き換え対象を探す
+			size_t foundPos = std::wstring::npos;
+			std::wstring foundKey;
+			int foundImage = -1;
+
+			for (const auto& textImage : textImages_)
+			{
+				const std::wstring& key = textImage.text;
+
+				size_t pos = remaining.find(key);
+
+				// 最も前にある置き換え対象を採用
+				if (pos != std::wstring::npos &&
+					(foundPos == std::wstring::npos || pos < foundPos))
+				{
+					foundPos = pos;
+					foundKey = key;
+					foundImage = textImage.image;
+				}
+			}
+
+			// 置き換え対象がなければ残りの文字幅を加算
+			if (foundPos == std::wstring::npos)
+			{
+				lineWidth += GetDrawStringWidthToHandle(
+					remaining.c_str(),
+					-1,
+					font
+				);
+
+				break;
+			}
+
+			// 画像より前の文章
+			std::wstring before = remaining.substr(0, foundPos);
+
+			if (!before.empty())
+			{
+				lineWidth += GetDrawStringWidthToHandle(
+					before.c_str(),
+					-1,
+					font
+				);
+			}
+
+			// 画像の幅を加算
+			lineWidth += GetImageWidth(foundImage);
+
+			// 置き換えた部分を削除
+			remaining = remaining.substr(foundPos + foundKey.length());
+		}
+
+		// 最大幅を更新
+		maxWidth = std::max(maxWidth, lineWidth);
 	}
 
 	return maxWidth;
+}
+
+const int TextManager::GetTextHeight(const int _lineCount, const int _size) const
+{
+	if (_lineCount <= 0) return 0;
+
+	return _lineCount * _size
+		+ (_lineCount - 1) * BETWEEN;
 }
 
 const int TextManager::GetLineCount(const std::wstring& _str) const
