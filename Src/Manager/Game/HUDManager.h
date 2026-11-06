@@ -42,7 +42,7 @@ public:
 	void Update(void);
 
 	//描画
-	void Draw(void);
+	void Draw(const int _playerIndex);
 
 	//プレイヤーの設定
 	void SetPlayer(const Player* _player, const int _index);
@@ -150,6 +150,9 @@ private:
 	static constexpr float GET_OFF_RADIUS = 0.3f;
 	static constexpr int GET_OFF_SIZE = 128;
 	static constexpr int GET_OFF_FRAME_SIZE = 10;
+
+	//括弧のサイズ
+	static constexpr float ATTENTION_SIZE = 3.0f;
 
 	//注目括弧の表示距離
 	static constexpr float ITEM_BOX_MAX_DISTANCE = 10000.0f;

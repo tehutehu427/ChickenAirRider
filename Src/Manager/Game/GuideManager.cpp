@@ -185,11 +185,11 @@ void GuideManager::DrawGuide(const int _playerIndex)
 	//ダイアログ描画
 	Vector2 dialogSize = { maxWidth + localPos.x * 2, textHeight + localPos.y * 2 };
 	renderer_.SetSize(dialogSize);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, Utility::ALPHA_MAX);
 	dialogMaterial_->SetConstBuf(0, { static_cast<float>(dialogSize.x), static_cast<float>(dialogSize.y), static_cast<float>(dialogSize_.x), static_cast<float>(dialogSize_.y) });
 	renderer_.MakeSquareVertex();
 	renderer_.Draw(*dialogMaterial_);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, Utility::ALPHA_MAX);
 
 	//テキスト描画
 	textMng.DrawTextToImage(text, pos.x, pos.y, size, TEXT_THICK, Utility::BLACK, font);

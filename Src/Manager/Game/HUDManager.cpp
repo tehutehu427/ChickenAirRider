@@ -118,16 +118,9 @@ void HUDManager::Update(void)
 	cnt_ += delta;
 }
 
-void HUDManager::Draw(void)
+void HUDManager::Draw(const int _playerIndex)
 {
-	//分割スクリーン
-	auto& split = SplitScreenManager::GetInstance();
-	int activeViewCnt = split.GetActiveViewCount();
-
-	for (int i = 0; i < activeViewCnt; i++)
-	{
-		DrawPlayerHUD(i);
-	}
+	DrawPlayerHUD(_playerIndex);
 }
 
 void HUDManager::SetPlayer(const Player* _player, const int _index)
@@ -500,18 +493,22 @@ void HUDManager::DrawItemBox(const int _playerIndex)
 
 	//サイズ比率(XYほぼ同一なので統一)
 	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
+	float size = ATTENTION_SIZE * scale;
 
 	//プレイヤー座標
 	VECTOR playerPos = player->GetTrans().pos;
 
 	//アイテムボックスの座標
-	const auto& itemBoxPos = ItemManager::GetInstance().GetItemBoxPos();
+	const auto& boxesPos = ItemManager::GetInstance().GetItemBoxPos();
 
 	//一番近いアイテムボックスの座標を取得
 	float minDistance = FLT_MAX;
 	VECTOR nearestItemBoxPos = {};
-	for (const auto& boxPos : itemBoxPos)
+	for (const auto& boxPos : boxesPos)
 	{
+		//カメラの視界外なら無視
+		if (CheckCameraViewClip(boxPos))continue;
+
 		float distance = Utility::Distance(playerPos, boxPos);
 		if (distance < minDistance)
 		{
@@ -528,10 +525,12 @@ void HUDManager::DrawItemBox(const int _playerIndex)
 	Vector2 pos = { static_cast<int>(screenPos.x), static_cast<int>(screenPos.y) };
 
 	//距離でサイズを変化させる
-	float sizeScale = std::clamp(1.0f - (minDistance / ITEM_BOX_MAX_DISTANCE), 0.5f, 1.0f);
+	float minSize = 0.5f;
+	float maxSize = 1.0f;
+	float sizeScale = std::clamp(1.0f - (minDistance / ITEM_BOX_MAX_DISTANCE), minSize, maxSize);
 
 	//注目用括弧の描画
-	DrawRotaGraph(pos.x, pos.y, sizeScale * scale, 0.0, attentionImg_, true);
+	DrawRotaGraph(pos.x, pos.y, sizeScale * size, 0.0, attentionImg_, true);
 }
 
 void HUDManager::DrawMachine(const int _playerIndex)
@@ -547,18 +546,22 @@ void HUDManager::DrawMachine(const int _playerIndex)
 
 	//サイズ比率(XYほぼ同一なので統一)
 	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
+	float size = ATTENTION_SIZE * scale;
 
 	//プレイヤー座標
 	VECTOR playerPos = player->GetTrans().pos;
 
 	//アイテムボックスの座標
-	const auto& machinePos = MachineManager::GetInstance().GetMachinePos();
+	const auto& machinesPos = MachineManager::GetInstance().GetMachinePos();
 
 	//一番近いアイテムボックスの座標を取得
 	float minDistance = FLT_MAX;
 	VECTOR nearestMachinePos = {};
-	for (const auto& machinePos : machinePos)
+	for (const auto& machinePos : machinesPos)
 	{
+		//カメラの視界外なら無視
+		if (CheckCameraViewClip(machinePos))continue;
+
 		float distance = Utility::Distance(playerPos, machinePos);
 		if (distance < minDistance)
 		{
@@ -575,10 +578,12 @@ void HUDManager::DrawMachine(const int _playerIndex)
 	Vector2 pos = { static_cast<int>(screenPos.x), static_cast<int>(screenPos.y) };
 
 	//距離でサイズを変化させる
-	float sizeScale = std::clamp(1.0f - (minDistance / MACHINE_MAX_DISTANCE), 0.5f, 1.0f);
+	float minSize = 0.5f;
+	float maxSize = 1.0f;
+	float sizeScale = std::clamp(1.0f - (minDistance / MACHINE_MAX_DISTANCE), minSize, maxSize);
 
 	//注目用括弧の描画
-	DrawRotaGraph(pos.x, pos.y, sizeScale * scale, 0.0, attentionImg_, true);
+	DrawRotaGraph(pos.x, pos.y, sizeScale * size, 0.0, attentionImg_, true);
 }
 
 void HUDManager::SetGetItemImageMaxSpeed(int& _icon, int& _text)
