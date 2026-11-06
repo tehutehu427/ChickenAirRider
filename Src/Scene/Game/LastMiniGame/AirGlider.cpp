@@ -50,6 +50,7 @@ void AirGlider::Update(void)
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& key = KeyConfig::GetInstance();
+	auto& guideMng = GuideManager::GetInstance();
 
 	//ステージ更新
 	stgMng.Update();
@@ -59,6 +60,9 @@ void AirGlider::Update(void)
 
 	//当たり判定更新
 	colMng.Update();
+
+	//ガイドの更新
+	guideMng.Update();
 
 	//ゲームパッドがないならマウス操作なので
 	if (GetJoypadNum() < 1)
@@ -108,6 +112,7 @@ void AirGlider::Draw(const Camera& _camera)
 	auto& setting = GameSetting::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
+	auto& guideMng = GuideManager::GetInstance();
 
 	//スカイドームを描画
 	sky_->Draw(_camera.GetPos());
@@ -117,6 +122,9 @@ void AirGlider::Draw(const Camera& _camera)
 
 	//プレイヤーの描画
 	plMng.Draw();
+
+	//ガイドの描画
+	guideMng.Draw();
 }
 
 void AirGlider::Release(void)

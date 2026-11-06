@@ -42,7 +42,7 @@ public:
 	void Update(void);
 
 	//描画
-	void Draw(const int _playerIndex);
+	void Draw(void);
 
 	//プレイヤーの設定
 	void SetPlayer(const Player* _player, const int _index);

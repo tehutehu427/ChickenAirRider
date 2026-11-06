@@ -57,6 +57,7 @@ void DeathMatch::Update(void)
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
 	auto& key = KeyConfig::GetInstance();
+	auto& guideMng = GuideManager::GetInstance();
 
 	//ステージ更新
 	stgMng.Update();
@@ -69,6 +70,9 @@ void DeathMatch::Update(void)
 
 	//当たり判定更新
 	colMng.Update();
+
+	//ガイドの更新
+	guideMng.Update();
 
 	//ゲームパッドがないならマウス操作なので
 	if (GetJoypadNum() < 1)
@@ -104,6 +108,7 @@ void DeathMatch::Draw(const Camera& _camera)
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
 	auto& itemMng = ItemManager::GetInstance();
+	auto& guideMng = GuideManager::GetInstance();
 
 	//スカイドームを描画
 	sky_->Draw(_camera.GetPos());
@@ -116,6 +121,9 @@ void DeathMatch::Draw(const Camera& _camera)
 
 	//プレイヤーの描画
 	plMng.Draw();
+
+	//ガイドの描画
+	guideMng.Draw();
 }
 
 void DeathMatch::Release(void)

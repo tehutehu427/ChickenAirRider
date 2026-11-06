@@ -68,7 +68,15 @@ void GuideManager::Reset(void)
 		{
 			//未達成
 			guideData = GuideData();
+		}
+	}
 
+	//表示ガイドのリセット
+	for (auto& types : types_)
+	{
+		while (!types.empty())
+		{
+			types.pop();
 		}
 	}
 }

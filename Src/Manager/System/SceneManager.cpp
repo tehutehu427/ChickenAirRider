@@ -182,15 +182,15 @@ void SceneManager::Draw(void)
 			if(s != nullptr) s->Draw(*cameras_[i]);
 		}
 
-		//HUDの描画
-		HUDManager::GetInstance().Draw(i);
-
 		//Effekseerにより再生中のエフェクトを描画する。
 		DrawEffekseer3D();
 	}
 
 	//分割スクリーン合成
 	split.Composite();
+
+	//HUDの描画
+	HUDManager::GetInstance().Draw();
 
 	//全体UIの描画
 	GlobalUIManager::GetInstance().Draw();

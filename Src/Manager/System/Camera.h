@@ -82,6 +82,9 @@ public:
 
 	//カメラの描画制限
 	static constexpr float VIEW_RANGE = 24000.0f;
+
+	//カメラの視野角
+	static constexpr float FOV = DX_PI_F / 3.0f;
 	
 	// カメラモード
 	enum class MODE
@@ -133,6 +136,12 @@ public:
 
 	// カメラの前方方向の取得
 	VECTOR GetForward(void) const;
+
+	// カメラの上方向の取得
+	VECTOR GetUp(void)const;
+
+	// カメラのFOVの取得
+	float GetFov(void)const;
 
 	// カメラの設定
 	void CameraSetting(void)const;

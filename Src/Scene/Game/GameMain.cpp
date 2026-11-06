@@ -96,6 +96,9 @@ void GameMain::Init(void)
 	//変数の初期化
 	state_ = STATE::START;
 
+	//プレイヤーを降車可能にする
+	plMng.PlayerCanGetOff(true);
+
 	//プレイヤー達の初期更新
 	plMng.Update();
 }

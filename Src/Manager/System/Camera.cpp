@@ -112,6 +112,16 @@ VECTOR Camera::GetForward(void) const
 	return VNorm(VSub(targetPos_, pos_));
 }
 
+VECTOR Camera::GetUp(void) const
+{
+	return cameraUp_;
+}
+
+float Camera::GetFov(void) const
+{
+	return FOV;
+}
+
 void Camera::ChangeMode(const MODE& mode)
 {
 	// ƒJƒƒ‰‚Ì‰Šúİ’è

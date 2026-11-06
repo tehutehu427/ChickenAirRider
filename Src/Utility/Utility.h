@@ -222,14 +222,21 @@ public:
 	static bool IsPointInRectCircle(const Vector2 _pos, const Vector2 _circlePos, const float _radius);
 
 	/// <summary>
-	/// スクリーン座標からワールド座標に
+	/// カメラごとにワールド座標をスクリーン座標に変換
 	/// </summary>
-	/// <param name="screenPos">スクリーン座標</param>
-	/// <param name="distance">距離</param>
+	/// <param name="worldPos">ワールド座標</param>
 	/// <param name="cameraPos">カメラ位置</param>
-	/// <param name="cameraDir">カメラ方向</param>
-	/// <returns>ワールド座標</returns>
-	static VECTOR GetWorldPosAtScreen(const Vector2 screenPos, const float distance, const VECTOR cameraPos, const VECTOR cameraDir);
+	/// <param name="cameraForward">カメラ前方</param>
+	/// <param name="cameraUp">カメラ上方向</param>
+	/// <param name="screenHeight">スクリーン高さ</param>
+	/// <param name="fov">視野角</param>
+	/// <returns>スクリーン座標</returns>
+	static Vector2 WorldPosToScreenPos(const VECTOR& worldPos,
+		const VECTOR& cameraPos,
+		const VECTOR& cameraForward,
+		const VECTOR& cameraUp,
+		const float screenHeight,
+		const float fov);
 
 	//符号を返す
 	static int GetSign(float f);
