@@ -3,6 +3,7 @@
 #include"GameSetting.h"
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/Camera.h"
+#include"../Manager/Game/WorldUIManager.h"
 #include"../Manager/Game/HUDManager.h"
 #include"../Object/Player/Player.h"
 #include "PlayerManager.h"
@@ -98,6 +99,7 @@ void PlayerManager::CreateUserPlayer(const int _playerIndex)
 {
 	//インスタンス
 	auto& scnMng = SceneManager::GetInstance();
+	auto& worldUi = WorldUIManager::GetInstance();
 	auto& hud = HUDManager::GetInstance();
 
 	//プレイヤー
@@ -114,9 +116,13 @@ void PlayerManager::CreateUserPlayer(const int _playerIndex)
 	camera->SetFollow(&player->GetTrans());
 	camera->ChangeMode(Camera::MODE::FOLLOW_LEAP);
 
+	//ワールドUIに設定
+	worldUi.SetPlayer(player.get(), _playerIndex);
+
 	//HUDに設定
 	hud.SetPlayer(player.get(),_playerIndex);
 
+	//プレイヤーを追加
 	players_.emplace_back(std::move(player));
 }
 
@@ -133,5 +139,7 @@ void PlayerManager::CreateNpcPlayer(const int _playerIndex)
 			static_cast<KeyConfig::JOYPAD_NO>(_playerIndex + 1),
 			static_cast<Collider::TAG>(_playerIndex)
 		);
+
+	//プレイヤーを追加
 	players_.emplace_back(std::move(player));
 }

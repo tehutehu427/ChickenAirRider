@@ -27,8 +27,6 @@ public:
 		GET_ITEM,		//アイテム取得表示
 		PARAMETER,		//パラメーター
 		GET_OFF,		//降車
-		ITEM_BOX,		//アイテムボックス
-		MACHINE,		//機体
 		MAX
 	};
 
@@ -151,13 +149,6 @@ private:
 	static constexpr int GET_OFF_SIZE = 128;
 	static constexpr int GET_OFF_FRAME_SIZE = 10;
 
-	//括弧のサイズ
-	static constexpr float ATTENTION_SIZE = 3.0f;
-
-	//注目括弧の表示距離
-	static constexpr float ITEM_BOX_MAX_DISTANCE = 10000.0f;
-	static constexpr float MACHINE_MAX_DISTANCE = 10000.0f;
-
 	//コンストラクタ
 	HUDManager(void);
 
@@ -190,9 +181,6 @@ private:
 	int attackImg_;
 	int defenceImg_;
 	int maxHealthImg_;
-
-	//注目用括弧画像
-	int attentionImg_;
 
 	//カウンタ
 	float cnt_;
@@ -227,8 +215,6 @@ private:
 	void DrawGetItem(const int _playerIndex);
 	void DrawParam(const int _playerIndex);
 	void DrawGetOff(const int _playerIndex);
-	void DrawItemBox(const int _playerIndex);
-	void DrawMachine(const int _playerIndex);
 
 	//画像設定
 	void SetGetItemImageMaxSpeed(int& _icon, int& _text);

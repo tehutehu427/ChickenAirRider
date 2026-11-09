@@ -4,6 +4,7 @@
 #include"../Manager/System/SceneManager.h"
 #include"../Manager/System/SoundManager.h"
 #include"../Manager/Game/GameSetting.h"
+#include"../Manager/Game/WorldUIManager.h"
 #include"../Manager/Game/HUDManager.h"
 #include"../Manager/Game/CollisionManager.h"
 #include"../Manager/Game/GravityManager.h"
@@ -43,10 +44,6 @@ SceneGame::~SceneGame(void)
 	//最終ゲームの解放
 	game_->Release();
 
-	//HUDの初期化
-	auto& hud = HUDManager::GetInstance();
-	hud.Init();
-
 	//サウンドの停止
 	SoundManager::GetInstance().StopAll();
 	
@@ -63,6 +60,9 @@ void SceneGame::Init(void)
 {
 	//インスタンス削除タイミング
 	auto timing = SingletonRegistry::DESTROY_TIMING::GAME_END;
+
+	//ワールドUIの初期化
+	WorldUIManager::GetInstance().Init();
 
 	//HUDの初期化
 	HUDManager::GetInstance().Init();

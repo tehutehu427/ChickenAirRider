@@ -14,6 +14,7 @@
 #include"../Manager/Game/PlayerManager.h"
 #include"../Manager/Game/ItemManager.h"
 #include"../Manager/Game/GlobalUIManager.h"
+#include"../Manager/Game/WorldUIManager.h"
 #include"../Manager/Game/HUDManager.h"
 #include"../Manager/Game/EventManager.h"
 #include"../Manager/Game/GuideManager.h"
@@ -123,6 +124,7 @@ void GameMain::Release(void)
 	auto& setMng = GameSetting::GetInstance();
 	auto& gloUi = GlobalUIManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
+	auto& worldUi = WorldUIManager::GetInstance();
 	auto& hud = HUDManager::GetInstance();
 
 	//タイマーの削除
@@ -134,13 +136,20 @@ void GameMain::Release(void)
 	//プレイヤー人数
 	const int plNum = GameSetting::GetInstance().GetUserNum();
 
-	//HPとチャージゲージを非表示
+	//UIの非表示
 	for (int i = 0; i < plNum; i++)
 	{
+		//ワールドUIを非表示
+		worldUi.SetVisible(i, WorldUIManager::WORLD_UI_TYPE::ITEM_BOX, false);
+		worldUi.SetVisible(i, WorldUIManager::WORLD_UI_TYPE::MACHINE, false);
+
+		//HUDを非表示
 		hud.SetVisible(i, HUDManager::HUD_TYPE::CHARGE_GAUGE, false);
 		hud.SetVisible(i, HUDManager::HUD_TYPE::HEALTH, false);
 		hud.SetVisible(i, HUDManager::HUD_TYPE::GET_OFF, false);
 		hud.SetVisible(i, HUDManager::HUD_TYPE::GET_ITEM, false);
+
+		//分割スクリーンのシェーダをデフォルトに戻す
 		split.SetShader(i, SplitScreenManager::SHADER_TYPE::DEFAULT);
 	}
 
@@ -160,6 +169,7 @@ void GameMain::UpdateStart(void)
 	//インスタンス
 	auto& setting = GameSetting::GetInstance();
 	auto& gloUi = GlobalUIManager::GetInstance();
+	auto& worldUi = WorldUIManager::GetInstance();
 	auto& hud = HUDManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
 	
@@ -178,13 +188,16 @@ void GameMain::UpdateStart(void)
 		//カウントダウンの削除
 		gloUi.SetVisible(GlobalUIManager::DRAW_TYPE::COUNT_DOWN, false);
 
+		//UIの表示
 		for (int i = 0; i < plNum; i++)
 		{
 			//入力表示を非表示
 			hud.SetVisible(i, HUDManager::HUD_TYPE::PUSH_BUTTON, false);
 			hud.SetVisible(i, HUDManager::HUD_TYPE::GET_OFF, true);
-			hud.SetVisible(i, HUDManager::HUD_TYPE::ITEM_BOX, true);
-			hud.SetVisible(i, HUDManager::HUD_TYPE::MACHINE, true);
+
+			//ワールドUIの表示
+			worldUi.SetVisible(i, WorldUIManager::WORLD_UI_TYPE::ITEM_BOX, true);
+			worldUi.SetVisible(i, WorldUIManager::WORLD_UI_TYPE::MACHINE, true);
 		}
 
 		//ゲーム開始

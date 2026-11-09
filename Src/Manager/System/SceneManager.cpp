@@ -6,6 +6,7 @@
 #include "../Scene/Select/SceneOption.h"
 #include "../Scene/Game/SceneGame.h"
 #include "../Scene/SceneResult.h"
+#include "../Game/WorldUIManager.h"
 #include "../Game/HUDManager.h"
 #include "../Game/GameSetting.h"
 #include "../Game/GlobalUIManager.h"
@@ -56,6 +57,9 @@ void SceneManager::Init(void)
 
 	//分割スクリーン
 	SplitScreenManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
+
+	//画面UIの生成
+	WorldUIManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
 
 	//画面UIの生成
 	HUDManager::CreateInstance(SingletonRegistry::DESTROY_TIMING::ALL_END);
@@ -181,6 +185,9 @@ void SceneManager::Draw(void)
 			//シーンが空じゃないなら描画
 			if(s != nullptr) s->Draw(*cameras_[i]);
 		}
+
+		//ワールドUIの描画
+		WorldUIManager::GetInstance().Draw(i);
 
 		//Effekseerにより再生中のエフェクトを描画する。
 		DrawEffekseer3D();
