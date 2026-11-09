@@ -92,6 +92,7 @@ void SceneGame::Init(void)
 
 	//ガイド管理の生成
 	GuideManager::CreateInstance(timing);
+	GuideManager::GetInstance().Reset();
 
 	//ゲームの状態変更
 	ChangeGameState(GAME_STATE::MAIN);

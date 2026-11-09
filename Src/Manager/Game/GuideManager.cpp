@@ -66,7 +66,7 @@ void GuideManager::Reset(void)
 	{
 		for (auto& guideData : guideDatas)
 		{
-			//未達成
+			//初期化
 			guideData = GuideData();
 		}
 	}

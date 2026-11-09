@@ -124,6 +124,7 @@ void GameMain::Release(void)
 	auto& gloUi = GlobalUIManager::GetInstance();
 	auto& snd = SoundManager::GetInstance();
 	auto& hud = HUDManager::GetInstance();
+	auto& guide = GuideManager::GetInstance();
 
 	//タイマーの削除
 	gloUi.GetTimer().SetCountValid(false);
@@ -147,6 +148,9 @@ void GameMain::Release(void)
 
 		//分割スクリーンのシェーダをデフォルトに戻す
 		split.SetShader(i, SplitScreenManager::SHADER_TYPE::DEFAULT);
+
+		//入力表示をリセット
+		guide.Reset();
 	}
 
 	//フィニッシュUIの削除
