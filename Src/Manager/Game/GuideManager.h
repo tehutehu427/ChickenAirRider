@@ -3,6 +3,7 @@
 #include<queue>
 #include<string>
 #include "../../Common/Singleton.h"
+#include "../../Common/Vector2.h"
 #include"GameSetting.h"
 #include"../../Renderer/PixelRenderer.h"
 
@@ -76,7 +77,7 @@ private:
 	static constexpr float DST_BORDER_SIZE = 60.0f;
 
 	//説明の相対座標
-	static constexpr Vector2 LOCAL_POS = { 30,20 };
+	static constexpr Vector2 LOCAL_POS = { 30,30 };
 
 	//表示時間
 	static constexpr float DISPLAY_TIME = 3.0f;

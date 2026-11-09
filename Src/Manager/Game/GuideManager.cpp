@@ -200,5 +200,5 @@ void GuideManager::DrawGuide(const int _playerIndex)
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, Utility::ALPHA_MAX);
 
 	//テキスト描画
-	textMng.DrawTextToImage(text, pos.x, pos.y, size, TEXT_THICK, Utility::BLACK, font);
+	textMng.DrawTextToImage(text, pos.x, pos.y, size, scale, TEXT_THICK, Utility::BLACK, font);
 }

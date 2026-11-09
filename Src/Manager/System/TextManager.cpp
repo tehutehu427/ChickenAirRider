@@ -7,7 +7,7 @@ void TextManager::Init(void)
 {
 }
 
-void TextManager::DrawTextToImage(const std::wstring& _str, const int _x, const int _y, const int _size, const int _thick, const int _color, const FONT_TYPE _font)const
+void TextManager::DrawTextToImage(const std::wstring& _str, const int _x, const int _y, const int _size, const float _scale, const int _thick, const int _color, const FONT_TYPE _font)const
 {
 	//フォントを取得
 	auto& fontMng = FontManager::GetInstance();
@@ -24,7 +24,7 @@ void TextManager::DrawTextToImage(const std::wstring& _str, const int _x, const 
 	int fontSize = _size;
 
 	//行間
-	int lineHeight = fontSize + BETWEEN;
+	int lineHeight = fontSize + BETWEEN * _scale;
 
 	//描画し終わっていないなら
 	while (!remaining.empty())
