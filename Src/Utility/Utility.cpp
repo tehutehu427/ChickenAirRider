@@ -607,19 +607,21 @@ bool Utility::IsPointInRectCircle(const Vector2 _pos, const Vector2 _circlePos, 
     return Distance(_pos, _circlePos) <= _radius;
 }
 
-Vector2 Utility::WorldPosToScreenPos(const VECTOR& worldPos, const VECTOR& cameraPos, const VECTOR& cameraForward, const VECTOR& cameraUp, const float screenHeight, const float fov)
+bool Utility::WorldPosToScreenPos(const VECTOR& _worldPos, const VECTOR& _cameraPos, const VECTOR& _cameraForward, const VECTOR& _cameraUp, const float _screenHeight, const float _fov, Vector2& _outScreenPos)
 {
 	// カメラの前方、右方向、上方向のベクトルを計算
-    VECTOR forward = VNorm(cameraForward);
-    VECTOR right = VNorm(VCross(cameraUp, forward));
+    VECTOR forward = VNorm(_cameraForward);
+    VECTOR right = VNorm(VCross(_cameraUp, forward));
     VECTOR up = VNorm(VCross(forward, right));
 
 	// ワールド座標からカメラ座標への変換
-    VECTOR diff = VSub(worldPos, cameraPos);
+    VECTOR diff = VSub(_worldPos, _cameraPos);
 
 	// カメラの前方ベクトルとの内積を計算して、z座標を取得
     float z = VDot(diff, forward);
-    if (z <= 0.0f)return {};
+
+    //カメラ外なので変換失敗
+    if (z <= 0.0f)return false;
 
 	// 画面上のx座標とy座標を計算
     float x = VDot(diff, right);
@@ -627,13 +629,28 @@ Vector2 Utility::WorldPosToScreenPos(const VECTOR& worldPos, const VECTOR& camer
 
 	// 画面の高さと視野角から焦点距離を計算
     float focalLength =
-        (screenHeight * 0.5f) / tanf(fov * 0.5f);
+        (_screenHeight * 0.5f) / tanf(_fov * 0.5f);
 
-	// 画面座標を計算して返す
-    return {
+	// 画面座標を計算して保存
+    _outScreenPos = {
         static_cast<int>(x * focalLength / z),
         static_cast<int>(-y * focalLength / z)
     };
+
+	// 変換成功
+    return true;
+}
+
+bool Utility::IsInScreen(const Vector2& _screenPos, const float& _screenWidth, const float& _screenHeight)
+{
+	//各方向の判定を行う
+	bool isInLeft = _screenPos.x >= 0;
+	bool isInRight = _screenPos.x < _screenWidth;
+	bool isInTop = _screenPos.y >= 0;
+	bool isInBottom = _screenPos.y < _screenHeight;
+
+	//すべての条件を満たす場合にtrueを返す
+	return isInLeft && isInRight && isInTop && isInBottom;
 }
 
 int Utility::GetSign(float f)

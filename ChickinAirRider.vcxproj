@@ -258,7 +258,6 @@
     <ClCompile Include="Src\Common\Vector2F.cpp" />
     <ClCompile Include="Src\Manager\System\SplitScreenManager.cpp" />
     <ClCompile Include="Src\Manager\System\TextManager.cpp" />
-    <ClCompile Include="Src\Manager\Game\WorldUIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Manager\Game\GuideManager.h" />
@@ -438,7 +437,6 @@
     <ClInclude Include="Src\Common\Vector2F.h" />
     <ClInclude Include="Src\Manager\System\SplitScreenManager.h" />
     <ClInclude Include="Src\Manager\System\TextManager.h" />
-    <ClInclude Include="Src\Manager\Game\WorldUIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\PixelShader2DHeader.hlsli" />

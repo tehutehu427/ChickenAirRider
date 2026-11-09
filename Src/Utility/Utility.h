@@ -224,19 +224,30 @@ public:
 	/// <summary>
 	/// カメラごとにワールド座標をスクリーン座標に変換
 	/// </summary>
-	/// <param name="worldPos">ワールド座標</param>
-	/// <param name="cameraPos">カメラ位置</param>
-	/// <param name="cameraForward">カメラ前方</param>
-	/// <param name="cameraUp">カメラ上方向</param>
-	/// <param name="screenHeight">スクリーン高さ</param>
-	/// <param name="fov">視野角</param>
-	/// <returns>スクリーン座標</returns>
-	static Vector2 WorldPosToScreenPos(const VECTOR& worldPos,
-		const VECTOR& cameraPos,
-		const VECTOR& cameraForward,
-		const VECTOR& cameraUp,
-		const float screenHeight,
-		const float fov);
+	/// <param name="_worldPos">ワールド座標</param>
+	/// <param name="_cameraPos">カメラ位置</param>
+	/// <param name="_cameraForward">カメラ前方</param>
+	/// <param name="_cameraUp">カメラ上方向</param>
+	/// <param name="_screenHeight">スクリーン高さ</param>
+	/// <param name="_fov">視野角</param>
+	/// <param name="_outScreenPos">変換したスクリーン座標</param>
+	/// <returns>true:変換に成功した, false:変換に失敗した</returns>
+	static bool WorldPosToScreenPos(const VECTOR& _worldPos,
+		const VECTOR& _cameraPos,
+		const VECTOR& _cameraForward,
+		const VECTOR& _cameraUp,
+		const float _screenHeight,
+		const float _fov,
+		Vector2& _outScreenPos);
+
+	/// <summary>
+	/// スクリーン内に入っているか
+	/// </summary>
+	/// <param name="_screenPos">スクリーン座標</param>
+	/// <param name="_screenWidth">スクリーンの幅</param>
+	/// <param name="_screenHeight">スクリーンの高さ</param>
+	/// <returns>true:スクリーン内, false:スクリーン外</returns>
+	static bool IsInScreen(const Vector2& _screenPos, const float& _screenWidth, const float& _screenHeight);
 
 	//符号を返す
 	static int GetSign(float f);
