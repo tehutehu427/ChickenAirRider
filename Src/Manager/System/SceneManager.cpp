@@ -285,9 +285,6 @@ void SceneManager::ResetScene(void)
 
 void SceneManager::Destroy(void)
 {
-	//スクリーンの解放
-	//DeleteGraph(mainScreen_);
-	//for(auto & screen : splitScreens_){ DeleteGraph(screen); }
 }
 
 void SceneManager::StartFadeIn(void)
@@ -456,10 +453,14 @@ void SceneManager::FadeOut(void)
 			//プレイヤー人数
 			createNum = GameSetting::GetInstance().GetUserNum();
 
+			//タイマーの位置を設定する
+			const int p1TimerPosY = Application::SCREEN_SIZE_Y * 0.1f;
+			const int p2TimerPosX = Application::SCREEN_SIZE_X * 0.1f;
+
 			//プレイヤー人数ごとのタイマー位置
 			Vector2 timerPos[GameSetting::PLAYER_MAX_NUM] = {
-				{ Application::SCREEN_HALF_X, 64 },									//1人
-				{ 100, Application::SCREEN_HALF_Y },								//2人
+				{ Application::SCREEN_HALF_X, p1TimerPosY },						//1人
+				{ p2TimerPosX, Application::SCREEN_HALF_Y },						//2人
 				{ Application::SCREEN_HALF_X + Application::SCREEN_HALF_X / 2
 				, Application::SCREEN_HALF_Y + Application::SCREEN_HALF_Y / 2},		//3人
 				{ Application::SCREEN_HALF_X, Application::SCREEN_HALF_Y }			//4人
