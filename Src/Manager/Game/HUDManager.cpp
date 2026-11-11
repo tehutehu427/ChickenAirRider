@@ -7,10 +7,11 @@
 #include "../System/KeyConfig.h"
 #include "../System/Camera.h"
 #include "../System/SplitScreenManager.h"
-#include "../Renderer/PixelMaterial.h"
-#include "../Renderer/PixelRenderer.h"
+#include "../System/TextManager.h"
 #include "ItemManager.h"
 #include "MachineManager.h"
+#include "../Renderer/PixelMaterial.h"
+#include "../Renderer/PixelRenderer.h"
 #include "../../Object/Player/Player.h"
 #include "../../Object/Player/Action/MachineAction.h"
 #include "../../Object/Player/Logic/UserLogic.h"
@@ -33,6 +34,7 @@ void HUDManager::LoadOutSide(void)
 		playerHud.hudData[static_cast<int>(HUD_TYPE::GET_OFF)] = { &HUDManager::DrawGetOff,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::ITEM_BOX)] = { &HUDManager::DrawItemBox,false };
 		playerHud.hudData[static_cast<int>(HUD_TYPE::MACHINE)] = { &HUDManager::DrawMachine,false };
+		playerHud.hudData[static_cast<int>(HUD_TYPE::FLIGHT_DISTANCE)] = { &HUDManager::DrawFlightDistance,false };
 	}
 
 	//パワーアップ画像設定
@@ -91,6 +93,17 @@ void HUDManager::LoadOutSide(void)
 	getOffMaterial_ = std::make_unique<PixelMaterial>(L"CircleGauge.cso", 2);
 	getOffMaterial_->AddConstBuf({ 0.5f,0.5f,0.0f,0.0f });
 	getOffMaterial_->AddConstBuf({ GET_OFF_RADIUS,0.0f,0.0f,0.0f });
+
+	//ダイアログマテリアル
+	int dialogImg = ResourceManager::GetInstance().Load(ResourceManager::SRC::DIALOG).handleId_;
+	GetGraphSize(dialogImg, &dialogSize_.x, &dialogSize_.y);
+
+	dialogMaterial_ = std::make_unique<PixelMaterial>(L"Dialog.cso", 4);
+	dialogMaterial_->AddConstBuf({ 0.3f,0.3f,static_cast<float>(dialogSize_.x), static_cast<float>(dialogSize_.y) });
+	dialogMaterial_->AddConstBuf({ DST_BORDER_SIZE,DST_BORDER_SIZE,DST_BORDER_SIZE,DST_BORDER_SIZE });
+	dialogMaterial_->AddConstBuf({ SRC_BORDER_SIZE, SRC_BORDER_SIZE,SRC_BORDER_SIZE, SRC_BORDER_SIZE });
+	dialogMaterial_->AddConstBuf({ 1.0f,1.0f,1.0f,1.0f });
+	dialogMaterial_->AddTextureBuf(dialogImg);
 }
 
 void HUDManager::Init(void)
@@ -644,6 +657,66 @@ void HUDManager::DrawMachine(const int _playerIndex)
 
 	//注目用括弧の描画
 	DrawRotaGraph(screenPos.x, screenPos.y, sizeScale * size, 0.0, attentionImg_, true);
+}
+
+void HUDManager::DrawFlightDistance(const int _playerIndex)
+{
+	//プレイヤー
+	const auto* player = playerHUD_[_playerIndex].player;
+
+	//存在しないなら何もしない
+	if (!player)return;
+
+	//テキストマネージャー
+	const auto& textMng = TextManager::GetInstance();
+
+	//分割
+	const auto& view = SplitScreenManager::GetInstance().GetViewport(_playerIndex);
+
+	//サイズ比率(XYほぼ同一なので統一)
+	float scale = static_cast<float>(view.height) / Application::SCREEN_SIZE_Y;
+
+	//サイズ
+	float size = FLIGHT_DISTANCE_TEXT_SIZE * scale;
+
+	//右上に表示
+	Vector2 pos = { view.x + static_cast<int>(Application::SCREEN_SIZE_X * 0.9f * scale),view.y + static_cast<int>(Application::SCREEN_SIZE_Y * 0.1f * scale) };
+
+	//飛距離の補正
+	float distanceCorrection = 100.0f;
+
+	// 飛距離
+	float flightDistance = player->GetTrans().pos.z / distanceCorrection;
+
+	// 文字列化（小数点以下2桁）
+	int decimalDisit = 2;
+	std::wstringstream ss;
+	ss << std::fixed << std::setprecision(decimalDisit) << flightDistance;
+	std::wstring flightDistanceStr = ss.str() + L"m";
+
+	//ロゴ
+	FONT_TYPE font = FONT_TYPE::HANAZOME;
+
+	//テキスト
+	int textWidth = TextManager::GetInstance().GetMaxWidth(flightDistanceStr, size, FLIGHT_DISTANCE_TEXT_THICK, font);
+	int textLineCount = textMng.GetLineCount(flightDistanceStr);
+	int textHeight = textMng.GetTextHeight(textLineCount, size);
+	Vector2 dialogLocalPos = DIALOG_LOCAL_POS * scale;
+	Vector2 dialogPos = pos - (DIALOG_LOCAL_POS / 2);
+	dialogPos.x -= textWidth;
+
+	//ダイアログ描画
+	Vector2 dialogSize = { textWidth + dialogLocalPos.x, textHeight + dialogLocalPos.y };
+	renderer_.SetPos(dialogPos);
+	renderer_.SetSize(dialogSize);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, Utility::ALPHA_MAX);
+	dialogMaterial_->SetConstBuf(0, { static_cast<float>(dialogSize.x), static_cast<float>(dialogSize.y), static_cast<float>(dialogSize_.x), static_cast<float>(dialogSize_.y) });
+	renderer_.MakeSquareVertex();
+	renderer_.Draw(*dialogMaterial_);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, Utility::ALPHA_MAX);
+
+	//テキスト描画
+	textMng.DrawTextToImage(flightDistanceStr, pos.x - textWidth, pos.y, size, scale, FLIGHT_DISTANCE_TEXT_THICK, Utility::BLACK, font);
 }
 
 void HUDManager::SetGetItemImageMaxSpeed(int& _icon, int& _text)

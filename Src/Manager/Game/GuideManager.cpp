@@ -137,15 +137,15 @@ GuideManager::GuideManager(void)
 	text_[static_cast<int>(GUIDE_TYPE::DEATH_MATCH)] = L"[デスマッチ]\nほかのプレイヤーと戦い生き残れ！！\nスピンやバトルアイテムを駆使し\n相手のマシンを破壊しよう。";
 
 	//ダイアログマテリアル
-	int dialogImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::DIALOG).handleId_;
-	GetGraphSize(dialogImg_, &dialogSize_.x, &dialogSize_.y);
+	int dialogImg = ResourceManager::GetInstance().Load(ResourceManager::SRC::DIALOG).handleId_;
+	GetGraphSize(dialogImg, &dialogSize_.x, &dialogSize_.y);
 
 	dialogMaterial_ = std::make_unique<PixelMaterial>(L"Dialog.cso", 4);
 	dialogMaterial_->AddConstBuf({ 0.3f,0.3f,static_cast<float>(dialogSize_.x), static_cast<float>(dialogSize_.y) });
 	dialogMaterial_->AddConstBuf({ DST_BORDER_SIZE,DST_BORDER_SIZE,DST_BORDER_SIZE,DST_BORDER_SIZE });
 	dialogMaterial_->AddConstBuf({ SRC_BORDER_SIZE, SRC_BORDER_SIZE,SRC_BORDER_SIZE, SRC_BORDER_SIZE });
 	dialogMaterial_->AddConstBuf({ 1.0f,1.0f,1.0f,1.0f });
-	dialogMaterial_->AddTextureBuf(dialogImg_);
+	dialogMaterial_->AddTextureBuf(dialogImg);
 }
 
 GuideManager::~GuideManager(void)

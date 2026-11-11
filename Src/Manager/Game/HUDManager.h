@@ -21,14 +21,15 @@ public:
 	//UI情報
 	enum class HUD_TYPE
 	{
-		PUSH_BUTTON,	//プッシュ表示
-		CHARGE_GAUGE,	//チャージゲージ
-		HEALTH,			//体力
-		GET_ITEM,		//アイテム取得表示
-		PARAMETER,		//パラメーター
-		GET_OFF,		//降車
-		ITEM_BOX,		//アイテムボックス
-		MACHINE,		//機体
+		PUSH_BUTTON,		//プッシュ表示
+		CHARGE_GAUGE,		//チャージゲージ
+		HEALTH,				//体力
+		GET_ITEM,			//アイテム取得表示
+		PARAMETER,			//パラメーター
+		GET_OFF,			//降車
+		ITEM_BOX,			//アイテムボックス
+		MACHINE,			//機体
+		FLIGHT_DISTANCE,	//飛距離
 		MAX
 	};
 
@@ -158,6 +159,15 @@ private:
 	static constexpr float ITEM_BOX_MAX_DISTANCE = 10000.0f;
 	static constexpr float MACHINE_MAX_DISTANCE = 10000.0f;
 
+	//飛距離のサイズ
+	static constexpr int FLIGHT_DISTANCE_TEXT_SIZE = 50;
+	static constexpr int FLIGHT_DISTANCE_TEXT_THICK = 5;
+
+	//ボーダーサイズ
+	static constexpr float SRC_BORDER_SIZE = 360.0f;
+	static constexpr float DST_BORDER_SIZE = 60.0f;
+	static constexpr Vector2 DIALOG_LOCAL_POS = { 50,30 };
+
 	//コンストラクタ
 	HUDManager(void);
 
@@ -194,6 +204,9 @@ private:
 	//注目用括弧画像
 	int attentionImg_;
 
+	//ダイアログのサイズ
+	Vector2 dialogSize_;
+
 	//カウンタ
 	float cnt_;
 
@@ -205,6 +218,9 @@ private:
 
 	//降車ゲージ
 	std::unique_ptr<PixelMaterial> getOffMaterial_;
+
+	//ダイアログ
+	std::unique_ptr<PixelMaterial> dialogMaterial_;
 
 	//レンダー
 	PixelRenderer renderer_;
@@ -229,6 +245,7 @@ private:
 	void DrawGetOff(const int _playerIndex);
 	void DrawItemBox(const int _playerIndex);
 	void DrawMachine(const int _playerIndex);
+	void DrawFlightDistance(const int _playerIndex);
 
 	//画像設定
 	void SetGetItemImageMaxSpeed(int& _icon, int& _text);

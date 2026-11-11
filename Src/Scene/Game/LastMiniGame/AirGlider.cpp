@@ -4,6 +4,7 @@
 #include "../Manager/Game/GameSetting.h"
 #include "../Manager/Game/StageManager.h"
 #include "../Manager/Game/PlayerManager.h"
+#include "../Manager/Game/HUDManager.h"
 #include "../Manager/Game/GuideManager.h"
 #include "../../../Object/SkyDome/SkyDome.h"
 #include "../Object/Player/Player.h"
@@ -24,6 +25,7 @@ void AirGlider::Init(void)
 	auto& setting = GameSetting::GetInstance();
 	auto& stgMng = StageManager::GetInstance();
 	auto& plMng = PlayerManager::GetInstance();
+	auto& hud = HUDManager::GetInstance();
 	auto& guideMng = GuideManager::GetInstance();
 
 	//各初期化
@@ -34,6 +36,9 @@ void AirGlider::Init(void)
 	const int plNum = setting.GetPlayerNum();
 	for (int i = 0; i < plNum; i++)
 	{
+		//飛距離UIの追加
+		hud.SetVisible(i, HUDManager::HUD_TYPE::FLIGHT_DISTANCE, true);
+
 		//ガイドの追加
 		guideMng.Add(GuideManager::GUIDE_TYPE::AIR_GLIDER, i);
 	}
@@ -130,6 +135,19 @@ void AirGlider::Draw(const Camera& _camera)
 void AirGlider::Release(void)
 {
 	LastGameBase::Release();
+
+	//インスタンス
+	auto& setting = GameSetting::GetInstance();
+	auto& hud = HUDManager::GetInstance();
+	auto& guideMng = GuideManager::GetInstance();
+
+	//プレイヤー人数
+	const int plNum = setting.GetPlayerNum();
+	for (int i = 0; i < plNum; i++)
+	{
+		//飛距離UIの削除
+		hud.SetVisible(i, HUDManager::HUD_TYPE::FLIGHT_DISTANCE, false);
+	}
 }
 
 void AirGlider::CompDistance(void)
